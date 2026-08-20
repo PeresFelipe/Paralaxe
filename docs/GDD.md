@@ -822,6 +822,61 @@ Parceiros recrutados poderão permanecer em uma cidade ou taverna.
 
 Esse local funcionará como ponto de encontro e gerenciamento da party.
 
+
+##### Primeiro parceiro recrutável — Mira
+**Mira** será a primeira parceira recrutável do jogo.
+
+Características definidas:
+
+- mulher;
+- humana;
+- ex-soldado da Ordem de Ferro;
+- arqueira;
+- parceira recrutada em uma Dungeon.
+
+##### História de Mira
+Mira deixou oficialmente a Ordem de Ferro.
+
+Durante sua vida militar, sofreu preconceito por ser mulher e era frequentemente tratada como inferior por homens do exército.
+
+Apesar disso, provou repetidamente sua capacidade e venceu diversas batalhas sem precisar de ajuda.
+
+Depois de sair do exército, ficou sem dinheiro e passou a entrar em Dungeons em busca de loot para sobreviver.
+
+Quando o jogador a encontra, ela já está sobrevivendo sozinha.
+
+Entrar para a party não representa um resgate, mas passa a dar a ela um novo objetivo de vida.
+
+##### Personalidade e desenvolvimento
+Mira ainda possui preconceitos contra monstros no início.
+
+Esse preconceito foi herdado da cultura humana e de sua formação militar.
+
+Conforme a relação com o jogador aumenta, sua visão sobre monstros diminui gradualmente.
+
+Mira não abandona a party por discordâncias.
+
+Por sua formação militar, ela sabe seguir ordens mesmo quando discorda do jogador.
+
+Isso não impede que ela:
+
+- questione decisões;
+- demonstre desaprovação;
+- mude sua postura conforme a relação evolui.
+
+##### Vantagem exclusiva
+A habilidade passiva exclusiva de Mira será:
+
+> **Olho de Caçadora**
+
+Efeito:
+
+> Aumenta a chance de crítico de todos os membros da party.
+
+##### Observações
+- Mira não possui ligação prévia com a fortificação da primeira Dungeon.
+- Mira não terá quest pessoal focada em vingança contra antigos soldados.
+
 ---
 
 ## Dungeons
