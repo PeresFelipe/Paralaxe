@@ -1,0 +1,103 @@
+name: Atualizar GDD com Mira
+
+on:
+  push:
+    paths:
+      - '.github/workflows/update-gdd-mira.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  atualizar-gdd:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Inserir seção da Mira
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path('docs/GDD.md')
+          text = path.read_text(encoding='utf-8')
+
+          heading = '##### Primeiro parceiro recrutável — Mira'
+          if heading in text:
+              print('A seção da Mira já existe. Nenhuma alteração necessária.')
+              raise SystemExit(0)
+
+          marker = '\n---\n\n## Dungeons\n'
+          if marker not in text:
+              raise SystemExit('Marcador de Dungeons não encontrado; GDD não foi alterado.')
+
+          section = r'''
+##### Primeiro parceiro recrutável — Mira
+
+**Mira** será a primeira parceira recrutável do jogo.
+
+Características definidas:
+
+- mulher;
+- humana;
+- ex-soldada da Ordem de Ferro;
+- arqueira;
+- recrutada durante uma Dungeon.
+
+##### História de Mira
+Mira deixou oficialmente a Ordem de Ferro.
+
+Durante sua carreira militar, sofreu preconceito por ser mulher e era frequentemente tratada como inferior pelos homens do exército.
+
+Apesar disso, provou repetidamente sua capacidade e venceu diversas batalhas sem precisar de ajuda.
+
+Depois de sair da Ordem, ficou sem dinheiro e passou a explorar Dungeons em busca de loot para sobreviver.
+
+Quando o jogador a encontra, Mira já está sobrevivendo sozinha. Entrar para a party não representa um resgate, mas passa a dar a ela um novo objetivo de vida.
+
+##### Personalidade e desenvolvimento
+Mira ainda possui preconceitos contra monstros no início.
+
+Esse preconceito foi herdado da cultura humana e de sua formação militar.
+
+Conforme a relação com o jogador aumenta, o preconceito de Mira contra monstros diminui gradualmente.
+
+Mira não abandona a party por discordâncias.
+
+Por sua formação militar, sabe seguir ordens mesmo quando discorda do jogador.
+
+Isso não impede que ela:
+
+- questione decisões;
+- demonstre desaprovação;
+- expresse opiniões próprias;
+- mude sua postura conforme a relação evolui.
+
+##### Vantagem exclusiva
+A vantagem mecânica exclusiva de Mira será:
+
+> **Olho de Caçadora:** aumenta a chance de crítico de todos os membros da party.
+
+##### Observações
+- Mira não possui ligação prévia com a fortificação da primeira Dungeon.
+- Mira não terá uma quest pessoal focada em vingança contra os antigos soldados que a tratavam como inferior.
+
+'''
+
+          text = text.replace(marker, '\n' + section + '---\n\n## Dungeons\n', 1)
+          path.write_text(text, encoding='utf-8')
+          print('Seção da Mira adicionada ao GDD.')
+          PY
+
+      - name: Commit e push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -- docs/GDD.md
+          if git diff --cached --quiet; then
+            echo "Nenhuma alteração para publicar."
+            exit 0
+          fi
+          git commit -m "Adiciona Mira ao GDD"
+          git push
