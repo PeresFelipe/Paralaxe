@@ -698,26 +698,110 @@ Ataque a cada 1,2s
 Atributos e equipamentos poderão modificar essa velocidade.
 
 ##### Habilidades
+O personagem poderá equipar até **4 habilidades ativas simultaneamente**.
+
+A combinação entre essas habilidades será totalmente livre.
+
+O jogador poderá equipar qualquer combinação de categorias, desde que cumpra os requisitos individuais de cada habilidade.
+
+Exemplos:
+
+```text
+4 habilidades físicas
+4 magias
+4 milagres
+2 físicas + 2 magias
+1 física + 1 magia + 1 milagre + 1 universal
+```
+
+A classe inicial não limita quais habilidades poderão ser utilizadas.
+
+Regra principal:
+
+> O jogador pode equipar qualquer combinação de 4 habilidades ativas, independentemente da classe inicial ou da categoria da habilidade.
+
+##### Categorias de habilidades
+As habilidades ativas serão organizadas em cinco categorias:
+
+1. **Físicas:** normalmente utilizam Stamina e representam técnicas de combate físico.
+2. **Magias:** utilizam Mana e escalam principalmente com Inteligência.
+3. **Milagres:** utilizam Mana e escalam principalmente com Fé.
+4. **Híbridas:** combinam atributos, armas ou estilos diferentes.
+5. **Universais:** podem ser utilizadas por qualquer personagem e têm o cooldown como sua principal limitação, sem depender necessariamente de Mana ou Stamina.
+
+As categorias servem para organizar requisitos, custos, scaling e identidade das habilidades, e não para restringir combinações de build.
+
+##### Desbloqueio de habilidades
+Habilidades poderão ser obtidas por diferentes caminhos:
+
+- progressão natural;
+- NPCs;
+- Dungeons;
+- Bosses;
+- quests;
+- exploração e descobertas secretas;
+- Prestígio.
+
+Dessa forma, novas habilidades também funcionarão como recompensas de progressão, exploração e conteúdo especial.
+
+##### Uso automático
 Habilidades serão utilizadas automaticamente quando:
 
 - o tempo de recarga terminar;
-- houver recurso suficiente;
-- a condição da habilidade for atendida.
+- houver recurso suficiente, quando aplicável;
+- os requisitos da habilidade forem atendidos;
+- a habilidade for priorizada pelo estilo de combate escolhido.
 
 Exemplo:
 
 ```text
 Golpe Pesado
+Categoria: Física
+Perfil: Agressiva
 Cooldown: 8s
 Custo: 30 Stamina
-
-↓
-Cooldown terminou
-↓
-Possui recurso
-↓
-Usa automaticamente
 ```
+
+##### Perfil obrigatório das habilidades
+Toda habilidade ativa deverá possuir obrigatoriamente um **Perfil de Combate**.
+
+Existem apenas dois perfis:
+
+- **Agressiva:** focada principalmente em dano, pressão ofensiva, efeitos ofensivos ou aumento da capacidade de ataque.
+- **Defensiva:** focada principalmente em cura, proteção, mitigação, sobrevivência, resistência ou suporte defensivo.
+
+O perfil é independente da categoria.
+
+Uma habilidade Física, Magia, Milagre, Híbrida ou Universal poderá ser Agressiva ou Defensiva.
+
+O perfil **Misto** não existe para habilidades individuais.
+
+Exemplo:
+
+```text
+Bola de Fogo
+Categoria: Magia
+Perfil: Agressiva
+
+Barreira Arcana
+Categoria: Magia
+Perfil: Defensiva
+```
+
+##### Estilo de combate
+Antes do combate, o jogador poderá definir um dos três estilos de combate:
+
+- **Agressivo:** prioriza habilidades com Perfil Agressiva.
+- **Defensivo:** prioriza habilidades com Perfil Defensiva.
+- **Misto:** alterna dinamicamente entre habilidades Agressivas e Defensivas conforme a situação do combate.
+
+O estilo escolhido orienta a prioridade da automação, sem alterar as quatro habilidades equipadas.
+
+No estilo Misto, o sistema deverá considerar o estado atual do personagem e da party para decidir entre pressão ofensiva e sobrevivência.
+
+Regra principal:
+
+> O jogador escolhe as habilidades da build e o estilo de combate determina como a automação prioriza seu uso.
 
 ##### Consumíveis
 Consumíveis poderão ser utilizados:
@@ -2522,6 +2606,12 @@ Princípios centrais definidos:
 > O modo Idle oferece boas recompensas; as melhores recompensas exigem exploração ativa.
 
 > O combate é automático, mas a build, os atributos, os equipamentos e a preparação determinam o resultado.
+
+> O personagem equipa até 4 habilidades ativas e pode combinar livremente suas categorias.
+
+> Toda habilidade ativa possui Perfil Agressiva ou Defensiva.
+
+> O estilo de combate Agressivo, Defensivo ou Misto determina como a automação prioriza as habilidades equipadas.
 
 > O inventário possui limite e pode ser expandido permanentemente.
 
