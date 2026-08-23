@@ -830,6 +830,381 @@ A quantidade perdida será calculada conforme o nível do personagem.
 
 Os valores exatos serão definidos durante o balanceamento.
 
+
+---
+
+## Inimigos e Bosses
+
+##### Categorias de inimigos
+Os inimigos serão divididos em três categorias principais:
+
+1. **Comum**
+2. **Elite**
+3. **Boss**
+
+Não existirá inicialmente uma categoria separada de mini-Boss. Quando necessário, um Elite poderá cumprir essa função dentro de uma Dungeon.
+
+##### Estrutura básica
+Todo inimigo deverá possuir uma ficha com informações como:
+
+```text
+Nome
+Tipo: Comum / Elite / Boss
+
+Vida
+Ataque
+Defesa
+Velocidade de ataque
+
+Fraquezas
+Resistências
+Habilidades
+Drops
+```
+
+##### Tipos de dano
+O jogo terá inicialmente sete tipos principais de dano:
+
+- **Corte**
+- **Perfuração**
+- **Impacto**
+- **Fogo**
+- **Gelo**
+- **Arcano**
+- **Sagrado**
+
+Inimigos poderão possuir fraquezas e resistências diferentes para cada tipo.
+
+Essas relações deverão incentivar o jogador a adaptar equipamentos, habilidades e composição da party entre diferentes conteúdos.
+
+##### Leitura de fraquezas e resistências
+Fraquezas e resistências serão apresentadas em duas camadas.
+
+Na visualização padrão, o jogador verá classificações simples:
+
+- **Fraco**
+- **Normal**
+- **Resistente**
+- **Muito Resistente**
+- **Imune**
+
+Na visualização avançada, o jogador poderá consultar também os percentuais reais utilizados pelo sistema.
+
+Exemplo:
+
+```text
+Modo simples:
+Fogo → Resistente
+
+Modo avançado:
+Fogo → Resistente — percentual real
+```
+
+Os percentuais e limites exatos de cada classificação serão definidos durante o balanceamento.
+
+##### Efeitos de status
+O jogo terá inicialmente cinco efeitos principais de status:
+
+- **Veneno:** causa dano ao longo do tempo.
+- **Sangramento:** acumula até provocar uma perda relevante de Vida.
+- **Atordoamento:** interrompe temporariamente as ações do alvo.
+- **Queimadura:** causa dano ao longo do tempo e possui identidade ligada a Fogo.
+- **Congelamento:** reduz o ritmo de combate e a velocidade de ações do alvo.
+
+Inimigos poderão possuir fraquezas, resistências ou imunidades específicas para esses efeitos.
+
+##### Acúmulo de status
+Os efeitos de status utilizarão um sistema de acúmulo.
+
+Ataques, habilidades e equipamentos poderão adicionar acúmulo a uma barra específica do efeito.
+
+Quando a barra atingir seu limite:
+
+```text
+Acúmulo chega a 100%
+↓
+Efeito é ativado
+↓
+Barra retorna a 0
+↓
+Alvo recebe resistência temporária ao mesmo efeito
+```
+
+As barras de status serão visíveis durante o combate para facilitar a leitura do sistema.
+
+A interface deverá mostrar principalmente as barras que já possuem acúmulo, evitando excesso de informação.
+
+Quando um efeito deixa de ser aplicado por algum tempo, seu acúmulo poderá diminuir gradualmente.
+
+##### Resistência temporária após status
+Depois que um efeito é ativado, o alvo recebe resistência temporária específica àquele mesmo efeito.
+
+Durante esse período, o novo acúmulo poderá ser reduzido ou temporariamente bloqueado.
+
+A intensidade e duração dessa resistência poderão variar conforme:
+
+- inimigo;
+- efeito;
+- categoria do inimigo;
+- dificuldade.
+
+Essa regra será especialmente importante para **Atordoamento**, evitando ciclos de controle infinito.
+
+##### Bosses e efeitos de status
+Bosses utilizarão o mesmo sistema geral de dano e status dos demais inimigos.
+
+Eles não serão automaticamente imunes a efeitos apenas por serem Bosses.
+
+Entretanto, poderão possuir:
+
+- resistências naturalmente maiores;
+- barras de acúmulo mais difíceis de completar;
+- resistência temporária mais forte após sofrer um efeito;
+- imunidades específicas quando fizer sentido para sua identidade;
+- fraquezas próprias que ainda possam ser exploradas pelo jogador.
+
+##### Habilidades por categoria de inimigo
+A complexidade das habilidades aumentará conforme a importância do inimigo.
+
+**Comuns**
+
+- poucas habilidades;
+- funcionamento simples;
+- leitura rápida.
+
+**Elites**
+
+- habilidades próprias;
+- efeitos mais perigosos;
+- pelo menos alguma característica que possa exigir adaptação da build ou da party.
+
+**Bosses**
+
+- conjunto completo de habilidades;
+- mecânicas próprias;
+- alterações de comportamento relacionadas a fases e dificuldade.
+
+Regra principal:
+
+> Quanto maior a importância do inimigo, mais suas habilidades devem alterar a dinâmica do combate, e não apenas aumentar dano.
+
+##### Leitura de habilidades inimigas
+Como o combate é automático, o jogador deverá conseguir entender claramente por que venceu ou perdeu.
+
+Habilidades inimigas poderão apresentar:
+
+- nome da habilidade sendo preparada;
+- barra de conjuração ou preparação quando aplicável;
+- ícone do efeito associado;
+- destaque visual para ataques especialmente perigosos;
+- histórico curto de combate para análise avançada.
+
+##### Fases de Boss
+Bosses poderão possuir fases.
+
+A quantidade de fases não será padronizada.
+
+Cada Boss terá seu número de fases definido individualmente de acordo com sua identidade e função dentro da Dungeon.
+
+Uma mudança de fase poderá alterar:
+
+- habilidades;
+- comportamento;
+- prioridades;
+- velocidade;
+- padrões de ataque;
+- efeitos de status;
+- mecânicas próprias.
+
+Regra principal:
+
+> As fases existem para mudar a dinâmica do confronto, não apenas para aumentar dano e Vida.
+
+Nem todo Boss precisará ter três fases.
+
+##### Dificuldade e comportamento
+Dificuldades maiores deverão alterar o combate de maneira mecânica e estratégica, e não apenas aumentar atributos.
+
+Poderão modificar:
+
+- ataques e habilidades dos inimigos;
+- resistências e fraquezas;
+- frequência e tipos de Elites;
+- fases dos Bosses;
+- comportamento e agressividade;
+- janelas de recuperação;
+- efeitos de status utilizados;
+- composição dos encontros;
+- recompensas e qualidade do loot.
+
+Regra principal:
+
+> Dificuldades maiores devem introduzir novas exigências mecânicas e estratégicas, não apenas aumentar atributos.
+
+##### Loot de inimigos comuns
+Inimigos Comuns serão responsáveis principalmente por sustentar a progressão normal.
+
+Poderão conceder:
+
+- dinheiro;
+- materiais comuns;
+- consumíveis básicos;
+- equipamentos normais com raridade e atributos procedurais;
+- pequena chance de materiais menos comuns.
+
+##### Loot de Elites
+Elites poderão conceder tudo que inimigos Comuns oferecem, porém com recompensas superiores.
+
+Poderão possuir:
+
+- maior chance de equipamentos de raridade elevada;
+- materiais raros;
+- consumíveis melhores;
+- pequena chance de receitas;
+- materiais específicos da Dungeon ou daquele tipo de criatura.
+
+Elites serão uma fonte importante para jogadores que desejarem buscar versões procedurais melhores de equipamentos.
+
+##### Loot de Bosses
+Bosses poderão conceder:
+
+- dinheiro;
+- equipamentos próprios e temáticos;
+- materiais exclusivos;
+- receitas especiais;
+- habilidades;
+- itens de quest ou lore;
+- materiais utilizados em upgrades +2;
+- chance de Relíquia, quando aquele Boss possuir uma Relíquia associada.
+
+Equipamentos normais de Boss continuarão utilizando o sistema de raridade e atributos procedurais.
+
+Relíquias continuam sendo exceções, nunca poderão ser fabricadas e poderão possuir condições próprias de obtenção, como dificuldade, segredo, evento ou outra condição especial.
+
+Todo Boss terá pelo menos **um recurso exclusivo garantido por vitória**, além de sua tabela de drops aleatórios.
+
+Regra principal:
+
+> Comuns sustentam a progressão, Elites recompensam o farm e Bosses entregam acesso a conteúdo exclusivo.
+
+##### Loot de exploração
+Nem todas as recompensas de uma Dungeon virão diretamente do combate.
+
+Salas secretas, eventos, caminhos especiais e descobertas poderão conceder recompensas como:
+
+- receitas;
+- habilidades;
+- itens incomuns;
+- materiais especiais;
+- conteúdo narrativo;
+- condições relacionadas a Relíquias.
+
+##### Ameaça e Aggro
+Em combates com party, os inimigos utilizarão um sistema de **Ameaça/Aggro**.
+
+Cada personagem poderá gerar Ameaça através de ações como:
+
+- dano causado;
+- cura;
+- suporte;
+- habilidades específicas.
+
+Como comportamento padrão, inimigos tenderão a atacar o personagem com maior Ameaça.
+
+##### Manipulação de Ameaça
+Habilidades poderão:
+
+- aumentar a Ameaça do usuário;
+- reduzir Ameaça;
+- modificar a geração de Ameaça;
+- **Provocar** um inimigo.
+
+Aumentar Ameaça influencia naturalmente a seleção de alvo.
+
+Provocar força temporariamente um inimigo a priorizar determinado personagem.
+
+Bosses poderão desenvolver resistência temporária contra provocações repetidas.
+
+##### Regras alternativas de alvo
+O Aggro será a regra padrão, mas determinados inimigos e habilidades poderão utilizar outras formas de escolher alvos.
+
+Exemplos:
+
+- personagem com maior Ameaça;
+- personagem com menor Vida;
+- personagem que causou mais dano recentemente;
+- alvo aleatório;
+- personagem que está curando;
+- personagem utilizando determinado tipo de habilidade;
+- toda a party.
+
+Cada inimigo utilizará apenas os comportamentos que fizerem sentido para sua identidade.
+
+Habilidades especiais poderão indicar explicitamente que **ignoram Ameaça**.
+
+##### Interface de Ameaça
+A Ameaça será visível ao jogador em duas camadas.
+
+Na interface padrão, serão mostrados principalmente:
+
+- alvo atual do inimigo;
+- indicação visual do personagem que possui a atenção do inimigo;
+- aviso quando outro personagem estiver próximo de assumir o Aggro;
+- mudanças de alvo.
+
+Na visualização avançada, o jogador poderá consultar a distribuição percentual relativa de Ameaça entre os membros da party.
+
+Exemplo:
+
+```text
+Ameaça
+
+Guerreiro    46%
+Mira         31%
+Curandeiro   15%
+Mago          8%
+```
+
+Quando um inimigo trocar de alvo, a interface deverá comunicar isso através de:
+
+- aviso curto de troca de foco;
+- destaque visual no novo alvo;
+- atualização do indicador de Aggro;
+- registro no histórico de combate.
+
+##### Recompensas por dificuldade
+Dificuldades maiores melhorarão as recompensas de duas formas:
+
+1. aumentar a chance e a qualidade do loot já existente;
+2. desbloquear itens exclusivos daquela dificuldade.
+
+Conteúdos exclusivos de dificuldade poderão incluir:
+
+- equipamentos;
+- receitas;
+- habilidades;
+- materiais especiais;
+- condições específicas relacionadas a Relíquias.
+
+Bosses de dificuldades maiores poderão adicionar novos itens à própria tabela de loot sem necessariamente remover recompensas das dificuldades anteriores.
+
+##### Primeiro clear de dificuldade
+A primeira conclusão de cada dificuldade concederá pelo menos **uma recompensa especial garantida**.
+
+Dependendo da Dungeon e da dificuldade, essa recompensa poderá ser:
+
+- habilidade;
+- receita;
+- material exclusivo;
+- equipamento fixo;
+- item narrativo ou de progressão.
+
+Depois do primeiro clear, essa recompensa específica não precisa permanecer garantida e as execuções seguintes utilizarão normalmente a tabela de loot daquela dificuldade.
+
+Regra principal:
+
+> A primeira vitória em cada dificuldade deve recompensar progresso real com pelo menos uma recompensa garantida especial.
+
 ---
 
 ## Party e parceiros
@@ -2606,6 +2981,26 @@ Princípios centrais definidos:
 > O modo Idle oferece boas recompensas; as melhores recompensas exigem exploração ativa.
 
 > O combate é automático, mas a build, os atributos, os equipamentos e a preparação determinam o resultado.
+
+> Inimigos são divididos em Comuns, Elites e Bosses, com complexidade e recompensas crescentes.
+
+> Fraquezas e resistências possuem leitura simples por categoria e visualização avançada por percentuais.
+
+> Veneno, Sangramento, Atordoamento, Queimadura e Congelamento utilizam acúmulo com barras visuais e resistência temporária após ativação.
+
+> Bosses usam o mesmo sistema de status dos demais inimigos, com resistências e imunidades definidas individualmente.
+
+> Fases de Boss são definidas individualmente e devem mudar a dinâmica do confronto.
+
+> Dificuldades maiores alteram mecânicas e estratégia, além de melhorar e expandir o loot.
+
+> O sistema de Ameaça/Aggro orienta a seleção padrão de alvos em party, mas inimigos e habilidades podem usar regras próprias.
+
+> A interface de Aggro possui leitura simples e visualização avançada por percentuais.
+
+> Todo Boss possui pelo menos um recurso exclusivo garantido por vitória.
+
+> A primeira conclusão de cada dificuldade concede pelo menos uma recompensa especial garantida.
 
 > O personagem equipa até 4 habilidades ativas e pode combinar livremente suas categorias.
 
