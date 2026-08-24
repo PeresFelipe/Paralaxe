@@ -299,19 +299,227 @@ Uma **skill** representa aquilo que o personagem aprende e evolui.
 
 Uma **atividade** representa aquilo que o jogador faz utilizando uma skill.
 
+As atividades concedem experiência para a skill relacionada.
+
+Para as skills de coleta, o jogador escolherá diretamente a atividade ou recurso principal que deseja obter, em vez de iniciar uma coleta genérica e depender de aleatoriedade para receber o material desejado.
+
 Exemplo:
 
 ```text
-Skill: Mineração
-
-Atividades:
-- Mina de Pedra
-- Mina de Cobre
-- Mina de Ferro
-- Mina de Ouro
+Mineração
+↓
+Seleciona Iarann
+↓
+aguarda o tempo da ação
+↓
+recebe Iarann + XP de Mineração
+↓
+chance de drops secundários
+↓
+repete automaticamente
 ```
 
-As atividades concedem experiência para a skill relacionada.
+Regra principal:
+
+> Escolher uma atividade específica → aguardar o tempo da ação → receber recurso principal + XP → chance de drops secundários → repetir automaticamente.
+
+##### Estrutura das atividades de coleta
+A estrutura-base será utilizada principalmente por:
+
+- Mineração;
+- Lenhador;
+- Pesca;
+- Herbologia.
+
+Cada atividade terá:
+
+- recurso principal definido;
+- requisito de nível quando aplicável;
+- tempo próprio por ação;
+- experiência da skill;
+- pool próprio de recursos secundários;
+- repetição automática enquanto estiver ativa.
+
+O tempo exato das ações será definido durante o balanceamento.
+
+A atividade poderá continuar durante o progresso offline, respeitando o limite de tempo offline do personagem.
+
+##### Quantidade obtida por ação
+Como base, cada ciclo de uma atividade de coleta concederá normalmente:
+
+> **1 unidade garantida do recurso principal.**
+
+Ferramentas, Prestígio, habilidades e outros efeitos poderão gerar unidades adicionais.
+
+A quantidade-base e os modificadores específicos poderão variar durante o balanceamento, mas o jogador deverá ter uma fonte previsível do recurso principal escolhido.
+
+##### Recursos secundários
+Cada atividade terá seu próprio pequeno pool temático de recursos secundários.
+
+Exemplo conceitual:
+
+```text
+Atividade de Mineração
+
+Garantido:
+→ recurso principal escolhido
+→ XP de Mineração
+
+Possíveis secundários:
+→ minerais complementares
+→ gemas
+→ cristais
+→ materiais raros
+→ componentes de crafting ou upgrade
+```
+
+Os recursos secundários poderão ser utilizados em:
+
+- crafting;
+- ligas e componentes de Metalurgia;
+- fabricação de ferramentas;
+- fabricação de equipamentos;
+- upgrades +1;
+- upgrades +2 como componentes complementares.
+
+A regra do upgrade +2 permanece válida:
+
+> Um upgrade +2 exige pelo menos um material especial proveniente de conteúdo como Dungeon, Boss ou evento.
+
+Um recurso raro obtido em uma atividade comum poderá participar da receita do +2, mas não substitui sozinho esse componente especial obrigatório.
+
+Recursos secundários poderão aparecer raramente antes de o jogador liberar uma atividade que permita obtê-los diretamente.
+
+Regra principal:
+
+> O recurso principal oferece produção previsível; os recursos secundários conectam a atividade ao crafting, aos upgrades e a outras formas de progressão.
+
+##### Ferramentas de coleta
+As ferramentas de coleta formarão um sistema separado dos equipamentos de combate.
+
+Elas não ocuparão slots como arma principal, mão secundária, armaduras, anéis ou amuleto.
+
+Ferramentas previstas:
+
+- **Mineração:** picareta;
+- **Lenhador:** machado de corte;
+- **Pesca:** equipamento de pesca;
+- **Herbologia:** ferramenta própria de coleta/preparo — A definir.
+
+As ferramentas poderão melhorar principalmente:
+
+- velocidade da atividade;
+- quantidade obtida;
+- chance de recurso extra;
+- chance de drop secundário raro;
+- experiência da skill.
+
+Ferramentas de coleta não deverão utilizar atributos de combate como foco de seus rolls procedurais.
+
+##### Obtenção de ferramentas
+Ferramentas de coleta terão somente duas fontes de obtenção:
+
+1. **Fabricação**;
+2. **Dungeons**.
+
+A fabricação, principalmente através da Forja quando aplicável, será a fonte regular de progressão das ferramentas.
+
+Dungeons poderão fornecer modelos próprios de ferramentas, com identidade ou características-base especiais.
+
+Ferramentas não serão obtidas diretamente como progressão por lojas, NPCs, quests ou Prestígio.
+
+##### Raridade procedural das ferramentas
+Ferramentas normais utilizarão o mesmo sistema de raridade procedural dos equipamentos.
+
+```text
+Comum      → 1 atributo procedural
+Incomum    → 2
+Raro       → 3
+Épico      → 4
+Lendário   → 5
+```
+
+Duas ferramentas com o mesmo modelo e raridade poderão possuir combinações diferentes de atributos.
+
+O pool inicial de atributos procedurais será focado em:
+
+- velocidade da atividade;
+- quantidade obtida;
+- chance de recurso extra;
+- chance de drop secundário raro;
+- XP da skill.
+
+Modelos especiais encontrados em Dungeons também poderão utilizar raridade procedural quando forem itens normais e não Relíquias.
+
+##### Upgrade de ferramentas
+Ferramentas seguirão o mesmo conceito de upgrade dos equipamentos:
+
+```text
++0
++1
++2
+```
+
+O upgrade de ferramenta:
+
+- nunca falha;
+- melhora somente seus atributos base;
+- não altera nem rerrola atributos procedurais;
+- não possui custo em dinheiro;
+- não utiliza durabilidade.
+
+O +1 poderá utilizar materiais de progressão normal.
+
+O +2 deverá exigir pelo menos um material especial proveniente de conteúdo como:
+
+- Dungeons;
+- Bosses;
+- eventos especiais.
+
+##### Minigames das skills
+Cada uma das sete skills terá um **minigame próprio e temático**, relacionado diretamente à fantasia da atividade.
+
+O minigame não ficará disponível continuamente.
+
+Depois de determinado tempo executando uma atividade, uma oportunidade de minigame será liberada.
+
+O tempo exato necessário será definido posteriormente.
+
+O progresso para liberar essa oportunidade poderá continuar durante a execução Idle/offline da atividade.
+
+O jogador poderá ignorar o minigame e continuar progredindo normalmente.
+
+Jogar o minigame com bom desempenho concederá um bônus temporário relacionado à atividade, podendo melhorar principalmente:
+
+- eficiência;
+- taxa de recursos extras;
+- taxa de drops secundários;
+- taxa de drops secundários raros.
+
+Os valores e a combinação exata dos bônus serão definidos durante o balanceamento.
+
+O minigame não deverá possuir recursos essenciais exclusivos que tornem a progressão Idle incompleta. A vantagem da interação ativa será melhorar temporariamente a eficiência das mesmas atividades e pools de recompensa.
+
+O sistema poderá limitar a quantidade de oportunidades de minigame acumuladas. O limite exato será **A definir**.
+
+Regra principal:
+
+> O Idle gera a oportunidade; a interação ativa permite aproveitá-la melhor.
+
+##### Direção temática dos minigames
+Cada skill terá uma mecânica compatível com sua fantasia.
+
+Direções iniciais:
+
+- **Mineração:** quebrar uma formação rochosa identificando e atingindo pontos de fraqueza;
+- **Lenhador:** trabalhar direção e momento dos cortes;
+- **Pesca:** reagir à fisgada e controlar a tensão da linha;
+- **Herbologia:** identificar e coletar corretamente partes da planta;
+- **Metalurgia:** controlar temperatura e ponto do processo;
+- **Forja:** trabalhar ritmo e precisão dos golpes;
+- **Culinária:** controlar tempo e sequência de etapas do preparo.
+
+As implementações exatas poderão ser refinadas posteriormente, preservando o princípio de que cada minigame representa a própria atividade.
 
 ##### Técnicas internas
 Uma skill poderá possuir técnicas ou categorias internas sem que elas sejam novas skills.
@@ -386,12 +594,12 @@ Exemplo:
 Mineração normal
 Nv. 1 → materiais básicos
 ...
-Nv. 99 → Ouro
+Nv. 90 → Grianchloch
+Nv. 99 → conclusão da progressão normal
 
 Prestígio I
-Nv. 1 → Ouro
-...
-Nv. 99 → novo material exclusivo
+→ antiga progressão permanece relevante
+→ novos materiais e atividades são introduzidos
 ```
 
 Regra principal:
@@ -410,6 +618,93 @@ Cada Prestígio deverá trazer:
 - recompensas exclusivas.
 
 A progressão deverá ficar mais longa a cada Prestígio.
+
+##### Produção paralela no Prestígio I
+Ao alcançar **Prestígio I**, todas as skills desbloquearão uma forma temática de produção paralela.
+
+Direções definidas:
+
+- **Mineração — Extração Dupla:** permite trabalhar com dois tipos de minério ao mesmo tempo;
+- **Lenhador — Corte Duplo:** permite trabalhar com duas madeiras simultaneamente;
+- **Pesca — Linha Dupla:** permite trabalhar com dois alvos de pesca;
+- **Herbologia — Coleta Dupla:** permite trabalhar com duas plantas ou ingredientes;
+- **Metalurgia — Fundição Paralela:** permite processar duas linhas de produção;
+- **Forja — Produção Paralela:** permite manter duas fabricações em andamento;
+- **Culinária — Preparo Paralelo:** permite manter dois preparos em andamento.
+
+A segunda atividade começará com eficiência reduzida em relação à atividade principal.
+
+Os percentuais exatos serão definidos durante o balanceamento.
+
+A evolução dessa mecânica nos Prestígios II e III será **A definir** e poderá envolver melhoria de eficiência ou novas formas de executar a skill.
+
+Regra principal:
+
+> Habilidades e recompensas avançadas de skill devem, sempre que possível, mudar a forma de executar a atividade, e não apenas aumentar percentuais.
+
+##### Mineração — identidade dos materiais
+A progressão normal de Mineração utilizará materiais reais e reconhecíveis, porém seus nomes apresentados ao jogador serão em **irlandês**.
+
+O ícone e a arte deverão representar claramente o material correspondente do mundo real, permitindo que o jogador crie a associação visual naturalmente.
+
+Exemplo:
+
+```text
+Iarann
+[imagem claramente reconhecível como minério de ferro]
+```
+
+A interface principal não precisará exibir permanentemente traduções como `Iarann (Ferro)`. O mapeamento abaixo existe para documentação de design e produção.
+
+Materiais sobrenaturais ou inteiramente originais serão reservados principalmente para Prestígios e conteúdos mais avançados, fazendo com que sua aparição represente uma mudança real de camada de progressão.
+
+##### Mineração — progressão normal 1–99
+Progressão inicial definida:
+
+| Nível | Nome no jogo | Material equivalente | Papel inicial |
+|---:|---|---|---|
+| 1 | **Cloch** | Pedra | construção e crafting básico |
+| 10 | **Stán** | Estanho | ligas e componentes iniciais |
+| 20 | **Copar** | Cobre | ferramentas e equipamentos iniciais |
+| 30 | **Iarann** | Ferro | base importante de armas e armaduras |
+| 45 | **Luaidhe** | Chumbo | receitas e componentes especializados |
+| 60 | **Airgead** | Prata | equipamentos, acessórios e receitas especiais |
+| 75 | **Ór** | Ouro | acessórios e crafting avançado |
+| 90 | **Grianchloch** | Quartzo | crafting de alto nível e componentes especiais |
+
+Os níveis entre os grandes desbloqueios continuarão sendo relevantes através de evolução da skill, acesso a receitas, melhoria de eficiência e outros conteúdos a serem detalhados.
+
+Os tempos de ação e valores de XP serão definidos posteriormente durante o balanceamento.
+
+##### Utilidade contínua dos materiais
+A progressão de Mineração não seguirá a lógica de que um material de nível maior torna automaticamente todos os anteriores obsoletos.
+
+Materiais antigos continuarão sendo utilizados em:
+
+- ligas;
+- equipamentos;
+- ferramentas;
+- acessórios;
+- upgrades;
+- receitas avançadas;
+- componentes especializados.
+
+Exemplos conceituais:
+
+```text
+Stán + Copar
+→ podem continuar sendo necessários em uma liga avançada
+
+Iarann
+→ pode continuar aparecendo em receitas avançadas
+
+Ór
+→ pode ser necessário para acessórios específicos sem ser simplesmente "melhor" que todos os outros materiais
+```
+
+Regra principal:
+
+> Um material possui função econômica e de crafting própria; nível de desbloqueio não representa uma escala absoluta de superioridade.
 
 ##### Crafting
 Crafting também fará parte da progressão Idle.
@@ -472,7 +767,7 @@ As chances poderão melhorar conforme:
 Exemplo:
 
 ```text
-Forjar Espada de Aço
+Forjar equipamento
 ↓
 Comum
 Incomum
@@ -490,20 +785,22 @@ Regra principal:
 ##### Materiais e identidade
 O material utilizado poderá influenciar as características base do equipamento.
 
-Exemplo:
+Materiais de diferentes níveis não serão tratados apenas como substitutos numericamente superiores.
+
+Exemplo conceitual:
 
 ```text
-Ferro
-→ equipamento básico
+Copar
+→ aplicações e ligas próprias
 
-Aço
-→ melhor dano ou defesa
+Iarann
+→ base frequente de armas e armaduras
 
-Mithril
-→ maior eficiência
+Airgead
+→ aplicações específicas e especiais
 
-Obsidiana
-→ características próprias
+Ór
+→ acessórios e componentes avançados
 ```
 
 O item final será resultado de três camadas:
@@ -1535,27 +1832,50 @@ Enfrentar o Boss
 → pode receber as melhores recompensas
 ```
 
-##### Dificuldade
-Uma Dungeon poderá possuir várias dificuldades.
+##### Dificuldades ativas
+Todas as Dungeons possuirão a mesma quantidade de dificuldades ativas.
+
+Serão quatro:
+
+1. **Fácil**
+2. **Normal**
+3. **Difícil**
+4. **Impossível**
+
+As dificuldades serão desbloqueadas sequencialmente.
 
 A próxima dificuldade só ficará disponível depois que a anterior for concluída.
 
-Dificuldades maiores poderão modificar:
+Dificuldades maiores deverão modificar o conteúdo de forma mecânica e estratégica, não apenas aumentar Vida e dano.
+
+Poderão modificar:
 
 - força dos inimigos;
 - quantidade de salas;
 - eventos;
-- elites;
+- frequência e tipos de Elites;
+- ataques e habilidades;
+- resistências e fraquezas;
 - mecânicas;
-- comportamento do Boss;
-- recompensas.
+- comportamento e fases do Boss;
+- aplicação de status;
+- composição dos encontros;
+- recompensas e qualidade do loot.
 
-##### Modo Idle
-Depois que uma Dungeon for concluída, ela poderá liberar uma versão Idle.
+As regras de recompensas por dificuldade permanecem válidas:
 
-O modo Idle possuirá uma dificuldade própria e padronizada.
+- dificuldades maiores melhoram a chance e a qualidade do loot existente;
+- podem desbloquear itens exclusivos;
+- a primeira conclusão de cada dificuldade concede pelo menos uma recompensa especial garantida.
 
-A expedição Idle terá:
+##### Incursão Automática
+Além das quatro dificuldades ativas, todas as Dungeons terão acesso ao modo **Incursão Automática** após o desbloqueio apropriado.
+
+A Incursão Automática é um modo separado e **não representa uma quinta dificuldade**.
+
+Ela possuirá um preset próprio e padronizado de balanceamento para execução automática.
+
+A Incursão Automática terá:
 
 - duração;
 - chance de sucesso;
@@ -1570,7 +1890,7 @@ Porém:
 
 Salas secretas, eventos secretos e as melhores recompensas do Boss deverão incentivar o jogador a realizar a Dungeon ativamente.
 
-Se uma expedição Idle falhar, aquela execução não entregará as recompensas esperadas.
+Se uma Incursão Automática falhar, aquela execução não entregará as recompensas esperadas.
 
 ---
 
@@ -1854,7 +2174,7 @@ Relíquias serão itens:
 
 Nem todo item raro será negociável.
 
-O mercado entre jogadores será focado principalmente em Relíquias e outros itens excepcionais.
+Somente Relíquias poderão ser negociadas entre jogadores.
 
 ##### Histórico de donos
 Cada Relíquia deverá manter o histórico de propriedade.
@@ -2962,6 +3282,20 @@ Princípios centrais definidos:
 
 > O antigo endgame de uma skill se torna o novo início após o Prestígio.
 
+> As atividades de coleta oferecem um recurso principal previsível, normalmente 1 unidade garantida por ciclo, além de pools temáticos de recursos secundários.
+
+> Recursos secundários das atividades podem alimentar crafting, ligas, ferramentas e upgrades.
+
+> Materiais antigos continuam relevantes em receitas e ligas avançadas; desbloqueio mais alto não significa superioridade absoluta.
+
+> Ferramentas de coleta são separadas do equipamento de combate, possuem raridade procedural, upgrades +0/+1/+2 e são obtidas somente por fabricação ou Dungeons.
+
+> Cada skill possui um minigame temático periódico e opcional; o Idle gera a oportunidade e a interação ativa melhora temporariamente a eficiência ou os drops.
+
+> No Prestígio I, todas as skills desbloqueiam uma forma temática de produção paralela, inicialmente com eficiência reduzida na segunda atividade.
+
+> A Mineração normal utiliza materiais reais com nomes em irlandês e representação visual reconhecível; materiais sobrenaturais ficam principalmente para Prestígios e conteúdos avançados.
+
 > O Prestígio do personagem concede 5 pontos permanentes para uma Árvore de Prestígio.
 
 > A árvore terá mais opções do que pontos disponíveis, obrigando escolhas de build.
@@ -2978,7 +3312,7 @@ Princípios centrais definidos:
 
 > Ao chegar ao Boss, o jogador escolhe entre garantir seu loot ou arriscar tudo por recompensas melhores.
 
-> O modo Idle oferece boas recompensas; as melhores recompensas exigem exploração ativa.
+> A Incursão Automática oferece boas recompensas, mas é um modo separado das quatro dificuldades ativas e as melhores recompensas exigem exploração ativa.
 
 > O combate é automático, mas a build, os atributos, os equipamentos e a preparação determinam o resultado.
 
@@ -2993,6 +3327,10 @@ Princípios centrais definidos:
 > Fases de Boss são definidas individualmente e devem mudar a dinâmica do confronto.
 
 > Dificuldades maiores alteram mecânicas e estratégia, além de melhorar e expandir o loot.
+
+> Todas as Dungeons possuem quatro dificuldades ativas fixas: Fácil, Normal, Difícil e Impossível.
+
+> A Incursão Automática é um modo separado e não conta como uma quinta dificuldade.
 
 > O sistema de Ameaça/Aggro orienta a seleção padrão de alvos em party, mas inimigos e habilidades podem usar regras próprias.
 
