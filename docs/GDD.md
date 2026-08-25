@@ -642,6 +642,27 @@ Regra principal:
 
 > Habilidades e recompensas avançadas de skill devem, sempre que possível, mudar a forma de executar a atividade, e não apenas aumentar percentuais.
 
+##### Convenção de nomenclatura dos recursos
+Recursos do mundo poderão utilizar nomes em **irlandês** para criar identidade própria, desde que isso não prejudique a leitura do jogo.
+
+A interface, os sistemas, atributos, dificuldades, instruções e descrições continuam utilizando português.
+
+Regras principais:
+
+> **Nome diferente, visual familiar.**
+
+> **A mesma coisa sempre recebe o mesmo nome.**
+
+> **Nunca usar uma palavra estrangeira quando ela só torna uma informação de sistema mais difícil de entender.**
+
+Na prática:
+
+- recursos importantes poderão ter nomes em irlandês;
+- a arte deverá continuar deixando claro o que o recurso representa quando existir um equivalente reconhecível;
+- um mesmo recurso nunca deverá receber nomes diferentes em contextos diferentes;
+- traduções explicativas poderão existir na documentação de design, mas não precisam aparecer permanentemente na interface;
+- termos puramente funcionais do sistema permanecerão em português quando a tradução estrangeira reduzir a clareza.
+
 ##### Mineração — identidade dos materiais
 A progressão normal de Mineração utilizará materiais reais e reconhecíveis, porém seus nomes apresentados ao jogador serão em **irlandês**.
 
@@ -656,10 +677,23 @@ Iarann
 
 A interface principal não precisará exibir permanentemente traduções como `Iarann (Ferro)`. O mapeamento abaixo existe para documentação de design e produção.
 
-Materiais sobrenaturais ou inteiramente originais serão reservados principalmente para Prestígios e conteúdos mais avançados, fazendo com que sua aparição represente uma mudança real de camada de progressão.
+Nos Prestígios, a Mineração passa a utilizar materiais cada vez mais excepcionais, preservando a mesma convenção de nomenclatura.
+
+A progressão temática completa será:
+
+```text
+Normal       → Natureza
+Prestígio I  → Sobrenatural
+Prestígio II → Guerra
+Prestígio III→ Divindades
+```
+
+A evolução representa conceitualmente:
+
+> **terra → sobrenatural → história → mito**
 
 ##### Mineração — progressão normal 1–99
-Progressão inicial definida:
+A progressão normal utiliza materiais naturais e reconhecíveis.
 
 | Nível | Nome no jogo | Material equivalente | Papel inicial |
 |---:|---|---|---|
@@ -676,7 +710,64 @@ Os níveis entre os grandes desbloqueios continuarão sendo relevantes através 
 
 Os tempos de ação e valores de XP serão definidos posteriormente durante o balanceamento.
 
-##### Utilidade contínua dos materiais
+##### Mineração — Prestígio I: Sobrenatural
+O Prestígio I introduz materiais sobrenaturais. Eles não formam apenas uma escala de poder: cada material possui aplicações próprias.
+
+| Nível P1 | Material | Significado-base | Identidade de crafting |
+|---:|---|---|---|
+| 1 | **Grianchloch** | Quartzo | antigo endgame normal torna-se o ponto de entrada |
+| 15 | **Scáth** | Sombra | equipamentos rápidos, precisão e componentes especiais |
+| 30 | **Gealach** | Lua | Mana, suporte, catalisadores e equipamentos mágicos |
+| 45 | **Fuil** | Sangue | armas físicas e receitas ligadas a Sangramento |
+| 60 | **Cuimhne** | Memória | receitas da civilização antiga e crafting especial |
+| 75 | **Anam** | Alma | Fé, cura, suporte e equipamentos híbridos |
+| 90 | **Réalta** | Estrela | crafting de alto nível e equipamentos excepcionais |
+
+**Cuimhne** será especialmente associada a ruínas e vestígios da civilização antiga. O nome não precisa significar que o material literalmente guarda memórias; sua relação real com o passado poderá permanecer ambígua.
+
+Ao entrar no Prestígio I, a Mineração também utiliza a mecânica já definida de **Extração Dupla**.
+
+##### Mineração — Prestígio II: Guerra
+O Prestígio II utiliza materiais culturalmente associados às marcas físicas deixadas pela guerra antiga.
+
+| Nível P2 | Material | Significado-base | Identidade de crafting |
+|---:|---|---|---|
+| 1 | **Réalta** | Estrela | antigo endgame do P1 torna-se o ponto de entrada |
+| 15 | **Cath** | Batalha | armas, armaduras e equipamentos voltados ao combate |
+| 30 | **Luaith** | Cinzas | ligas, Metalurgia e receitas relacionadas a Fogo |
+| 45 | **Mionn** | Juramento | defesa, Fé e suporte |
+| 60 | **Créacht** | Ferida | Sangramento, dano físico e equipamentos agressivos |
+| 75 | **Fothrach** | Ruína | equipamentos antigos e receitas ligadas à guerra |
+| 90 | **Cogadh** | Guerra | crafting de endgame do P2 e equipamentos especiais |
+
+A sequência possui também uma leitura narrativa:
+
+> **Batalha → Cinzas → Juramentos → Feridas → Ruínas → Guerra**
+
+Esses nomes são associações históricas criadas pelos povos atuais porque os materiais são encontrados repetidamente em locais marcados pelo conflito.
+
+Isso **não confirma** que a guerra criou os materiais. Alguns podem ter sido formados pelo conflito, outros podem apenas ter sido expostos por destruições, e outros podem ser anteriores à própria guerra.
+
+##### Mineração — Prestígio III: Divindades
+O Prestígio III representa a camada máxima da Mineração. Os materiais são tão raros e poderosos que receberam nomes associados a antigas figuras divinas.
+
+| Nível P3 | Material | Associação cultural | Identidade de crafting |
+|---:|---|---|---|
+| 1 | **Cogadh** | Guerra | antigo endgame do P2 torna-se o ponto de entrada |
+| 15 | **Brigid** | metalurgia, criação e cura | Forja avançada, suporte e equipamentos especiais |
+| 30 | **Nuada** | prata, realeza e combate | defesa, precisão e equipamentos de alta qualidade |
+| 45 | **Goibniu** | ferreiros e fabricação de armas | armas, ferramentas e Forja de altíssimo nível |
+| 60 | **Lugh** | habilidade, guerra e múltiplas artes | equipamentos híbridos e builds versáteis |
+| 75 | **Mórrigan** | guerra e destino | crítico, Sangramento, status e equipamentos agressivos |
+| 90 | **Dagda** | força, magia e grande versatilidade | material máximo de crafting do P3 |
+
+Os nomes divinos são **associações culturais**. Sua utilização não confirma que essas divindades realmente existam, que tenham criado os materiais ou que a interpretação religiosa do mundo esteja correta.
+
+Essa regra preserva a ambiguidade da religião e do atributo Fé.
+
+Mesmo os materiais do Prestígio III deverão possuir identidades próprias. `Dagda`, por exemplo, representa um material máximo de crafting, mas não torna automaticamente todos os materiais anteriores inferiores ou desnecessários.
+
+##### Mineração — utilidade contínua dos materiais
 A progressão de Mineração não seguirá a lógica de que um material de nível maior torna automaticamente todos os anteriores obsoletos.
 
 Materiais antigos continuarão sendo utilizados em:
@@ -702,9 +793,179 @@ Iarann
 → pode ser necessário para acessórios específicos sem ser simplesmente "melhor" que todos os outros materiais
 ```
 
+Uma receita de endgame poderá combinar materiais de diferentes camadas:
+
+```text
+Iarann
++
+Fuil
++
+Cogadh
++
+Dagda
++
+material exclusivo de Boss
+```
+
 Regra principal:
 
 > Um material possui função econômica e de crafting própria; nível de desbloqueio não representa uma escala absoluta de superioridade.
+
+##### Lenhador — identidade
+Lenhador seguirá a mesma convenção geral de recursos: nomes principais em irlandês, arte reconhecível quando houver equivalente natural e interface funcional em português.
+
+A progressão temática completa será:
+
+```text
+Normal       → Floresta Natural
+Prestígio I  → Floresta Sobrenatural
+Prestígio II → Eras Antigas
+Prestígio III→ Árvores Sagradas
+```
+
+Cada madeira terá aplicações próprias. Uma madeira liberada mais tarde não deverá ser simplesmente uma versão numericamente melhor da anterior.
+
+##### Lenhador — progressão normal 1–99
+A progressão normal utiliza espécies de árvores reconhecíveis.
+
+| Nível | Nome no jogo | Equivalente | Identidade de uso |
+|---:|---|---|---|
+| 1 | **Giúis** | Pinheiro | construção simples, cabos e componentes básicos |
+| 10 | **Beith** | Bétula | madeira leve, crafting inicial e utensílios |
+| 20 | **Fearn** | Amieiro | peças flexíveis e componentes |
+| 30 | **Saileach** | Salgueiro | madeira flexível, arcos e receitas naturais |
+| 45 | **Coll** | Aveleira | bastões, arcos, ferramentas e componentes especializados |
+| 60 | **Fuinseog** | Freixo | cabos de armas, ferramentas e equipamentos resistentes |
+| 75 | **Dair** | Carvalho | escudos, estruturas e equipamentos pesados |
+| 90 | **Iúr** | Teixo | arcos avançados, armas especiais e crafting de alto nível |
+
+Cada árvore terá seu próprio pool temático de secundários, que poderá incluir itens como:
+
+- resina;
+- casca;
+- galhos;
+- sementes;
+- seivas;
+- componentes raros.
+
+Esses itens secundários não precisam receber nomes estrangeiros quando isso não acrescentar identidade ou quando prejudicar a leitura.
+
+##### Minigame de Lenhador
+O minigame de Lenhador será baseado principalmente em **direção e timing dos cortes**.
+
+O jogador deverá identificar bons pontos ou ângulos de corte e executar os golpes no momento correto.
+
+Melhor desempenho concede o bônus temporário já definido pelo sistema geral de minigames, sem tornar a interação ativa obrigatória para a progressão.
+
+##### Lenhador — Prestígio I: Floresta Sobrenatural
+O Prestígio I introduz madeiras sobrenaturais que continuam visualmente reconhecíveis como madeira, porém apresentam propriedades impossíveis ou incomuns.
+
+| Nível P1 | Madeira | Significado-base | Identidade de crafting |
+|---:|---|---|---|
+| 1 | **Iúr** | Teixo | antigo endgame normal torna-se o ponto de entrada |
+| 15 | **Ceo** | Névoa | arcos leves, precisão e velocidade |
+| 30 | **Oíche** | Noite | furtividade, crítico e equipamentos rápidos |
+| 45 | **Draíocht** | Magia | cajados, catalisadores, Mana e equipamentos mágicos |
+| 60 | **Aisling** | Sonho / visão | híbridos, suporte e componentes especiais |
+| 75 | **Spiorad** | Espírito | Fé, cura, suporte e equipamentos espirituais |
+| 90 | **Síoraí** | Eterno | crafting máximo do P1, resistência e componentes avançados |
+
+Mesmo uma madeira sobrenatural deverá continuar parecendo madeira.
+
+Exemplo conceitual:
+
+```text
+Draíocht
+→ tronco reconhecível
+→ casca escura
+→ veios luminosos discretos
+```
+
+Ao entrar no Prestígio I, Lenhador também desbloqueia **Corte Duplo**, permitindo trabalhar com duas madeiras desbloqueadas simultaneamente, com eficiência reduzida na atividade secundária conforme a regra geral de produção paralela.
+
+##### Lenhador — Prestígio II: Eras Antigas
+O Prestígio II utiliza nomes e identidades relacionados a povos, estruturas, reinos e legados do passado.
+
+| Nível P2 | Madeira | Significado-base | Identidade de crafting |
+|---:|---|---|---|
+| 1 | **Síoraí** | Eterno | antigo endgame do P1 torna-se o ponto de entrada |
+| 15 | **Treibh** | Tribo / povo | arcos, ferramentas e crafting versátil |
+| 30 | **Dún** | Fortaleza | escudos, estruturas e defesa |
+| 45 | **Ríocht** | Reino | equipamentos refinados e acessórios |
+| 60 | **Ríshliocht** | Dinastia | equipamentos únicos e receitas históricas |
+| 75 | **Oidhreacht** | Herança / legado | receitas que combinam materiais de várias eras |
+| 90 | **Seanchas** | Tradição / lore | crafting máximo do P2 e receitas ligadas à civilização antiga |
+
+A sequência possui uma leitura histórica:
+
+> **povos → fortalezas → reinos → dinastias → herança → história**
+
+Os nomes representam associações culturais construídas ao longo do tempo e não significam que a madeira seja literalmente uma fortaleza, reino ou dinastia.
+
+Por exemplo, `Dún` poderá ser encontrada com frequência próxima a fortificações antigas, enquanto `Seanchas` poderá existir em florestas tão antigas que diferentes povos contam histórias contraditórias sobre sua origem.
+
+##### Lenhador — Prestígio III: Árvores Sagradas
+O Prestígio III representa o ápice da skill através de madeiras associadas a grandes árvores sagradas e lendárias.
+
+| Nível P3 | Madeira | Identidade visual / cultural | Especialização principal |
+|---:|---|---|---|
+| 1 | **Seanchas** | antigo endgame do P2 | entrada do P3 |
+| 15 | **Bile** | grande árvore de importância sagrada | crafting ritual, avançado e versátil |
+| 30 | **Eó Mugna** | grande carvalho lendário | defesa, estruturas e escudos |
+| 45 | **Bile Tortan** | freixo lendário | armas, cabos e ferramentas máximas |
+| 60 | **Eó Rossa** | teixo lendário | arcos, precisão, crítico e efeitos especiais |
+| 75 | **Craeb Dáithí** | árvore lendária de madeira clara e padrões incomuns | equipamentos híbridos e crafting complexo |
+| 90 | **Craeb Uisnig** | grande árvore sagrada | madeira máxima do P3 e receitas excepcionais |
+
+A arte deverá continuar respeitando a origem visual de cada madeira. Uma versão lendária de carvalho, freixo ou teixo ainda precisa ser reconhecível como madeira e manter características compatíveis com sua espécie-base.
+
+Assim como nos outros Prestígios, a madeira final não invalida as anteriores.
+
+##### Lenhador — utilidade contínua das madeiras
+Madeiras de todas as camadas continuarão relevantes por funções específicas.
+
+Exemplos:
+
+- **Fuinseog** poderá continuar sendo utilizada em cabos de armas e ferramentas;
+- **Dair** poderá permanecer relevante para escudos e estruturas pesadas;
+- **Iúr** poderá continuar sendo necessário em arcos;
+- **Ceo** poderá ser utilizado em equipamentos que priorizam leveza e velocidade;
+- **Draíocht** poderá permanecer importante para cajados e catalisadores;
+- madeiras históricas e sagradas terão receitas próprias em vez de simplesmente substituírem as anteriores.
+
+Receitas avançadas poderão misturar skills e Prestígios diferentes.
+
+Exemplo conceitual:
+
+```text
+Arco avançado
+
+Iúr
++
+Ceo
++
+Airgead
++
+material de Dungeon
+```
+
+Ou:
+
+```text
+Ferramenta de endgame
+
+Dair
++
+Fuinseog
++
+Goibniu
++
+material especial
+```
+
+Regra principal:
+
+> A progressão amplia as possibilidades de crafting; ela não transforma todos os recursos antigos em materiais descartáveis.
 
 ##### Crafting
 Crafting também fará parte da progressão Idle.
@@ -3294,7 +3555,13 @@ Princípios centrais definidos:
 
 > No Prestígio I, todas as skills desbloqueiam uma forma temática de produção paralela, inicialmente com eficiência reduzida na segunda atividade.
 
-> A Mineração normal utiliza materiais reais com nomes em irlandês e representação visual reconhecível; materiais sobrenaturais ficam principalmente para Prestígios e conteúdos avançados.
+> Recursos importantes do mundo podem utilizar nomes em irlandês seguindo três regras: nome diferente com visual familiar; a mesma coisa sempre recebe o mesmo nome; e palavras estrangeiras não devem prejudicar a clareza dos sistemas.
+
+> A Mineração evolui tematicamente de Natureza para Sobrenatural, Guerra e Divindades, preservando a utilidade de materiais antigos em todas as camadas.
+
+> Nomes de materiais ligados à guerra ou a divindades representam associações culturais e não confirmam sua origem real nem a existência objetiva das figuras religiosas.
+
+> Lenhador evolui de Floresta Natural para Floresta Sobrenatural, Eras Antigas e Árvores Sagradas, mantendo cada madeira útil por propriedades e receitas próprias.
 
 > O Prestígio do personagem concede 5 pontos permanentes para uma Árvore de Prestígio.
 
