@@ -643,7 +643,9 @@ Regra principal:
 > Habilidades e recompensas avançadas de skill devem, sempre que possível, mudar a forma de executar a atividade, e não apenas aumentar percentuais.
 
 ##### Convenção de nomenclatura dos recursos
-Recursos do mundo poderão utilizar nomes em **irlandês** para criar identidade própria, desde que isso não prejudique a leitura do jogo.
+Recursos e nomes culturais do mundo poderão utilizar idiomas inspirados nas tradições que formam sua identidade, principalmente **irlandês** para a vertente céltica e, quando fizer sentido para outra tradição histórica ou cultural, referências **islandesas/nórdicas**.
+
+O mundo não representa literalmente Irlanda ou Islândia. Essas línguas e tradições funcionam como referências para construir culturas próprias do universo do jogo.
 
 A interface, os sistemas, atributos, dificuldades, instruções e descrições continuam utilizando português.
 
@@ -655,9 +657,14 @@ Regras principais:
 
 > **Nunca usar uma palavra estrangeira quando ela só torna uma informação de sistema mais difícil de entender.**
 
+> **A origem linguística de um nome pode funcionar como pista de qual tradição cultural ou histórica o nome pertence.**
+
 Na prática:
 
-- recursos importantes poderão ter nomes em irlandês;
+- os recursos já definidos de Mineração, Lenhador e Pesca mantêm sua nomenclatura principal em irlandês;
+- nomes ligados a uma tradição cultural de inspiração céltica poderão utilizar irlandês;
+- nomes ligados a uma tradição cultural de inspiração islandesa/nórdica poderão utilizar uma convenção linguística própria dessa vertente;
+- a escolha entre essas tradições não deverá ser aleatória: a origem do nome deve possuir coerência cultural ou histórica dentro do mundo;
 - a arte deverá continuar deixando claro o que o recurso representa quando existir um equivalente reconhecível;
 - um mesmo recurso nunca deverá receber nomes diferentes em contextos diferentes;
 - traduções explicativas poderão existir na documentação de design, mas não precisam aparecer permanentemente na interface;
@@ -966,6 +973,156 @@ material especial
 Regra principal:
 
 > A progressão amplia as possibilidades de crafting; ela não transforma todos os recursos antigos em materiais descartáveis.
+
+##### Pesca — identidade
+Pesca seguirá a mesma convenção geral das skills de coleta: o jogador escolhe diretamente o alvo desejado, recebe normalmente uma unidade garantida por ciclo e possui chance de recursos secundários temáticos.
+
+Os peixes e criaturas aquáticas deverão continuar visualmente reconhecíveis como fauna aquática mesmo quando a progressão entrar em conteúdos sobrenaturais ou lendários.
+
+A progressão temática completa será:
+
+```text
+Normal       → Águas Naturais
+Prestígio I  → Águas Sobrenaturais
+Prestígio II → Mar de Guerra
+Prestígio III→ Lendas das Águas
+```
+
+A evolução representa conceitualmente:
+
+> **natureza → sobrenatural → história da guerra → lenda**
+
+Cada espécie terá aplicações próprias em Culinária e crafting. Uma espécie de nível maior não deverá tornar automaticamente as anteriores inúteis.
+
+##### Pesca — progressão normal 1–99
+A progressão normal utiliza espécies reconhecíveis, apresentadas com nomes em irlandês e identidade visual familiar.
+
+| Nível | Nome no jogo | Equivalente | Uso principal |
+|---:|---|---|---|
+| 1 | **Scadán** | Arenque | refeições simples e ingredientes básicos |
+| 10 | **Breac** | Truta | refeições leves e buffs iniciais |
+| 20 | **Sairdín** | Sardinha | óleo, pratos simples e receitas em quantidade |
+| 30 | **Ronnach** | Cavala | refeições energéticas e ingredientes gordurosos |
+| 45 | **Trosc** | Bacalhau | refeições de longa duração e receitas mais completas |
+| 60 | **Bradán** | Salmão | buffs melhores e Culinária avançada |
+| 75 | **Tuinnín** | Atum | refeições de alto valor e buffs físicos |
+| 90 | **Doingean** | Robalo | pratos avançados e ingredientes de endgame normal |
+
+Cada alvo de pesca terá seu próprio pool de recursos secundários.
+
+Esses pools poderão incluir, quando fizer sentido para a espécie:
+
+- escamas;
+- óleo de peixe;
+- espinhas;
+- ovas;
+- dentes;
+- pérolas ou objetos incomuns;
+- componentes raros encontrados durante a pesca.
+
+Itens funcionais comuns, como `Óleo de Peixe`, não precisam receber nomes estrangeiros apenas por pertencerem à skill.
+
+##### Minigame de Pesca
+O minigame de Pesca será baseado em **fisgada e controle de tensão da linha**.
+
+Fluxo conceitual:
+
+```text
+Fisgada
+↓
+jogador reage
+↓
+controla a tensão da linha
+↓
+evita linha frouxa ou tensão excessiva
+↓
+captura
+```
+
+O desempenho concede o bônus temporário definido pelo sistema geral de minigames, sem tornar a interação ativa obrigatória para a progressão.
+
+##### Pesca — Prestígio I: Águas Sobrenaturais
+O Prestígio I introduz fauna aquática sobrenatural que continua reconhecível como peixe ou criatura aquática, mas apresenta propriedades impossíveis ou incomuns.
+
+| Nível P1 | Espécie | Significado-base | Identidade de uso |
+|---:|---|---|---|
+| 1 | **Doingean** | Robalo | antigo endgame normal torna-se o ponto de entrada |
+| 15 | **Tonn** | Onda | velocidade, Stamina e refeições leves |
+| 30 | **Solas** | Luz | Mana, regeneração e receitas de suporte |
+| 45 | **Taibhse** | Fantasma | Arcano, crítico e receitas incomuns |
+| 60 | **Lasair** | Chama | Fogo, resistência a Queimadura e buffs ofensivos |
+| 75 | **Stoirm** | Tempestade | velocidade, precisão e buffs de combate |
+| 90 | **Doimhneacht** | Profundidade | Culinária avançada e componentes especiais do P1 |
+
+O sobrenatural deverá aparecer nas propriedades e detalhes visuais sem destruir a leitura de fauna aquática.
+
+Exemplos conceituais:
+
+- **Taibhse:** peixe pálido e parcialmente translúcido;
+- **Lasair:** escamas vermelho-escuras e brilho interno semelhante a brasas;
+- **Doimhneacht:** grande peixe escuro adaptado a águas extremamente profundas.
+
+Ao entrar no Prestígio I, Pesca também desbloqueia **Linha Dupla**, permitindo trabalhar com dois alvos de pesca já desbloqueados simultaneamente, com eficiência reduzida no alvo secundário conforme a regra geral de produção paralela.
+
+##### Pesca — Prestígio II: Mar de Guerra
+O Prestígio II utiliza espécies culturalmente associadas a portos militares abandonados, destroços, antigas rotas navais e águas marcadas por batalhas.
+
+| Nível P2 | Espécie | Significado-base | Identidade de uso |
+|---:|---|---|---|
+| 1 | **Doimhneacht** | Profundidade | antigo endgame do P1 torna-se o ponto de entrada |
+| 15 | **Ancaire** | Âncora | defesa, resistência e refeições duradouras |
+| 30 | **Cabhlach** | Frota / marinha | buffs de party e receitas produzidas em quantidade |
+| 45 | **Ruathar** | Ataque / incursão | crítico, velocidade e buffs ofensivos |
+| 60 | **Raic** | Destroço / naufrágio | componentes especiais e resistência |
+| 75 | **Báite** | Afundado / submerso | Arcano, resistência e receitas incomuns |
+| 90 | **Uaigh** | Túmulo | Culinária máxima do P2 e receitas excepcionais |
+
+A sequência possui uma leitura narrativa:
+
+> **ancoram → formam uma frota → atacam → tornam-se destroços → afundam → o mar vira túmulo**
+
+Os nomes são associações históricas dadas por pescadores e comunidades atuais.
+
+Isso **não confirma** que a guerra tenha criado ou transformado biologicamente essas espécies. Algumas podem ser anteriores ao conflito, enquanto destroços e campos de batalha podem apenas ter criado novos habitats ou tornado determinadas espécies mais conhecidas.
+
+##### Pesca — Prestígio III: Lendas das Águas
+O Prestígio III utiliza espécies associadas às lendas aquáticas mais antigas.
+
+Esses animais continuam sendo fauna pescável. Seus nomes fazem referência a criaturas lendárias por semelhança de aparência, comportamento ou tradição cultural e não significam que o jogador esteja capturando literalmente seres mitológicos inteligentes.
+
+| Nível P3 | Espécie | Inspiração cultural | Identidade de uso |
+|---:|---|---|---|
+| 1 | **Uaigh** | Túmulo | antigo endgame do P2 torna-se o ponto de entrada |
+| 15 | **Each Uisce** | Cavalo-d'água | Stamina, velocidade e evasão |
+| 30 | **Dobhar-chú** | criatura aquática lendária | Força, crítico e buffs físicos |
+| 45 | **Murúch** | tradição de sereia aquática | Mana, cura e suporte |
+| 60 | **Tarbh Uisce** | touro-d'água | Vida, defesa e resistência |
+| 75 | **Ollphéist** | grande monstro ou serpente aquática | status, receitas excepcionais e buffs agressivos |
+| 90 | **Muirdris** | monstro lendário das águas | ingrediente máximo da Pesca P3 |
+
+Regra narrativa:
+
+> **A cultura dá nome ao desconhecido; o nome não prova que a lenda seja verdadeira.**
+
+A existência dessas espécies não confirma que as criaturas mitológicas que inspiraram seus nomes existiram da forma descrita nas histórias.
+
+##### Pesca — utilidade contínua das espécies
+Peixes e recursos aquáticos antigos continuarão relevantes por funções específicas de Culinária e crafting.
+
+Exemplos:
+
+- **Scadán** poderá continuar sendo útil em receitas simples produzidas em grande quantidade;
+- **Ronnach** poderá permanecer relevante para refeições ligadas a Stamina;
+- **Bradán** poderá ser utilizado em receitas de regeneração;
+- **Tuinnín** poderá participar de refeições voltadas a buffs físicos;
+- **Tonn** poderá continuar relevante para velocidade e Stamina;
+- **Solas** poderá ser utilizado em receitas ligadas a Mana;
+- **Lasair** poderá permanecer ligado a Fogo e resistência a Queimadura;
+- espécies de Prestígios II e III terão funções especializadas em vez de simplesmente substituir as anteriores.
+
+Regra principal:
+
+> O peixe determina a função da receita, não apenas sua potência.
 
 ##### Crafting
 Crafting também fará parte da progressão Idle.
@@ -2942,6 +3099,34 @@ Regra narrativa:
 #### Lore
 Dark Fantasy com construção de mundo inspirada em grandes eras, povos, conflitos e acontecimentos antigos.
 
+##### Identidade geográfica e cultural
+O mundo terá uma identidade de **Dark Fantasy atlântico**, inspirada cultural e geograficamente na transição entre tradições **célticas e nórdicas**, especialmente referências que remetem à Irlanda e à Islândia.
+
+O cenário será inteiramente fictício e não representará literalmente esses países ou sua história real.
+
+A inspiração permite combinar de forma coerente elementos como:
+
+- florestas antigas;
+- penhascos e costas severas;
+- mares frios e violentos;
+- ilhas;
+- montanhas;
+- áreas vulcânicas;
+- ruínas antigas;
+- fortalezas costeiras.
+
+As diferentes tradições culturais do mundo já tiveram contato entre si antes da guerra atual. Comércio, migrações, conflitos e civilizações antigas poderão ter deixado camadas linguísticas e arquitetônicas diferentes nos mesmos territórios.
+
+A Cidade Livre funciona como um ponto importante de encontro entre essas influências culturais, reforçando seu papel de território neutro, comércio e convivência entre povos diferentes.
+
+A diferença entre tradições linguísticas também poderá servir como pista narrativa. Um nome de origem cultural diferente pode indicar outra época, outro povo ou outra camada histórica do mundo.
+
+Humanos e monstros não representam diretamente povos históricos reais. As referências célticas e nórdicas servem como inspiração estética, linguística e cultural para sociedades próprias do universo do jogo.
+
+Regra principal:
+
+> **O mundo possui uma identidade atlântica sombria, inspirada culturalmente na transição entre tradições célticas e nórdicas, sem representar literalmente Irlanda ou Islândia.**
+
 A narrativa principal será construída sobre um conflito político entre **humanos e monstros**.
 
 O jogo inicialmente apresenta grande parte do mundo através da visão humana, na qual monstros são tratados como criaturas inferiores, irracionais ou perigosas.
@@ -3502,6 +3687,23 @@ O mundo deverá transmitir:
 - grandeza perdida;
 - conflito atual.
 
+##### Identidade visual atlântica
+A direção visual do mundo deverá combinar a atmosfera Dark Fantasy com referências do Atlântico Norte e das tradições célticas e nórdicas.
+
+Elementos recorrentes poderão incluir:
+
+- florestas antigas e úmidas;
+- penhascos;
+- costas rochosas;
+- mares frios e violentos;
+- ilhas;
+- montanhas;
+- paisagens vulcânicas;
+- fortalezas e ruínas costeiras;
+- construções e objetos que revelem diferentes camadas culturais do passado.
+
+A combinação dessas referências deve produzir uma identidade própria do universo, e não uma reprodução histórica direta de Irlanda, Islândia ou qualquer outro país real.
+
 ##### Estilos
 - **Minimalista:** reduzir excesso de informação.
 - **Elegante:** interface limpa e organizada.
@@ -3562,6 +3764,14 @@ Princípios centrais definidos:
 > Nomes de materiais ligados à guerra ou a divindades representam associações culturais e não confirmam sua origem real nem a existência objetiva das figuras religiosas.
 
 > Lenhador evolui de Floresta Natural para Floresta Sobrenatural, Eras Antigas e Árvores Sagradas, mantendo cada madeira útil por propriedades e receitas próprias.
+
+> Pesca evolui de Águas Naturais para Águas Sobrenaturais, Mar de Guerra e Lendas das Águas, mantendo espécies antigas relevantes por suas funções próprias em Culinária e crafting.
+
+> Nomes lendários da Pesca são associações culturais das espécies e não confirmam literalmente a existência das criaturas mitológicas que os inspiraram.
+
+> O mundo possui identidade atlântica sombria inspirada na transição entre tradições célticas e nórdicas, sem representar literalmente Irlanda ou Islândia.
+
+> A origem linguística de nomes pode funcionar como pista cultural e histórica, enquanto termos funcionais da interface permanecem em português.
 
 > O Prestígio do personagem concede 5 pontos permanentes para uma Árvore de Prestígio.
 
