@@ -286,13 +286,13 @@ Regra principal:
 ##### Skills iniciais
 As 7 skills principais serão:
 
-1. **Mineração** → minérios, pedras e gemas.
+1. **Mineração** → minérios, pedras e materiais minerais.
 2. **Lenhador** → madeiras e recursos de árvores.
 3. **Pesca** → peixes e recursos aquáticos.
-4. **Herbologia** → plantas, ervas, fungos e ingredientes raros.
-5. **Metalurgia** → transforma minérios em barras e ligas.
-6. **Forja** → armas, armaduras, equipamentos metálicos, arcos, acessórios, couro, tecidos e outros equipamentos.
-7. **Culinária** → alimentos, buffs, poções, consumíveis e preparados especiais.
+4. **Herbologia** → plantas, ervas, fungos e ingredientes naturais.
+5. **Metalurgia** → transforma materiais minerais em formas processadas, lingotes, ligas e componentes.
+6. **Forja** → armas, armaduras, ferramentas, arcos, acessórios, couro, tecidos e outros equipamentos.
+7. **Culinária** → alimentos, bebidas, poções, elixires, antídotos e preparados especiais.
 
 ##### Skill e atividade
 Uma **skill** representa aquilo que o personagem aprende e evolui.
@@ -301,7 +301,7 @@ Uma **atividade** representa aquilo que o jogador faz utilizando uma skill.
 
 As atividades concedem experiência para a skill relacionada.
 
-Para as skills de coleta, o jogador escolherá diretamente a atividade ou recurso principal que deseja obter, em vez de iniciar uma coleta genérica e depender de aleatoriedade para receber o material desejado.
+Nas skills de coleta, o jogador escolhe diretamente o recurso principal que deseja obter.
 
 Exemplo:
 
@@ -314,14 +314,65 @@ aguarda o tempo da ação
 ↓
 recebe Iarann + XP de Mineração
 ↓
-chance de drops secundários
-↓
 repete automaticamente
 ```
 
 Regra principal:
 
-> Escolher uma atividade específica → aguardar o tempo da ação → receber recurso principal + XP → chance de drops secundários → repetir automaticamente.
+> **Escolher uma atividade específica → aguardar o tempo da ação → receber o recurso ou produto definido + XP → repetir automaticamente.**
+
+##### Atividades Idle e previsibilidade
+Atividades Idle **não geram drops secundários aleatórios**.
+
+Cada atividade entrega somente:
+
+- o recurso ou produto que o jogador escolheu obter;
+- XP da skill;
+- possíveis unidades adicionais **desse mesmo resultado**, quando algum bônus permitir.
+
+Exemplo:
+
+```text
+Seleciona Iarann
+↓
+resultado normal: 1 Iarann
+↓
+bônus de quantidade é ativado
+↓
+resultado: unidades adicionais de Iarann
+```
+
+O bônus nunca transforma a atividade em uma fonte aleatória de outros itens.
+
+Não existirão, como efeito colateral aleatório da execução Idle:
+
+- gemas inesperadas;
+- sementes aleatórias;
+- resinas aleatórias;
+- escamas aleatórias;
+- pós ou resíduos aleatórios;
+- componentes raros aleatórios;
+- materiais secretos aleatórios.
+
+Regra principal:
+
+> **O jogador sabe o que está produzindo. A aleatoriedade do Idle não deve multiplicar desnecessariamente a quantidade de itens e fontes de obtenção.**
+
+##### Fontes explícitas para materiais especiais
+Materiais especiais e raros continuam existindo, porém deverão possuir fontes claras de obtenção.
+
+Poderão vir de:
+
+- atividades próprias desbloqueáveis;
+- receitas próprias;
+- Dungeons;
+- Bosses;
+- eventos;
+- exploração;
+- quests;
+- conteúdos ou desbloqueios de Prestígio.
+
+Se determinado componente precisar existir no crafting, o jogador deverá conseguir identificar **onde buscá-lo**, em vez de depender de um drop secundário escondido dentro de outra atividade Idle.
 
 ##### Estrutura das atividades de coleta
 A estrutura-base será utilizada principalmente por:
@@ -331,13 +382,12 @@ A estrutura-base será utilizada principalmente por:
 - Pesca;
 - Herbologia.
 
-Cada atividade terá:
+Cada atividade de coleta terá:
 
 - recurso principal definido;
 - requisito de nível quando aplicável;
 - tempo próprio por ação;
 - experiência da skill;
-- pool próprio de recursos secundários;
 - repetição automática enquanto estiver ativa.
 
 O tempo exato das ações será definido durante o balanceamento.
@@ -349,87 +399,75 @@ Como base, cada ciclo de uma atividade de coleta concederá normalmente:
 
 > **1 unidade garantida do recurso principal.**
 
-Ferramentas, Prestígio, habilidades e outros efeitos poderão gerar unidades adicionais.
+Ferramentas, Prestígio, habilidades e outros efeitos poderão gerar unidades adicionais do mesmo recurso.
 
-A quantidade-base e os modificadores específicos poderão variar durante o balanceamento, mas o jogador deverá ter uma fonte previsível do recurso principal escolhido.
+A quantidade-base e os modificadores específicos poderão variar durante o balanceamento, mas o jogador deverá possuir uma fonte previsível do recurso escolhido.
 
-##### Recursos secundários
-Cada atividade terá seu próprio pequeno pool temático de recursos secundários.
+##### Estrutura das atividades de produção
+Metalurgia, Forja e Culinária utilizam receitas.
 
-Exemplo conceitual:
+Fluxo geral:
 
 ```text
-Atividade de Mineração
-
-Garantido:
-→ recurso principal escolhido
-→ XP de Mineração
-
-Possíveis secundários:
-→ minerais complementares
-→ gemas
-→ cristais
-→ materiais raros
-→ componentes de crafting ou upgrade
+Seleciona receita
+↓
+consome os materiais definidos
+↓
+aguarda o tempo de produção
+↓
+recebe o produto definido + XP
+↓
+repete enquanto houver materiais e a produção estiver ativa
 ```
 
-Os recursos secundários poderão ser utilizados em:
+A produção normal não falha.
 
-- crafting;
-- ligas e componentes de Metalurgia;
-- fabricação de ferramentas;
-- fabricação de equipamentos;
-- upgrades +1;
-- upgrades +2 como componentes complementares.
+Quantidade consumida, quantidade produzida e tempo de cada receita serão definidos individualmente e balanceados posteriormente.
 
-A regra do upgrade +2 permanece válida:
-
-> Um upgrade +2 exige pelo menos um material especial proveniente de conteúdo como Dungeon, Boss ou evento.
-
-Um recurso raro obtido em uma atividade comum poderá participar da receita do +2, mas não substitui sozinho esse componente especial obrigatório.
-
-Recursos secundários poderão aparecer raramente antes de o jogador liberar uma atividade que permita obtê-los diretamente.
-
-Regra principal:
-
-> O recurso principal oferece produção previsível; os recursos secundários conectam a atividade ao crafting, aos upgrades e a outras formas de progressão.
+Produtos intermediários como ligas, extratos, óleos, essências ou materiais refinados deverão existir como **receitas ou atividades próprias**, e não como subprodutos aleatórios.
 
 ##### Ferramentas de coleta
-As ferramentas de coleta formarão um sistema separado dos equipamentos de combate.
+As ferramentas de coleta formam um sistema separado dos equipamentos de combate.
 
-Elas não ocuparão slots como arma principal, mão secundária, armaduras, anéis ou amuleto.
+Elas não ocupam slots como arma principal, mão secundária, armaduras, anéis ou amuleto.
 
-Ferramentas previstas:
+Ferramentas definidas:
 
 - **Mineração:** picareta;
 - **Lenhador:** machado de corte;
 - **Pesca:** equipamento de pesca;
-- **Herbologia:** ferramenta própria de coleta/preparo — A definir.
+- **Herbologia:** Kit de Herbologia.
 
-As ferramentas poderão melhorar principalmente:
+O **Kit de Herbologia** representa um conjunto único de instrumentos de coleta e preparo, podendo incluir conceitualmente lâmina, tesoura, pá pequena e recipientes. Ele funciona como um único item de ferramenta no sistema.
+
+Metalurgia e Culinária não possuem ferramenta equipável própria. Fornos, cadinhos, utensílios e outras instalações fazem parte da atividade ou estação de produção, e não de um slot de ferramenta.
+
+##### Atributos de ferramentas
+Ferramentas poderão melhorar principalmente:
 
 - velocidade da atividade;
 - quantidade obtida;
-- chance de recurso extra;
-- chance de drop secundário raro;
+- chance de unidade adicional do mesmo recurso;
 - experiência da skill.
 
 Ferramentas de coleta não deverão utilizar atributos de combate como foco de seus rolls procedurais.
 
+Atributos ligados a chance de drops secundários ou materiais raros aleatórios não fazem parte do sistema.
+
 ##### Obtenção de ferramentas
 Ferramentas de coleta terão somente duas fontes de obtenção:
 
-1. **Fabricação**;
+1. **Fabricação/Forja**;
 2. **Dungeons**.
 
-A fabricação, principalmente através da Forja quando aplicável, será a fonte regular de progressão das ferramentas.
+A Forja será a fonte regular de progressão das ferramentas.
 
 Dungeons poderão fornecer modelos próprios de ferramentas, com identidade ou características-base especiais.
 
 Ferramentas não serão obtidas diretamente como progressão por lojas, NPCs, quests ou Prestígio.
 
 ##### Raridade procedural das ferramentas
-Ferramentas normais utilizarão o mesmo sistema de raridade procedural dos equipamentos.
+Ferramentas normais utilizam o mesmo sistema de raridade procedural dos equipamentos.
 
 ```text
 Comum      → 1 atributo procedural
@@ -441,18 +479,10 @@ Lendário   → 5
 
 Duas ferramentas com o mesmo modelo e raridade poderão possuir combinações diferentes de atributos.
 
-O pool inicial de atributos procedurais será focado em:
-
-- velocidade da atividade;
-- quantidade obtida;
-- chance de recurso extra;
-- chance de drop secundário raro;
-- XP da skill.
-
 Modelos especiais encontrados em Dungeons também poderão utilizar raridade procedural quando forem itens normais e não Relíquias.
 
 ##### Upgrade de ferramentas
-Ferramentas seguirão o mesmo conceito de upgrade dos equipamentos:
+Ferramentas seguem o mesmo conceito de upgrade dos equipamentos:
 
 ```text
 +0
@@ -491,46 +521,42 @@ O jogador poderá ignorar o minigame e continuar progredindo normalmente.
 
 Jogar o minigame com bom desempenho concederá um bônus temporário relacionado à atividade, podendo melhorar principalmente:
 
-- eficiência;
-- taxa de recursos extras;
-- taxa de drops secundários;
-- taxa de drops secundários raros.
+- velocidade ou eficiência;
+- quantidade obtida ou produzida;
+- chance de unidade adicional do mesmo resultado;
+- experiência da skill.
 
-Os valores e a combinação exata dos bônus serão definidos durante o balanceamento.
-
-O minigame não deverá possuir recursos essenciais exclusivos que tornem a progressão Idle incompleta. A vantagem da interação ativa será melhorar temporariamente a eficiência das mesmas atividades e pools de recompensa.
+O minigame não introduz pools de drops próprios e não gera materiais raros aleatórios que não façam parte da atividade escolhida.
 
 O sistema poderá limitar a quantidade de oportunidades de minigame acumuladas. O limite exato será **A definir**.
 
 Regra principal:
 
-> O Idle gera a oportunidade; a interação ativa permite aproveitá-la melhor.
+> **O Idle gera a oportunidade; a interação ativa permite aproveitá-la melhor.**
 
 ##### Direção temática dos minigames
 Cada skill terá uma mecânica compatível com sua fantasia.
 
-Direções iniciais:
+- **Mineração:** quebrar uma formação rochosa identificando e atingindo pontos de fraqueza.
+- **Lenhador:** trabalhar direção e momento dos cortes.
+- **Pesca:** reagir à fisgada e controlar a tensão da linha.
+- **Herbologia — Identificação e Extração:** reconhecer partes corretas da planta e coletá-las na ordem e momento adequados.
+- **Metalurgia — Controle de Fundição:** controlar temperatura, remover impurezas no momento correto e escolher a janela de vazamento.
+- **Forja — Martelamento:** trabalhar ritmo, posição e força dos golpes, evitando excesso em uma mesma região.
+- **Culinária — Sequência e Timing:** executar etapas da receita na ordem correta e dentro das janelas adequadas.
 
-- **Mineração:** quebrar uma formação rochosa identificando e atingindo pontos de fraqueza;
-- **Lenhador:** trabalhar direção e momento dos cortes;
-- **Pesca:** reagir à fisgada e controlar a tensão da linha;
-- **Herbologia:** identificar e coletar corretamente partes da planta;
-- **Metalurgia:** controlar temperatura e ponto do processo;
-- **Forja:** trabalhar ritmo e precisão dos golpes;
-- **Culinária:** controlar tempo e sequência de etapas do preparo.
-
-As implementações exatas poderão ser refinadas posteriormente, preservando o princípio de que cada minigame representa a própria atividade.
+Desempenho ruim no minigame não deverá fazer a produção Idle normal falhar.
 
 ##### Técnicas internas
 Uma skill poderá possuir técnicas ou categorias internas sem que elas sejam novas skills.
 
-Exemplo:
+Forja inclui internamente:
 
 ```text
 FORJA
 │
 ├── Ferraria
-│   └── espadas, machados e armaduras
+│   └── armas, armaduras metálicas, escudos e ferramentas
 │
 ├── Couraria
 │   └── couro e armaduras leves
@@ -539,20 +565,18 @@ FORJA
 │   └── vestes e tecidos
 │
 ├── Arquearia
-│   └── arcos
+│   └── arcos e componentes relacionados
 │
 └── Ourivesaria
-    └── anéis e amuletos
+    └── anéis, amuletos e componentes refinados
 ```
 
 Essas técnicas fazem parte da mesma progressão de Forja.
 
 ##### Herbologia e Culinária
-Herbologia será responsável principalmente pela coleta e preparação de ingredientes naturais.
+Herbologia é responsável principalmente pela coleta de ingredientes naturais.
 
-Culinária será responsável por transformar ingredientes em itens consumíveis.
-
-Exemplo:
+Culinária transforma ingredientes em itens consumíveis.
 
 ```text
 Herbologia
@@ -560,7 +584,8 @@ Herbologia
 Ervas
 Fungos
 Raízes
-Ingredientes raros
+Flores
+Ingredientes naturais
 
 Culinária
 ↓
@@ -588,59 +613,81 @@ Ao realizar Prestígio, a skill volta ao nível 1, porém não repete simplesmen
 
 O antigo conteúdo final passa a ser o novo ponto de partida.
 
-Exemplo:
+Regra principal:
+
+> **O antigo endgame se torna o novo início.**
+
+Cada Prestígio deverá ampliar o conteúdo da skill através de elementos como:
+
+- novos recursos ou produtos;
+- novas atividades ou receitas;
+- novas técnicas;
+- novos equipamentos;
+- novos bônus e possibilidades mecânicas;
+- recompensas exclusivas;
+- novas conexões com Dungeons, Bosses, quests, eventos e exploração.
+
+A progressão deverá ficar mais longa a cada Prestígio.
+
+##### Evolução mecânica das atividades por Prestígio
+A estrutura de produção simultânea será comum às sete skills.
+
+**Progressão Normal**
+
+> **1 atividade ou linha de produção por vez.**
+
+**Prestígio I — Produção Paralela**
+
+> **2 atividades ou linhas simultâneas.**
+
+A atividade principal funciona com eficiência completa como referência de design, enquanto a segunda começa com eficiência reduzida. O percentual exato será definido durante o balanceamento.
+
+Versões temáticas:
+
+- **Mineração — Extração Dupla:** dois recursos minerais.
+- **Lenhador — Corte Duplo:** duas madeiras.
+- **Pesca — Linha Dupla:** dois alvos de pesca.
+- **Herbologia — Coleta Dupla:** duas plantas ou ingredientes.
+- **Metalurgia — Fundição Paralela:** duas receitas de processamento.
+- **Forja — Produção Paralela:** duas fabricações.
+- **Culinária — Preparo Paralelo:** duas receitas.
+
+A segunda atividade precisa estar desbloqueada normalmente.
+
+**Prestígio II — Sincronização e Prioridade**
+
+O jogador mantém duas atividades simultâneas, mas desbloqueia controle avançado sobre a distribuição de eficiência entre elas.
+
+Direções de configuração:
+
+- **Equilibrado:** distribui a eficiência de forma mais uniforme;
+- **Prioridade Principal:** favorece a primeira atividade;
+- **Prioridade Secundária:** favorece a segunda atividade.
+
+Os percentuais e fórmulas exatos serão definidos durante o balanceamento.
+
+A função do P2 é dar **controle** sobre o paralelismo, e não apenas adicionar mais uma linha.
+
+**Prestígio III — Produção Tripla**
+
+> **3 atividades ou linhas de produção simultâneas.**
+
+Todas devem estar individualmente desbloqueadas.
+
+Os valores de eficiência das três linhas serão definidos posteriormente.
+
+Progressão mecânica resumida:
 
 ```text
-Mineração normal
-Nv. 1 → materiais básicos
-...
-Nv. 90 → Grianchloch
-Nv. 99 → conclusão da progressão normal
-
-Prestígio I
-→ antiga progressão permanece relevante
-→ novos materiais e atividades são introduzidos
+Normal       → 1 atividade
+Prestígio I  → 2 atividades
+Prestígio II → 2 atividades + controle avançado de prioridade
+Prestígio III→ 3 atividades
 ```
 
 Regra principal:
 
-> O antigo endgame se torna o novo início.
-
-Cada Prestígio deverá trazer:
-
-- novos conteúdos;
-- novos materiais;
-- novas atividades;
-- novas técnicas;
-- novos drops;
-- novos equipamentos;
-- novos talentos ou bônus;
-- recompensas exclusivas.
-
-A progressão deverá ficar mais longa a cada Prestígio.
-
-##### Produção paralela no Prestígio I
-Ao alcançar **Prestígio I**, todas as skills desbloquearão uma forma temática de produção paralela.
-
-Direções definidas:
-
-- **Mineração — Extração Dupla:** permite trabalhar com dois tipos de minério ao mesmo tempo;
-- **Lenhador — Corte Duplo:** permite trabalhar com duas madeiras simultaneamente;
-- **Pesca — Linha Dupla:** permite trabalhar com dois alvos de pesca;
-- **Herbologia — Coleta Dupla:** permite trabalhar com duas plantas ou ingredientes;
-- **Metalurgia — Fundição Paralela:** permite processar duas linhas de produção;
-- **Forja — Produção Paralela:** permite manter duas fabricações em andamento;
-- **Culinária — Preparo Paralelo:** permite manter dois preparos em andamento.
-
-A segunda atividade começará com eficiência reduzida em relação à atividade principal.
-
-Os percentuais exatos serão definidos durante o balanceamento.
-
-A evolução dessa mecânica nos Prestígios II e III será **A definir** e poderá envolver melhoria de eficiência ou novas formas de executar a skill.
-
-Regra principal:
-
-> Habilidades e recompensas avançadas de skill devem, sempre que possível, mudar a forma de executar a atividade, e não apenas aumentar percentuais.
+> **Prestígio deve mudar a forma de executar a skill, não apenas aumentar números.**
 
 ##### Convenção de nomenclatura dos recursos
 Recursos e nomes culturais do mundo poderão utilizar idiomas inspirados nas tradições que formam sua identidade, principalmente **irlandês** para a vertente céltica e, quando fizer sentido para outra tradição histórica ou cultural, referências **islandesas/nórdicas**.
@@ -661,47 +708,36 @@ Regras principais:
 
 Na prática:
 
-- os recursos já definidos de Mineração, Lenhador e Pesca mantêm sua nomenclatura principal em irlandês;
-- nomes ligados a uma tradição cultural de inspiração céltica poderão utilizar irlandês;
-- nomes ligados a uma tradição cultural de inspiração islandesa/nórdica poderão utilizar uma convenção linguística própria dessa vertente;
-- a escolha entre essas tradições não deverá ser aleatória: a origem do nome deve possuir coerência cultural ou histórica dentro do mundo;
+- recursos já definidos mantêm sua nomenclatura cultural;
+- nomes ligados a uma tradição de inspiração céltica poderão utilizar irlandês;
+- nomes ligados a uma tradição de inspiração islandesa/nórdica poderão utilizar convenção própria dessa vertente;
+- a escolha entre tradições não deverá ser aleatória;
 - a arte deverá continuar deixando claro o que o recurso representa quando existir um equivalente reconhecível;
 - um mesmo recurso nunca deverá receber nomes diferentes em contextos diferentes;
-- traduções explicativas poderão existir na documentação de design, mas não precisam aparecer permanentemente na interface;
-- termos puramente funcionais do sistema permanecerão em português quando a tradução estrangeira reduzir a clareza.
+- traduções explicativas poderão existir na documentação, mas não precisam aparecer permanentemente na interface;
+- termos funcionais do sistema permanecem em português quando a tradução estrangeira reduzir a clareza.
 
-##### Mineração — identidade dos materiais
-A progressão normal de Mineração utilizará materiais reais e reconhecíveis, porém seus nomes apresentados ao jogador serão em **irlandês**.
+---
 
-O ícone e a arte deverão representar claramente o material correspondente do mundo real, permitindo que o jogador crie a associação visual naturalmente.
+### Mineração
 
-Exemplo:
+##### Identidade
+A progressão normal utiliza materiais naturais e reconhecíveis, com nomes em irlandês e visual familiar.
 
-```text
-Iarann
-[imagem claramente reconhecível como minério de ferro]
-```
-
-A interface principal não precisará exibir permanentemente traduções como `Iarann (Ferro)`. O mapeamento abaixo existe para documentação de design e produção.
-
-Nos Prestígios, a Mineração passa a utilizar materiais cada vez mais excepcionais, preservando a mesma convenção de nomenclatura.
-
-A progressão temática completa será:
+Nos Prestígios, a Mineração passa a materiais progressivamente mais excepcionais.
 
 ```text
-Normal       → Natureza
-Prestígio I  → Sobrenatural
-Prestígio II → Guerra
-Prestígio III→ Divindades
+Normal        → Natureza
+Prestígio I   → Sobrenatural
+Prestígio II  → Guerra
+Prestígio III → Divindades
 ```
 
-A evolução representa conceitualmente:
+Evolução conceitual:
 
 > **terra → sobrenatural → história → mito**
 
-##### Mineração — progressão normal 1–99
-A progressão normal utiliza materiais naturais e reconhecíveis.
-
+##### Progressão normal 1–99
 | Nível | Nome no jogo | Material equivalente | Papel inicial |
 |---:|---|---|---|
 | 1 | **Cloch** | Pedra | construção e crafting básico |
@@ -713,13 +749,7 @@ A progressão normal utiliza materiais naturais e reconhecíveis.
 | 75 | **Ór** | Ouro | acessórios e crafting avançado |
 | 90 | **Grianchloch** | Quartzo | crafting de alto nível e componentes especiais |
 
-Os níveis entre os grandes desbloqueios continuarão sendo relevantes através de evolução da skill, acesso a receitas, melhoria de eficiência e outros conteúdos a serem detalhados.
-
-Os tempos de ação e valores de XP serão definidos posteriormente durante o balanceamento.
-
-##### Mineração — Prestígio I: Sobrenatural
-O Prestígio I introduz materiais sobrenaturais. Eles não formam apenas uma escala de poder: cada material possui aplicações próprias.
-
+##### Prestígio I — Sobrenatural
 | Nível P1 | Material | Significado-base | Identidade de crafting |
 |---:|---|---|---|
 | 1 | **Grianchloch** | Quartzo | antigo endgame normal torna-se o ponto de entrada |
@@ -730,13 +760,9 @@ O Prestígio I introduz materiais sobrenaturais. Eles não formam apenas uma esc
 | 75 | **Anam** | Alma | Fé, cura, suporte e equipamentos híbridos |
 | 90 | **Réalta** | Estrela | crafting de alto nível e equipamentos excepcionais |
 
-**Cuimhne** será especialmente associada a ruínas e vestígios da civilização antiga. O nome não precisa significar que o material literalmente guarda memórias; sua relação real com o passado poderá permanecer ambígua.
+**Cuimhne** é especialmente associada a ruínas e vestígios da civilização antiga. O nome não confirma que o material literalmente guarde memórias.
 
-Ao entrar no Prestígio I, a Mineração também utiliza a mecânica já definida de **Extração Dupla**.
-
-##### Mineração — Prestígio II: Guerra
-O Prestígio II utiliza materiais culturalmente associados às marcas físicas deixadas pela guerra antiga.
-
+##### Prestígio II — Guerra
 | Nível P2 | Material | Significado-base | Identidade de crafting |
 |---:|---|---|---|
 | 1 | **Réalta** | Estrela | antigo endgame do P1 torna-se o ponto de entrada |
@@ -747,17 +773,13 @@ O Prestígio II utiliza materiais culturalmente associados às marcas físicas d
 | 75 | **Fothrach** | Ruína | equipamentos antigos e receitas ligadas à guerra |
 | 90 | **Cogadh** | Guerra | crafting de endgame do P2 e equipamentos especiais |
 
-A sequência possui também uma leitura narrativa:
+Leitura narrativa:
 
 > **Batalha → Cinzas → Juramentos → Feridas → Ruínas → Guerra**
 
-Esses nomes são associações históricas criadas pelos povos atuais porque os materiais são encontrados repetidamente em locais marcados pelo conflito.
+Os nomes são associações históricas. Não confirmam que a guerra tenha criado os materiais.
 
-Isso **não confirma** que a guerra criou os materiais. Alguns podem ter sido formados pelo conflito, outros podem apenas ter sido expostos por destruições, e outros podem ser anteriores à própria guerra.
-
-##### Mineração — Prestígio III: Divindades
-O Prestígio III representa a camada máxima da Mineração. Os materiais são tão raros e poderosos que receberam nomes associados a antigas figuras divinas.
-
+##### Prestígio III — Divindades
 | Nível P3 | Material | Associação cultural | Identidade de crafting |
 |---:|---|---|---|
 | 1 | **Cogadh** | Guerra | antigo endgame do P2 torna-se o ponto de entrada |
@@ -768,16 +790,10 @@ O Prestígio III representa a camada máxima da Mineração. Os materiais são t
 | 75 | **Mórrigan** | guerra e destino | crítico, Sangramento, status e equipamentos agressivos |
 | 90 | **Dagda** | força, magia e grande versatilidade | material máximo de crafting do P3 |
 
-Os nomes divinos são **associações culturais**. Sua utilização não confirma que essas divindades realmente existam, que tenham criado os materiais ou que a interpretação religiosa do mundo esteja correta.
+Os nomes divinos são associações culturais e não confirmam a existência objetiva dessas divindades nem que tenham criado os materiais.
 
-Essa regra preserva a ambiguidade da religião e do atributo Fé.
-
-Mesmo os materiais do Prestígio III deverão possuir identidades próprias. `Dagda`, por exemplo, representa um material máximo de crafting, mas não torna automaticamente todos os materiais anteriores inferiores ou desnecessários.
-
-##### Mineração — utilidade contínua dos materiais
-A progressão de Mineração não seguirá a lógica de que um material de nível maior torna automaticamente todos os anteriores obsoletos.
-
-Materiais antigos continuarão sendo utilizados em:
+##### Utilidade contínua
+Materiais antigos continuam relevantes em:
 
 - ligas;
 - equipamentos;
@@ -787,54 +803,25 @@ Materiais antigos continuarão sendo utilizados em:
 - receitas avançadas;
 - componentes especializados.
 
-Exemplos conceituais:
-
-```text
-Stán + Copar
-→ podem continuar sendo necessários em uma liga avançada
-
-Iarann
-→ pode continuar aparecendo em receitas avançadas
-
-Ór
-→ pode ser necessário para acessórios específicos sem ser simplesmente "melhor" que todos os outros materiais
-```
-
-Uma receita de endgame poderá combinar materiais de diferentes camadas:
-
-```text
-Iarann
-+
-Fuil
-+
-Cogadh
-+
-Dagda
-+
-material exclusivo de Boss
-```
-
 Regra principal:
 
-> Um material possui função econômica e de crafting própria; nível de desbloqueio não representa uma escala absoluta de superioridade.
+> **Um material possui função econômica e de crafting própria; nível de desbloqueio não representa uma escala absoluta de superioridade.**
 
-##### Lenhador — identidade
-Lenhador seguirá a mesma convenção geral de recursos: nomes principais em irlandês, arte reconhecível quando houver equivalente natural e interface funcional em português.
+---
 
-A progressão temática completa será:
+### Lenhador
+
+##### Identidade
+Lenhador utiliza nomes principais em irlandês, arte reconhecível e funções próprias para cada madeira.
 
 ```text
-Normal       → Floresta Natural
-Prestígio I  → Floresta Sobrenatural
-Prestígio II → Eras Antigas
-Prestígio III→ Árvores Sagradas
+Normal        → Floresta Natural
+Prestígio I   → Floresta Sobrenatural
+Prestígio II  → Eras Antigas
+Prestígio III → Árvores Sagradas
 ```
 
-Cada madeira terá aplicações próprias. Uma madeira liberada mais tarde não deverá ser simplesmente uma versão numericamente melhor da anterior.
-
-##### Lenhador — progressão normal 1–99
-A progressão normal utiliza espécies de árvores reconhecíveis.
-
+##### Progressão normal 1–99
 | Nível | Nome no jogo | Equivalente | Identidade de uso |
 |---:|---|---|---|
 | 1 | **Giúis** | Pinheiro | construção simples, cabos e componentes básicos |
@@ -846,27 +833,7 @@ A progressão normal utiliza espécies de árvores reconhecíveis.
 | 75 | **Dair** | Carvalho | escudos, estruturas e equipamentos pesados |
 | 90 | **Iúr** | Teixo | arcos avançados, armas especiais e crafting de alto nível |
 
-Cada árvore terá seu próprio pool temático de secundários, que poderá incluir itens como:
-
-- resina;
-- casca;
-- galhos;
-- sementes;
-- seivas;
-- componentes raros.
-
-Esses itens secundários não precisam receber nomes estrangeiros quando isso não acrescentar identidade ou quando prejudicar a leitura.
-
-##### Minigame de Lenhador
-O minigame de Lenhador será baseado principalmente em **direção e timing dos cortes**.
-
-O jogador deverá identificar bons pontos ou ângulos de corte e executar os golpes no momento correto.
-
-Melhor desempenho concede o bônus temporário já definido pelo sistema geral de minigames, sem tornar a interação ativa obrigatória para a progressão.
-
-##### Lenhador — Prestígio I: Floresta Sobrenatural
-O Prestígio I introduz madeiras sobrenaturais que continuam visualmente reconhecíveis como madeira, porém apresentam propriedades impossíveis ou incomuns.
-
+##### Prestígio I — Floresta Sobrenatural
 | Nível P1 | Madeira | Significado-base | Identidade de crafting |
 |---:|---|---|---|
 | 1 | **Iúr** | Teixo | antigo endgame normal torna-se o ponto de entrada |
@@ -877,22 +844,9 @@ O Prestígio I introduz madeiras sobrenaturais que continuam visualmente reconhe
 | 75 | **Spiorad** | Espírito | Fé, cura, suporte e equipamentos espirituais |
 | 90 | **Síoraí** | Eterno | crafting máximo do P1, resistência e componentes avançados |
 
-Mesmo uma madeira sobrenatural deverá continuar parecendo madeira.
+Mesmo a madeira sobrenatural deverá continuar parecendo claramente madeira.
 
-Exemplo conceitual:
-
-```text
-Draíocht
-→ tronco reconhecível
-→ casca escura
-→ veios luminosos discretos
-```
-
-Ao entrar no Prestígio I, Lenhador também desbloqueia **Corte Duplo**, permitindo trabalhar com duas madeiras desbloqueadas simultaneamente, com eficiência reduzida na atividade secundária conforme a regra geral de produção paralela.
-
-##### Lenhador — Prestígio II: Eras Antigas
-O Prestígio II utiliza nomes e identidades relacionados a povos, estruturas, reinos e legados do passado.
-
+##### Prestígio II — Eras Antigas
 | Nível P2 | Madeira | Significado-base | Identidade de crafting |
 |---:|---|---|---|
 | 1 | **Síoraí** | Eterno | antigo endgame do P1 torna-se o ponto de entrada |
@@ -903,17 +857,11 @@ O Prestígio II utiliza nomes e identidades relacionados a povos, estruturas, re
 | 75 | **Oidhreacht** | Herança / legado | receitas que combinam materiais de várias eras |
 | 90 | **Seanchas** | Tradição / lore | crafting máximo do P2 e receitas ligadas à civilização antiga |
 
-A sequência possui uma leitura histórica:
+Leitura histórica:
 
 > **povos → fortalezas → reinos → dinastias → herança → história**
 
-Os nomes representam associações culturais construídas ao longo do tempo e não significam que a madeira seja literalmente uma fortaleza, reino ou dinastia.
-
-Por exemplo, `Dún` poderá ser encontrada com frequência próxima a fortificações antigas, enquanto `Seanchas` poderá existir em florestas tão antigas que diferentes povos contam histórias contraditórias sobre sua origem.
-
-##### Lenhador — Prestígio III: Árvores Sagradas
-O Prestígio III representa o ápice da skill através de madeiras associadas a grandes árvores sagradas e lendárias.
-
+##### Prestígio III — Árvores Sagradas
 | Nível P3 | Madeira | Identidade visual / cultural | Especialização principal |
 |---:|---|---|---|
 | 1 | **Seanchas** | antigo endgame do P2 | entrada do P3 |
@@ -924,171 +872,73 @@ O Prestígio III representa o ápice da skill através de madeiras associadas a 
 | 75 | **Craeb Dáithí** | árvore lendária de madeira clara e padrões incomuns | equipamentos híbridos e crafting complexo |
 | 90 | **Craeb Uisnig** | grande árvore sagrada | madeira máxima do P3 e receitas excepcionais |
 
-A arte deverá continuar respeitando a origem visual de cada madeira. Uma versão lendária de carvalho, freixo ou teixo ainda precisa ser reconhecível como madeira e manter características compatíveis com sua espécie-base.
-
-Assim como nos outros Prestígios, a madeira final não invalida as anteriores.
-
-##### Lenhador — utilidade contínua das madeiras
-Madeiras de todas as camadas continuarão relevantes por funções específicas.
-
-Exemplos:
-
-- **Fuinseog** poderá continuar sendo utilizada em cabos de armas e ferramentas;
-- **Dair** poderá permanecer relevante para escudos e estruturas pesadas;
-- **Iúr** poderá continuar sendo necessário em arcos;
-- **Ceo** poderá ser utilizado em equipamentos que priorizam leveza e velocidade;
-- **Draíocht** poderá permanecer importante para cajados e catalisadores;
-- madeiras históricas e sagradas terão receitas próprias em vez de simplesmente substituírem as anteriores.
-
-Receitas avançadas poderão misturar skills e Prestígios diferentes.
-
-Exemplo conceitual:
-
-```text
-Arco avançado
-
-Iúr
-+
-Ceo
-+
-Airgead
-+
-material de Dungeon
-```
-
-Ou:
-
-```text
-Ferramenta de endgame
-
-Dair
-+
-Fuinseog
-+
-Goibniu
-+
-material especial
-```
+##### Utilidade contínua
+Madeiras antigas mantêm funções próprias. `Fuinseog`, `Dair`, `Iúr`, `Ceo`, `Draíocht` e outras poderão continuar aparecendo em receitas de endgame conforme suas propriedades.
 
 Regra principal:
 
-> A progressão amplia as possibilidades de crafting; ela não transforma todos os recursos antigos em materiais descartáveis.
+> **A progressão amplia as possibilidades de crafting; ela não transforma os recursos antigos em materiais descartáveis.**
 
-##### Pesca — identidade
-Pesca seguirá a mesma convenção geral das skills de coleta: o jogador escolhe diretamente o alvo desejado, recebe normalmente uma unidade garantida por ciclo e possui chance de recursos secundários temáticos.
+---
 
-Os peixes e criaturas aquáticas deverão continuar visualmente reconhecíveis como fauna aquática mesmo quando a progressão entrar em conteúdos sobrenaturais ou lendários.
+### Pesca
 
-A progressão temática completa será:
+##### Identidade
+Os peixes e criaturas aquáticas continuam visualmente reconhecíveis como fauna aquática mesmo quando a progressão entra em conteúdos sobrenaturais ou lendários.
 
 ```text
-Normal       → Águas Naturais
-Prestígio I  → Águas Sobrenaturais
-Prestígio II → Mar de Guerra
-Prestígio III→ Lendas das Águas
+Normal        → Águas Naturais
+Prestígio I   → Águas Sobrenaturais
+Prestígio II  → Mar de Guerra
+Prestígio III → Lendas das Águas
 ```
 
-A evolução representa conceitualmente:
+Evolução conceitual:
 
 > **natureza → sobrenatural → história da guerra → lenda**
 
-Cada espécie terá aplicações próprias em Culinária e crafting. Uma espécie de nível maior não deverá tornar automaticamente as anteriores inúteis.
-
-##### Pesca — progressão normal 1–99
-A progressão normal utiliza espécies reconhecíveis, apresentadas com nomes em irlandês e identidade visual familiar.
-
+##### Progressão normal 1–99
 | Nível | Nome no jogo | Equivalente | Uso principal |
 |---:|---|---|---|
 | 1 | **Scadán** | Arenque | refeições simples e ingredientes básicos |
 | 10 | **Breac** | Truta | refeições leves e buffs iniciais |
-| 20 | **Sairdín** | Sardinha | óleo, pratos simples e receitas em quantidade |
-| 30 | **Ronnach** | Cavala | refeições energéticas e ingredientes gordurosos |
-| 45 | **Trosc** | Bacalhau | refeições de longa duração e receitas mais completas |
+| 20 | **Sairdín** | Sardinha | receitas simples e produção em quantidade |
+| 30 | **Ronnach** | Cavala | refeições energéticas |
+| 45 | **Trosc** | Bacalhau | refeições de longa duração e receitas completas |
 | 60 | **Bradán** | Salmão | buffs melhores e Culinária avançada |
 | 75 | **Tuinnín** | Atum | refeições de alto valor e buffs físicos |
-| 90 | **Doingean** | Robalo | pratos avançados e ingredientes de endgame normal |
+| 90 | **Doingean** | Robalo | pratos avançados e endgame normal |
 
-Cada alvo de pesca terá seu próprio pool de recursos secundários.
-
-Esses pools poderão incluir, quando fizer sentido para a espécie:
-
-- escamas;
-- óleo de peixe;
-- espinhas;
-- ovas;
-- dentes;
-- pérolas ou objetos incomuns;
-- componentes raros encontrados durante a pesca.
-
-Itens funcionais comuns, como `Óleo de Peixe`, não precisam receber nomes estrangeiros apenas por pertencerem à skill.
-
-##### Minigame de Pesca
-O minigame de Pesca será baseado em **fisgada e controle de tensão da linha**.
-
-Fluxo conceitual:
-
-```text
-Fisgada
-↓
-jogador reage
-↓
-controla a tensão da linha
-↓
-evita linha frouxa ou tensão excessiva
-↓
-captura
-```
-
-O desempenho concede o bônus temporário definido pelo sistema geral de minigames, sem tornar a interação ativa obrigatória para a progressão.
-
-##### Pesca — Prestígio I: Águas Sobrenaturais
-O Prestígio I introduz fauna aquática sobrenatural que continua reconhecível como peixe ou criatura aquática, mas apresenta propriedades impossíveis ou incomuns.
-
+##### Prestígio I — Águas Sobrenaturais
 | Nível P1 | Espécie | Significado-base | Identidade de uso |
 |---:|---|---|---|
 | 1 | **Doingean** | Robalo | antigo endgame normal torna-se o ponto de entrada |
 | 15 | **Tonn** | Onda | velocidade, Stamina e refeições leves |
-| 30 | **Solas** | Luz | Mana, regeneração e receitas de suporte |
+| 30 | **Solas** | Luz | Mana, regeneração e suporte |
 | 45 | **Taibhse** | Fantasma | Arcano, crítico e receitas incomuns |
 | 60 | **Lasair** | Chama | Fogo, resistência a Queimadura e buffs ofensivos |
 | 75 | **Stoirm** | Tempestade | velocidade, precisão e buffs de combate |
-| 90 | **Doimhneacht** | Profundidade | Culinária avançada e componentes especiais do P1 |
+| 90 | **Doimhneacht** | Profundidade | Culinária avançada e receitas especiais do P1 |
 
-O sobrenatural deverá aparecer nas propriedades e detalhes visuais sem destruir a leitura de fauna aquática.
-
-Exemplos conceituais:
-
-- **Taibhse:** peixe pálido e parcialmente translúcido;
-- **Lasair:** escamas vermelho-escuras e brilho interno semelhante a brasas;
-- **Doimhneacht:** grande peixe escuro adaptado a águas extremamente profundas.
-
-Ao entrar no Prestígio I, Pesca também desbloqueia **Linha Dupla**, permitindo trabalhar com dois alvos de pesca já desbloqueados simultaneamente, com eficiência reduzida no alvo secundário conforme a regra geral de produção paralela.
-
-##### Pesca — Prestígio II: Mar de Guerra
-O Prestígio II utiliza espécies culturalmente associadas a portos militares abandonados, destroços, antigas rotas navais e águas marcadas por batalhas.
-
+##### Prestígio II — Mar de Guerra
 | Nível P2 | Espécie | Significado-base | Identidade de uso |
 |---:|---|---|---|
 | 1 | **Doimhneacht** | Profundidade | antigo endgame do P1 torna-se o ponto de entrada |
 | 15 | **Ancaire** | Âncora | defesa, resistência e refeições duradouras |
-| 30 | **Cabhlach** | Frota / marinha | buffs de party e receitas produzidas em quantidade |
+| 30 | **Cabhlach** | Frota / marinha | buffs de party e receitas em quantidade |
 | 45 | **Ruathar** | Ataque / incursão | crítico, velocidade e buffs ofensivos |
-| 60 | **Raic** | Destroço / naufrágio | componentes especiais e resistência |
+| 60 | **Raic** | Destroço / naufrágio | resistência e receitas especiais |
 | 75 | **Báite** | Afundado / submerso | Arcano, resistência e receitas incomuns |
 | 90 | **Uaigh** | Túmulo | Culinária máxima do P2 e receitas excepcionais |
 
-A sequência possui uma leitura narrativa:
+Leitura narrativa:
 
 > **ancoram → formam uma frota → atacam → tornam-se destroços → afundam → o mar vira túmulo**
 
-Os nomes são associações históricas dadas por pescadores e comunidades atuais.
+Os nomes são associações históricas. A guerra não é confirmada como causa biológica dessas espécies.
 
-Isso **não confirma** que a guerra tenha criado ou transformado biologicamente essas espécies. Algumas podem ser anteriores ao conflito, enquanto destroços e campos de batalha podem apenas ter criado novos habitats ou tornado determinadas espécies mais conhecidas.
-
-##### Pesca — Prestígio III: Lendas das Águas
-O Prestígio III utiliza espécies associadas às lendas aquáticas mais antigas.
-
-Esses animais continuam sendo fauna pescável. Seus nomes fazem referência a criaturas lendárias por semelhança de aparência, comportamento ou tradição cultural e não significam que o jogador esteja capturando literalmente seres mitológicos inteligentes.
+##### Prestígio III — Lendas das Águas
+As espécies recebem nomes associados a criaturas lendárias por aparência, comportamento ou tradição cultural. O jogador continua pescando fauna aquática; os nomes não confirmam a existência literal dos seres mitológicos.
 
 | Nível P3 | Espécie | Inspiração cultural | Identidade de uso |
 |---:|---|---|---|
@@ -1104,57 +954,486 @@ Regra narrativa:
 
 > **A cultura dá nome ao desconhecido; o nome não prova que a lenda seja verdadeira.**
 
-A existência dessas espécies não confirma que as criaturas mitológicas que inspiraram seus nomes existiram da forma descrita nas histórias.
-
-##### Pesca — utilidade contínua das espécies
-Peixes e recursos aquáticos antigos continuarão relevantes por funções específicas de Culinária e crafting.
-
-Exemplos:
-
-- **Scadán** poderá continuar sendo útil em receitas simples produzidas em grande quantidade;
-- **Ronnach** poderá permanecer relevante para refeições ligadas a Stamina;
-- **Bradán** poderá ser utilizado em receitas de regeneração;
-- **Tuinnín** poderá participar de refeições voltadas a buffs físicos;
-- **Tonn** poderá continuar relevante para velocidade e Stamina;
-- **Solas** poderá ser utilizado em receitas ligadas a Mana;
-- **Lasair** poderá permanecer ligado a Fogo e resistência a Queimadura;
-- espécies de Prestígios II e III terão funções especializadas em vez de simplesmente substituir as anteriores.
+##### Utilidade contínua
+Espécies antigas permanecem úteis devido às funções específicas de Culinária e crafting.
 
 Regra principal:
 
-> O peixe determina a função da receita, não apenas sua potência.
+> **O peixe determina a função da receita, não apenas sua potência.**
 
-##### Crafting
-Crafting também fará parte da progressão Idle.
+---
 
-O jogador poderá iniciar produções em quantidade e deixá-las sendo processadas ao longo do tempo.
+### Herbologia
+
+##### Identidade
+Herbologia trabalha com plantas, ervas, fungos, raízes, flores e ingredientes naturais.
+
+A progressão temática será:
+
+```text
+Normal        → Flora Natural
+Prestígio I   → Flora Sobrenatural
+Prestígio II  → Flora do Norte: Fogo e Gelo
+Prestígio III → Oráculos e Destino
+```
+
+Evolução conceitual:
+
+> **natureza → sobrenatural → terras do norte → destino e mito**
+
+A progressão também será a primeira demonstração forte, dentro das skills, da passagem de uma tradição linguística principalmente céltica para uma vertente nórdica/islandesa.
+
+##### Progressão normal 1–99
+| Nível | Nome | Equivalente | Identidade principal |
+|---:|---|---|---|
+| 1 | **Neantóg** | Urtiga | preparados básicos, Veneno e antídotos iniciais |
+| 10 | **Seamair** | Trevo | suporte, refeições e preparados leves |
+| 20 | **Caisearbhán** | Dente-de-leão | tônicos, regeneração e receitas comuns |
+| 30 | **Fraoch** | Urze | Stamina, resistência e bebidas |
+| 45 | **Aiteann** | Tojo | preparados e componentes especializados |
+| 60 | **Raithneach** | Samambaia / feto | antídotos, resistência e ingredientes naturais |
+| 75 | **Sáiste** | Sálvia | preparados avançados, suporte e recuperação |
+| 90 | **Marós** | Alecrim | Culinária avançada, regeneração e preparados de alto nível |
+
+##### Prestígio I — Flora Sobrenatural
+| Nível P1 | Ingrediente | Significado | Especialização |
+|---:|---|---|---|
+| 1 | **Marós** | Alecrim | antigo endgame normal e entrada do P1 |
+| 15 | **Drúcht** | Orvalho | cura e regeneração |
+| 30 | **Suan** | Sono / repouso | controle, resistência e preparados calmantes |
+| 45 | **Cogar** | Sussurro | precisão, velocidade e preparados sutis |
+| 60 | **Rún** | Segredo | Arcano e catalisadores especiais |
+| 75 | **Beatha** | Vida | Vida, cura e suporte |
+| 90 | **Bás** | Morte | Veneno, antídotos superiores e preparados agressivos |
+
+`Beatha` e `Bás` representam funções diferentes, não uma simples escala de superioridade.
+
+##### Prestígio II — Flora do Norte: Fogo e Gelo
+A nomenclatura passa a utilizar inspiração islandesa/nórdica porque essas espécies são associadas a terras frias, vulcânicas e culturalmente ligadas aos povos do norte.
+
+| Nível P2 | Ingrediente | Significado | Especialização |
+|---:|---|---|---|
+| 1 | **Bás** | antigo P1 | entrada do P2 |
+| 15 | **Mosi** | Musgo | resistência e regeneração |
+| 30 | **Þoka** | Névoa | evasão, precisão e preparados sutis |
+| 45 | **Ís** | Gelo | Gelo, Congelamento e resistência |
+| 60 | **Aska** | Cinzas | toxinas, resistência e preparados especializados |
+| 75 | **Hraun** | Lava | Fogo, defesa e preparados fortes |
+| 90 | **Eldur** | Fogo | Fogo e preparados máximos do P2 |
+
+Leitura da paisagem:
+
+> **Musgo → Névoa → Gelo → Cinzas → Lava → Fogo**
+
+##### Prestígio III — Oráculos e Destino
+| Nível P3 | Ingrediente | Associação | Especialização |
+|---:|---|---|---|
+| 1 | **Eldur** | antigo endgame P2 | entrada do P3 |
+| 15 | **Seiður** | magia / ritual | Arcano, efeitos especiais e catalisadores |
+| 30 | **Völva** | vidente | percepção, suporte e preparados raros |
+| 45 | **Urðr** | destino / passado | resistência e preparados persistentes |
+| 60 | **Verðandi** | tornar-se / presente | regeneração e efeitos de duração |
+| 75 | **Skuld** | obrigação / futuro | crítico e preparados condicionais |
+| 90 | **Örlög** | Destino | ingrediente máximo de Herbologia P3 |
+
+Os nomes representam associações culturais. Não confirmam que figuras, rituais ou forças mitológicas existam literalmente da forma descrita pelas tradições.
+
+##### Minigame — Identificação e Extração
+O jogador identifica quais partes de uma planta devem ser coletadas e em qual ordem.
+
+Dependendo da espécie, a interação poderá envolver:
+
+- folha;
+- flor;
+- raiz;
+- fruto;
+- semente;
+- fungo;
+- outra parte apropriada.
+
+O minigame melhora temporariamente a eficiência da coleta, sem criar itens secundários exclusivos.
+
+##### Ferramenta
+Herbologia utiliza o **Kit de Herbologia**, conforme o sistema geral de ferramentas de coleta.
+
+---
+
+### Metalurgia
+
+##### Conceito
+Metalurgia transforma materiais minerais em formas processadas, lingotes, ligas e componentes utilizáveis por outras skills.
+
+Regra principal:
+
+> **Mineração descobre os materiais. Metalurgia descobre o que é possível fazer com eles.**
+
+Processar um recurso não muda sua identidade sem necessidade.
 
 Exemplo:
 
 ```text
-Produzir 100 barras
-Tempo: 1h 35min
+Iarann
+→ Lingote de Iarann
 ```
 
-##### Receitas
-Receitas poderão ser desbloqueadas por uma combinação de:
+Quando o processo cria um material realmente novo, como uma liga, o produto poderá receber nome próprio.
 
-- nível da skill;
-- Prestígio;
+Produções não geram subprodutos aleatórios. Se um material intermediário for necessário, ele deverá possuir receita própria.
+
+##### Normal — Beneficiamento e Ligas Naturais
+| Nível | Desbloqueio central | Base | Função |
+|---:|---|---|---|
+| 1 | **Cloch Tratada** | Cloch | blocos, estruturas e componentes básicos |
+| 10 | **Lingote de Stán** | Stán | componentes e ligas iniciais |
+| 20 | **Lingote de Copar** | Copar | equipamentos e ferramentas |
+| 30 | **Cré-Umha** | Stán + Copar | liga versátil, equipamentos e ferramentas |
+| 45 | **Fundição Pesada** | Iarann / Luaidhe | lingotes para armas, armaduras e componentes |
+| 60 | **Cruach** | Iarann + componente apropriado | armas, ferramentas e equipamentos resistentes |
+| 75 | **Metais Nobres** | Airgead / Ór | lingotes e ligas para acessórios e crafting especial |
+| 90 | **Grianchloch Refinado** | Grianchloch | catalisadores, componentes arcanos e crafting avançado |
+
+##### Prestígio I — Metalurgia Sobrenatural
+| Nível P1 | Produto | Base principal | Especialização |
+|---:|---|---|---|
+| 1 | **Grianchloch Refinado** | Grianchloch | antigo endgame normal |
+| 15 | **Liga de Scáth** | Scáth + metais anteriores | velocidade, precisão e equipamentos leves |
+| 30 | **Liga de Gealach** | Gealach + Airgead | Mana, catalisadores e equipamentos mágicos |
+| 45 | **Liga de Fuil** | Fuil + Iarann | dano físico e Sangramento |
+| 60 | **Cuimhne Estabilizado** | Cuimhne + minerais anteriores | receitas antigas e componentes históricos |
+| 75 | **Liga de Anam** | Anam + metais nobres | Fé, cura e suporte |
+| 90 | **Liga de Réalta** | Réalta + materiais refinados | crafting excepcional do P1 |
+
+Nem todo processamento precisa gerar um lingote. Materiais poderão ser estabilizados, refinados, vitrificados ou combinados conforme sua natureza.
+
+##### Prestígio II — Metalurgia da Guerra
+| Nível P2 | Produto | Base | Especialização |
+|---:|---|---|---|
+| 1 | **Liga de Réalta** | antigo P1 | entrada |
+| 15 | **Liga de Cath** | Cath + Cruach | armas e armaduras de combate |
+| 30 | **Vidro de Luaith** | Luaith + Grianchloch | Fogo, calor e componentes especiais |
+| 45 | **Liga de Mionn** | Mionn + Airgead | defesa, Fé e suporte |
+| 60 | **Liga de Créacht** | Créacht + materiais apropriados | Sangramento e equipamentos agressivos |
+| 75 | **Fothrach Reforçado** | Fothrach + materiais estruturais | equipamentos antigos, defesa e reconstrução |
+| 90 | **Liga de Cogadh** | Cogadh + ligas anteriores | material máximo da Metalurgia P2 |
+
+##### Prestígio III — Metalurgia Mítica
+| Nível P3 | Produto | Identidade |
+|---:|---|---|
+| 1 | **Liga de Cogadh** | antigo endgame P2 |
+| 15 | **Liga de Brigid** | Forja avançada, suporte e equipamentos especiais |
+| 30 | **Liga de Nuada** | defesa, precisão e equipamentos refinados |
+| 45 | **Liga de Goibniu** | armas, ferramentas e componentes máximos de Forja |
+| 60 | **Liga de Lugh** | equipamentos híbridos e versáteis |
+| 75 | **Liga de Mórrigan** | crítico, Sangramento, status e builds agressivas |
+| 90 | **Liga de Dagda** | material máximo da Metalurgia P3 |
+
+O uso de nomes divinos continua sendo cultural e não comprova a existência real das divindades.
+
+##### Minigame — Controle de Fundição
+A interação ativa trabalha:
+
+- temperatura;
+- remoção de impurezas;
+- momento correto do vazamento.
+
+Desempenho ruim no minigame não destrói a produção normal.
+
+Metalurgia não utiliza ferramenta equipável própria.
+
+---
+
+### Forja
+
+##### Conceito
+Forja transforma os materiais obtidos e processados em possibilidades de build.
+
+Regra principal:
+
+> **Metalurgia cria os materiais. Forja transforma esses materiais em possibilidades de build.**
+
+A progressão libera técnicas, famílias de receitas e combinações, e não uma simples sequência de versões numericamente melhores da mesma arma.
+
+##### Normal — Domínio dos Ofícios
+| Nível | Marco | Principal evolução |
+|---:|---|---|
+| 1 | **Trabalho Básico** | armas, armaduras e ferramentas simples |
+| 10 | **Reforços e Couraria** | couro, tiras, proteções leves e componentes |
+| 20 | **Tecelagem** | vestes, tecidos e equipamentos ligados a Mana/Fé |
+| 30 | **Arquearia** | arcos e estruturas compostas de madeira |
+| 45 | **Ferraria Avançada** | armas e armaduras mais complexas |
+| 60 | **Ourivesaria** | anéis, amuletos e componentes preciosos |
+| 75 | **Construção Híbrida** | receitas que combinam várias skills e tipos de material |
+| 90 | **Obra-Prima** | melhores receitas da progressão normal |
+
+Tipos básicos de equipamento poderão existir antes desses marcos quando o gameplay exigir. Os níveis representam principalmente profundidade e domínio técnico.
+
+##### Prestígio I — Forja Sobrenatural
+| Nível P1 | Técnica | Função |
+|---:|---|---|
+| 1 | **Reforço Sobrenatural** | entrada do P1 e uso avançado do antigo endgame |
+| 15 | **Vinculação** | unir materiais com propriedades muito diferentes |
+| 30 | **Condução** | equipamentos ligados a Mana, Arcano e efeitos especiais |
+| 45 | **Têmpera Reativa** | equipamentos ligados a dano, status e comportamento ofensivo |
+| 60 | **Estrutura Híbrida** | mistura complexa de madeira, metal, cristal, couro e ingredientes |
+| 75 | **Forja Espiritual** | equipamentos ligados a Fé, cura e suporte |
+| 90 | **Obra-Prima Sobrenatural** | equipamentos máximos do P1 |
+
+##### Prestígio II — Forja da Guerra
+O jogador aprende a reproduzir e reinterpretar técnicas encontradas em antigas fortificações, equipamentos militares, ruínas, Dungeons e registros históricos.
+
+| Nível P2 | Técnica | Especialização |
+|---:|---|---|
+| 1 | **Forja de Campanha** | fabricação eficiente e equipamentos funcionais |
+| 15 | **Reforço Militar** | defesa, resistência e equipamentos pesados |
+| 30 | **Têmpera de Cinzas** | Fogo, calor e materiais vitrificados |
+| 45 | **Construção de Juramento** | defesa, suporte e Fé |
+| 60 | **Lâmina de Ferida** | dano físico, crítico e Sangramento |
+| 75 | **Reconstrução Antiga** | receitas provenientes de equipamentos e projetos históricos |
+| 90 | **Obra-Prima de Guerra** | equipamentos máximos do P2 |
+
+A Forja também poderá funcionar como ferramenta narrativa: descobrir uma receita antiga pode revelar como determinada cultura construía seus equipamentos.
+
+##### Prestígio III — Forja Lendária
+O último Prestígio representa o máximo que um artesão consegue fabricar, mas **não permite criar Relíquias**.
+
+| Nível P3 | Técnica | Identidade |
+|---:|---|---|
+| 1 | **Forja Ancestral** | entrada do P3 |
+| 15 | **Obra Sagrada** | equipamentos ligados a tradições e materiais excepcionais |
+| 30 | **Precisão Absoluta** | armas, ferramentas e equipamentos refinados |
+| 45 | **Forja Magistral** | grandes armas e ferramentas de endgame |
+| 60 | **Obra Híbrida Superior** | equipamentos capazes de explorar várias escalas de atributos |
+| 75 | **Forja de Lenda** | receitas extremamente raras provenientes do mundo |
+| 90 | **Obra-Prima Absoluta** | ápice craftável da skill |
+
+Regra principal:
+
+> **Mesmo o melhor item fabricado no Prestígio III continua sendo um equipamento normal e nunca uma Relíquia.**
+
+##### Receitas de Forja
+Receitas poderão ser obtidas por:
+
+- progressão da skill;
 - Dungeons;
+- Bosses;
 - NPCs;
 - quests;
-- eventos;
-- exploração.
+- exploração;
+- segredos;
+- eventos.
 
-Receitas comuns tendem a ser desbloqueadas pela progressão normal.
+Chegar ao nível máximo não significa conhecer automaticamente todas as receitas. O personagem pode possuir capacidade técnica para fabricar um item sem ainda ter descoberto seu projeto.
 
-Receitas especiais poderão exigir conteúdo específico do mundo.
+##### Materiais, receita e raridade
+O equipamento final combina:
+
+```text
+RECEITA
++ MATERIAL
++ RARIDADE PROCEDURAL
+= EQUIPAMENTO FINAL
+```
+
+O material influencia a identidade base do item.
+
+A mesma receita feita com materiais diferentes poderá favorecer propriedades diferentes.
+
+Equipamentos normais produzidos pela Forja utilizam:
+
+```text
+Comum      → 1 atributo procedural
+Incomum    → 2
+Raro       → 3
+Épico      → 4
+Lendário   → 5
+```
+
+Duas peças fabricadas pela mesma receita podem possuir atributos procedurais diferentes.
+
+##### Ferramentas de coleta
+Forja é a fonte regular para fabricação de:
+
+- picaretas;
+- machados de corte;
+- equipamentos de pesca;
+- Kits de Herbologia.
+
+Dungeons continuam sendo a única outra fonte definida para ferramentas melhores.
+
+##### Minigame — Martelamento
+A interação trabalha:
+
+- ritmo;
+- posição;
+- força do golpe.
+
+Receitas diferentes poderão possuir padrões diferentes de martelamento.
+
+O minigame não faz a fabricação normal falhar.
+
+---
+
+### Culinária
+
+##### Conceito
+Culinária transforma recursos renováveis e ingredientes em consumíveis, criando demanda contínua para Pesca, Herbologia e outros sistemas.
+
+Tipos de consumível:
+
+| Tipo | Papel |
+|---|---|
+| **Refeição** | buffs de duração maior |
+| **Bebida** | recuperação ou buffs complementares |
+| **Poção** | efeito imediato ou de curta duração |
+| **Elixir** | efeito forte e especializado |
+| **Antídoto** | remove ou oferece resistência contra status |
+| **Preparado especial** | receitas incomuns ligadas a Dungeons, Bosses, eventos ou lore |
+
+Regra central:
+
+> **Culinária transforma os recursos acumulados pelo jogador em preparação para aquilo que ele pretende enfrentar.**
+
+##### Buffs
+Efeitos da mesma família não acumulam entre si.
+
+Se dois consumíveis concederem o mesmo tipo de bônus, apenas o efeito válido mais forte permanece.
+
+Combinações entre famílias diferentes poderão existir.
+
+Quantidade máxima de efeitos simultâneos e regras exatas de substituição serão **A definir** durante o balanceamento.
+
+##### Normal — Domínio do Preparo
+| Nível | Marco | Desbloqueio principal |
+|---:|---|---|
+| 1 | **Preparo Básico** | refeições simples e bebidas básicas |
+| 10 | **Conservação** | alimentos secos, conservados e preparados duráveis |
+| 20 | **Infusão** | chás, tônicos e preparados herbais simples |
+| 30 | **Cozimento Composto** | receitas com vários ingredientes |
+| 45 | **Extração** | poções, antídotos e concentrados melhores |
+| 60 | **Refeição Completa** | buffs especializados e receitas avançadas |
+| 75 | **Elixires** | efeitos mais fortes e específicos |
+| 90 | **Grande Preparo** | melhores receitas da progressão normal |
+
+##### Prestígio I — Preparos Sobrenaturais
+| Nível P1 | Técnica | Identidade |
+|---:|---|---|
+| 1 | **Preparo Sobrenatural** | entrada do P1 |
+| 15 | **Infusão Superior** | extração eficiente de propriedades sobrenaturais |
+| 30 | **Concentração Arcana** | Mana, Arcano e efeitos mágicos |
+| 45 | **Neutralização** | Veneno, Sangramento e antídotos avançados |
+| 60 | **Preparo Híbrido** | combinações de ingredientes de várias skills |
+| 75 | **Elixir Espiritual** | Fé, cura e suporte |
+| 90 | **Grande Preparo Sobrenatural** | receitas máximas do P1 |
+
+Um ingrediente perigoso poderá participar justamente de uma receita destinada a neutralizar seu efeito, desde que isso esteja explicitamente definido na receita.
+
+##### Prestígio II — Culinária de Campanha
+As técnicas refletem alimentos e preparados desenvolvidos para sobrevivência, marcha, recuperação e guerra.
+
+| Nível P2 | Técnica | Identidade |
+|---:|---|---|
+| 1 | **Ração de Campanha** | alimentos eficientes e duráveis |
+| 15 | **Conservação Extrema** | refeições de longa duração |
+| 30 | **Tônico de Marcha** | Stamina, recuperação e velocidade |
+| 45 | **Medicina de Campo** | poções e antídotos voltados ao combate |
+| 60 | **Refeição de Companhia** | efeitos especialmente úteis em party |
+| 75 | **Preparo de Cerco** | receitas fortes usando ingredientes difíceis |
+| 90 | **Banquete de Guerra** | receitas máximas do P2 |
+
+Receitas poderão contar história cotidiana, incluindo técnicas usadas por soldados, comunidades humanas ou monstruosas e povos que sobreviveram ao conflito.
+
+##### Prestígio III — Banquetes de Lenda
+O P3 combina técnicas e ingredientes de diferentes culturas e eras.
+
+| Nível P3 | Técnica | Identidade |
+|---:|---|---|
+| 1 | **Preparo Ancestral** | entrada do P3 |
+| 15 | **Mesa dos Povos** | receitas que combinam tradições culturais diferentes |
+| 30 | **Essência Perfeita** | alta concentração de propriedades específicas |
+| 45 | **Preparo Condicional** | efeitos especializados para situações específicas |
+| 60 | **Grande Banquete** | buffs voltados à party |
+| 75 | **Receita Perdida** | técnicas raríssimas descobertas no mundo |
+| 90 | **Banquete de Lenda** | ápice da Culinária |
+
+**Mesa dos Povos** reforça a ideia de que diferentes culturas do mundo tiveram contato e trocaram conhecimento ao longo da história.
+
+##### Receitas
+Receitas poderão vir de:
+
+- progressão;
+- NPCs;
+- quests;
+- Dungeons;
+- Bosses;
+- exploração;
+- documentos históricos;
+- parceiros;
+- eventos.
+
+Chegar ao P3 99 não significa conhecer automaticamente todas as receitas.
+
+##### Consumíveis não possuem raridade procedural
+Consumíveis feitos pela mesma receita possuem efeitos fixos e podem ser empilhados normalmente.
+
+Não existirão versões como uma mesma poção Comum, Rara ou Épica com efeitos procedurais diferentes.
+
+A eficiência de Culinária será buscada por elementos como:
+
+- quantidade produzida;
+- velocidade;
+- chance de unidade adicional do mesmo consumível;
+- XP;
+- acesso a receitas melhores.
+
+Regra principal:
+
+> **A mesma receita de consumível gera o mesmo item; o que muda é a eficiência da produção.**
+
+##### Efeitos permanentes
+Consumíveis não concedem aumento permanente de atributo.
+
+Podem oferecer efeitos temporários fortes, mas progressão permanente continua pertencendo aos sistemas próprios do personagem.
+
+##### Minigame — Sequência e Timing
+O minigame trabalha:
+
+- ordem das etapas;
+- timing;
+- controle do preparo.
+
+Uma receita poderá exigir pequenas sequências como:
+
+```text
+cortar
+↓
+misturar
+↓
+aquecer
+↓
+adicionar ingrediente
+↓
+retirar
+```
+
+O minigame não cria uma versão exclusiva do consumível e não gera materiais secundários aleatórios.
+
+Culinária não utiliza ferramenta equipável própria.
+
+A localização diegética exata onde o jogador realiza Culinária permanece **A definir** e não exige a criação de uma nova estrutura inicial na Cidade Livre.
+
+---
+
+### Crafting, receitas e equipamentos
+
+##### Crafting Idle
+Metalurgia, Forja e Culinária fazem parte da progressão Idle.
+
+O jogador poderá iniciar produções em quantidade e deixá-las sendo processadas ao longo do tempo.
 
 ##### Receitas combinadas
-Receitas avançadas poderão exigir múltiplas skills.
+Receitas avançadas poderão exigir múltiplas skills e materiais de diferentes camadas de progressão.
 
-Exemplo:
+Exemplo conceitual:
 
 ```text
 Lâmina Arcana
@@ -1166,93 +1445,36 @@ Herbologia 40
 
 Materiais:
 Liga especial
-Cristal arcano
-Essência rara
+Componente de madeira
+Ingrediente específico
+Material de Dungeon ou Boss, quando a receita exigir
 ```
-
-##### Crafting procedural
-Itens fabricados também poderão gerar raridade e atributos procedurais.
-
-A raridade do item produzido será aleatória.
-
-As chances poderão melhorar conforme:
-
-- nível da skill;
-- Prestígio;
-- qualidade dos materiais;
-- bônus do personagem.
-
-Exemplo:
-
-```text
-Forjar equipamento
-↓
-Comum
-Incomum
-Raro
-Épico
-Lendário
-```
-
-Mesmo dois itens Lendários produzidos pela mesma receita poderão ter atributos diferentes.
-
-Regra principal:
-
-> Crafting também é uma forma de buscar loot.
 
 ##### Materiais e identidade
-O material utilizado poderá influenciar as características base do equipamento.
+Materiais de diferentes níveis não são tratados apenas como substitutos numericamente superiores.
 
-Materiais de diferentes níveis não serão tratados apenas como substitutos numericamente superiores.
-
-Exemplo conceitual:
-
-```text
-Copar
-→ aplicações e ligas próprias
-
-Iarann
-→ base frequente de armas e armaduras
-
-Airgead
-→ aplicações específicas e especiais
-
-Ór
-→ acessórios e componentes avançados
-```
-
-O item final será resultado de três camadas:
+O item final de equipamento utiliza três camadas:
 
 ```text
 RECEITA
-define o item
-
-+
-
-MATERIAL
-define características base
-
-+
-
-RARIDADE PROCEDURAL
-define atributos aleatórios
-
-=
-
-EQUIPAMENTO FINAL
++ MATERIAL
++ RARIDADE PROCEDURAL
+= EQUIPAMENTO FINAL
 ```
+
+Consumíveis são exceção à raridade procedural e seguem as regras próprias de Culinária.
 
 ##### Relíquias e Crafting
 Relíquias nunca poderão ser fabricadas.
 
-Nem Prestígio, receita secreta ou materiais especiais permitirão criar uma Relíquia.
+Nem Prestígio, receita secreta ou materiais especiais permitem criar uma Relíquia.
 
 ##### Upgrade de equipamentos
 O upgrade +1 poderá utilizar materiais obtidos por:
 
-- atividades;
+- atividades explícitas;
 - produção;
-- drops comuns;
+- drops de inimigos;
 - Dungeons.
 
 O upgrade +2 deverá exigir pelo menos um material especial obtido em conteúdos como:
@@ -1261,11 +1483,14 @@ O upgrade +2 deverá exigir pelo menos um material especial obtido em conteúdos
 - Bosses;
 - eventos especiais.
 
+O material obrigatório do +2 não poderá ser substituído por um antigo conceito de drop secundário Idle, pois esse sistema não existe mais.
+
 ##### Desmontagem
-Desmontar equipamentos concederá apenas dinheiro.
+Desmontar equipamentos concede apenas dinheiro.
 
-Não será utilizado como fonte de materiais de crafting.
+Não é utilizado como fonte de materiais de crafting.
 
+---
 
 ## Prestígio do personagem
 
@@ -3745,33 +3970,73 @@ Princípios centrais definidos:
 
 > O antigo endgame de uma skill se torna o novo início após o Prestígio.
 
-> As atividades de coleta oferecem um recurso principal previsível, normalmente 1 unidade garantida por ciclo, além de pools temáticos de recursos secundários.
+> As sete skills principais estão definidas: Mineração, Lenhador, Pesca, Herbologia, Metalurgia, Forja e Culinária.
 
-> Recursos secundários das atividades podem alimentar crafting, ligas, ferramentas e upgrades.
+> Atividades Idle não geram drops secundários aleatórios; entregam somente o recurso ou produto escolhido, XP e possíveis unidades adicionais do mesmo resultado.
 
-> Materiais antigos continuam relevantes em receitas e ligas avançadas; desbloqueio mais alto não significa superioridade absoluta.
+> Materiais especiais e raros devem possuir fontes explícitas de obtenção, como atividades próprias, receitas, Dungeons, Bosses, eventos, exploração, quests ou conteúdos de Prestígio.
 
-> Ferramentas de coleta são separadas do equipamento de combate, possuem raridade procedural, upgrades +0/+1/+2 e são obtidas somente por fabricação ou Dungeons.
+> Nas atividades de coleta, a base normal é 1 unidade garantida do recurso escolhido por ciclo, sujeita a modificadores de quantidade do mesmo recurso.
 
-> Cada skill possui um minigame temático periódico e opcional; o Idle gera a oportunidade e a interação ativa melhora temporariamente a eficiência ou os drops.
+> Ferramentas de coleta são separadas do equipamento de combate, possuem raridade procedural, upgrades +0/+1/+2 e são obtidas somente por Forja ou Dungeons.
 
-> No Prestígio I, todas as skills desbloqueiam uma forma temática de produção paralela, inicialmente com eficiência reduzida na segunda atividade.
+> As ferramentas de coleta definidas são picareta, machado de corte, equipamento de pesca e Kit de Herbologia.
 
-> Recursos importantes do mundo podem utilizar nomes em irlandês seguindo três regras: nome diferente com visual familiar; a mesma coisa sempre recebe o mesmo nome; e palavras estrangeiras não devem prejudicar a clareza dos sistemas.
+> Ferramentas não possuem atributos relacionados a drops secundários; seus bônus se concentram em velocidade, quantidade, unidades adicionais do mesmo recurso e XP.
 
-> A Mineração evolui tematicamente de Natureza para Sobrenatural, Guerra e Divindades, preservando a utilidade de materiais antigos em todas as camadas.
+> Cada skill possui um minigame temático periódico e opcional; o Idle gera a oportunidade e a interação ativa melhora temporariamente a eficiência da atividade escolhida.
 
-> Nomes de materiais ligados à guerra ou a divindades representam associações culturais e não confirmam sua origem real nem a existência objetiva das figuras religiosas.
+> Os minigames não introduzem pools próprios de materiais aleatórios.
 
-> Lenhador evolui de Floresta Natural para Floresta Sobrenatural, Eras Antigas e Árvores Sagradas, mantendo cada madeira útil por propriedades e receitas próprias.
+> A evolução mecânica das skills é: Normal com 1 atividade; Prestígio I com 2 atividades simultâneas; Prestígio II com 2 atividades e controle avançado de prioridade; Prestígio III com 3 atividades simultâneas.
 
-> Pesca evolui de Águas Naturais para Águas Sobrenaturais, Mar de Guerra e Lendas das Águas, mantendo espécies antigas relevantes por suas funções próprias em Culinária e crafting.
+> Prestígio deve mudar a forma de executar uma skill, e não apenas aumentar números.
 
-> Nomes lendários da Pesca são associações culturais das espécies e não confirmam literalmente a existência das criaturas mitológicas que os inspiraram.
+> Materiais antigos continuam relevantes em receitas avançadas; desbloqueio mais alto não significa superioridade absoluta.
+
+> Recursos importantes do mundo podem utilizar nomes inspirados em tradições célticas ou nórdicas quando houver coerência cultural, enquanto termos funcionais da interface permanecem em português.
+
+> A origem linguística de nomes pode funcionar como pista cultural e histórica.
+
+> A Mineração evolui de Natureza para Sobrenatural, Guerra e Divindades.
+
+> Lenhador evolui de Floresta Natural para Floresta Sobrenatural, Eras Antigas e Árvores Sagradas.
+
+> Pesca evolui de Águas Naturais para Águas Sobrenaturais, Mar de Guerra e Lendas das Águas.
+
+> Herbologia evolui de Flora Natural para Flora Sobrenatural, Flora do Norte — Fogo e Gelo, e Oráculos e Destino.
+
+> Herbologia é a primeira skill cuja progressão demonstra fortemente a passagem da vertente linguística céltica para a nórdica/islandesa.
+
+> Metalurgia evolui de Beneficiamento e Ligas Naturais para Metalurgia Sobrenatural, Metalurgia da Guerra e Metalurgia Mítica.
+
+> Mineração descobre materiais; Metalurgia descobre como processá-los e combiná-los.
+
+> Formas processadas mantêm o nome-base quando continuam sendo o mesmo material; novos nomes são usados quando o processo cria um material realmente novo.
+
+> Metalurgia não possui subprodutos aleatórios nem ferramenta equipável própria.
+
+> Forja evolui de Domínio dos Ofícios para Forja Sobrenatural, Forja da Guerra e Forja Lendária.
+
+> Metalurgia cria os materiais; Forja transforma esses materiais em possibilidades de build.
+
+> Mesmo o melhor equipamento fabricado no Prestígio III nunca é uma Relíquia.
+
+> Equipamentos fabricados continuam utilizando raridade e atributos procedurais.
+
+> Culinária evolui de Domínio do Preparo para Preparos Sobrenaturais, Culinária de Campanha e Banquetes de Lenda.
+
+> Culinária produz refeições, bebidas, poções, elixires, antídotos e preparados especiais.
+
+> Consumíveis da mesma receita possuem efeito fixo, são empilháveis e não utilizam raridade procedural.
+
+> Consumíveis não concedem aumentos permanentes de atributo.
+
+> Culinária não possui ferramenta equipável própria; sua localização diegética permanece A definir sem exigir uma nova estrutura inicial na cidade.
 
 > O mundo possui identidade atlântica sombria inspirada na transição entre tradições célticas e nórdicas, sem representar literalmente Irlanda ou Islândia.
 
-> A origem linguística de nomes pode funcionar como pista cultural e histórica, enquanto termos funcionais da interface permanecem em português.
+> Nomes ligados à guerra, divindades, lendas ou destino são associações culturais e não confirmam automaticamente a origem dos materiais nem a verdade objetiva dos mitos.
 
 > O Prestígio do personagem concede 5 pontos permanentes para uma Árvore de Prestígio.
 
