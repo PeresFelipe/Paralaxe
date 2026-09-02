@@ -232,36 +232,279 @@ A eficiência de um equipamento dependerá da build construída pelo jogador.
 
 ## Classes
 
-##### Classes iniciais
-Classes definidas:
+##### Princípio das classes iniciais
+As classes iniciais definem apenas a vantagem de começo do personagem.
 
-- Guerreiro
-- Mago
-- Caçador
-- Acólito
-- Ladino
-- Errante
+Cada classe altera:
 
-##### Funções iniciais
-- **Guerreiro:** combate corpo a corpo, vida, defesa, Força e Vigor.
-- **Mago:** Mente, Inteligência, Mana e magia.
-- **Caçador:** Destreza, precisão e combate à distância.
-- **Acólito:** Fé, Mente, cura e suporte.
-- **Ladino:** Destreza, crítico e velocidade.
-- **Errante:** início equilibrado e sem especialização forte.
+- distribuição inicial dos atributos;
+- equipamento inicial;
+- habilidade inicial.
+
+Nenhuma classe bloqueia permanentemente:
+
+- atributos;
+- armas;
+- equipamentos;
+- skills;
+- categorias de habilidade;
+- caminhos de build.
+
+Regra principal:
+
+> **A classe define o começo, não o destino do personagem.**
+
+##### Orçamento inicial de atributos
+Todas as classes começam com o mesmo orçamento total de atributos.
+
+A referência inicial será:
+
+> **35 pontos distribuídos entre os 7 atributos.**
+
+O total comum é uma regra de design para evitar que uma classe comece com mais poder bruto do que outra.
+
+As distribuições abaixo são **referências de balanceamento**. Os valores individuais poderão ser ajustados depois de validar requisitos das armas, Vida, Mana, Stamina, scaling e dificuldade do início do jogo.
+
+##### Guerreiro
+| Atributo | Referência inicial |
+|---|---:|
+| Vitalidade | 7 |
+| Mente | 2 |
+| Vigor | 7 |
+| Força | 8 |
+| Destreza | 4 |
+| Inteligência | 2 |
+| Fé | 5 |
+
+Equipamento inicial de referência:
+
+- Espada;
+- Escudo;
+- armadura física básica.
+
+Habilidade inicial:
+
+- uma habilidade **Física Agressiva**.
+
+Identidade inicial:
+
+> Combate corpo a corpo, sobrevivência, Força e Vigor.
+
+##### Mago
+| Atributo | Referência inicial |
+|---|---:|
+| Vitalidade | 4 |
+| Mente | 8 |
+| Vigor | 3 |
+| Força | 2 |
+| Destreza | 3 |
+| Inteligência | 10 |
+| Fé | 5 |
+
+Equipamento inicial de referência:
+
+- Cajado;
+- vestes básicas.
+
+Habilidade inicial:
+
+- uma **Magia Agressiva**.
+
+Identidade inicial:
+
+> Mana, Inteligência e acesso imediato a combate mágico.
+
+##### Caçador
+| Atributo | Referência inicial |
+|---|---:|
+| Vitalidade | 5 |
+| Mente | 3 |
+| Vigor | 6 |
+| Força | 4 |
+| Destreza | 10 |
+| Inteligência | 2 |
+| Fé | 5 |
+
+Equipamento inicial de referência:
+
+- Arco;
+- proteção leve.
+
+Habilidade inicial:
+
+- uma habilidade **Física Agressiva à distância**.
+
+Identidade inicial:
+
+> Destreza, precisão e combate à distância.
+
+##### Acólito
+| Atributo | Referência inicial |
+|---|---:|
+| Vitalidade | 5 |
+| Mente | 8 |
+| Vigor | 4 |
+| Força | 3 |
+| Destreza | 2 |
+| Inteligência | 3 |
+| Fé | 10 |
+
+Equipamento inicial de referência:
+
+- arma simples;
+- Catalisador;
+- vestes.
+
+Habilidade inicial:
+
+- um **Milagre Defensivo**.
+
+O Acólito poderá ser a classe cujo primeiro ativo enfatiza diretamente defesa, cura ou suporte.
+
+Identidade inicial:
+
+> Fé, Mente, cura e suporte.
+
+##### Ladino
+| Atributo | Referência inicial |
+|---|---:|
+| Vitalidade | 4 |
+| Mente | 3 |
+| Vigor | 7 |
+| Força | 3 |
+| Destreza | 11 |
+| Inteligência | 4 |
+| Fé | 3 |
+
+Equipamento inicial de referência:
+
+- Adaga;
+- armadura leve.
+
+Habilidade inicial:
+
+- uma habilidade **Física Agressiva** ligada a crítico ou velocidade.
+
+Identidade inicial:
+
+> Destreza, crítico e combate rápido.
+
+##### Errante
+| Atributo | Referência inicial |
+|---|---:|
+| Vitalidade | 5 |
+| Mente | 5 |
+| Vigor | 5 |
+| Força | 5 |
+| Destreza | 5 |
+| Inteligência | 5 |
+| Fé | 5 |
+
+Equipamento inicial de referência:
+
+- arma simples e versátil;
+- proteção básica.
+
+Habilidade inicial:
+
+- uma habilidade **Universal**.
+
+Identidade inicial:
+
+> Não possui vantagem clara, mas também não possui atributo inicialmente atrasado.
 
 ##### Presente inicial
 O presente é escolhido separadamente da classe.
 
-Poderá incluir:
+Existirão sete opções iniciais:
 
-- chave;
-- consumível raro;
-- moeda;
-- anel;
-- material misterioso;
-- item com utilidade futura;
-- opção de não escolher presente.
+| Presente | Função principal |
+|---|---|
+| **Chave Enferrujada** | exploração e segredo |
+| **Bolsa de Moedas** | vantagem econômica inicial |
+| **Frasco Carmesim** | sobrevivência emergencial |
+| **Anel do Viajante** | pequeno bônus versátil enquanto equipado |
+| **Pedra Sem Nome** | lore e conteúdo secreto |
+| **Kit de Sobrevivência** | início confortável com consumíveis normais |
+| **Nenhum Presente** | escolha puramente narrativa |
+
+##### Chave Enferrujada
+Uma chave antiga cuja fechadura não é explicada no começo do jogo.
+
+Poderá abrir futuramente uma sala, cofre, caminho ou evento opcional.
+
+Sua recompensa deverá ser interessante, mas não essencial para a progressão principal nem matematicamente obrigatória.
+
+##### Bolsa de Moedas
+O personagem começa com dinheiro adicional.
+
+A quantidade exata será **A definir** durante o balanceamento.
+
+Sua vantagem deve perder importância naturalmente conforme a economia do personagem cresce.
+
+##### Frasco Carmesim
+Consumível raro de emergência disponível desde o início.
+
+Seu efeito exato será **A definir**, porém deverá servir principalmente para sobrevivência e não conceder progresso permanente.
+
+O item poderá ser obtido novamente no mundo futuramente; não será um conteúdo permanentemente exclusivo da escolha inicial.
+
+##### Anel do Viajante
+Equipamento inicial fixo que aumenta, enquanto equipado:
+
+- Vida máxima;
+- Mana máxima;
+- Stamina máxima.
+
+Os valores exatos serão **A definir**.
+
+O Anel do Viajante:
+
+- ocupa normalmente um slot de Anel;
+- não é uma Relíquia;
+- não possui vantagem permanente depois de ser substituído;
+- deve se tornar naturalmente substituível por equipamentos melhores.
+
+##### Pedra Sem Nome
+Objeto mineral incomum cuja função não é compreendida inicialmente.
+
+Poderá se conectar futuramente a:
+
+- quest secreta;
+- diálogo;
+- evento de Dungeon;
+- civilização antiga;
+- lore.
+
+Não deverá conceder vantagem obrigatória à progressão principal.
+
+##### Kit de Sobrevivência
+Conjunto inicial de consumíveis normais, como refeições, poções ou outros itens apropriados.
+
+A composição e quantidade exatas serão **A definir**.
+
+Tudo presente no kit deverá poder ser obtido normalmente no jogo.
+
+##### Nenhum Presente
+O jogador pode escolher começar sem presente.
+
+Essa opção não concede bônus escondido nem recompensa secreta automática por ter recusado as demais opções.
+
+##### Limites dos presentes
+Presentes iniciais não deverão conceder:
+
+- Relíquia;
+- material obrigatório de upgrade +2;
+- habilidade permanentemente exclusiva;
+- ponto de atributo permanente;
+- Ponto de Prestígio;
+- aumento permanente de XP;
+- item globalmente limitado;
+- equipamento destinado a permanecer dominante por grande parte da progressão.
+
+Regra principal:
+
+> **A classe define como o personagem começa a lutar; o presente define uma pequena vantagem, conveniência ou curiosidade com a qual ele começa a jornada.**
 
 ---
 
@@ -1522,78 +1765,446 @@ Total máximo:
 
 > **15 Pontos de Prestígio.**
 
-##### Árvore de Prestígio
-Os Pontos de Prestígio são permanentes e utilizados em uma árvore própria.
+##### Estrutura da Árvore de Prestígio
+A Árvore de Prestígio possui **32 nós** no total:
 
-A árvore terá mais opções do que pontos disponíveis, obrigando o jogador a fazer escolhas.
+- **6 nós de Corpo**;
+- **6 nós de Arcano**;
+- **6 nós de Espírito**;
+- **6 nós de Técnica**;
+- **8 nós híbridos**.
 
-Ramos principais:
-
-- **Corpo**
-- **Arcano**
-- **Espírito**
-- **Técnica**
-
-Também poderão existir nós híbridos entre os ramos.
-
-##### Corpo
-Focado em:
-
-- Vida;
-- Stamina;
-- Força;
-- resistência;
-- equipamentos pesados.
-
-##### Arcano
-Focado em:
-
-- Mana;
-- Inteligência;
-- regeneração;
-- eficiência de magias;
-- redução de custos.
-
-##### Espírito
-Focado em:
-
-- Fé;
-- cura;
-- suporte;
-- resistência;
-- benefícios para a party.
-
-##### Técnica
-Focado em:
-
-- Destreza;
-- velocidade;
-- crítico;
-- precisão;
-- versatilidade com armas.
-
-##### Nós híbridos
-Poderão existir combinações como:
+Os quatro ramos principais possuem a mesma estrutura de custo:
 
 ```text
-Corpo + Arcano
-→ Guerreiro Arcano
-
-Corpo + Espírito
-→ Paladino
-
-Técnica + Arcano
-→ Lâmina Arcana
-
-Técnica + Espírito
-→ Inquisidor
+Nó 1 → 1 ponto
+Nó 2 → 1 ponto
+Nó 3 → 2 pontos
+Nó 4 → 2 pontos
+Nó 5 → 2 pontos
+Nó 6 → 2 pontos
 ```
 
-Esses nomes representam caminhos de build, não novas classes.
+Completar um ramo principal custa:
+
+> **10 Pontos de Prestígio.**
+
+Completar dois ramos custaria 20 pontos e, portanto, é impossível com o limite de 15.
+
+Um especialista completo pode gastar 10 pontos em seu ramo principal e ainda possuir 5 pontos para complementar a build.
 
 Regra principal:
 
-> Os primeiros nós melhoram a base da build; os nós mais avançados devem mudar a forma de jogar.
+> **A Árvore de Prestígio deve recompensar especialização e experimentação sem criar uma nova classe permanente.**
+
+##### Estrutura dos híbridos
+Existem quatro combinações híbridas iniciais:
+
+1. Corpo + Arcano;
+2. Corpo + Espírito;
+3. Técnica + Arcano;
+4. Técnica + Espírito.
+
+Cada combinação possui dois nós:
+
+- **Híbrido I:** custa 1 ponto;
+- **Híbrido II:** custa 2 pontos e funciona como o capstone daquele caminho híbrido.
+
+O Híbrido I exige pelo menos:
+
+> **3 nós comprados em cada um dos dois ramos relacionados.**
+
+Os três primeiros nós de um ramo custam 4 pontos. Portanto:
+
+```text
+3 nós do ramo A = 4
+3 nós do ramo B = 4
+Híbrido I       = 1
+Total            = 9
+```
+
+O Híbrido II exige:
+
+- Híbrido I;
+- pelo menos 4 nós do primeiro ramo;
+- pelo menos 4 nós do segundo ramo.
+
+Os quatro primeiros nós de um ramo custam 6 pontos. Portanto, o híbrido completo custa exatamente:
+
+```text
+4 nós do ramo A = 6
+4 nós do ramo B = 6
+Híbrido I       = 1
+Híbrido II      = 2
+Total            = 15
+```
+
+Assim, uma build híbrida completa utiliza todo o orçamento disponível e abre mão dos capstones puros dos dois ramos.
+
+##### Regra de balanceamento da árvore
+A árvore seguirá estes princípios:
+
+> **Capstones puros devem representar a melhor expressão daquela especialização.**
+
+> **Híbridos completos devem ser competitivos quando utilizam corretamente os dois lados da combinação.**
+
+> **Um híbrido que ignora metade de sua mecânica deve ser inferior ao especialista correspondente.**
+
+> **Nenhuma combinação deve ser obrigatória para alcançar o melhor desempenho geral do jogo.**
+
+Como referência conceitual de balanceamento, um especialista bem utilizado funciona como referência de 100% de eficiência no próprio papel. Um híbrido bem utilizado deverá ser competitivo em torno dessa referência e poderá superá-la levemente em situações ideais para sua sinergia, sem se tornar superior em todos os contextos.
+
+Percentuais finais, durações, limites internos e fórmulas permanecem **A definir** durante o balanceamento.
+
+---
+
+### Ramo Corpo
+
+Identidade:
+
+> **Vida + Stamina + combate físico + sobrevivência sob pressão.**
+
+##### 1. Constituição — 1 ponto
+Aumenta a **Vida máxima**.
+
+O valor exato será definido durante o balanceamento.
+
+##### 2. Fôlego de Guerra — 1 ponto
+Melhora:
+
+- Stamina máxima;
+- recuperação de Stamina.
+
+##### 3. Ímpeto — 2 pontos
+Utilizar uma **habilidade Física Agressiva** concede temporariamente eficiência física.
+
+O bônus poderá afetar elementos como dano físico, Stamina ou ritmo da próxima ação física, com valores e forma final **A definir**.
+
+##### 4. Inabalável — 2 pontos
+Ao sofrer um golpe que represente uma parcela relevante da Vida máxima, o personagem recebe temporariamente redução de dano recebido.
+
+Pequenos golpes repetidos não deverão ativar o efeito como se fossem ataques pesados.
+
+##### 5. Segundo Fôlego — 2 pontos
+Uma vez por combate, quando o personagem entra em uma condição crítica de Vida, recupera:
+
+- parte da Vida;
+- parte da Stamina.
+
+Não é uma ressurreição.
+
+A interação com um golpe que mate diretamente o personagem será definida no balanceamento.
+
+##### 6. Último Bastião — 2 pontos
+**Capstone de Corpo.**
+
+Conforme a Vida diminui, o personagem recebe progressivamente:
+
+- resistência;
+- recuperação de Stamina.
+
+O efeito utilizará faixas e limites para não incentivar o jogador a permanecer propositalmente com Vida extremamente baixa durante todo o combate.
+
+---
+
+### Ramo Arcano
+
+Identidade:
+
+> **Mana + Magias + rotação + manipulação eficiente de poder mágico.**
+
+##### 1. Reserva Mental — 1 ponto
+Aumenta a **Mana máxima**.
+
+##### 2. Fluxo Arcano — 1 ponto
+Melhora a **regeneração de Mana**.
+
+##### 3. Canalização — 2 pontos
+Utilizar Magias diferentes em sequência concede eficiência temporária à próxima Magia.
+
+Repetir continuamente a mesma Magia não aproveita completamente essa mecânica.
+
+##### 4. Ressonância — 2 pontos
+Magias diferentes utilizadas em sequência acumulam **Ressonância** até um limite.
+
+A Ressonância melhora temporariamente a eficiência mágica.
+
+Repetições excessivas da mesma Magia ou interrupções prolongadas poderão interromper ou reduzir a sequência.
+
+##### 5. Reserva Arcana — 2 pontos
+Uma vez por combate, quando a Mana entra em condição crítica, o personagem obtém uma recuperação ou janela temporária de eficiência excepcional.
+
+A forma final entre recuperação direta, redução temporária de custos ou efeito equivalente permanece **A definir**.
+
+##### 6. Sobrecarga — 2 pontos
+**Capstone de Arcano.**
+
+Ao atingir Ressonância máxima, uma Magia poderá consumir essa preparação para tornar-se **Sobrecarregada**.
+
+Uma Magia Sobrecarregada recebe um efeito fortalecido em troca de consumir a Ressonância e, quando apropriado, possuir custo adicional de Mana.
+
+O comportamento deverá funcionar naturalmente com o combate automático.
+
+Fluxo conceitual:
+
+```text
+rotacionar Magias
+↓
+acumular Ressonância
+↓
+Sobrecarregar
+↓
+consumir a preparação
+↓
+reconstruir Ressonância
+```
+
+---
+
+### Ramo Espírito
+
+Identidade:
+
+> **Fé + cura + suporte + resistência + proteção da party.**
+
+##### 1. Convicção — 1 ponto
+Aumenta **Fé**.
+
+##### 2. Graça Restauradora — 1 ponto
+Melhora a eficiência das **curas realizadas**.
+
+##### 3. Resistência Espiritual — 2 pontos
+Melhora a resistência ao acúmulo de:
+
+- Veneno;
+- Sangramento;
+- Atordoamento;
+- Queimadura;
+- Congelamento.
+
+Não concede imunidade automática.
+
+##### 4. Intercessão — 2 pontos
+Parte de uma cura que ultrapassaria a Vida máxima do alvo pode ser convertida em uma **proteção temporária**, respeitando um limite.
+
+##### 5. Vínculo de Companhia — 2 pontos
+Determinados efeitos defensivos ou de suporte aplicados pelo personagem podem beneficiar parcialmente outros membros da party.
+
+O efeito compartilhado será menor que o efeito principal.
+
+##### 6. Comunhão — 2 pontos
+**Capstone de Espírito.**
+
+Cura ou proteção excedente pode ser parcialmente redirecionada para o membro da party que mais necessita naquele momento.
+
+No conteúdo Solo, o nó terá funcionamento equivalente voltado ao próprio personagem, para não se tornar inútil sem parceiros.
+
+---
+
+### Ramo Técnica
+
+Identidade:
+
+> **Precisão + crítico + velocidade + execução eficiente de sequências.**
+
+##### 1. Mão Firme — 1 ponto
+Melhora **Precisão**.
+
+##### 2. Golpe Preciso — 1 ponto
+Melhora **chance de crítico**.
+
+##### 3. Ritmo de Combate — 2 pontos
+Utilizar habilidades ativas diferentes em sequência gera **Ritmo**.
+
+Repetir continuamente a mesma habilidade não aumenta Ritmo com a mesma eficiência.
+
+##### 4. Oportunismo — 2 pontos
+Acertos críticos ajudam a acelerar ou preservar o Ritmo de Combate.
+
+O efeito terá limites para evitar ciclos infinitos de crítico e aceleração.
+
+##### 5. Execução — 2 pontos
+Contra inimigos em condição de Vida baixa, críticos recebem um efeito adicional.
+
+O efeito poderá envolver dano ou melhoria do ritmo da próxima ação; sua forma exata permanece **A definir**.
+
+##### 6. Mestre do Ritmo — 2 pontos
+**Capstone de Técnica.**
+
+Ao atingir Ritmo máximo, a próxima habilidade ativa recebe uma melhoria especial e o Ritmo é consumido.
+
+Fluxo conceitual:
+
+```text
+sequência de habilidades
+↓
+críticos e Ritmo
+↓
+Ritmo máximo
+↓
+habilidade fortalecida
+↓
+recomeça a construção
+```
+
+---
+
+### Híbridos — Corpo + Arcano
+
+##### Arma Encantada — 1 ponto
+Requer:
+
+- 3 nós de Corpo;
+- 3 nós de Arcano.
+
+Utilizar uma habilidade **Física Agressiva** fortalece temporariamente a próxima Magia.
+
+A mecânica exige que o jogador realmente utilize os dois estilos para aproveitar o investimento híbrido.
+
+##### Guerreiro Arcano — 2 pontos
+Requer:
+
+- Arma Encantada;
+- 4 nós de Corpo;
+- 4 nós de Arcano.
+
+A interação passa a funcionar nos dois sentidos:
+
+```text
+Física
+→ fortalece a próxima Magia
+
+Magia
+→ fortalece a próxima ação Física
+```
+
+Alternar corretamente entre os estilos cria um ciclo próprio de combate.
+
+**Guerreiro Arcano** é o nome do caminho da árvore, não uma nova classe.
+
+---
+
+### Híbridos — Corpo + Espírito
+
+##### Zelo — 1 ponto
+Requer:
+
+- 3 nós de Corpo;
+- 3 nós de Espírito.
+
+Utilizar uma habilidade Defensiva ligada a Fé ou suporte fortalece temporariamente a próxima ação Física apropriada.
+
+##### Bastião Sagrado — 2 pontos
+Requer:
+
+- Zelo;
+- 4 nós de Corpo;
+- 4 nós de Espírito.
+
+Ações físicas podem gerar uma reserva limitada de **Guarda**.
+
+O próximo Milagre ou efeito defensivo apropriado pode consumir essa Guarda para fortalecer proteção ou cura.
+
+Fluxo conceitual:
+
+```text
+combate físico
+↓
+gera Guarda
+↓
+Milagre / defesa consome Guarda
+↓
+efeito fortalecido
+↓
+retorna ao combate
+```
+
+**Bastião Sagrado** representa um caminho de build, não uma nova classe.
+
+---
+
+### Híbridos — Técnica + Arcano
+
+##### Lâmina Arcana — 1 ponto
+Requer:
+
+- 3 nós de Técnica;
+- 3 nós de Arcano.
+
+Um crítico físico pode fortalecer a próxima Magia utilizada.
+
+##### Conjuração Rápida — 2 pontos
+Requer:
+
+- Lâmina Arcana;
+- 4 nós de Técnica;
+- 4 nós de Arcano.
+
+Uma Magia fortalecida pela interação de Lâmina Arcana cria uma janela temporária que favorece a próxima ação física precisa.
+
+Fluxo conceitual:
+
+```text
+crítico físico
+↓
+Magia fortalecida
+↓
+janela física
+↓
+nova ação precisa
+```
+
+Limites internos impedirão ciclos infinitos.
+
+Esse caminho tende conceitualmente a enfatizar mais velocidade e precisão do que Corpo + Arcano.
+
+---
+
+### Híbridos — Técnica + Espírito
+
+##### Golpe de Convicção — 1 ponto
+Requer:
+
+- 3 nós de Técnica;
+- 3 nós de Espírito.
+
+Um crítico pode aumentar temporariamente a eficiência do próximo Milagre.
+
+##### Inquisidor — 2 pontos
+Requer:
+
+- Golpe de Convicção;
+- 4 nós de Técnica;
+- 4 nós de Espírito.
+
+Utilizar um Milagre apropriado fortalece temporariamente a próxima ação física precisa.
+
+O fortalecimento poderá possuir interação com **dano Sagrado** quando fizer sentido para a habilidade ou equipamento utilizado.
+
+Fluxo conceitual:
+
+```text
+crítico
+↓
+Milagre fortalecido
+↓
+ação física fortalecida
+↓
+nova oportunidade de crítico
+```
+
+**Inquisidor** é o nome do caminho híbrido, não uma nova classe.
+
+##### Combinações não utilizadas inicialmente
+**Corpo + Técnica** e **Arcano + Espírito** não recebem caminhos híbridos exclusivos na estrutura inicial.
+
+Motivos:
+
+- Corpo e Técnica já podem combinar naturalmente através de atributos, armas e habilidades físicas;
+- Arcano e Espírito já compartilham Mana e podem coexistir naturalmente em builds de Inteligência/Fé;
+- adicionar todos os pares possíveis aumentaria a árvore sem garantir uma identidade mecânica distinta para cada combinação.
+
+Novos híbridos poderão ser adicionados futuramente se surgir uma razão mecânica forte e não redundante.
 
 ---
 
@@ -1769,7 +2380,6 @@ Ao morrer fora de uma Dungeon:
 A quantidade perdida será calculada conforme o nível do personagem.
 
 Os valores exatos serão definidos durante o balanceamento.
-
 
 ---
 
@@ -2220,7 +2830,6 @@ Não haverá sistema de romance.
 Parceiros recrutados poderão permanecer em uma cidade ou taverna.
 
 Esse local funcionará como ponto de encontro e gerenciamento da party.
-
 
 ##### Primeiro parceiro recrutável — Mira
 **Mira** será a primeira parceira recrutável do jogo.
@@ -2793,7 +3402,6 @@ Elas terão:
 
 O principal valor de uma Relíquia deverá vir de seu efeito único e de sua importância dentro do mundo, e não apenas da quantidade de atributos aleatórios.
 
-
 ##### Raridade
 A raridade normal poderá seguir categorias como:
 
@@ -3183,6 +3791,8 @@ O personagem chega à Cidade Livre procurando:
 No início, ele não conhece sua possível relação com a profecia e não manifesta nenhum sinal especial ligado a ela.
 
 ##### Fluxo inicial
+O início seguirá conceitualmente:
+
 ```text
 Criação do personagem
 ↓
@@ -3194,27 +3804,149 @@ Chegada à Cidade Livre
 ↓
 Conversa curta na Taverna
 ↓
-Primeira atividade
+Primeira atividade escolhida pelo jogador
 ↓
-Primeiros equipamentos
+Primeira melhoria de equipamento / crafting introdutório
+↓
+Primeiro combate simples
+↓
+Primeiro contrato importante
 ↓
 Primeira Dungeon
 ```
 
-##### Tutorial
-O tutorial será curto e integrado ao gameplay.
+##### Criação do personagem
+O jogador escolhe:
 
-Apresentará apenas o essencial:
+- aparência;
+- nome;
+- classe;
+- presente.
 
-- atividades;
-- equipamentos;
-- combate;
-- cidade;
-- Dungeon.
+Na interface de classe, deverão ser apresentadas principalmente:
 
-O jogador começará sozinho.
+- identidade da classe;
+- atributos inicialmente destacados;
+- equipamento inicial;
+- habilidade inicial.
 
-O primeiro parceiro será introduzido posteriormente.
+A interface deverá deixar claro desde o começo:
+
+> **A classe define apenas o início. Todas as formas de combate poderão ser aprendidas posteriormente.**
+
+##### Primeira apresentação da Cidade Livre
+A chegada deverá ser curta e predominantemente visual, sem grande exposição de lore.
+
+O jogador poderá observar elementos como:
+
+- humanos;
+- monstros presentes sob as regras de neutralidade;
+- guardas;
+- comércio;
+- tensão entre indivíduos diferentes.
+
+O objetivo é apresentar que existe um conflito e que a Cidade Livre possui uma situação particular, sem explicar toda a política do mundo imediatamente.
+
+##### Primeira conversa na Taverna
+O primeiro diálogo obrigatório será curto.
+
+Um NPC poderá perguntar por que o personagem chegou à cidade.
+
+Respostas poderão permitir caracterização sem definir uma origem canônica rígida, por exemplo:
+
+- procurar trabalho;
+- procurar dinheiro;
+- fugir do passado;
+- apenas sobreviver.
+
+Essas respostas não precisam determinar uma biografia oficial do protagonista.
+
+##### Primeira atividade Idle
+O jogador não será obrigado a começar pela Mineração.
+
+Ele poderá escolher qual das quatro skills de coleta experimentar primeiro:
+
+1. Mineração;
+2. Lenhador;
+3. Pesca;
+4. Herbologia.
+
+O tutorial inicial ensina somente o fluxo essencial:
+
+```text
+escolher recurso
+↓
+iniciar atividade
+↓
+aguardar tempo da ação
+↓
+receber recurso escolhido + XP
+↓
+atividade continua automaticamente
+```
+
+A primeira experiência deve reforçar a regra de que a atividade entrega o recurso escolhido, sem pools aleatórios secundários.
+
+##### Primeiro crafting e melhoria de equipamento
+Depois da introdução às atividades, o jogador será levado a obter ou produzir uma pequena melhoria de equipamento.
+
+Metalurgia, Forja e Culinária não precisam ser ensinadas todas ao mesmo tempo.
+
+Cada sistema de produção terá uma explicação curta quando o jogador o utilizar pela primeira vez.
+
+##### Primeiro combate
+Antes da primeira Dungeon, o jogador realiza um combate simples.
+
+Esse encontro apresenta apenas o necessário para compreender:
+
+- ataque automático;
+- Vida;
+- Mana;
+- Stamina;
+- habilidade ativa;
+- consumíveis;
+- estilos Agressivo, Defensivo e Misto.
+
+O jogo poderá sugerir inicialmente um estilo de combate compatível com a classe escolhida, sem bloquear a alteração imediata pelo jogador.
+
+Exemplos de sugestão:
+
+- Guerreiro → Agressivo;
+- Acólito → Defensivo;
+- Errante → Misto.
+
+A sugestão nunca funciona como restrição de classe.
+
+##### Primeiro contrato importante
+Após a introdução básica, o jogador recebe o primeiro trabalho relevante ligado à **Ordem de Ferro**.
+
+O contrato leva à antiga fortificação militar que funciona como primeira Dungeon.
+
+A missão é apresentada inicialmente como um trabalho direto de eliminação de monstros, recuperação de um objeto e obtenção de pagamento.
+
+##### Tutorial contextual
+O tutorial seguirá uma regra de **desbloqueio contextual**.
+
+Um sistema avançado só deve ser explicado quando se tornar relevante para o jogador.
+
+Exemplos:
+
+- primeira utilização de Metalurgia → tutorial curto de Metalurgia;
+- primeira utilização de Forja → tutorial curto de Forja;
+- primeira utilização de Culinária → tutorial curto de Culinária;
+- primeira oportunidade de minigame → tutorial do minigame;
+- primeira skill apta a prestigiar → tutorial de Prestígio;
+- primeiro parceiro recrutado → tutorial de party;
+- primeira Relíquia → tutorial de Relicário e, quando aplicável, mercado.
+
+Regra de UX:
+
+> **O jogador aprende jogando; nenhum sistema avançado é explicado antes de se tornar relevante.**
+
+##### Primeiro parceiro
+O jogador começa sozinho.
+
+O primeiro parceiro é introduzido posteriormente e não faz parte da sobrecarga inicial de sistemas do tutorial.
 
 ##### Visão inicial sobre os monstros
 No começo, a narrativa apresentará principalmente a visão humana dominante.
@@ -3591,7 +4323,6 @@ Relatos poderão:
 
 O jogador deverá aprender a desconfiar de versões apresentadas como verdades absolutas.
 
-
 ##### Cidade livre
 A cidade principal existe como território neutro.
 
@@ -3668,7 +4399,6 @@ A descoberta mostrará que as interpretações modernas foram alteradas por:
 - política;
 - guerra;
 - interesses culturais.
-
 
 ##### Civilização antiga
 Existiu uma antiga civilização ou reino extremamente importante antes dos acontecimentos atuais.
@@ -3788,7 +4518,6 @@ Alguns relatos dizem que:
 
 O único consenso é que qualquer tentativa de paz daquele período não produziu um resultado duradouro.
 
-
 ##### Dungeons e narrativa
 Dungeons serão uma das principais formas de contar a história do mundo.
 
@@ -3895,7 +4624,6 @@ Mesmo após qualquer um dos finais, o jogo poderá continuar com:
 - eventos;
 - expansões narrativas.
 
-
 ---
 
 ## Arte
@@ -3968,6 +4696,18 @@ Princípios centrais definidos:
 
 > A classe define o começo, não o destino do personagem.
 
+> Todas as classes iniciais usam o mesmo orçamento total de atributos; a referência atual é 35 pontos distribuídos entre os sete atributos, com distribuições individuais sujeitas a balanceamento.
+
+> Classe inicial altera apenas distribuição inicial, equipamento inicial e habilidade inicial; não cria exclusividades permanentes de build.
+
+> Guerreiro começa orientado a físico e sobrevivência; Mago a Mana e Magias; Caçador a combate à distância; Acólito a Fé e suporte; Ladino a crítico e velocidade; Errante a equilíbrio e habilidade Universal.
+
+> Existem sete opções de presente inicial: Chave Enferrujada, Bolsa de Moedas, Frasco Carmesim, Anel do Viajante, Pedra Sem Nome, Kit de Sobrevivência e Nenhum Presente.
+
+> O Anel do Viajante aumenta Vida, Mana e Stamina máximas enquanto equipado e deve ser naturalmente substituível pela progressão.
+
+> Presentes iniciais não podem criar vantagem permanente dominante nem conteúdo essencial exclusivo.
+
 > O antigo endgame de uma skill se torna o novo início após o Prestígio.
 
 > As sete skills principais estão definidas: Mineração, Lenhador, Pesca, Herbologia, Metalurgia, Forja e Culinária.
@@ -4038,9 +4778,21 @@ Princípios centrais definidos:
 
 > Nomes ligados à guerra, divindades, lendas ou destino são associações culturais e não confirmam automaticamente a origem dos materiais nem a verdade objetiva dos mitos.
 
-> O Prestígio do personagem concede 5 pontos permanentes para uma Árvore de Prestígio.
+> O Prestígio do personagem concede 5 pontos permanentes, até um máximo de 15.
 
-> A árvore terá mais opções do que pontos disponíveis, obrigando escolhas de build.
+> A Árvore de Prestígio possui 32 nós: 24 em Corpo, Arcano, Espírito e Técnica e 8 híbridos.
+
+> Cada ramo principal possui seis nós e custa 10 pontos para ser completado.
+
+> Um híbrido completo exige quatro nós em cada um de dois ramos, mais seus dois nós híbridos, consumindo exatamente os 15 Pontos de Prestígio disponíveis.
+
+> Especialistas mantêm acesso aos capstones puros; híbridos completos abrem mão dos dois capstones em troca de uma sinergia exclusiva entre os ramos.
+
+> Os quatro caminhos híbridos iniciais são Corpo + Arcano, Corpo + Espírito, Técnica + Arcano e Técnica + Espírito.
+
+> Caminhos híbridos são configurações da árvore e não novas classes.
+
+> Capstones puros devem representar a melhor expressão da especialização; híbridos devem ser competitivos quando sua sinergia é realmente utilizada, sem se tornarem obrigatoriamente superiores.
 
 > Cada parceiro fixo deve possuir identidade narrativa e mecânica própria.
 
@@ -4136,7 +4888,13 @@ Princípios centrais definidos:
 
 > O personagem chega de uma terra distante procurando sobrevivência e trabalho, sem conhecer sua relação com a profecia.
 
-> O tutorial será curto e integrado ao fluxo normal do jogo.
+> O tutorial será curto, contextual e integrado ao fluxo normal do jogo.
+
+> A primeira atividade Idle é escolhida pelo jogador entre Mineração, Lenhador, Pesca e Herbologia.
+
+> O jogador aprende sistemas avançados apenas quando eles se tornam relevantes: nenhum sistema avançado deve ser explicado antecipadamente sem necessidade.
+
+> Antes da primeira Dungeon, o jogador experimenta uma atividade, uma pequena melhoria de equipamento e um combate simples.
 
 > A primeira Dungeon apresenta uma comunidade de monstros tentando sobreviver em uma fortificação abandonada.
 
