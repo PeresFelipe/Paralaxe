@@ -340,7 +340,7 @@ Habilidade inicial: **Universal**.
 Identidade: equilíbrio, sem atributo inicialmente atrasado.
 
 ##### Valores ainda não finais
-Nomes e efeitos exatos dos equipamentos e habilidades iniciais permanecem **A definir**. Os valores das distribuições individuais permanecem referências para balanceamento.
+Nomes e efeitos exatos dos equipamentos e habilidades iniciais permanecem **A definir** para o balanceamento final. A Build de Validação 0.1 usa fichas provisórias específicas registradas na seção de Build de Validação deste GDD. Os valores das distribuições individuais permanecem referências para balanceamento.
 
 ---
 
@@ -439,7 +439,7 @@ receber recurso escolhido + XP
 repetir automaticamente
 ```
 
-A quantidade-base normal é **1 unidade garantida por ciclo**. Ferramentas, Prestígio e outros efeitos podem conceder unidades adicionais do mesmo resultado.
+A quantidade-base normal é **1 unidade garantida por ciclo**. Ferramentas, Prestígios e outros efeitos podem conceder unidades adicionais do mesmo resultado.
 
 Não existirão como efeito colateral aleatório do Idle: gemas, sementes, resinas, escamas, pós, componentes raros ou materiais secretos desconectados da atividade escolhida.
 
@@ -1119,7 +1119,7 @@ Leitura padrão:
 - Muito Resistente;
 - Imune.
 
-Modo avançado poderá mostrar percentuais reais. Valores **A definir**.
+Modo avançado poderá mostrar percentuais reais. Valores finais **A definir**; a Build 0.1 possui percentuais provisórios de teste definidos na seção da Build de Validação.
 
 ##### Status
 Exatamente:
@@ -2688,6 +2688,26 @@ Até a Build de Validação 0.1 demonstrar que o núcleo funciona:
 
 Conteúdo já desenhado para etapas futuras permanece documentado, mas não precisa ser implementado imediatamente.
 
+### Regra incremental das builds
+
+A Build 0.1 não é um protótipo descartável.
+
+> **Cada build incrementa a anterior.**
+
+A fundação implementada deve permanecer e ser ampliada nas builds seguintes. Sistemas centrais devem nascer de acordo com a estrutura real pretendida, mesmo quando a primeira build possui pouco conteúdo.
+
+> **Pouco conteúdo, estrutura real.**
+
+Combate, inventário, crafting, skills, equipamentos, Dungeon e save não devem ser soluções temporárias feitas para descarte. Valores, conteúdo, quantidades, tempos, XP, dano, loot e balanceamento podem mudar livremente entre builds.
+
+Referência conceitual:
+
+```text
+Build 0.1 → núcleo real + conteúdo reduzido
+Build 0.2 → correções + aprofundamento dos sistemas existentes
+Build 0.3+ → expansão incremental de conteúdo e sistemas já planejados
+```
+
 ## Recorte integrado principal
 O fluxo mais importante a ser validado é:
 
@@ -2712,6 +2732,10 @@ Fairtheoir
 ↓
 consequência e retorno à Cidade Livre
 ```
+
+O endpoint natural da campanha jogável da Build 0.1 é:
+
+> **primeira conclusão de Dún Liath na dificuldade Fácil.**
 
 Dún Liath funciona como principal ponto de integração porque já conecta:
 - build;
@@ -2745,38 +2769,428 @@ Pesca / Herbologia → Culinária → consumível → combate
 
 O objetivo é validar relações entre sistemas antes de produzir grande volume de conteúdo.
 
+### Conteúdo mínimo inicial das coletas
+
+A Build 0.1 usa inicialmente os dois primeiros recursos de cada coleta como referência de conteúdo:
+
+| Skill | Nível 1 | Nível 10 |
+|---|---|---|
+| Mineração | Cloch | Stán |
+| Lenhador | Giúis | Beith |
+| Pesca | Scadán | Breac |
+| Herbologia | Neantóg | Seamair |
+
+Metalurgia deve possuir pelo menos **Cloch Tratada** e **Lingote de Stán** no primeiro recorte.
+
+Forja e Culinária usam poucas receitas, mas suficientes para provar os ciclos reais de produção.
+
+### Convergência das quatro coletas
+
+Não pode existir uma escolha inicial secretamente correta.
+
+As quatro opções devem gerar uma preparação útil e permitir continuar o tutorial:
+
+```text
+Mineração → material → Metalurgia/Forja → reforço/equipamento → combate
+Lenhador → material → Forja → equipamento/ferramenta → combate
+Pesca → alimento → Culinária → preparação → combate
+Herbologia → preparado → Culinária → recuperação/preparação → combate
+```
+
+O primeiro combate deve ser vencível e compreensível independentemente da coleta escolhida, sem exigir grind desproporcional ou troca obrigatória para outra rota.
+
 ## Sistemas avançados
 Prestígio, progressão longa, dificuldades avançadas, Relíquias e outros estados podem usar ferramentas internas/atalhos de desenvolvimento para validação, sem exigir que o testador reproduza naturalmente centenas de horas.
 
 A forma técnica desses atalhos será definida somente durante implementação.
 
+Mira, Party, segunda Dungeon, Dún Liath Normal/Difícil/Impossível, Arquivo Selado, Selo de Dún Liath, mercado de jogadores, progressão completa 1–99/P3 e minigames completos não precisam fazer parte da progressão natural da campanha da Build 0.1.
+
 ## Mira e Party nesta etapa
 O design de Mira e de sua introdução permanece oficial.
 
-A Build de Validação principal pode priorizar o personagem Solo e Dún Liath antes de implementar a campanha da segunda Dungeon. Party/Aggro/Mira podem ser validados separadamente ou em etapa posterior da build, sem alterar o design já aprovado.
-
-O escopo exato de Mira dentro da primeira build executável permanece **A definir** conforme necessidade de validação.
+A Build de Validação principal prioriza o personagem Solo e Dún Liath antes de implementar a campanha da segunda Dungeon. Party/Aggro/Mira podem ser validados separadamente ou em etapa posterior da build, sem alterar o design já aprovado.
 
 ## Valores de balanceamento da Build
 Valores atualmente marcados como **A definir** podem receber números provisórios explicitamente tratados como **Valores de Balanceamento da Build de Validação**, sem se tornarem valores finais do GDD.
 
-Entre eles:
-- Vida/Mana/Stamina base;
-- scaling de atributos;
-- dano/defesa;
-- custos de Mana/Stamina;
-- cooldowns;
-- buildup/resistências;
-- tempos Idle;
-- XP;
-- receitas/quantidades;
-- economia;
-- perda por morte;
-- loot;
-- raridade;
-- geração de Dún Liath.
-
 Esses números existem para teste e podem mudar livremente conforme resultados.
+
+### Recursos máximos provisórios
+
+```text
+Vida máxima    = 100 + (Vitalidade × 12)
+Mana máxima    = 30  + (Mente × 10)
+Stamina máxima = 60  + (Vigor × 8)
+```
+
+### Regeneração provisória
+
+```text
+Mana por segundo    = 1,5 + (Mente × 0,35)
+Stamina por segundo = 5 + (Vigor × 0,6)
+```
+
+Vida não possui regeneração natural significativa durante combate.
+
+Fora de combate normal, a recuperação pode ser rápida para evitar tempo morto. Em Dungeon, Vida, Mana e Stamina persistem entre encontros até recuperação por sistema apropriado.
+
+### Scaling provisório
+
+Ataques e habilidades usam a estrutura:
+
+```text
+Poder Base + soma(Atributo × multiplicador de scaling)
+```
+
+| Scaling | Multiplicador |
+|---|---:|
+| S | 1,00 |
+| A | 0,85 |
+| B | 0,70 |
+| C | 0,50 |
+| D | 0,30 |
+| E | 0,15 |
+
+### Defesa provisória
+
+```text
+Mitigação = Defesa / (Defesa + 100 + 5 × Nível do atacante)
+```
+
+Teto provisório de mitigação por Defesa: **75%**.
+
+```text
+Dano recebido = Dano bruto × (1 - Mitigação)
+```
+
+### Resistências provisórias
+
+Dano recebido:
+
+| Leitura | Multiplicador |
+|---|---:|
+| Fraco | 125% |
+| Normal | 100% |
+| Resistente | 80% |
+| Muito Resistente | 60% |
+| Imune | 0% |
+
+Buildup recebido:
+
+| Leitura | Multiplicador |
+|---|---:|
+| Fraco | 125% |
+| Normal | 100% |
+| Resistente | 75% |
+| Muito Resistente | 50% |
+| Imune | 0% |
+
+### Precisão provisória
+
+```text
+Precisão = 100 + (Destreza × 2) + bônus
+```
+
+```text
+Chance de acerto = 90% + (Precisão - Evasão) × 0,25%
+```
+
+Limite provisório: mínimo **70%**, máximo **99%**.
+
+### Crítico provisório
+
+```text
+Chance de crítico = 5% + (Destreza × 0,25%) + bônus
+```
+
+Crítico-base: **150% do dano normal**.
+
+### Velocidade provisória
+
+```text
+Bônus de velocidade de ataque = Destreza × 0,4%
+```
+
+Cap provisório: **25%**.
+
+Destreza não reduz cooldowns globalmente.
+
+### Responsabilidade dos atributos na Build 0.1
+
+| Atributo | Papel principal |
+|---|---|
+| Vitalidade | Vida |
+| Mente | Mana máxima e regeneração |
+| Vigor | Stamina máxima e regeneração |
+| Força | scaling físico apropriado e requisitos |
+| Destreza | scaling apropriado, Precisão, crítico e velocidade |
+| Inteligência | Magias e Arcano |
+| Fé | Milagres, cura e Sagrado |
+
+Mente e Vigor não aumentam dano diretamente na referência inicial.
+
+Destreza possui mais funções derivadas que os demais atributos ofensivos e deve ser observada explicitamente durante os testes para evitar que se torne obrigatória em todas as builds.
+
+## Fichas iniciais provisórias da Build 0.1
+
+As cópias de equipamento recebidas na criação são **fixas e sem RNG procedural**. Modelos equivalentes obtidos posteriormente seguem o sistema procedural normal quando aplicável.
+
+Slots que não fazem parte do kit começam vazios, salvo presente equipado aplicável. Isso permite que primeiros crafts e drops tenham valor imediato.
+
+As habilidades iniciais não são permanentemente exclusivas das classes e poderão ser aprendidas posteriormente por outros personagens que cumpram seus requisitos.
+
+### Guerreiro
+
+**Espada de Milícia**
+- Corte;
+- Poder Base 14;
+- intervalo-base 2,1 s;
+- Força B;
+- Destreza C;
+- requisito Força 5 / Destreza 3.
+
+**Escudo de Milícia:** Defesa 8.
+
+**Peitoral de Milícia:** Defesa 18.
+
+Defesa inicial de referência: **26**.
+
+**Golpe de Força — Física Agressiva**
+- 155% do dano da arma;
+- custo 28 Stamina;
+- cooldown 6 s.
+
+### Mago
+
+**Cajado Simples**
+- ataque básico Arcano;
+- Poder Base 9;
+- intervalo-base 2,4 s;
+- Inteligência C;
+- requisito Inteligência 6.
+
+**Vestes Simples:** Defesa 6.
+
+**Pulso Arcano — Magia Agressiva**
+- Poder Base 18;
+- Inteligência A;
+- dano Arcano;
+- custo 24 Mana;
+- cooldown 5 s.
+
+### Caçador
+
+**Arco Curto**
+- Perfuração;
+- Poder Base 12;
+- intervalo-base 2,3 s;
+- Força D;
+- Destreza A;
+- requisito Destreza 7.
+
+**Gibão de Caça:** Defesa 10.
+
+**Disparo Preciso — Física Agressiva**
+- 150% do dano da arma;
+- +15 pontos percentuais de chance de acerto nessa ação;
+- custo 24 Stamina;
+- cooldown 6 s.
+
+### Acólito
+
+**Maça Simples**
+- Impacto;
+- Poder Base 14;
+- intervalo-base 2,3 s;
+- Força C;
+- Destreza D;
+- requisito Força 3.
+
+**Catalisador Simples**
+- requisito Fé 7;
+- necessário para Milagres apropriados.
+
+**Vestes do Acólito:** Defesa 8.
+
+**Prece Restauradora — Milagre Defensivo**
+- cura-base 24;
+- Fé S;
+- custo 36 Mana;
+- cooldown 10 s.
+
+### Ladino
+
+**Adaga de Caça**
+- Perfuração;
+- Poder Base 7;
+- intervalo-base 1,45 s;
+- Força D;
+- Destreza B;
+- requisito Destreza 8.
+
+**Traje Leve:** Defesa 9.
+
+**Golpe Oportuno — Física Agressiva**
+- 125% do dano da arma;
+- +25 pontos percentuais de crítico nessa ação;
+- custo 20 Stamina;
+- cooldown 5 s.
+
+### Errante
+
+**Lança de Viagem**
+- Perfuração;
+- Poder Base 13;
+- intervalo-base 2,1 s;
+- Força B;
+- Destreza C;
+- requisito Força 4 / Destreza 4.
+
+**Proteção de Viagem:** Defesa 12.
+
+**Abertura — Universal Agressiva**
+- funciona independentemente da categoria da arma;
+- 135% do dano-base da ação apropriada;
+- +10 pontos percentuais de Precisão;
+- sem custo de Mana ou Stamina;
+- cooldown 7 s.
+
+## Resolução do combate automático
+
+### Regra central
+
+> **Uma habilidade ativa substitui o ataque básico que seria realizado naquela ação.**
+
+Habilidades não acontecem como dano adicional paralelo ao ataque básico.
+
+Cada combatente possui seu próprio intervalo. Quando fica pronto para agir, escolhe uma única ação e depois reinicia seu intervalo.
+
+Cooldowns são relógios separados e continuam transcorrendo durante outras ações.
+
+### Ordem de decisão do personagem
+
+```text
+1. Consumível automático válido
+2. Habilidade válida conforme estilo, condição e ordem dos slots
+3. Ataque básico
+```
+
+Uma habilidade só entra em cooldown quando realmente é usada. Falta de recurso, requisito ou condição apenas faz o sistema continuar para a próxima opção.
+
+### Ordem dos quatro slots
+
+A ordem visual é a prioridade real:
+
+```text
+Slot 1 → Slot 2 → Slot 3 → Slot 4 → Ataque básico
+```
+
+### Estilos
+
+**Agressivo:** prioriza habilidades Agressivas; Defensivas entram quando suas condições apropriadas forem atingidas.
+
+**Defensivo:** prioriza habilidades Defensivas válidas; depois considera Agressivas.
+
+**Misto:** Agressivas e Defensivas competem de forma mais direta segundo ordem dos slots e condições.
+
+A implementação pode ajustar detalhes de prioridade após teste sem alterar o princípio desses três estilos.
+
+## Condições defensivas configuráveis
+
+Habilidades defensivas podem usar limiar percentual configurável pelo jogador.
+
+Exemplos:
+- Vida ≤ X%;
+- Mana ≤ X%;
+- Stamina ≤ X%;
+- futuramente, aliado com Vida ≤ X%.
+
+A condição é verificada quando chega o momento de ação. A Build 0.1 não precisa de editor de lógica, AND/OR ou scripting.
+
+## Consumíveis em combate
+
+A Build 0.1 usa **2 slots de consumíveis**.
+
+Cada slot pode possuir condição automática simples, como Vida, Mana ou Stamina abaixo de um percentual.
+
+Prioridade:
+
+```text
+Consumível 1 → Consumível 2
+```
+
+Uso automático ou manual ocupa a ação atual.
+
+> **Jogar ativamente concede controle, não ações extras.**
+
+O jogo executa o limiar configurado pelo jogador e não utiliza IA oculta para ignorar a configuração por considerar o uso “ineficiente”.
+
+Cooldown global provisório de consumíveis: **8 segundos** após o uso de qualquer consumível.
+
+Durante Dungeon, consumíveis vêm da preparação da expedição. Não existe acesso ao Banco durante a run.
+
+## Telegraphs, preparação e interrupções
+
+Ataques normais resolvem na ação. Habilidades perigosas podem possuir tempo de preparação.
+
+Durante um telegraph:
+- o usuário fica comprometido com a ação;
+- não realiza ataques básicos ou outras habilidades;
+- outros combatentes continuam agindo normalmente;
+- ao resolver, o intervalo normal do usuário reinicia.
+
+A UI deve comunicar pelo menos nome, ícone, barra regressiva, alvo quando aplicável, destaque visual e registro no log.
+
+Não existe botão universal de interrupção.
+
+Interrupções vêm de Atordoamento ou de efeitos/habilidades que explicitamente possam interromper.
+
+Uma habilidade telegráfica pode ser:
+- **Interrompível**;
+- **Resistente**;
+- **Ininterruptível**.
+
+Se uma habilidade for interrompida:
+- seu efeito não ocorre;
+- ela entra em cooldown normalmente.
+
+Morte durante a preparação cancela a ação, salvo exceção futura explícita.
+
+Habilidades começam o combate disponíveis, salvo regra individual. Uma habilidade pode possuir **Atraso Inicial** para controlar quando pode ser escolhida pela primeira vez sem alterar seu cooldown normal.
+
+## Ordem determinística de ações
+
+Uma ação já iniciada resolve antes de uma nova ação que fique disponível exatamente no mesmo instante, salvo interrupção válida.
+
+Se duas novas ações ficam disponíveis no mesmo timestamp, a referência é:
+
+```text
+1. personagem principal
+2. parceiros pela posição
+3. inimigos
+```
+
+Na Build 0.1 Solo, personagem principal vence empate exato contra inimigo.
+
+## Fases de Boss
+
+Quando a Vida cruza o limiar de uma nova fase, uma ação já iniciada termina normalmente. A mudança de fase ocorre depois da resolução da ação atual.
+
+Para Fairtheoir:
+- Fase 1: **O Vigia**;
+- Fase 2: **Desespero**;
+- limiar numérico ainda **A definir**.
+
+**Última Investida** deve possuir telegraph longo, dano alto de Impacto, buildup alto de Atordoamento e janela posterior de vulnerabilidade.
+
+## Comportamento de inimigos
+
+Inimigos e Bosses utilizam a mesma fundação temporal e de resolução do combate, mas não precisam imitar os quatro slots configuráveis do jogador.
+
+Cada inimigo pode possuir sua própria lista de comportamentos, condições, cooldowns, fases e Atrasos Iniciais.
+
+> **O motor de combate fornece regras universais; a identidade do inimigo surge da combinação dessas regras.**
 
 ## Ciclos que precisam fechar
 A Build de Validação deve permitir testar pelo menos os seguintes encadeamentos conceituais:
@@ -2810,7 +3224,11 @@ A build deve revelar, entre outros problemas:
 - Dún Liath fica longa/curta demais;
 - escolha Matar/Poupar perde impacto na execução;
 - atributos não geram builds suficientemente distintas;
+- Destreza concentra poder demais;
+- automação não deixa claro por que uma ação foi escolhida;
 - Prestige não altera a execução de forma percebida.
+
+O plano operacional, cenários de teste e critérios de sucesso da Build 0.1 são mantidos também em `docs/BUILD_0.1_TESTES.md`.
 
 Arquitetura técnica, modelagem de dados e decisões de implementação continuam deliberadamente posteriores ao fechamento do design necessário para essa validação.
 
@@ -2859,7 +3277,17 @@ Princípios centrais consolidados:
 
 > Combate é automático, mas build, preparação, equipamentos, habilidades e escolhas determinam o resultado.
 
-> O personagem equipa até quatro habilidades ativas e o estilo Agressivo, Defensivo ou Misto determina prioridades da automação.
+> Uma habilidade ativa substitui o ataque básico daquela ação; não acontece gratuitamente em paralelo.
+
+> O personagem equipa até quatro habilidades ativas e a ordem dos slots participa da prioridade real da automação.
+
+> Habilidades defensivas podem utilizar limiares percentuais configuráveis pelo jogador.
+
+> A Build 0.1 usa dois slots de consumíveis; uso manual ou automático consome a ação e compartilha cooldown global provisório de 8 segundos.
+
+> Telegraphs não pausam os demais combatentes e podem possuir regras explícitas de interrupção.
+
+> Inimigos usam a mesma fundação temporal de combate, mas possuem comportamentos próprios em vez de copiar os quatro slots do jogador.
 
 > Inimigos são Comuns, Elites ou Bosses e usam sete tipos de dano e cinco status principais.
 
@@ -2912,5 +3340,9 @@ Princípios centrais consolidados:
 > A guerra é antiga demais para que sua origem seja conhecida com certeza; ambos os lados cometeram atrocidades e produzem versões contraditórias do passado.
 
 > Existem dois finais principais: continuar o ciclo ou romper o ciclo, sem classificação oficial de bom ou ruim.
+
+> A Build 0.1 é a primeira fundação real e incremental do jogo, com conteúdo reduzido e endpoint natural no primeiro clear de Dún Liath no Fácil.
+
+> Cada build incrementa a anterior; sistemas centrais não são protótipos descartáveis.
 
 > O foco atual é montar a Build de Validação Interna para verificar se os sistemas já definidos fecham juntos antes de expandir o mundo ou entrar na arquitetura técnica definitiva.
