@@ -1,166 +1,124 @@
-# Requisitos v1 — Game Design Document
+# Game Design Document — Especificação do Jogo
 
-## Nome do jogo
-
-**Nome:** A definir
-
-##### Slogan
-_A definir._
+> **Este documento é a fonte canônica das regras de negócio, sistemas, conteúdo e princípios de design do jogo.**
+>
+> Ele não descreve escopo de builds, valores provisórios de balanceamento, cenários de teste ou critérios de aceite de uma versão específica. Esses itens pertencem aos documentos de build em `docs/builds/`.
 
 ---
 
-## Definições gerais
+# 1. Nome do jogo
 
-##### Tags
+**Nome:** A definir.
+
+**Slogan:** A definir.
+
+---
+
+# 2. Definições gerais
+
+## Tags
+
 `Idle` `RPG` `Dark Fantasy` `Online` `Economia` `Crafting` `Dungeons` `Marketplace`
 
-##### Ambição
-Criar um Idle RPG de longa duração, com progressão profunda, itens extremamente raros e poderosos, exploração de um mundo em decadência e uma interface elegante, simples e padronizada.
+## Ambição
 
-O jogo deve ser modular, fácil de manter e preparado para receber novos conteúdos ao longo do tempo.
+Criar um Idle RPG de longa duração, com progressão profunda, liberdade de build, exploração de um mundo em decadência, Dungeons com identidade própria, itens raros e uma interface elegante, simples e padronizada.
 
-##### Resumo
-O jogador controla um personagem principal que chega a um mundo em caos.
+O jogo deve ser modular, fácil de manter e preparado para receber novos conteúdos sem exigir reconstrução dos sistemas centrais.
 
-Enquanto tenta sobreviver e evoluir, descobre aos poucos o passado desse mundo, suas eras, povos, conflitos e ruínas.
+## Resumo
 
-O personagem poderá desenvolver todas as skills disponíveis, realizar Prestígios, formar uma party com parceiros encontrados durante a jornada, explorar Dungeons procedurais e conquistar Relíquias extremamente raras.
+O jogador controla um único personagem principal que chega a um mundo em crise.
 
-##### Referências
-- **Melvor Idle:** progressão por skills e atividades Idle.
+Enquanto tenta sobreviver e evoluir, desenvolve todas as Skills disponíveis, distribui atributos, fabrica equipamentos, enfrenta inimigos, explora Dungeons, toma decisões narrativas e descobre gradualmente as camadas históricas e políticas do mundo.
+
+O personagem pode realizar Prestígios, formar Party com parceiros encontrados durante a jornada e conquistar Relíquias extremamente raras.
+
+## Referências
+
+- **Melvor Idle:** progressão por Skills e atividades Idle.
 - **Dark Souls 1:** atmosfera, início por classe e presente, liberdade de build e mundo decadente.
 - **Tolkien:** construção de mundo, povos, eras, conflitos e história antiga.
 - **World of Warcraft:** identidade própria de cada Dungeon e Boss.
 - **Apple:** simplicidade, consistência, organização visual e experiência de uso.
 
-##### Semelhantes / concorrência
-- Melvor Idle
-- Idle Clans
-- IdleOn
-- RuneScape
-- Dark Souls
+## Plataformas
 
-##### Proposta para o mercado de jogos
-Principais diferenciais:
+Inicialmente previstas:
 
-- interface elegante e organizada;
-- liberdade de build;
-- progressão baseada em Prestígio;
-- Dungeons procedurais com identidade fixa;
-- exploração ativa com risco e recompensa;
-- itens extremamente raros e poderosos;
-- mercado restrito a itens especiais;
-- histórico de donos das Relíquias;
-- parceiros com funções únicas;
-- mundo com história antiga e acontecimentos atuais;
-- estrutura modular e expansível.
+- Web;
+- Desktop;
+- Mobile.
 
-##### Proposta de valor
-- **Custo de desenvolvimento:** A definir.
-- **Modelo de monetização:** A definir.
-
-##### Como se joga
-O jogador escolhe atividades, evolui skills, distribui atributos, obtém recursos, fabrica equipamentos, enfrenta inimigos, explora Dungeons e melhora seu personagem.
-
-Exemplo:
-
-```text
-Mineração
-↓
-Obtém recursos
-↓
-Metalurgia
-↓
-Produz materiais
-↓
-Forja
-↓
-Cria equipamentos
-↓
-Usa para progredir
-```
-
-##### Requisitos
-- **Público-alvo:** A definir.
-- **Hardware:** requisitos modestos.
-- **Condição física:** sem requisitos especiais previstos.
-
-##### Plataformas
-Inicialmente:
-
-- Web
-- Desktop
-- Mobile
+2D ou 3D permanece **A definir**.
 
 ---
 
-## Regras do jogo
+# 3. Princípios centrais
 
-##### Desafios
-O jogador deverá decidir:
+> **A classe define o começo, não o destino do personagem.**
 
-- quais skills desenvolver primeiro;
-- como distribuir seus atributos;
-- quais atividades executar;
-- quais recursos guardar;
-- o que fabricar;
-- quais equipamentos utilizar;
-- quando realizar Prestígio;
-- como reconstruir sua build após Prestígio;
-- quais parceiros levar para uma Dungeon;
-- quais caminhos escolher durante uma Dungeon;
-- quando arriscar o loot contra o Boss;
-- quais Relíquias conservar ou vender.
+> **O jogador aprende jogando; nenhum sistema avançado é explicado antes de se tornar relevante.**
 
-##### Evolução
-O personagem possui:
+> **Poucas Skills, cada uma ampla e profunda.**
 
-- nível geral;
-- atributos;
-- níveis individuais para cada skill;
-- Prestígio do personagem;
-- Prestígio individual por skill.
+> **Atividade Idle entrega aquilo que o jogador escolheu produzir, não uma loteria de subprodutos desconectados.**
 
-Todas as skills ficam disponíveis para o mesmo personagem.
+> **Prestígio deve mudar a forma de executar um sistema, não apenas aumentar números.**
 
-A classe inicial influencia apenas o começo da jornada e não impede o jogador de seguir outros estilos futuramente.
+> **O jogador não precisa executar cada ataque, mas preparação, build e decisões devem determinar o resultado.**
+
+> **Jogar ativamente concede controle, não ações extras.**
+
+> **Quanto mais perigosa uma habilidade, mais legível ela deve ser.**
+
+> **A geração procedural muda o caminho, mas nunca contradiz a história do local.**
+
+> **Escolhas narrativas mudam estados e caminhos; não escolhem entre “recompensa” e “castigo moral”.**
+
+> **A primeira Dungeon não revela a verdade; ela apenas cria a primeira rachadura na versão que o jogador recebeu.**
 
 ---
 
-## Nível geral e atributos
+# 4. Nível geral e atributos
 
-##### Nível geral
+## Nível geral
+
 O personagem possui nível geral de **1 a 99**.
 
-A experiência geral poderá vir de uma combinação de:
+Experiência geral pode vir de:
 
 - atividades;
 - combate;
 - quests;
 - conquistas;
-- progressão das skills.
+- progressão das Skills.
 
-A cada nível geral ganho, o personagem recebe:
+A cada nível geral ganho:
 
 > **+1 ponto de atributo.**
 
-##### Atributos
-A base de atributos será:
+A curva numérica de XP é um dado de balanceamento e deve ser mantida fora desta especificação até ser promovida a valor definitivo.
 
-- **Vitalidade:** aumenta Vida.
-- **Mente:** aumenta Mana.
-- **Vigor:** aumenta Stamina.
-- **Força:** melhora armas pesadas e dano físico.
-- **Destreza:** melhora armas rápidas, precisão e velocidade.
-- **Inteligência:** melhora magias e dano arcano.
-- **Fé:** melhora milagres, cura e poderes divinos.
+## Atributos
 
-##### Recursos principais
-O personagem utilizará somente:
+Existem exatamente sete atributos:
 
-- **Vida**
-- **Mana**
-- **Stamina**
+- **Vitalidade:** Vida e sobrevivência;
+- **Mente:** Mana e sustentação mágica;
+- **Vigor:** Stamina e sustentação física;
+- **Força:** requisitos e scaling físico apropriado;
+- **Destreza:** requisitos e scaling apropriado, Precisão, crítico e velocidade;
+- **Inteligência:** Magias e dano Arcano;
+- **Fé:** Milagres, cura e dano Sagrado.
+
+## Recursos principais
+
+O personagem utiliza somente:
+
+- **Vida**;
+- **Mana**;
+- **Stamina**.
 
 Relação principal:
 
@@ -170,29 +128,21 @@ Mente      → Mana
 Vigor      → Stamina
 ```
 
-Mana não é um recurso exclusivo de Magos.
+Mana não é exclusiva de Magos.
 
-##### Liberdade de build
-A classe define apenas o ponto de partida.
+Mente e Vigor não precisam aumentar dano diretamente. Sua identidade principal é sustentação de recursos.
 
-Um Guerreiro poderá investir futuramente em Mente, Inteligência ou Fé e tornar-se mágico ou híbrido. Um Mago poderá investir em Força, Vitalidade ou Vigor e tornar-se um combatente físico.
+## Liberdade de build
 
-Regra principal:
+Classes, equipamentos e habilidades podem possuir afinidades e requisitos, mas nenhum caminho é permanentemente bloqueado pela classe inicial.
 
-> **A classe define o começo, não o destino do personagem.**
+Um Guerreiro pode investir em Inteligência ou Fé; um Mago pode investir em Força; qualquer personagem pode se tornar híbrido quando cumprir os requisitos necessários.
 
-##### Requisitos e scaling
-Equipamentos, armas e habilidades poderão possuir requisitos de atributos e scaling.
+## Requisitos e scaling
 
-Exemplo:
+Armas, equipamentos e habilidades podem possuir requisitos de atributos e scaling.
 
-```text
-Espadão do Carrasco
-Força necessária: 24
-Destreza necessária: 8
-```
-
-Exemplo de scaling:
+Exemplo conceitual:
 
 ```text
 Lâmina Arcana
@@ -201,199 +151,148 @@ Destreza      D
 Inteligência  A
 ```
 
-A eficiência de um equipamento dependerá da build construída pelo jogador.
+A eficiência final depende da build construída pelo jogador.
+
+Os multiplicadores exatos de scaling, fórmulas de recursos, Defesa, Precisão, crítico e velocidade são parâmetros de balanceamento e não regras estruturais do GDD.
 
 ---
 
-## Classes
+# 5. Classes iniciais
 
-##### Princípio das classes iniciais
+## Regra principal
+
 Cada classe altera somente:
 
-1. distribuição inicial dos atributos;
+1. distribuição inicial de atributos;
 2. equipamento inicial;
 3. habilidade inicial.
 
-Nenhuma classe bloqueia permanentemente atributos, armas, equipamentos, skills, categorias de habilidade ou caminhos de build.
+Nenhuma classe bloqueia permanentemente atributos, armas, equipamentos, Skills, categorias de habilidade ou caminhos de build.
 
-##### Orçamento inicial de atributos
-Todas as classes começam com o mesmo orçamento total de atributos.
+Todas usam o mesmo orçamento inicial de **35 pontos distribuídos entre os sete atributos**.
 
-Referência atual:
+## Distribuições de referência
 
-> **35 pontos distribuídos entre os 7 atributos.**
+| Classe | VIT | MEN | VIG | STR | DEX | INT | FAI |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| Guerreiro | 7 | 2 | 7 | 8 | 4 | 2 | 5 |
+| Mago | 4 | 8 | 3 | 2 | 3 | 10 | 5 |
+| Caçador | 5 | 3 | 6 | 4 | 10 | 2 | 5 |
+| Acólito | 5 | 8 | 4 | 3 | 2 | 3 | 10 |
+| Ladino | 4 | 3 | 7 | 3 | 11 | 4 | 3 |
+| Errante | 5 | 5 | 5 | 5 | 5 | 5 | 5 |
 
-As distribuições individuais abaixo são referências de balanceamento e poderão ser ajustadas depois de validar requisitos de armas, Vida, Mana, Stamina, scaling, habilidades iniciais e dificuldade de Dún Liath.
+As distribuições podem ser alteradas por balanceamento sem mudar o princípio das classes.
 
-##### Guerreiro
-| Atributo | Referência inicial |
-|---|---:|
-| Vitalidade | 7 |
-| Mente | 2 |
-| Vigor | 7 |
-| Força | 8 |
-| Destreza | 4 |
-| Inteligência | 2 |
-| Fé | 5 |
+## Identidade inicial
 
-Equipamento inicial de referência:
-- Espada;
-- Escudo;
-- armadura física básica.
+### Guerreiro
 
-Habilidade inicial: **Física Agressiva**.
+- corpo a corpo;
+- sobrevivência;
+- Força e Vigor;
+- começa com arma física, escudo e proteção física;
+- habilidade inicial Física Agressiva.
 
-Identidade: combate corpo a corpo, sobrevivência, Força e Vigor.
+### Mago
 
-##### Mago
-| Atributo | Referência inicial |
-|---|---:|
-| Vitalidade | 4 |
-| Mente | 8 |
-| Vigor | 3 |
-| Força | 2 |
-| Destreza | 3 |
-| Inteligência | 10 |
-| Fé | 5 |
+- Mana;
+- Inteligência;
+- acesso imediato a dano mágico;
+- começa com Cajado e vestes;
+- habilidade inicial Magia Agressiva.
 
-Equipamento inicial de referência:
-- Cajado;
-- vestes básicas.
+### Caçador
 
-Habilidade inicial: **Magia Agressiva**.
+- Destreza;
+- Precisão;
+- combate à distância;
+- começa com Arco e proteção leve;
+- habilidade inicial Física Agressiva à distância.
 
-Identidade: Mana, Inteligência e acesso imediato a combate mágico.
+### Acólito
 
-##### Caçador
-| Atributo | Referência inicial |
-|---|---:|
-| Vitalidade | 5 |
-| Mente | 3 |
-| Vigor | 6 |
-| Força | 4 |
-| Destreza | 10 |
-| Inteligência | 2 |
-| Fé | 5 |
+- Fé;
+- cura, defesa e suporte;
+- começa com arma simples, Catalisador e vestes;
+- habilidade inicial Milagre Defensivo.
 
-Equipamento inicial de referência:
-- Arco;
-- proteção leve.
+### Ladino
 
-Habilidade inicial: **Física Agressiva à distância**.
+- Destreza;
+- crítico e velocidade;
+- começa com Adaga e proteção leve;
+- habilidade inicial Física Agressiva.
 
-Identidade: Destreza, precisão e combate à distância.
+### Errante
 
-##### Acólito
-| Atributo | Referência inicial |
-|---|---:|
-| Vitalidade | 5 |
-| Mente | 8 |
-| Vigor | 4 |
-| Força | 3 |
-| Destreza | 2 |
-| Inteligência | 3 |
-| Fé | 10 |
+- equilíbrio;
+- nenhum atributo inicialmente atrasado;
+- começa com arma versátil e proteção básica;
+- habilidade inicial Universal.
 
-Equipamento inicial de referência:
-- arma simples;
-- Catalisador;
-- vestes.
+## Habilidades iniciais
 
-Habilidade inicial: **Milagre Defensivo**.
+Habilidades recebidas na criação **não são exclusivas permanentemente da classe**. Outros personagens podem aprendê-las posteriormente se cumprirem os requisitos.
 
-O Acólito é a classe cuja primeira habilidade ativa enfatiza diretamente defesa, cura ou suporte.
-
-##### Ladino
-| Atributo | Referência inicial |
-|---|---:|
-| Vitalidade | 4 |
-| Mente | 3 |
-| Vigor | 7 |
-| Força | 3 |
-| Destreza | 11 |
-| Inteligência | 4 |
-| Fé | 3 |
-
-Equipamento inicial de referência:
-- Adaga;
-- armadura leve.
-
-Habilidade inicial: **Física Agressiva** ligada a crítico ou velocidade.
-
-##### Errante
-| Atributo | Referência inicial |
-|---|---:|
-| Vitalidade | 5 |
-| Mente | 5 |
-| Vigor | 5 |
-| Força | 5 |
-| Destreza | 5 |
-| Inteligência | 5 |
-| Fé | 5 |
-
-Equipamento inicial de referência:
-- arma simples e versátil;
-- proteção básica.
-
-Habilidade inicial: **Universal**.
-
-Identidade: equilíbrio, sem atributo inicialmente atrasado.
-
-##### Valores ainda não finais
-Nomes e efeitos exatos dos equipamentos e habilidades iniciais permanecem **A definir** para o balanceamento final. A Build de Validação 0.1 usa fichas provisórias específicas registradas na seção de Build de Validação deste GDD. Os valores das distribuições individuais permanecem referências para balanceamento.
+O equipamento recebido na criação pode ser fixo, sem RNG procedural, para preservar uma largada previsível.
 
 ---
 
-## Presentes iniciais
+# 6. Presentes iniciais
 
-Regra principal:
+## Regra principal
 
 > **A classe define como o personagem começa a lutar; o presente define uma pequena vantagem, conveniência ou curiosidade com a qual ele começa a jornada.**
 
-Existirão sete opções:
+Existem sete opções:
 
-| Presente | Função principal |
+| Presente | Função |
 |---|---|
-| **Chave Enferrujada** | exploração e segredo |
-| **Bolsa de Moedas** | vantagem econômica inicial |
-| **Frasco Carmesim** | sobrevivência emergencial |
-| **Anel do Viajante** | pequeno bônus versátil enquanto equipado |
-| **Pedra Sem Nome** | lore e conteúdo secreto |
-| **Kit de Sobrevivência** | início confortável com consumíveis normais |
-| **Nenhum Presente** | escolha narrativa |
+| Chave Enferrujada | exploração e segredo |
+| Bolsa de Moedas | vantagem econômica inicial |
+| Frasco Carmesim | emergência de sobrevivência |
+| Anel do Viajante | pequeno bônus versátil enquanto equipado |
+| Pedra Sem Nome | lore e conteúdo secreto |
+| Kit de Sobrevivência | consumíveis normais |
+| Nenhum Presente | nenhuma vantagem |
 
-##### Chave Enferrujada
-Chave antiga cuja fechadura não é explicada no começo. Pode abrir antecipadamente uma sala, cofre, caminho ou evento opcional. A recompensa deve ser interessante, mas nunca obrigatória.
+## Regras por presente
 
-Em Dún Liath, poderá permitir acesso antecipado ao **Alojamento do Oficial**. Jogadores que não escolheram a chave poderão encontrar outra forma de acesso posteriormente.
+### Chave Enferrujada
 
-##### Bolsa de Moedas
-Concede dinheiro adicional no início. Quantidade **A definir**. Sua vantagem perde importância naturalmente conforme a economia cresce.
+Pode abrir antecipadamente sala, cofre, caminho ou evento opcional. A recompensa nunca pode ser essencial para progressão.
 
-##### Frasco Carmesim
-Consumível raro de emergência. Efeito exato **A definir**. Não concede progresso permanente e poderá ser obtido novamente no mundo.
+Em Dún Liath, pode permitir acesso antecipado aos **Aposentos do Oficial**. Outra forma de acesso deve existir posteriormente.
 
-##### Anel do Viajante
-Equipamento inicial fixo que aumenta, enquanto equipado:
-- Vida máxima;
-- Mana máxima;
-- Stamina máxima.
+### Bolsa de Moedas
 
-Valores **A definir**.
+Concede dinheiro inicial. Sua vantagem perde importância naturalmente conforme a economia cresce.
 
-Ocupa um slot normal de Anel, não é Relíquia e deve ser naturalmente substituído pela progressão.
+### Frasco Carmesim
 
-##### Pedra Sem Nome
-Objeto mineral incomum ligado potencialmente a quest secreta, diálogo, evento de Dungeon, civilização antiga ou lore. Não concede vantagem obrigatória.
+Consumível raro de emergência. Não concede progressão permanente e pode ser obtido novamente no mundo.
 
-##### Kit de Sobrevivência
-Conjunto de consumíveis normais. Composição e quantidade **A definir**. Tudo no kit deve ser normalmente obtível.
+### Anel do Viajante
 
-##### Nenhum Presente
-Não concede bônus escondido nem recompensa secreta automática.
+Ocupa slot normal de Anel e aumenta Vida, Mana e Stamina máximas enquanto equipado. Não é Relíquia e deve ser naturalmente substituído pela progressão.
 
-##### Limites dos presentes
-Presentes não podem conceder:
+### Pedra Sem Nome
+
+Objeto ligado a lore, diálogo, evento, civilização antiga ou conteúdo secreto. Não concede vantagem obrigatória de progressão.
+
+### Kit de Sobrevivência
+
+Contém somente consumíveis normais que podem ser obtidos por outros meios.
+
+### Nenhum Presente
+
+Não concede compensação escondida.
+
+## Limites dos presentes
+
+Nenhum presente pode conceder:
+
 - Relíquia;
 - material obrigatório de upgrade +2;
 - habilidade permanentemente exclusiva;
@@ -405,59 +304,56 @@ Presentes não podem conceder:
 
 ---
 
-## Skills
+# 7. Skills
 
-##### Filosofia
-O jogo terá poucas skills, porém cada uma representará uma profissão ampla e profunda. A complexidade virá de atividades, técnicas, receitas, materiais, Prestígios e conteúdos desbloqueados, não da criação excessiva de skills semelhantes.
+## Filosofia
 
-##### Skills principais
-Exatamente sete:
+O jogo possui exatamente sete Skills:
 
-1. **Mineração**
-2. **Lenhador**
-3. **Pesca**
-4. **Herbologia**
-5. **Metalurgia**
-6. **Forja**
-7. **Culinária**
+1. **Mineração**;
+2. **Lenhador**;
+3. **Pesca**;
+4. **Herbologia**;
+5. **Metalurgia**;
+6. **Forja**;
+7. **Culinária**.
 
-Técnicas internas não são novas skills. Forja, por exemplo, pode incluir Ferraria, Couraria, Tecelagem, Arquearia e Ourivesaria.
+Técnicas internas não criam novas Skills. Forja, por exemplo, pode incluir Ferraria, Couraria, Tecelagem, Arquearia e Ourivesaria.
 
-##### Regra global das atividades Idle
+## Regra global das atividades Idle
 
-> **Atividades Idle não geram drops secundários aleatórios. Cada atividade entrega apenas seu recurso ou produto definido, além de XP e possíveis unidades adicionais desse mesmo resultado. Materiais especiais devem possuir fontes explícitas de obtenção.**
+> **Atividades Idle não geram drops secundários aleatórios. Cada atividade entrega apenas seu recurso ou produto definido, além de XP e possíveis unidades adicionais desse mesmo resultado.**
 
-Nas skills de coleta:
+Coleta:
 
 ```text
-Escolher recurso específico
+Escolher recurso
 ↓
-aguardar a ação
+aguardar ação
 ↓
 receber recurso escolhido + XP
 ↓
 repetir automaticamente
 ```
 
-A quantidade-base normal é **1 unidade garantida por ciclo**. Ferramentas, Prestígios e outros efeitos podem conceder unidades adicionais do mesmo resultado.
+A quantidade-base normal é 1 unidade garantida por ciclo. Ferramentas, Prestígios e outros efeitos podem conceder unidades adicionais **do mesmo resultado**.
 
-Não existirão como efeito colateral aleatório do Idle: gemas, sementes, resinas, escamas, pós, componentes raros ou materiais secretos desconectados da atividade escolhida.
+Materiais especiais devem possuir fontes explícitas, como:
 
-##### Fontes explícitas para materiais especiais
-Materiais raros ou especiais poderão vir de:
-- atividades próprias desbloqueáveis;
+- atividades próprias;
 - receitas;
 - Dungeons;
 - Bosses;
 - eventos;
 - exploração;
 - quests;
-- conteúdos de Prestígio.
+- conteúdo de Prestígio.
 
 O jogador deve conseguir descobrir onde buscar um material.
 
-##### Produção
-Metalurgia, Forja e Culinária utilizam receitas:
+## Produção
+
+Metalurgia, Forja e Culinária utilizam receitas determinísticas:
 
 ```text
 Selecionar receita
@@ -471,75 +367,99 @@ receber produto definido + XP
 repetir enquanto houver materiais
 ```
 
-Produção normal não falha. Produtos intermediários são receitas ou atividades explícitas, nunca subprodutos aleatórios.
+Produção normal não falha.
 
-##### Ferramentas de coleta
+Produtos intermediários são receitas ou atividades explícitas, nunca subprodutos aleatórios.
+
+## Uma atividade Idle por vez
+
+No estado normal, o personagem executa uma atividade Idle por vez. Prestígios podem ampliar essa capacidade de maneira explícita.
+
+## Ferramentas de coleta
+
 Separadas dos equipamentos de combate e sem durabilidade:
-- Mineração → picareta;
-- Lenhador → machado de corte;
-- Pesca → equipamento de pesca;
+
+- Mineração → Picareta;
+- Lenhador → Machado de Corte;
+- Pesca → Equipamento de Pesca;
 - Herbologia → Kit de Herbologia.
 
-Metalurgia e Culinária não possuem ferramenta equipável própria. Forja é uma skill de produção.
+Metalurgia e Culinária não possuem ferramenta equipável própria. Forja é uma Skill de produção.
 
-Ferramentas focam em:
+Ferramentas podem afetar:
+
 - velocidade;
 - quantidade;
 - chance de unidade adicional do mesmo resultado;
-- XP da skill.
+- XP da Skill.
 
-Fontes de ferramentas:
+Fontes regulares de ferramentas:
+
 1. Forja;
 2. Dungeons.
 
-Ferramentas normais usam raridade procedural:
+Ferramentas normais utilizam o mesmo princípio procedural dos equipamentos normais.
 
-```text
-Comum      → 1 atributo
-Incomum    → 2
-Raro       → 3
-Épico      → 4
-Lendário   → 5
-```
+## Minigames
 
-Upgrade:
-
-```text
-+0 → +1 → +2
-```
-
-Sem falha, sem rerroll procedural, sem dinheiro e sem durabilidade. +2 exige ao menos um componente especial de Dungeon, Boss ou evento.
-
-##### Minigames
-Cada skill possui minigame temático periódico e opcional.
+Cada Skill pode possuir um minigame temático periódico e opcional.
 
 > **O Idle gera a oportunidade; a interação ativa permite aproveitá-la melhor.**
 
-O progresso da oportunidade pode acumular offline. Limite exato **A definir**.
+Bom desempenho pode melhorar temporariamente eficiência, velocidade, quantidade, unidade adicional do mesmo resultado ou XP.
 
-Bom desempenho concede bônus temporário de eficiência, velocidade, quantidade, chance de unidade adicional do mesmo resultado ou XP. Não existe pool de drops raro próprio.
+Desempenho ruim nunca faz a produção Idle normal falhar.
 
 Direções:
+
 - Mineração → pontos de fraqueza da rocha;
 - Lenhador → direção/timing de cortes;
 - Pesca → fisgada e tensão da linha;
-- Herbologia → **Identificação e Extração**;
-- Metalurgia → **Controle de Fundição**;
-- Forja → **Martelamento**;
-- Culinária → **Sequência e Timing**.
+- Herbologia → Identificação e Extração;
+- Metalurgia → Controle de Fundição;
+- Forja → Martelamento;
+- Culinária → Sequência e Timing.
 
-Desempenho ruim não faz a produção Idle normal falhar.
+---
 
-##### Prestígio de Skill
-Cada skill possui nível 1–99 e Prestígio I–III.
+# 8. Convergência da progressão inicial
 
-Ao prestigiar, a skill volta ao nível 1, mas seu antigo endgame torna-se o novo ponto de entrada.
+O início apresenta escolha livre entre Mineração, Lenhador, Pesca e Herbologia.
+
+> **Não pode existir uma coleta inicial secretamente correta.**
+
+Todas devem produzir preparação útil para o primeiro arco de combate:
+
+```text
+Mineração → material → Metalurgia/Forja → reforço/equipamento → combate
+Lenhador → material → Forja → equipamento/ferramenta → combate
+Pesca → alimento → Culinária → preparação → combate
+Herbologia → preparado → Culinária → recuperação/preparação → combate
+```
+
+Equivalência entre rotas significa **valor de preparação**, não bônus idênticos.
+
+Uma rota pode gerar equipamento permanente; outra pode gerar sustain, recuperação ou preparação temporária.
+
+Nenhuma rota deve exigir grind desproporcional ou troca obrigatória para outra Skill para continuar o onboarding.
+
+---
+
+# 9. Progressão das Skills
+
+Cada Skill possui nível 1–99 e Prestígio I–III.
+
+## Prestígio de Skill
+
+Ao prestigiar:
+
+- a Skill retorna ao nível 1;
+- o antigo endgame torna-se o novo ponto de entrada;
+- a progressão aumenta em profundidade e possibilidades.
 
 > **O antigo endgame se torna o novo início.**
 
-A progressão fica mais longa a cada Prestígio e amplia recursos, atividades, receitas, técnicas, equipamentos, possibilidades mecânicas e conexões com o mundo.
-
-##### Evolução mecânica das atividades por Prestígio
+## Evolução mecânica por Prestígio
 
 ```text
 Normal        → 1 atividade ou linha
@@ -548,18 +468,20 @@ Prestígio II  → 2 simultâneas + prioridade avançada
 Prestígio III → 3 simultâneas
 ```
 
-Prestígio I: atividade principal em eficiência de referência completa e secundária em eficiência reduzida. Percentuais **A definir**.
+Prestígio I possui uma atividade principal e uma secundária em eficiência reduzida.
 
-Prestígio II oferece configurações:
+Prestígio II permite configurações como:
+
 - Equilibrado;
 - Prioridade Principal;
 - Prioridade Secundária.
 
-Percentuais **A definir**.
+Prestígio III permite três atividades individualmente desbloqueadas.
 
-Prestígio III permite três atividades individualmente desbloqueadas. Eficiências **A definir**.
+Percentuais exatos são dados de balanceamento.
 
 Nomes temáticos do P1:
+
 - Mineração — Extração Dupla;
 - Lenhador — Corte Duplo;
 - Pesca — Linha Dupla;
@@ -568,17 +490,13 @@ Nomes temáticos do P1:
 - Forja — Produção Paralela;
 - Culinária — Preparo Paralelo.
 
-Regra:
-
-> **Prestígio deve mudar a forma de executar a skill, não apenas aumentar números.**
-
 ---
 
-## Convenção de nomenclatura do mundo
+# 10. Convenção de nomenclatura
 
-Recursos e nomes culturalmente importantes podem usar idiomas inspirados nas tradições do universo, principalmente irlandês para a vertente céltica e islandês/nórdico quando outra camada histórica ou cultural justificar.
+O mundo possui identidade atlântica sombria, inspirada culturalmente na transição entre tradições célticas e nórdicas, sem representar literalmente Irlanda, Islândia ou outro país real.
 
-O mundo não representa literalmente Irlanda ou Islândia.
+Recursos e nomes culturalmente importantes podem usar idiomas coerentes com a camada histórica do conteúdo, principalmente irlandês na vertente céltica e islandês/nórdico quando outra camada justificar.
 
 Regras:
 
@@ -594,26 +512,21 @@ Termos funcionais permanecem em português: Mineração, Forja, Prestígio, Vida
 
 Descrições e efeitos permanecem em português.
 
-A escolha linguística não deve ser aleatória. Nomes sobrenaturais, históricos, divinos ou míticos representam associações culturais e não provam a origem objetiva do recurso ou a existência literal da tradição.
-
-##### Inimigos, Bosses e locais importantes
-A mesma filosofia vale para Bosses, inimigos importantes, locais antigos e itens de lore:
-
-- nome cultural coerente com a camada histórica do conteúdo;
-- significado real quando possível;
-- título funcional em português quando ajudar a leitura;
-- nunca utilizar pseudo-fantasia aleatória apenas para parecer exótico.
+Nomes sobrenaturais, históricos, divinos ou míticos representam associações culturais e não comprovam a origem objetiva do recurso ou a existência literal de determinada tradição.
 
 Regra prática:
 
 > **O nome pode ser estranho; a função precisa ser compreensível.**
 
-Exemplos já definidos:
-- **Dún Liath — A Fortaleza Cinzenta**;
-- **Fairtheoir — O Último Vigia**;
-- **Cosantóir — Protetor da Passagem**.
+Exemplos:
+
+- Dún Liath — A Fortaleza Cinzenta;
+- Fairtheoir — O Último Vigia;
+- Cosantóir — Protetor da Passagem.
 
 ---
+
+# 11. Recursos das Skills de coleta
 
 ## Mineração
 
@@ -626,9 +539,8 @@ Prestígio II  → Guerra
 Prestígio III → Divindades
 ```
 
-> **terra → sobrenatural → história → mito**
+### Normal
 
-##### Normal
 | Nível | Recurso | Equivalente |
 |---:|---|---|
 | 1 | Cloch | Pedra |
@@ -640,48 +552,25 @@ Prestígio III → Divindades
 | 75 | Ór | Ouro |
 | 90 | Grianchloch | Quartzo |
 
-##### Prestígio I
-| Nível | Recurso |
-|---:|---|
-| 1 | Grianchloch |
-| 15 | Scáth |
-| 30 | Gealach |
-| 45 | Fuil |
-| 60 | Cuimhne |
-| 75 | Anam |
-| 90 | Réalta |
+### Prestígio I
 
-##### Prestígio II
-| Nível | Recurso |
-|---:|---|
-| 1 | Réalta |
-| 15 | Cath |
-| 30 | Luaith |
-| 45 | Mionn |
-| 60 | Créacht |
-| 75 | Fothrach |
-| 90 | Cogadh |
+`Grianchloch → Scáth → Gealach → Fuil → Cuimhne → Anam → Réalta`
+
+Níveis: `1, 15, 30, 45, 60, 75, 90`.
+
+### Prestígio II
+
+`Réalta → Cath → Luaith → Mionn → Créacht → Fothrach → Cogadh`
 
 Leitura: **Batalha → Cinzas → Juramentos → Feridas → Ruínas → Guerra**.
 
-##### Prestígio III
-| Nível | Recurso |
-|---:|---|
-| 1 | Cogadh |
-| 15 | Brigid |
-| 30 | Nuada |
-| 45 | Goibniu |
-| 60 | Lugh |
-| 75 | Mórrigan |
-| 90 | Dagda |
+### Prestígio III
 
-Os nomes divinos são associações culturais, não confirmação objetiva de divindades.
+`Cogadh → Brigid → Nuada → Goibniu → Lugh → Mórrigan → Dagda`
 
-Regra:
+Nomes divinos são associações culturais, não confirmação objetiva de divindades.
 
 > **Um material possui função econômica e de crafting própria; nível de desbloqueio não representa uma escala absoluta de superioridade.**
-
----
 
 ## Lenhador
 
@@ -692,27 +581,25 @@ Prestígio II  → Eras Antigas
 Prestígio III → Árvores Sagradas
 ```
 
-##### Normal
+### Normal
+
 `Giúis → Beith → Fearn → Saileach → Coll → Fuinseog → Dair → Iúr`
 
 Níveis: `1, 10, 20, 30, 45, 60, 75, 90`.
 
-##### Prestígio I
+### Prestígio I
+
 `Iúr → Ceo → Oíche → Draíocht → Aisling → Spiorad → Síoraí`
 
-Níveis: `1, 15, 30, 45, 60, 75, 90`.
+### Prestígio II
 
-##### Prestígio II
 `Síoraí → Treibh → Dún → Ríocht → Ríshliocht → Oidhreacht → Seanchas`
 
-Leitura histórica: **povos → fortalezas → reinos → dinastias → herança → história**.
+### Prestígio III
 
-##### Prestígio III
 `Seanchas → Bile → Eó Mugna → Bile Tortan → Eó Rossa → Craeb Dáithí → Craeb Uisnig`
 
 Recursos antigos continuam relevantes em receitas de endgame.
-
----
 
 ## Pesca
 
@@ -723,29 +610,27 @@ Prestígio II  → Mar de Guerra
 Prestígio III → Lendas das Águas
 ```
 
-##### Normal
+### Normal
+
 `Scadán → Breac → Sairdín → Ronnach → Trosc → Bradán → Tuinnín → Doingean`
 
 Níveis: `1, 10, 20, 30, 45, 60, 75, 90`.
 
-##### Prestígio I
+### Prestígio I
+
 `Doingean → Tonn → Solas → Taibhse → Lasair → Stoirm → Doimhneacht`
 
-##### Prestígio II
+### Prestígio II
+
 `Doimhneacht → Ancaire → Cabhlach → Ruathar → Raic → Báite → Uaigh`
 
-##### Prestígio III
-`Uaigh → Each Uisce → Dobhar-chú → Murúch → Tarbh Uisce → Ollphéist → Muirdris`
+### Prestígio III
 
-Regra narrativa:
+`Uaigh → Each Uisce → Dobhar-chú → Murúch → Tarbh Uisce → Ollphéist → Muirdris`
 
 > **A cultura dá nome ao desconhecido; o nome não prova que a lenda seja verdadeira.**
 
-Regra de função:
-
 > **O peixe determina a função da receita, não apenas sua potência.**
-
----
 
 ## Herbologia
 
@@ -756,106 +641,105 @@ Prestígio II  → Flora do Norte: Fogo e Gelo
 Prestígio III → Oráculos e Destino
 ```
 
-##### Normal
+### Normal
+
 `Neantóg → Seamair → Caisearbhán → Fraoch → Aiteann → Raithneach → Sáiste → Marós`
 
-##### Prestígio I
+### Prestígio I
+
 `Marós → Drúcht → Suan → Cogar → Rún → Beatha → Bás`
 
-##### Prestígio II
-A nomenclatura passa à vertente islandesa/nórdica por coerência cultural com terras frias e vulcânicas:
+### Prestígio II
 
 `Bás → Mosi → Þoka → Ís → Aska → Hraun → Eldur`
 
-##### Prestígio III
+### Prestígio III
+
 `Eldur → Seiður → Völva → Urðr → Verðandi → Skuld → Örlög`
-
-Os nomes representam associações culturais, sem confirmar literalmente mitos ou forças sobrenaturais.
-
-Minigame: **Identificação e Extração**.
-
-Ferramenta: **Kit de Herbologia**.
 
 ---
 
-## Metalurgia
-
-Regra:
+# 12. Metalurgia
 
 > **Mineração descobre os materiais. Metalurgia descobre o que é possível fazer com eles.**
 
-A mesma matéria mantém sua identidade quando apenas processada: `Iarann → Lingote de Iarann`. Um nome novo aparece quando o processo cria um material realmente novo, como uma liga.
+A mesma matéria mantém sua identidade quando apenas processada: `Iarann → Lingote de Iarann`.
+
+Um novo nome aparece quando o processo cria um material realmente novo, como uma liga.
 
 Sem subprodutos aleatórios e sem ferramenta equipável própria.
 
-##### Normal
-1. Cloch Tratada
-2. Lingote de Stán
-3. Lingote de Copar
-4. Cré-Umha
-5. Fundição Pesada
-6. Cruach
-7. Metais Nobres
-8. Grianchloch Refinado
+## Normal
+
+1. Cloch Tratada;
+2. Lingote de Stán;
+3. Lingote de Copar;
+4. Cré-Umha;
+5. Fundição Pesada;
+6. Cruach;
+7. Metais Nobres;
+8. Grianchloch Refinado.
 
 Marcos: `1, 10, 20, 30, 45, 60, 75, 90`.
 
-##### Prestígio I
+## Prestígio I
+
 `Grianchloch Refinado → Liga de Scáth → Liga de Gealach → Liga de Fuil → Cuimhne Estabilizado → Liga de Anam → Liga de Réalta`
 
-##### Prestígio II
+## Prestígio II
+
 `Liga de Réalta → Liga de Cath → Vidro de Luaith → Liga de Mionn → Liga de Créacht → Fothrach Reforçado → Liga de Cogadh`
 
-##### Prestígio III
-`Liga de Cogadh → Liga de Brigid → Liga de Nuada → Liga de Goibniu → Liga de Lugh → Liga de Mórrigan → Liga de Dagda`
+## Prestígio III
 
-Minigame: **Controle de Fundição**.
+`Liga de Cogadh → Liga de Brigid → Liga de Nuada → Liga de Goibniu → Liga de Lugh → Liga de Mórrigan → Liga de Dagda`
 
 ---
 
-## Forja
-
-Regra:
+# 13. Forja
 
 > **Metalurgia cria os materiais. Forja transforma esses materiais em possibilidades de build.**
 
 Forja inclui técnicas internas como Ferraria, Couraria, Tecelagem, Arquearia e Ourivesaria.
 
-##### Normal
+## Normal
+
 `Trabalho Básico → Reforços e Couraria → Tecelagem → Arquearia → Ferraria Avançada → Ourivesaria → Construção Híbrida → Obra-Prima`
 
-##### Prestígio I
+## Prestígio I
+
 `Reforço Sobrenatural → Vinculação → Condução → Têmpera Reativa → Estrutura Híbrida → Forja Espiritual → Obra-Prima Sobrenatural`
 
-##### Prestígio II
+## Prestígio II
+
 `Forja de Campanha → Reforço Militar → Têmpera de Cinzas → Construção de Juramento → Lâmina de Ferida → Reconstrução Antiga → Obra-Prima de Guerra`
 
-##### Prestígio III
+## Prestígio III
+
 `Forja Ancestral → Obra Sagrada → Precisão Absoluta → Forja Magistral → Obra Híbrida Superior → Forja de Lenda → Obra-Prima Absoluta`
 
-> **Mesmo o melhor item fabricado no Prestígio III continua sendo um equipamento normal e nunca uma Relíquia.**
+> **Mesmo o melhor item fabricado no Prestígio III continua sendo equipamento normal e nunca uma Relíquia.**
 
-Receitas podem vir de progressão, Dungeons, Bosses, NPCs, quests, exploração, segredos e eventos. Chegar ao nível máximo não significa conhecer todas as receitas.
+Receitas podem vir de progressão, Dungeons, Bosses, NPCs, quests, exploração, segredos e eventos.
 
-Equipamentos fabricados usam:
+Chegar ao nível máximo não significa conhecer todas as receitas.
+
+Equipamentos fabricados usam a estrutura:
 
 ```text
 RECEITA + MATERIAL + RARIDADE PROCEDURAL = EQUIPAMENTO FINAL
 ```
 
-Forja é a fonte regular de todas as ferramentas de coleta; Dungeons são a única outra fonte definida.
-
-Minigame: **Martelamento**.
+Forja é fonte regular de ferramentas de coleta; Dungeons são a outra fonte regular definida.
 
 ---
 
-## Culinária
-
-Regra:
+# 14. Culinária
 
 > **Culinária transforma os recursos acumulados pelo jogador em preparação para aquilo que ele pretende enfrentar.**
 
 Tipos:
+
 - Refeição;
 - Bebida;
 - Poção;
@@ -863,69 +747,90 @@ Tipos:
 - Antídoto;
 - Preparado especial.
 
-Buffs da mesma família não acumulam; prevalece o efeito válido mais forte. Famílias diferentes podem combinar. Limites exatos **A definir**.
+Buffs da mesma família não acumulam; prevalece o efeito válido mais forte. Famílias diferentes podem combinar.
 
-##### Normal
+Consumíveis não utilizam raridade procedural: a mesma receita gera o mesmo item e efeito.
+
+Consumíveis não concedem aumento permanente de atributo.
+
+Culinária não possui ferramenta equipável própria.
+
+## Normal
+
 `Preparo Básico → Conservação → Infusão → Cozimento Composto → Extração → Refeição Completa → Elixires → Grande Preparo`
 
-##### Prestígio I
+## Prestígio I
+
 `Preparo Sobrenatural → Infusão Superior → Concentração Arcana → Neutralização → Preparo Híbrido → Elixir Espiritual → Grande Preparo Sobrenatural`
 
-##### Prestígio II
+## Prestígio II
+
 `Ração de Campanha → Conservação Extrema → Tônico de Marcha → Medicina de Campo → Refeição de Companhia → Preparo de Cerco → Banquete de Guerra`
 
-##### Prestígio III
+## Prestígio III
+
 `Preparo Ancestral → Mesa dos Povos → Essência Perfeita → Preparo Condicional → Grande Banquete → Receita Perdida → Banquete de Lenda`
-
-Consumíveis não usam raridade procedural: a mesma receita gera o mesmo item e efeito. Não concedem aumento permanente de atributo.
-
-Culinária não possui ferramenta equipável própria. Sua localização diegética permanece **A definir** e não exige nova estrutura inicial na Cidade Livre.
-
-Minigame: **Sequência e Timing**.
 
 ---
 
-## Crafting, receitas e equipamentos fabricados
+# 15. Crafting e upgrades
 
 Metalurgia, Forja e Culinária fazem parte da progressão Idle.
 
-Receitas avançadas podem exigir múltiplas skills, materiais de várias camadas de progressão e componentes de Dungeon/Boss quando explicitamente definido.
+Receitas avançadas podem exigir múltiplas Skills, materiais de várias camadas e componentes de Dungeon/Boss quando explicitamente definido.
 
 Relíquias nunca podem ser fabricadas.
 
-Upgrade +1 pode usar materiais normais de atividades, produção, inimigos e Dungeons.
+Equipamentos e ferramentas normais utilizam:
 
-Upgrade +2 exige pelo menos um material especial proveniente de Dungeon, Boss ou evento.
+```text
++0 → +1 → +2
+```
+
+Regras:
+
+- sem falha;
+- upgrade melhora somente propriedades-base definidas para o item;
+- não rerrola atributos procedurais;
+- não rerrola efeitos únicos;
+- crafting e upgrades não exigem dinheiro;
+- +1 pode utilizar materiais normais;
+- +2 exige pelo menos um componente especial de Dungeon, Boss ou evento.
 
 Desmontar equipamento concede somente dinheiro e não é fonte de materiais.
 
 ---
 
-## Prestígio do personagem
+# 16. Prestígio do personagem
 
-##### Requisito
-Só é liberado quando **todas as skills possuem pelo menos Prestígio I**.
+## Requisito
 
-##### Funcionamento
+Só é liberado quando **todas as Skills possuem pelo menos Prestígio I**.
+
+## Funcionamento
+
 Prestígio I–III.
 
 Ao prestigiar:
+
 - nível geral volta a 1;
-- pontos normais de atributo podem ser reconstruídos/redistribuídos ao longo da nova jornada;
+- pontos normais de atributo são reconstruídos ao longo da nova jornada;
 - progresso permanente permanece;
 - Árvore de Prestígio permanece.
 
 Cada Prestígio concede **5 Pontos de Prestígio**, máximo **15**.
 
-##### Estrutura da Árvore
+## Árvore
+
 32 nós:
+
 - Corpo: 6;
 - Arcano: 6;
 - Espírito: 6;
 - Técnica: 6;
 - híbridos: 8.
 
-Custo dos seis nós de cada ramo:
+Custo por ramo puro:
 
 `1 → 1 → 2 → 2 → 2 → 2`
 
@@ -933,116 +838,146 @@ Um ramo completo custa 10.
 
 Um especialista completo gasta 10 e mantém 5 para suporte.
 
-##### Híbridos
-Quatro combinações iniciais:
+## Híbridos
+
+Combinações iniciais:
+
 1. Corpo + Arcano;
 2. Corpo + Espírito;
 3. Técnica + Arcano;
 4. Técnica + Espírito.
 
-Híbrido I custa 1 e exige 3 nós de cada ramo. Chegada: `4 + 4 + 1 = 9`.
+Híbrido I custa 1 e exige 3 nós de cada ramo.
 
-Híbrido II custa 2 e exige Híbrido I + 4 nós de cada ramo. Híbrido completo: `6 + 6 + 1 + 2 = 15`.
+Híbrido II custa 2 e exige Híbrido I + 4 nós de cada ramo.
 
-O híbrido completo abre mão dos nós 5 e 6/capstones puros de seus ramos.
+Um híbrido completo usa os 15 pontos e abre mão dos capstones puros correspondentes.
 
-Regras de balanceamento:
+Regras:
 
-> **Capstones puros devem representar a melhor expressão daquela especialização.**
+> **Capstones puros representam a melhor expressão daquela especialização.**
 
-> **Híbridos completos devem ser competitivos quando utilizam corretamente os dois lados da combinação.**
+> **Híbridos completos são competitivos quando utilizam corretamente os dois lados da combinação.**
 
 > **Um híbrido que ignora metade de sua mecânica deve ser inferior ao especialista correspondente.**
 
-> **Nenhuma combinação deve ser obrigatória para alcançar o melhor desempenho geral do jogo.**
+> **Nenhuma combinação é obrigatória para alcançar o melhor desempenho geral do jogo.**
 
-Referência conceitual: especialista bem utilizado = 100% de referência em seu papel; híbrido pode superar levemente em condições ideais da própria sinergia, sem ser geralmente superior.
+## Corpo
 
-##### Corpo
-1. **Constituição — 1:** Vida máxima.
-2. **Fôlego de Guerra — 1:** Stamina máxima e recuperação.
-3. **Ímpeto — 2:** Física Agressiva concede eficiência física temporária; efeito exato **A definir**.
-4. **Inabalável — 2:** golpe relevante em relação à Vida máxima concede redução temporária de dano; pequenos golpes repetidos não ativam como golpe pesado.
-5. **Segundo Fôlego — 2:** uma vez por combate, condição crítica recupera Vida e Stamina; não é ressurreição.
-6. **Último Bastião — 2:** capstone; Vida menor concede resistência e recuperação de Stamina progressivas e limitadas.
+1. Constituição — Vida máxima;
+2. Fôlego de Guerra — Stamina máxima e recuperação;
+3. Ímpeto — Física Agressiva concede eficiência física temporária;
+4. Inabalável — golpe relevante concede redução temporária de dano;
+5. Segundo Fôlego — uma vez por combate, condição crítica recupera Vida e Stamina; não é ressurreição;
+6. Último Bastião — capstone; Vida baixa concede resistência e recuperação de Stamina progressivas e limitadas.
 
-##### Arcano
-1. **Reserva Mental — 1:** Mana máxima.
-2. **Fluxo Arcano — 1:** regeneração de Mana.
-3. **Canalização — 2:** diferentes Magias em sequência fortalecem eficiência da próxima; repetição não recebe valor completo.
-4. **Ressonância — 2:** sequência diversa acumula Ressonância até limite e melhora eficiência mágica.
-5. **Reserva Arcana — 2:** uma vez por combate em Mana crítica, recuperação ou janela excepcional; forma **A definir**.
-6. **Sobrecarga — 2:** capstone; Ressonância máxima permite Magia Sobrecarregada, consumindo preparação e, quando apropriado, Mana adicional.
+## Arcano
 
-Loop: `rotacionar → Ressonância → Sobrecarga → reconstruir`.
+1. Reserva Mental — Mana máxima;
+2. Fluxo Arcano — regeneração de Mana;
+3. Canalização — diferentes Magias em sequência fortalecem eficiência da próxima;
+4. Ressonância — sequência diversa acumula Ressonância;
+5. Reserva Arcana — uma vez por combate em Mana crítica, oferece recuperação/janela excepcional;
+6. Sobrecarga — capstone; Ressonância máxima permite Magia Sobrecarregada.
 
-##### Espírito
-1. **Convicção — 1:** Fé.
-2. **Graça Restauradora — 1:** cura realizada.
-3. **Resistência Espiritual — 2:** resistência ao buildup de Veneno, Sangramento, Atordoamento, Queimadura e Congelamento; sem imunidade automática.
-4. **Intercessão — 2:** overheal parcialmente convertido em proteção temporária limitada.
-5. **Vínculo de Companhia — 2:** efeitos defensivos/suporte podem beneficiar parcialmente outros membros da party, em potência menor.
-6. **Comunhão — 2:** capstone; cura/proteção excedente parcialmente redirecionada ao membro mais necessitado; equivalente Solo para não ser inútil.
+Loop:
 
-##### Técnica
-1. **Mão Firme — 1:** Precisão.
-2. **Golpe Preciso — 1:** chance de crítico.
-3. **Ritmo de Combate — 2:** diferentes ativos em sequência geram Ritmo.
-4. **Oportunismo — 2:** críticos aceleram ou preservam Ritmo, com limites.
-5. **Execução — 2:** contra inimigos em Vida baixa, crítico recebe efeito adicional; forma **A definir**.
-6. **Mestre do Ritmo — 2:** capstone; Ritmo máximo fortalece próximo ativo e é consumido.
+`rotacionar → Ressonância → Sobrecarga → reconstruir`
 
-Loop: `sequência → crítico/Ritmo → Ritmo máximo → ativo fortalecido → reinício`.
+## Espírito
 
-##### Corpo + Arcano
-**Arma Encantada — 1:** Física Agressiva fortalece próxima Magia.
+1. Convicção — Fé;
+2. Graça Restauradora — cura realizada;
+3. Resistência Espiritual — resistência ao buildup dos cinco status;
+4. Intercessão — overheal parcialmente convertido em proteção temporária limitada;
+5. Vínculo de Companhia — suporte pode beneficiar parcialmente outros membros da Party;
+6. Comunhão — capstone; cura/proteção excedente parcialmente redirecionada, com equivalente Solo.
 
-**Guerreiro Arcano — 2:** interação bidirecional `Física ↔ Magia`. É nome do caminho, não nova classe.
+## Técnica
 
-##### Corpo + Espírito
-**Zelo — 1:** habilidade Defensiva ligada a Fé/suporte fortalece próxima ação Física apropriada.
+1. Mão Firme — Precisão;
+2. Golpe Preciso — crítico;
+3. Ritmo de Combate — ativos diferentes geram Ritmo;
+4. Oportunismo — críticos aceleram/preservam Ritmo dentro de limites;
+5. Execução — crítico contra inimigos em Vida baixa recebe efeito adicional;
+6. Mestre do Ritmo — capstone; Ritmo máximo fortalece próximo ativo e é consumido.
 
-**Bastião Sagrado — 2:** ações físicas geram Guarda limitada; Milagre/defesa apropriado consome Guarda para fortalecer proteção ou cura. Nome de caminho, não classe.
+## Caminhos híbridos
 
-##### Técnica + Arcano
-**Lâmina Arcana — 1:** crítico físico fortalece próxima Magia.
+### Corpo + Arcano
 
-**Conjuração Rápida — 2:** Magia fortalecida abre janela para ação física precisa. Limites evitam loops infinitos. Identidade mais rápida/frágil que Corpo + Arcano.
+- **Arma Encantada:** Física Agressiva fortalece próxima Magia;
+- **Guerreiro Arcano:** interação bidirecional Física ↔ Magia.
 
-##### Técnica + Espírito
-**Golpe de Convicção — 1:** crítico fortalece próximo Milagre.
+### Corpo + Espírito
 
-**Inquisidor — 2:** Milagre apropriado fortalece próxima ação física precisa, podendo interagir com Sagrado. Nome de caminho, não classe.
+- **Zelo:** habilidade Defensiva ligada a Fé fortalece próxima ação Física apropriada;
+- **Bastião Sagrado:** ações físicas geram Guarda; Milagre/defesa consome Guarda para fortalecer proteção ou cura.
 
-Corpo + Técnica e Arcano + Espírito não possuem caminho exclusivo inicialmente por já terem sobreposição natural e não haver identidade mecânica suficientemente distinta.
+### Técnica + Arcano
+
+- **Lâmina Arcana:** crítico físico fortalece próxima Magia;
+- **Conjuração Rápida:** Magia fortalecida abre janela para ação física precisa.
+
+### Técnica + Espírito
+
+- **Golpe de Convicção:** crítico fortalece próximo Milagre;
+- **Inquisidor:** Milagre apropriado fortalece próxima ação física precisa.
+
+Corpo + Técnica e Arcano + Espírito não possuem caminho exclusivo inicialmente por falta de identidade mecânica suficientemente distinta.
 
 ---
 
-## Progressão offline
+# 17. Progressão offline
 
 O limite de atividade offline aumenta em **2 horas a cada 10 níveis gerais**.
 
-A quantidade-base inicial de horas permanece **A definir**.
+A base inicial, caps e regras específicas por tipo de atividade são parâmetros de progressão e podem ser ajustados separadamente.
 
-O progresso para oportunidades de minigame pode acumular offline, respeitando limites ainda **A definir**.
+O progresso de oportunidades de minigame pode acumular offline quando o sistema correspondente permitir.
 
 ---
 
-## Combate
+# 18. Combate
 
-##### Conceito
+## Conceito
+
 Combate automático em tempo real.
 
 Ataques básicos são automáticos. Cada arma possui intervalo próprio.
 
 > **O jogador não precisa executar cada ataque, mas sua preparação e suas escolhas devem determinar o resultado.**
 
-##### Habilidades ativas
+## Relógio de ação
+
+Cada combatente possui seu próprio intervalo de ação.
+
+Quando o combatente fica pronto:
+
+1. verifica prioridades e condições;
+2. escolhe uma única ação válida;
+3. resolve ou inicia a preparação dessa ação;
+4. reinicia seu intervalo após a resolução conforme a regra da ação.
+
+Cooldown de habilidade e intervalo de ação são relógios separados. Cooldowns continuam transcorrendo durante outras ações.
+
+## Regra central de habilidades
+
+> **Uma habilidade ativa substitui o ataque básico que seria realizado naquela ação.**
+
+Habilidades não acontecem gratuitamente em paralelo ao ataque básico.
+
+Uma habilidade só entra em cooldown quando realmente é utilizada.
+
+Se uma ação não puder ser usada por falta de recurso, requisito, condição ou cooldown, a automação segue para a próxima opção válida.
+
+## Habilidades ativas
+
 Até **4 slots ativos**.
 
-Combinação livre, respeitando apenas requisitos individuais.
-
 Categorias:
+
 1. Físicas;
 2. Magias;
 3. Milagres;
@@ -1051,58 +986,156 @@ Categorias:
 
 A classe inicial nunca restringe categorias.
 
-##### Perfil das habilidades
-Cada habilidade ativa é obrigatoriamente:
+Cada habilidade ativa possui perfil:
+
 - **Agressiva**; ou
 - **Defensiva**.
 
-Não existe Perfil Misto em uma habilidade individual.
+Não existe perfil Misto individual.
 
-##### Estilo de combate
-- **Agressivo:** prioriza perfis Agressivos;
-- **Defensivo:** prioriza perfis Defensivos;
-- **Misto:** alterna dinamicamente conforme estado do personagem/party.
+## Ordem dos slots
 
-> **O jogador escolhe as habilidades da build e o estilo de combate determina como a automação prioriza seu uso.**
+A ordem visual participa da prioridade real:
 
-##### Uso automático
-Um ativo pode ser usado quando:
-- cooldown terminou;
-- recurso suficiente existe;
-- requisitos são atendidos;
-- estilo de combate o prioriza.
+```text
+Slot 1 → Slot 2 → Slot 3 → Slot 4 → Ataque básico
+```
 
-##### Consumíveis
-Uso manual ou automático, incluindo condições como limiar de Vida.
+## Estilos de combate
 
-##### Morte fora de Dungeons
-Retorno à Cidade Livre e perda de dinheiro calculada conforme nível. Fórmula **A definir**. O dinheiro é destruído como sink.
+### Agressivo
+
+Prioriza habilidades Agressivas. Habilidades Defensivas entram quando suas condições apropriadas forem atingidas.
+
+### Defensivo
+
+Prioriza habilidades Defensivas válidas; depois considera Agressivas.
+
+### Misto
+
+Agressivas e Defensivas competem de maneira mais direta conforme ordem dos slots e condições.
+
+> **O jogador escolhe a build; o estilo determina como a automação prioriza seu uso.**
+
+## Condições defensivas
+
+Habilidades Defensivas podem utilizar condições simples configuráveis pelo jogador, como:
+
+- Vida ≤ X%;
+- Mana ≤ X%;
+- Stamina ≤ X%;
+- aliado com Vida ≤ X% quando aplicável.
+
+A condição é avaliada quando chega o momento da ação.
+
+O sistema não exige editor de scripting ou lógica AND/OR para funcionar.
+
+## Consumíveis em combate
+
+O jogador pode equipar consumíveis em slots dedicados, com uso manual ou automático.
+
+Condições automáticas podem utilizar limiares simples de Vida, Mana ou Stamina.
+
+Regras permanentes:
+
+- usar consumível ocupa a ação atual;
+- uso manual e automático seguem a mesma economia de ações;
+- consumível não concede ataque gratuito no mesmo ciclo;
+- o sistema respeita os limiares configurados pelo jogador;
+- não existe IA oculta que ignore a configuração por considerar outro uso “mais inteligente”.
+
+> **Jogar ativamente concede controle, não ações extras.**
+
+A quantidade de slots e cooldowns globais são parâmetros de balanceamento/interface.
+
+## Prioridade geral do personagem
+
+Estrutura:
+
+```text
+1. Consumível automático válido
+2. Habilidade válida conforme estilo, condição e ordem dos slots
+3. Ataque básico
+```
+
+## Telegraphs e preparação
+
+Ataques normais resolvem na ação. Habilidades perigosas podem possuir tempo de preparação.
+
+Durante um telegraph:
+
+- o usuário fica comprometido com a ação;
+- não realiza ataque básico nem outra habilidade;
+- outros combatentes continuam agindo;
+- o intervalo normal reinicia após a resolução.
+
+A UI comunica pelo menos:
+
+- nome;
+- ícone;
+- barra regressiva;
+- alvo quando aplicável;
+- destaque visual;
+- registro curto no log.
+
+Não existe botão universal de interrupção.
+
+Interrupções surgem de Atordoamento ou efeitos explicitamente capazes de interromper.
+
+Uma ação telegráfica pode ser:
+
+- **Interrompível**;
+- **Resistente**;
+- **Ininterruptível**.
+
+Se uma habilidade for interrompida:
+
+- seu efeito não ocorre;
+- ela entra em cooldown normalmente.
+
+Morte durante preparação cancela a ação, salvo exceção explícita.
+
+Uma habilidade pode possuir **Atraso Inicial**, separado de seu cooldown normal, para controlar a primeira oportunidade de uso em um combate.
+
+## Ordem determinística
+
+Uma ação já iniciada resolve antes de uma nova ação que fique disponível exatamente no mesmo instante, salvo interrupção válida.
+
+Se duas novas ações ficam disponíveis no mesmo timestamp:
+
+1. personagem principal;
+2. parceiros pela posição;
+3. inimigos.
+
+## Fases de Boss
+
+Quando a Vida cruza um limiar de fase, uma ação já iniciada termina normalmente. A mudança de fase ocorre depois da resolução da ação atual.
+
+Fases devem alterar comportamento, habilidades, prioridades ou dinâmica e não apenas multiplicadores numéricos.
+
+## Comportamento de inimigos
+
+Inimigos usam a mesma fundação temporal e de resolução do combate, mas não precisam copiar os quatro slots configuráveis do jogador.
+
+Cada inimigo pode possuir:
+
+- lista própria de comportamentos;
+- condições;
+- cooldowns;
+- fases;
+- Atrasos Iniciais;
+- prioridades.
+
+> **O motor de combate fornece regras universais; a identidade do inimigo surge da combinação dessas regras.**
 
 ---
 
-## Inimigos e Bosses
+# 19. Tipos de dano, resistências e status
 
-##### Categorias
+## Tipos de dano
+
 Exatamente:
-1. **Comum**
-2. **Elite**
-3. **Boss**
 
-Sem categoria separada de mini-Boss inicialmente.
-
-##### Ficha-base
-- Nome;
-- Tipo;
-- Vida;
-- Ataque;
-- Defesa;
-- velocidade de ataque;
-- fraquezas/resistências;
-- habilidades;
-- drops.
-
-##### Tipos de dano
-Exatamente:
 - Corte;
 - Perfuração;
 - Impacto;
@@ -1111,84 +1144,172 @@ Exatamente:
 - Arcano;
 - Sagrado.
 
-##### Resistências
+## Resistências
+
 Leitura padrão:
+
 - Fraco;
 - Normal;
 - Resistente;
 - Muito Resistente;
 - Imune.
 
-Modo avançado poderá mostrar percentuais reais. Valores finais **A definir**; a Build 0.1 possui percentuais provisórios de teste definidos na seção da Build de Validação.
+A UI avançada pode mostrar percentuais reais.
 
-##### Status
+Os multiplicadores exatos são dados de balanceamento.
+
+## Status
+
 Exatamente:
+
 - Veneno;
 - Sangramento;
 - Atordoamento;
 - Queimadura;
 - Congelamento.
 
-Usam buildup em barras. Ao atingir o limite, o efeito ativa, a barra reseta e o alvo recebe resistência temporária ao mesmo efeito. Acúmulo pode decair sem aplicação.
+Todos utilizam buildup em barra.
 
-Bosses usam o mesmo sistema e não são automaticamente imunes por serem Bosses.
+Ao atingir o limite:
 
-##### Telegraph
-Ataques perigosos devem comunicar:
-- nome;
-- barra de preparação/conjuração quando aplicável;
-- ícone/efeito;
-- destaque de perigo;
-- registro curto de combate.
+1. o efeito ativa;
+2. a barra reseta;
+3. o alvo recebe resistência temporária ao mesmo status;
+4. novo buildup passa a ser mais difícil durante essa janela.
 
-Regra:
+Buildup pode decair após um período sem nova aplicação.
 
-> **Quanto mais perigosa uma habilidade, mais legível ela deve ser.**
+Bosses usam o mesmo sistema e **não são automaticamente imunes** apenas por serem Bosses.
 
-##### Fases de Boss
-Quantidade individual. Fases devem mudar comportamento, habilidades ou dinâmica, não apenas números.
+## Identidade funcional dos status
 
-##### Dificuldade
-Dificuldades maiores podem mudar ataques, resistências, Elites, fases, comportamento, recuperação, status, composições e loot.
+### Veneno
 
-> **Dificuldades maiores devem introduzir novas exigências mecânicas e estratégicas, não apenas aumentar atributos.**
+Dano sustentado ao longo do tempo.
 
-##### Loot
-Comuns sustentam progressão normal com dinheiro, consumíveis, materiais apropriados e equipamento procedural.
+### Sangramento
+
+Dano explosivo periódico após buildup físico repetido.
+
+### Atordoamento
+
+Controle, interrupção e perda temporária de ação.
+
+Atordoamento pode cancelar telegraph quando a habilidade permitir interrupção.
+
+### Queimadura
+
+Pressão de dano com abertura ofensiva, incluindo redução defensiva quando definido pelo efeito.
+
+### Congelamento
+
+Controle de ritmo: reduz frequência de ação e pode ampliar janelas de telegraph, sem duplicar a função de Atordoamento.
+
+Status não devem surgir de maneira arbitrária em todo ataque básico. Buildup relevante deve ter fonte identificável em habilidade, arma, afixo ou efeito.
+
+---
+
+# 20. Inimigos e Bosses
+
+## Categorias
+
+Exatamente:
+
+1. Comum;
+2. Elite;
+3. Boss.
+
+Não existe categoria separada de mini-Boss inicialmente.
+
+## Ficha-base
+
+- Nome;
+- categoria;
+- Vida;
+- Ataque/Poder;
+- Defesa;
+- intervalo/velocidade;
+- Precisão/Evasão quando aplicável;
+- fraquezas e resistências;
+- habilidades;
+- status;
+- drops;
+- comportamento.
+
+## Dificuldade
+
+Dificuldades maiores podem alterar:
+
+- ataques;
+- resistências;
+- Elites;
+- fases;
+- comportamento;
+- recuperação;
+- status;
+- composições;
+- loot;
+- eventos e camadas da Dungeon.
+
+> **Dificuldades maiores introduzem novas exigências mecânicas e estratégicas, não apenas mais Vida e dano.**
+
+## Loot
+
+Comuns sustentam progressão normal.
 
 Elites aumentam qualidade/chance e podem possuir receitas ou materiais específicos quando houver função real.
 
-Bosses podem conceder equipamentos temáticos, materiais exclusivos, receitas, habilidades, lore, materiais +2 e condições de Relíquia.
+Bosses podem conceder:
+
+- equipamentos temáticos;
+- materiais exclusivos;
+- receitas;
+- habilidades;
+- lore;
+- componentes +2;
+- condições de Relíquia.
 
 Todo Boss concede pelo menos **um recurso exclusivo garantido por vitória**.
-
-##### Ameaça / Aggro
-Em party, dano, cura, suporte e habilidades podem gerar Ameaça. Regra padrão: inimigo tende a atacar o personagem de maior Ameaça.
-
-Habilidades podem aumentar/reduzir Ameaça ou Provocar. Bosses podem ganhar resistência temporária a Provocações repetidas.
-
-Ataques podem usar regras alternativas e ignorar Ameaça explicitamente.
-
-Interface padrão mostra alvo atual e mudanças de foco; modo avançado pode mostrar percentuais.
-
-##### Recompensas por dificuldade
-Dificuldades maiores melhoram loot existente e podem adicionar conteúdo exclusivo.
 
 A primeira conclusão de cada dificuldade garante pelo menos **uma recompensa especial**.
 
 ---
 
-## Party e parceiros
+# 21. Party, Ameaça e parceiros
 
-##### Party
-Dungeons em Party usam:
+## Party
+
+Dungeons em Party utilizam:
+
 - personagem principal;
 - até 3 parceiros.
 
 Parceiros são substituíveis/removíveis.
 
-##### Parceiros
-São NPCs fixos e únicos, com identidade narrativa e mecânica própria. Não possuem sistema completo de nível/skills igual ao personagem principal.
+## Ameaça / Aggro
+
+Em Party, dano, cura, suporte e habilidades podem gerar Ameaça.
+
+Regra padrão:
+
+> inimigo tende a atacar o personagem com maior Ameaça.
+
+Habilidades podem:
+
+- aumentar Ameaça;
+- reduzir Ameaça;
+- Provocar;
+- ignorar Ameaça explicitamente.
+
+Bosses podem ganhar resistência temporária a Provocações repetidas.
+
+A interface padrão mostra alvo atual e mudanças de foco; modo avançado pode mostrar percentuais.
+
+## Parceiros
+
+Parceiros são NPCs fixos e únicos, com identidade narrativa e mecânica própria.
+
+Não possuem sistema completo de nível/Skills igual ao personagem principal.
 
 Progressão principal ocorre por relacionamento:
 
@@ -1204,47 +1325,56 @@ Companheiro
 Leal
 ```
 
-Relação pode liberar passivas, habilidades, diálogos, quests, lore e utilidade.
+Relação pode liberar:
+
+- passivas;
+- habilidades;
+- diálogos;
+- quests;
+- lore;
+- utilidade.
 
 Não há romance.
 
-Alguns parceiros futuros poderão abandonar a party conforme suas regras narrativas; isso não significa desaparecer permanentemente do mundo. **Mira é uma exceção explícita e não abandona a party por discordância.**
-
-Regra:
+Alguns parceiros futuros podem abandonar a Party conforme suas próprias regras narrativas. Isso não significa desaparecer permanentemente do mundo.
 
 > **O primeiro encontro de um parceiro deve demonstrar quem ele é antes de explicar sua ficha.**
 
 ---
 
-## Mira
+# 22. Mira
 
-##### Identidade
-Primeira parceira recrutável.
+## Identidade
+
+Mira é a primeira parceira recrutável.
 
 - mulher humana;
-- ex-soldado da Ordem de Ferro;
+- ex-soldada da Ordem de Ferro;
 - arqueira;
 - deixou oficialmente a Ordem;
 - sofreu preconceito e sexismo no exército;
-- provou sua capacidade e venceu batalhas por mérito próprio;
-- após sair, ficou sem dinheiro e passou a explorar Dungeons por loot e sobrevivência;
+- provou sua capacidade por mérito próprio;
+- depois de sair, passou a explorar Dungeons por loot e sobrevivência;
 - não possui arco de vingança contra antigos soldados.
 
-Mira inicia com preconceitos contra monstros derivados da cultura humana, formação militar e experiências reais de guerra. Sua visão muda gradualmente, sem a narrativa afirmar que tudo que ela viu anteriormente era falso.
+Mira inicia com preconceitos contra monstros derivados da cultura humana, de sua formação militar e de experiências reais da guerra.
 
-Ela nunca abandona a party por discordância, mas pode questionar, desaprovar e mudar de postura.
+Sua visão muda gradualmente, sem a narrativa afirmar que tudo que ela viu anteriormente era falso.
 
-Passiva exclusiva:
+Mira **não abandona a Party por discordância**, mas pode questionar, desaprovar e mudar de postura.
 
-> **Olho de Caçadora — aumenta a chance de crítico de todos os membros da party.**
+## Passiva exclusiva
 
-##### Introdução oficial
-Mira entra **depois de Dún Liath**, durante a segunda Dungeon, que será a primeira experiência em Party.
+> **Olho de Caçadora — aumenta a chance de crítico de todos os membros da Party.**
+
+## Introdução
+
+Mira entra depois de Dún Liath, durante a segunda Dungeon, que também introduz a primeira experiência real em Party.
 
 Fluxo:
 
 ```text
-Jogador entra sozinho na segunda Dungeon
+jogador entra sozinho
 ↓
 encontra sinais de outro explorador
 ↓
@@ -1254,7 +1384,7 @@ cooperação pragmática
 ↓
 Mira entra como Parceira Temporária
 ↓
-tutorial contextual de Party e Aggro
+tutorial contextual de Party e Ameaça
 ↓
 primeira divergência sobre monstros
 ↓
@@ -1267,56 +1397,64 @@ reencontro na Taverna
 Mira torna-se recrutável
 ```
 
-Mira não é resgatada: ao ser encontrada, está lutando e sobrevivendo por conta própria, ainda que gastando recursos.
+Mira não é resgatada; está sobrevivendo por conta própria.
 
 A cooperação inicial ocorre por conveniência e sobrevivência, não amizade imediata.
 
-O tutorial nesse momento apresenta apenas o necessário: Party, alvo/Aggro e Olho de Caçadora.
-
-Um encontro específico deve demonstrar troca de alvo conforme Mira gera Ameaça.
-
-A primeira divergência narrativa deve mostrar seu preconceito sem torná-la caricata. Ela pode favorecer eliminar uma ameaça que o jogador decide ignorar/poupar e ainda assim continuar a missão.
-
-Após o Boss, Mira inicialmente segue seu próprio caminho. Na Taverna, torna-se recrutável. Se o jogador não convidá-la na primeira oportunidade, poderá recrutá-la posteriormente.
-
-O tutorial completo de relacionamento só aparece depois do recrutamento oficial.
-
-##### Progressão e quest pessoal
-Mira não usa um sistema completo de níveis. A relação desbloqueia gradualmente novas capacidades.
-
-Sua quest pessoal trata de identidade, propósito e vida depois de servir uma guerra que ela começa a questionar — não de vingança.
+Sua quest pessoal trata de identidade, propósito e vida depois de servir uma guerra que começa a questionar — não de vingança.
 
 ---
 
-## Dungeons — regras gerais
+# 23. Dungeons — regras gerais
 
-##### Conceito
+## Conceito
+
 Expedições com combate automático, caminhos, eventos, escolhas, armadilhas, segredos e Boss.
 
-O jogador controla principalmente preparação, party e decisões de exploração.
+O jogador controla principalmente:
 
-##### Identidade fixa e execução procedural
-Cada Dungeon representa um local fixo do mundo, com temática, inimigos, eventos, segredos, recompensas e Boss único.
+- preparação;
+- Party;
+- build;
+- decisões de exploração;
+- risco e retirada.
+
+## Identidade fixa e execução procedural
+
+Cada Dungeon representa um local fixo do mundo com:
+
+- temática;
+- inimigos;
+- eventos;
+- segredos;
+- recompensas;
+- Boss único.
 
 Sua estrutura interna pode variar por run.
 
 > **A geração procedural muda o caminho, mas nunca contradiz a história do local.**
 
-##### Tamanho
-Solo inicial: **15–20 salas**.
+## Tamanho de referência
 
-Party inicial: **30–40 salas**.
+- Solo inicial: 15–20 salas;
+- Party inicial: 30–40 salas.
 
 Dungeons posteriores podem crescer aproximadamente 2–4 salas por etapa.
 
 O jogador não sabe o número exato antes de concluir a run.
 
-##### Caminhos
-Bifurcações possuem descrições ambientais e são irreversíveis por run. Não existe backtracking. Nova tentativa regenera a estrutura.
+## Caminhos
 
-Descrições devem fornecer risco/contexto, não revelar diretamente `Tesouro`, `Elite`, `melhor caminho` etc.
+Bifurcações possuem descrições ambientais e são irreversíveis por run.
 
-##### Salas
+Não existe backtracking normal.
+
+Nova tentativa regenera a estrutura.
+
+Descrições comunicam risco/contexto, não revelam diretamente “Tesouro”, “Elite” ou “melhor caminho”.
+
+## Tipos de sala
+
 - combate;
 - Elite;
 - evento;
@@ -1326,48 +1464,84 @@ Descrições devem fornecer risco/contexto, não revelar diretamente `Tesouro`, 
 - secreta;
 - Boss.
 
-##### Recuperação
-Não é checkpoint seguro. Pode restaurar Vida, Mana, Stamina e outros recursos de combate. Não protege o loot.
+## Recuperação
 
-Troca de equipamentos dentro de Dungeon só é permitida em salas de recuperação.
+Não é checkpoint seguro.
 
-##### Armadilhas
-Podem causar dano, status/debuff, consumir recursos, iniciar combate, bloquear caminhos ou ativar eventos.
+Pode restaurar Vida, Mana, Stamina e outros recursos de combate.
 
-Detecção/contorno pode depender de parceiro, atributo, skill, equipamento ou item.
+Não protege loot automaticamente.
 
-##### Requisitos especiais
-Podem abrir vantagens, atalhos, conteúdo opcional ou segredos por atributo, skill, chave, parceiro, equipamento ou item.
+Troca de equipamento dentro de Dungeon só é permitida em salas de recuperação.
+
+A sala de recuperação também pode permitir reconfiguração de habilidades, estilo e consumíveis quando apropriado.
+
+## Armadilhas
+
+Podem:
+
+- causar dano;
+- aplicar status/debuff;
+- consumir recursos;
+- iniciar combate;
+- bloquear caminhos;
+- ativar eventos.
+
+Detecção/contorno pode depender de:
+
+- parceiro;
+- atributo;
+- Skill;
+- equipamento;
+- item.
+
+Não deve existir armadilha aleatória de morte instantânea sem informação adequada.
+
+## Requisitos especiais
+
+Podem abrir:
+
+- vantagens;
+- atalhos;
+- conteúdo opcional;
+- segredos.
 
 > **Nenhuma geração pode exigir uma condição que o jogador não possui para chegar ao Boss.**
 
 A rota de conclusão sempre existe.
 
-##### Eventos persistentes
-Podem revelar personagens, abrir quests, alterar relações, serviços ou acontecimentos futuros.
+## Bolsa de Expedição
 
-##### Segredos
-Difíceis e opcionais. O jogador pode concluir a Dungeon muitas vezes sem encontrar tudo.
+Loot obtido durante a run permanece separado do patrimônio seguro do personagem.
 
-As melhores recompensas ativas podem estar ligadas a salas/eventos secretos ou Boss.
+Morte perde o loot obtido naquela tentativa e preserva o que o jogador já possuía antes de entrar.
 
-##### Bolsa de Expedição
-Loot da run permanece separado. Morte perde tudo obtido naquela tentativa e preserva o que o jogador possuía antes de entrar.
+A UI deve distinguir claramente:
 
-##### Retirada
-Não é permitida livremente com loot. Antes do Boss existe decisão:
+- itens levados para a Dungeon;
+- itens encontrados durante a expedição.
+
+## Retirada
+
+Não é permitida livremente a qualquer momento com loot assegurado.
+
+Antes do Boss existe decisão explícita:
 
 ```text
 Retornar à Cidade Livre
-→ mantém loot da expedição
+→ assegura loot da expedição
 
 Enfrentar Boss
-→ arrisca todo o loot
+→ mantém loot em risco
 → acessa recompensas finais
 ```
 
-##### Dificuldades
+Retirada segura não equivale necessariamente a concluir o objetivo narrativo/contrato da Dungeon.
+
+## Dificuldades
+
 Exatamente:
+
 1. Fácil;
 2. Normal;
 3. Difícil;
@@ -1375,42 +1549,39 @@ Exatamente:
 
 Desbloqueio sequencial.
 
-##### Incursão Automática
-Modo separado, não quinta dificuldade. Liberado após conclusão/requisito apropriado.
+## Incursão Automática
 
-Possui preset, duração, chance de sucesso e recompensas úteis. Falha não entrega recompensas esperadas.
+Modo separado, não quinta dificuldade.
 
-Melhores segredos, conteúdo de exploração e recompensas especiais de Boss/Relíquia permanecem exclusivos da atividade quando definido.
+Liberado após conclusão/requisito apropriado.
+
+Possui preset, duração, chance de sucesso e recompensas úteis.
+
+Melhores segredos, exploração especial, recompensas exclusivas de Boss e Relíquias podem permanecer exclusivos da atividade manual quando definido.
 
 ---
 
-# Dún Liath — A Fortaleza Cinzenta
+# 24. Dún Liath — A Fortaleza Cinzenta
 
 ## Papel
-Primeira Dungeon oficial do jogo e primeira grande validação integrada de combate, exploração, risco/recompensa e narrativa.
 
-É uma Dungeon **Solo**. Mira e Party entram posteriormente.
+Primeira Dungeon oficial do jogo e primeiro grande ponto de integração de combate, exploração, risco/recompensa e narrativa.
 
-Regra central:
+É uma Dungeon Solo.
 
 > **A primeira Dungeon ensina mecânica através de exploração e narrativa através de contradição.**
 
-Regra narrativa:
-
 > **A primeira Dungeon não revela a verdade; ela apenas cria a primeira rachadura na versão que o jogador recebeu.**
 
-## Identidade do local
-Dún Liath é uma antiga fortificação militar humana próxima à Cidade Livre, construída em posição costeira e exposta a chuva, neblina, vento, sal e mar frio.
+## Identidade
+
+Antiga fortificação militar humana próxima à Cidade Livre, em posição costeira exposta a chuva, neblina, vento, sal e mar frio.
 
 Identidade visual:
 
 > **pedra molhada + mar frio + ferrugem + neblina**
 
-Possui muralhas quebradas, torre de vigia, portão danificado, penhasco, mar ao fundo e estruturas que descem para a rocha.
-
-A fortificação controlava historicamente uma estrada costeira, suprimentos, aproximações à Cidade Livre e movimentos militares.
-
-O local possui camadas de diferentes períodos:
+Camadas históricas:
 
 ```text
 estrutura original
@@ -1424,44 +1595,49 @@ abandono
 ocupação atual pela comunidade monstruosa
 ```
 
-Regra visual:
-
 > **Construções antigas devem parecer ter história, não terem sido erguidas apenas para funcionar como fase.**
 
 ## Situação atual
+
 Humanos afirmam que monstros tomaram a fortificação.
 
 Na realidade, uma pequena comunidade monstruosa usa as ruínas para sobreviver e se proteger.
 
-As barricadas recentes estão orientadas **contra a entrada**, sugerindo defesa contra invasores.
+As barricadas recentes estão orientadas contra a entrada.
 
-A leitura da Dungeon evolui:
+Leitura da Dungeon:
 
 > **Fortaleza tomada → posição defensiva → assentamento improvisado → refúgio sitiado.**
 
 ## Primeiro contrato
-Um NPC humano ligado à Ordem de Ferro apresenta a tarefa como:
+
+Um NPC humano ligado à Ordem de Ferro envia o jogador para:
 
 ```text
 entrar
 ↓
-eliminar monstros
+eliminar a presença hostil
 ↓
-recuperar objeto
+recuperar um registro da antiga guarnição
 ↓
-derrotar Boss
+derrotar a criatura que controla/protege o bastião
 ```
 
-O NPC pode genuinamente desconhecer o significado histórico dos documentos encontrados.
+O NPC não precisa mentir. Ele pode acreditar sinceramente na leitura militar dominante.
 
-## Estrutura da primeira visita
-A primeira visita é **parcialmente controlada**, não totalmente procedural, para garantir os beats narrativos e tutoriais.
+O objetivo físico é o **Registro de Suprimentos da Guarnição**, documento logístico antigo e aparentemente banal.
 
-Após o primeiro clear, Dún Liath passa a utilizar a geração procedural normal com maior liberdade.
+A busca por esse registro conduz o jogador também ao primeiro fragmento de evidência contraditória sobre a guerra.
 
-Primeira run: aproximadamente **16–18 salas**, número exato oculto do jogador.
+## Primeira visita
 
-Sequência conceitual obrigatória embutida entre salas variáveis:
+É parcialmente controlada para garantir beats narrativos e tutoriais.
+
+Depois do primeiro clear, a Dungeon utiliza geração procedural com maior liberdade.
+
+Primeira visita: aproximadamente 16–18 salas, sem revelar o total exato ao jogador.
+
+Sequência conceitual:
 
 ```text
 Entrada
@@ -1489,36 +1665,47 @@ decisão de retirada
 Fairtheoir
 ```
 
-## Setores visuais
-### 1. Muralha Externa
-Mais próxima da fantasia aparente de “fortaleza ocupada”. Patrulhas, antigas barricadas, postos de vigia e depósitos.
+## Setores
 
-### 2. Quartel
+### Muralha Externa
+
+Patrulhas, antigas barricadas, postos de vigia e depósitos.
+
+### Quartel
+
 Camas humanas antigas, depósitos, arsenal abandonado e reparos recentes.
 
-### 3. Interior Ocupado
-Camas improvisadas, alimentos, recipientes, ferramentas, curativos e espaços adaptados para viver. Aqui ocorre o evento do monstro ferido.
+### Interior Ocupado
 
-### 4. Bastião Interno
-Área mais defensável. Cosantóir protege uma passagem importante, existe recuperação e o Portão do Bastião leva a Fairtheoir.
+Camas improvisadas, alimentos, recipientes, ferramentas, curativos e espaços adaptados para viver.
 
-## Primeiros combates
-Dois inimigos Comuns principais ensinam ritmos opostos.
+Aqui ocorre o evento do monstro ferido.
 
-### Crúbach — Batedor das Muralhas
+### Bastião Interno
+
+Área mais defensável. Cosantóir protege uma passagem importante; existe recuperação; o Portão do Bastião leva a Fairtheoir.
+
+---
+
+# 25. Inimigos de Dún Liath
+
+## Crúbach — Batedor das Muralhas
+
 **Categoria:** Comum.
 
 Papel: rápido e frágil.
 
-Dano principal: **Corte**.
+Dano principal: Corte.
 
-Visual: corpo relativamente magro, braços longos, garras, pouca proteção e sinais claros de uso de roupas, bolsas, ferramentas e peças reaproveitadas.
+Visual: corpo relativamente magro, braços longos, garras, pouca proteção e sinais de roupas, bolsas, ferramentas e peças reaproveitadas.
 
 Habilidades-base:
-- **Talho** — Corte simples;
+
+- **Talho** — Corte com pressão de Sangramento;
 - **Salto Curto** — acelera/pressiona a próxima ação.
 
 Resistências-base:
+
 - Corte: Normal;
 - Perfuração: Fraco;
 - Impacto: Normal;
@@ -1527,37 +1714,41 @@ Resistências-base:
 - Arcano: Normal;
 - Sagrado: Normal.
 
-Sem imunidades automáticas. Corpo leve favorece vulnerabilidade a Atordoamento.
+Corpo leve favorece vulnerabilidade a Atordoamento.
 
 Função didática:
 
 > **velocidade também é uma ameaça.**
 
-### Tromghiallach — Guarda Pesado
+## Tromghiallach — Guarda Pesado
+
 **Categoria:** Comum.
 
 Papel: lento e resistente.
 
-Dano principal: **Impacto**.
+Dano principal: Impacto.
 
-Visual: corpo pesado, pescoço curto, mandíbula larga, pele espessa, placas de madeira/metal reaproveitadas e arma improvisada feita de partes da fortificação.
+Visual: corpo pesado, pescoço curto, mandíbula larga, pele espessa, placas reaproveitadas e arma improvisada feita de partes da fortificação.
 
 Habilidades-base:
-- **Golpe Pesado** — ataque lento de Impacto;
+
+- **Golpe Pesado** — telegraph de Impacto e buildup de Atordoamento;
 - **Firmar Posição** — defesa temporária.
 
 Resistências-base:
+
 - Corte: Resistente;
 - Perfuração: Normal;
 - Impacto: Normal;
 - demais tipos: Normal.
 
 Status:
+
 - Sangramento: Resistente;
 - Atordoamento: Resistente;
 - demais: Normal.
 
-Leitura inicial:
+Leitura:
 
 ```text
 Crúbach → rápido / vulnerável
@@ -1565,193 +1756,145 @@ Tromghiallach → lento / resistente
 ```
 
 ## Cosantóir — Protetor da Passagem
+
 **Categoria:** Elite.
 
-É um indivíduo da comunidade com função de defesa, não uma espécie ou tier biológico diferente.
+É um indivíduo da comunidade com função de defesa, não espécie ou tier biológico diferente.
 
-Visual: escudo improvisado, lança curta, armadura de peças humanas reaproveitadas, marcas de reparo e aparência funcional, não ornamentação de vilão.
+Visual: escudo improvisado, lança curta, armadura de peças humanas reaproveitadas e marcas de reparo.
 
 Habilidades-base:
+
 - **Estocada** — Perfuração moderada;
-- **Golpe de Escudo** — Impacto + buildup de Atordoamento;
+- **Golpe de Escudo** — Impacto + Atordoamento;
 - **Postura de Defesa** — redução temporária de dano;
-- **Avanço do Guardião** — primeiro grande telegraph do jogo, com barra de preparação, ataque forte de Impacto/Perfuração, buildup alto de Atordoamento e pequena janela posterior de vulnerabilidade.
+- **Avanço do Guardião** — grande telegraph, ataque forte, alto buildup de Atordoamento e janela posterior de vulnerabilidade.
 
-Mecânica de **Defesa de Outro**: quando acompanhado por um Comum em condição crítica, Cosantóir pode tentar assumir pressão/Ameaça ou proteger o aliado.
+### Defesa de Outro
 
-Isso introduz sutilmente a ideia de que os monstros se defendem como grupo antes do tutorial completo de Party.
+Quando acompanhado de um Comum em condição crítica, Cosantóir pode priorizar proteção do aliado ou assumir pressão.
 
-Loot temático possível: **Escudo da Passagem**.
+Isso introduz a ideia de que os monstros se defendem como grupo antes do tutorial completo de Party.
 
-Identidade do Escudo da Passagem:
-- defesa;
-- Vitalidade;
-- Vigor;
-- resistência a Atordoamento;
-- atributos procedurais normais conforme raridade.
+Cosantóir não deve ser apenas um Comum com mais Vida.
 
-## Composições iniciais
-Exemplos de progressão:
-1. 1 Crúbach;
-2. 1 Tromghiallach;
-3. 2 Crúbach;
-4. 1 Tromghiallach + 1 Crúbach;
-5. 1 Tromghiallach + 2 Crúbach;
-6. Cosantóir + 1 Crúbach.
+---
 
-## Progressão narrativa dos inimigos
+# 26. Evento Matar/Poupar
 
-> **Patrulha → Resistência → Defesa → Proteção → Último Vigia.**
+Na primeira visita, um monstro adulto ferido protege outro indivíduo mais fraco.
 
-Na primeira leitura, os inimigos apenas parecem ficar mais fortes. Na leitura posterior, quanto mais fundo o jogador avança, mais desesperadamente a comunidade tenta impedir que ele chegue até ela.
+O protegido não precisa ser criança, evitando tornar a decisão moralmente óbvia.
 
-## Primeiro Elite obrigatório
-Na primeira visita, Cosantóir é obrigatório para ensinar:
-- telegraph;
-- habilidade perigosa;
-- buildup relevante;
-- janela de vulnerabilidade;
-- proteção de outro indivíduo.
+O ferido demonstra linguagem, compreensão, medo e proteção, mas não ataca imediatamente.
 
-Ele não deve ser apenas um Comum com mais Vida.
-
-## Primeira bifurcação
-Irreversível, com descrições ambientais curtas e sem indicar “caminho bom/ruim”. Ensina ausência de backtracking.
-
-## Primeira recompensa relevante e Bolsa de Expedição
-Ainda no começo da Dungeon, o jogador obtém recompensa prática — dinheiro, equipamento, consumível ou material — e aprende que tudo obtido naquela expedição permanece em risco até uma saída segura.
-
-## Evento obrigatório — monstro ferido
-Um monstro adulto ferido protege outro indivíduo mais fraco. O protegido não precisa ser criança, evitando tornar a decisão moralmente óbvia.
-
-O ferido ergue a arma, mas não ataca imediatamente. Sua fala deve ser curta e comunicar algo equivalente a:
-
-> “Já levaram os outros. Não vai levar este.”
-
-O jogador percebe fala, compreensão, medo e proteção.
-
-Escolha apresentada apenas como:
+Escolha apresentada somente como:
 
 ```text
 Matar
 Poupar
 ```
 
-Sem cores de moralidade, coração, alinhamento, pontos ou aviso de consequências.
+Sem:
 
-### Matar
-O jogador luta e recebe loot normal apropriado. O indivíduo protegido pode fugir ou permanecer silencioso conforme encenação.
+- cores de moralidade;
+- coração;
+- alinhamento;
+- preview de recompensa;
+- aviso de “boa” ou “má” consequência.
 
-### Poupar
+## Matar
+
+O jogador luta. O indivíduo protegido pode fugir.
+
+Não existe bônus moral ou recompensa especial por escolher esse caminho.
+
+## Poupar
+
 O ferido permanece desconfiado, não agradece calorosamente e recua/permite passagem junto do protegido.
 
-**Poupar não concede recompensa imediata de item**, evitando transformar a escolha narrativa em cálculo de loot.
+Não concede recompensa imediata de item.
 
-Consequências são posteriores e ambos os caminhos geram conteúdo.
+## Persistência
 
-Regra:
+A decisão gera estado persistente e altera leitura/acontecimentos posteriores.
 
-> **Escolhas narrativas mudam o caminho; não escolhem entre “conteúdo” e “castigo”.**
+Se poupado, visitas posteriores podem mostrar sinais de evacuação organizada ou sobreviventes.
 
-## Evidência ambiental depois do evento
-Quanto mais fundo o jogador avança, mais aparecem:
-- camas improvisadas;
-- comida armazenada;
-- itens reparados;
-- espaços de cuidado;
-- desenhos/inscrições;
-- objetos pessoais.
+Se morto, a área pode apresentar abandono mais caótico, novas barricadas, outros personagens ou registros.
 
-O cenário sugere comunidade sem texto explícito dizendo ao jogador o que pensar.
+Nenhum lado recebe simplesmente “mais loot”.
 
-## Fragmento do tratado
-Obrigatório na segunda metade, encontrado em antiga **Sala de Comando** humana próxima ao objetivo da missão.
-
-O documento é parcialmente destruído e sugere elementos como cessar hostilidades, representantes ou passagem segura, sem declarar amizade plena.
-
-O fato de estar em arquivos humanos reduz a leitura de que foi fabricado pela comunidade atual.
-
-A fortificação foi relevante historicamente, mas o tratado não precisa ter sido assinado ali; pode ter sido arquivado, copiado ou transportado.
-
-## Recuperação garantida da primeira visita
-Antes da reta final há uma sala garantida que:
-- restaura recursos;
-- permite primeira troca de equipamento dentro de Dungeon;
-- reforça que recuperação **não protege o loot**.
-
-Pode assumir visual de antiga enfermaria humana ou abrigo recentemente abandonado.
-
-## Foreshadowing de Fairtheoir
-Antes do Boss aparecem:
-- portas reforçadas pelo lado de dentro;
-- corpos de invasores;
-- marcas enormes;
-- caminhos deliberadamente bloqueados;
-- sinais de que indivíduos menores eram protegidos atrás da linha defensiva.
-
-Primeira leitura: “há uma criatura terrível lá dentro”.
-
-Leitura posterior: “ela manteve os invasores do lado de fora”.
-
-## Decisão pré-Boss
-Interface enfatiza risco:
-
-```text
-Retornar à Cidade Livre
-→ mantém Bolsa de Expedição
-
-Entrar no Portão do Bastião
-→ loot continua em risco
-→ enfrentar Fairtheoir
-```
-
-Não apresentar “continuar = recompensa melhor” como decisão moral ou óbvia.
+> **Escolhas narrativas mudam o caminho; não escolhem entre conteúdo e castigo.**
 
 ---
 
-# Fairtheoir — O Último Vigia
+# 27. Fragmento do Tratado
+
+Obrigatório na segunda metade da primeira visita, em uma antiga área de comando humana próxima ao objetivo do contrato.
+
+O documento é parcialmente destruído e comprova apenas que humanos e monstros já negociaram formalmente no passado.
+
+Pode mencionar:
+
+- cessar hostilidades;
+- representantes;
+- limites territoriais;
+- passagem segura.
+
+Não revela:
+
+- quem rompeu o acordo;
+- por quê;
+- qual lado estava certo;
+- a verdade completa sobre a guerra.
+
+O fato de estar em arquivo humano reduz a leitura de que foi fabricado pela comunidade atual.
+
+---
+
+# 28. Fairtheoir — O Último Vigia
 
 ## Papel narrativo
+
 Boss fixo de Dún Liath.
 
-É um monstro adulto e principal defensor da comunidade. Não é rei, chefe tribal, general, criatura invocada ou besta irracional.
+Monstro adulto e principal defensor da comunidade.
 
-Sua função narrativa é simples:
+Não é rei, chefe tribal, general, criatura invocada ou besta irracional.
 
-> ele foi o indivíduo que permaneceu na passagem enquanto os outros recuavam.
+> **Ele foi o indivíduo que permaneceu na passagem enquanto os outros recuavam.**
 
 A Ordem o descreve apenas como uma criatura maior ocupando o interior.
 
 ## Aparência
+
 - alto;
 - torso largo;
 - braços longos;
 - postura levemente curvada;
-- pele espessa, irregular e marcada;
+- pele espessa e marcada;
 - mandíbula larga e dentes expostos;
-- visual grotesco segundo padrões humanos, mas não demoníaco.
+- grotesco segundo padrões humanos, mas não demoníaco.
 
 ## Equipamento
-Armadura defensiva remendada com:
-- peças da fortificação;
-- placas militares humanas reaproveitadas;
-- couro;
-- correntes;
-- madeira;
-- múltiplos reparos.
 
-Arma: **Viga de Guarda**, peça de madeira/metal reforçada derivada das defesas da fortificação.
+Armadura defensiva remendada com peças da fortificação, placas militares humanas, couro, correntes, madeira e reparos sucessivos.
 
-Escudo: **Escudo da Muralha**, grande placa irregular reforçada e marcada por ataques.
+Arma: **Viga de Guarda**.
+
+Escudo: **Escudo da Muralha**.
 
 ## Ficha conceitual
+
 **Categoria:** Boss.
 
 Papel: defensor físico.
 
-Dano principal: **Impacto**.
+Dano principal: Impacto.
 
 Resistências-base:
+
 - Corte: Resistente;
 - Perfuração: Normal;
 - Impacto: Normal;
@@ -1761,55 +1904,59 @@ Resistências-base:
 - Sagrado: Normal.
 
 Status-base:
+
 - Veneno: Normal;
 - Sangramento: Resistente;
 - Atordoamento: Muito Resistente;
 - Queimadura: Normal;
 - Congelamento: Normal.
 
-Não possui imunidade automática por ser Boss. A configuração inicial evita tornar uma classe inicial “errada”.
+Não possui imunidade automática por ser Boss.
 
 ## Fase 1 — O Vigia
-Fairtheoir mantém posição entre o jogador e o setor protegido.
+
+Mantém posição entre o jogador e o setor protegido.
 
 Habilidades:
-- **Pancada** — Impacto lento/moderado;
-- **Golpe Pesado** — telegraph, alto Impacto e buildup de Atordoamento;
-- **Varredura** — mais rápida, dano moderado;
-- **Postura de Guarda** — defesa temporária.
+
+- Pancada;
+- Golpe Pesado;
+- Varredura;
+- Postura de Guarda.
 
 ## Fase 2 — Desespero
-Limiar de Vida exato **A definir**.
 
-Fairtheoir observa a passagem atrás de si, perde/abandona o escudo e utiliza a Viga de Guarda com duas mãos.
+Ao atingir o limiar definido pelo balanceamento, Fairtheoir conclui a ação que já estiver em andamento e só então realiza a transição.
 
-Fica:
-- menos defensivo;
-- mais frequente/agressivo;
-- mais vulnerável;
-- mais perigoso.
+Abandona parte da defesa e passa a agir com:
+
+- menor defesa;
+- maior frequência/agressividade;
+- maior vulnerabilidade;
+- maior risco ofensivo.
 
 Habilidade marcante:
 
-**Última Investida** — telegraph longo, alto Impacto, buildup alto de Atordoamento e vulnerabilidade posterior.
+**Última Investida** — telegraph longo, alto Impacto, alto buildup de Atordoamento e janela posterior de vulnerabilidade.
 
-A mudança de fase altera comportamento, não apenas números.
-
-Fairtheoir nunca foge e preserva o posicionamento de proteção.
+Fairtheoir nunca foge e preserva seu posicionamento de proteção.
 
 ## Morte
+
 Sem fala, flashback ou texto moral.
 
 Fairtheoir cai de joelhos, tenta uma última vez colocar o corpo entre o jogador e a passagem e então desaba.
 
 ## Depois do Boss
+
 Atrás do Portão do Bastião existem:
+
 - suprimentos;
 - camas;
 - objetos pessoais;
-- bandagens/ferramentas;
+- bandagens e ferramentas;
 - sinais de evacuação;
-- saída secundária aberta ou recentemente usada.
+- saída secundária recentemente usada.
 
 Leitura possível:
 
@@ -1825,128 +1972,147 @@ chegou tarde demais para alcançar os demais
 
 A Dungeon não explica isso diretamente.
 
-## Bestiário
-Entrada: **Fairtheoir — O Último Vigia**.
-
-Informações podem evoluir conforme descobertas posteriores, incluindo observação de que seu posicionamento parecia deliberadamente defensivo.
-
 ---
 
-# Loot de Dún Liath
+# 29. Loot de Dún Liath
 
-Filosofia:
+## Filosofia
 
 > **Poucos itens exclusivos, mas cada um com função clara.**
 
 ## Sucata de Dún Liath
+
 Material geral compartilhado da Dungeon, representando placas militares, rebites, ferragens e componentes recuperados.
 
 Fontes possíveis:
+
 - Crúbach;
 - Tromghiallach;
 - Cosantóir;
 - salas de tesouro;
 - eventos apropriados.
 
-Usos: Forja, reparos, equipamentos temáticos, receitas defensivas e upgrades normais.
+Usos:
 
-Não criar materiais como Garra de Crúbach, Dente de Tromghiallach etc. apenas para dar identidade a cada inimigo.
+- Forja;
+- reparos;
+- equipamentos temáticos;
+- receitas defensivas;
+- upgrades normais.
 
 > **Identidade de inimigo não exige um material de crafting exclusivo para cada criatura.**
 
 ## Fragmento de Fairtheoir
-Recurso exclusivo garantido em **toda vitória contra Fairtheoir**.
 
-Fonte explícita: Fairtheoir.
+Recurso exclusivo garantido em toda vitória contra Fairtheoir.
 
 Pode ser usado em:
+
 - equipamentos do Boss;
 - receitas especiais;
 - upgrade +2;
 - crafting defensivo de Dún Liath.
 
 ## Equipamentos temáticos
+
 ### Escudo da Passagem
-Associado a Cosantóir. Defesa, Vitalidade, Vigor e resistência a Atordoamento como identidade-base; atributos procedurais normais.
+
+Associado a Cosantóir. Identidade:
+
+- Defesa;
+- Vitalidade;
+- Vigor;
+- resistência a Atordoamento;
+- atributos procedurais normais conforme raridade.
 
 ### Escudo do Último Vigia
-Modelo de Boss, mais pesado e defensivo. Identidade-base:
-- alta defesa física;
+
+Modelo de Boss, mais pesado e defensivo.
+
+Identidade:
+
+- alta Defesa física;
 - resistência a Impacto;
 - sobrevivência/estabilidade;
-- possível interação com Ameaça conforme balanceamento.
+- possível interação com Ameaça quando apropriado.
 
-Continua equipamento normal procedural, permitindo rolls fora do papel tradicional.
+Continua equipamento normal procedural.
 
 ### Viga do Vigia
-Versão adaptada da arma de Fairtheoir para uso do personagem:
-- arma pesada;
+
+Arma pesada adaptada da arma de Fairtheoir:
+
 - Impacto alto;
 - ataque lento;
 - bom buildup de Atordoamento;
 - alto consumo de Stamina;
 - favorece Força.
 
-## Receita — Reforço do Vigia
-Receita de Forja usando conceitualmente:
+## Reforço do Vigia
+
+Receita de Forja que usa conceitualmente:
 
 `Sucata de Dún Liath + material normal + Fragmento de Fairtheoir`
-
-Quantidades **A definir**.
 
 Representa técnica defensiva da fortificação e não cria nova categoria de item.
 
 ## Primeiro clear por dificuldade
+
 | Dificuldade | Recompensa especial garantida |
 |---|---|
-| **Fácil** | **Guarda Instintiva** |
-| **Normal** | **Receita: Reforço do Vigia** |
-| **Difícil** | **Escudo do Último Vigia** |
-| **Impossível** | **Lacre do Comandante** |
+| Fácil | Guarda Instintiva |
+| Normal | Receita: Reforço do Vigia |
+| Difícil | Escudo do Último Vigia |
+| Impossível | Lacre do Comandante |
 
 ### Guarda Instintiva
-Categoria: **Universal**.
 
-Perfil: **Defensiva**.
+Categoria: Universal.
 
-Reduz temporariamente o próximo dano significativo recebido. Valores, duração e cooldown **A definir**.
+Perfil: Defensiva.
 
-É a primeira recompensa ideal por ser utilizável por qualquer classe e apresentar uma habilidade Universal.
+Reduz temporariamente o próximo dano significativo recebido.
 
 ### Reforço do Vigia
-Primeiro clear Normal desbloqueia permanentemente a receita. Não exige que o jogador continue esperando o mesmo conhecimento dropar.
 
-### Escudo do Último Vigia — Difícil
-Primeiro clear garante o modelo, não necessariamente um roll procedural perfeito. Farm posterior pode buscar versões melhores.
+Primeiro clear Normal desbloqueia permanentemente a receita.
 
-### Lacre do Comandante — Impossível
+### Escudo do Último Vigia
+
+Primeiro clear Difícil garante o modelo, não necessariamente um roll procedural perfeito.
+
+### Lacre do Comandante
+
 Item permanente de exploração/lore, não equipamento nem material consumível.
 
-Descrição conceitual: lacre militar antigo cujo símbolo não corresponde completamente às insígnias atuais da Ordem de Ferro.
-
-Permite acessar o **Arquivo Selado**.
+Permite acessar o Arquivo Selado.
 
 ---
 
-# Segredos de Dún Liath
+# 30. Segredos de Dún Liath
 
 ## Segredo simples
-Sala pequena com Sucata, equipamento, documento ou consumíveis. Descoberta por pistas/exploração normal.
 
-## Alojamento do Oficial
+Sala pequena com Sucata, equipamento, documento ou consumíveis.
+
+## Aposentos do Oficial
+
 Ligado à Chave Enferrujada para acesso antecipado.
 
 Pode conter:
+
 - loot interessante;
 - registro militar;
 - pista sobre o Arquivo Selado.
 
-Nenhuma recompensa essencial. Outra forma de acesso deve existir futuramente.
+Nenhuma recompensa essencial.
 
 ## Arquivo Selado
+
 Segredo de alto nível ligado ao Lacre do Comandante.
 
 Contém:
+
 - registros militares;
 - documentos;
 - informações sobre antigos habitantes;
@@ -1956,13 +2122,16 @@ Contém:
 Incursão Automática não acessa essa sala.
 
 ## Porta sem Insígnia
-Evento raro que pode aparecer antes de o jogador saber resolvê-lo. A porta antiga inicialmente não abre. Conhecimento ou item posterior revela sua relação com camadas profundas do Arquivo.
 
-O objetivo é criar reconhecimento persistente: “eu já vi isso antes”.
+Evento raro que pode aparecer antes de o jogador saber resolvê-lo.
+
+Conhecimento/item posterior revela sua relação com camadas profundas do Arquivo.
+
+Objetivo: criar reconhecimento persistente — “eu já vi isso antes”.
 
 ---
 
-# Relíquia secreta — Selo de Dún Liath
+# 31. Relíquia — Selo de Dún Liath
 
 **Tipo:** Relíquia — Amuleto.
 
@@ -1984,11 +2153,9 @@ descobrir compartimento/condição secreta
 possibilidade de obter Selo de Dún Liath
 ```
 
-Condição/chance final **A definir**.
-
 Efeito único conceitual: **Trégua Instável**.
 
-Alternar adequadamente entre habilidades de perfis diferentes cria sinergia:
+Alternar corretamente entre perfis diferentes cria sinergia:
 
 ```text
 Agressiva
@@ -2000,103 +2167,84 @@ Defensiva
 próxima Agressiva recebe benefício
 ```
 
-Valores, janela e limites **A definir**.
-
-A mecânica representa duas forças diferentes funcionando melhor quando alternadas e conecta gameplay à história da Dungeon.
+Valores, janela, chance final e limites são dados de balanceamento/conteúdo ainda A definir.
 
 Como Relíquia:
-- é negociável no mercado;
+
+- é negociável;
 - possui histórico de donos;
 - utiliza o Relicário;
 - pode registrar primeiro descobridor e vendas.
 
-Quantidade global limitada ou não permanece **A definir**.
-
 ---
 
-# Eventos e geração procedural de Dún Liath
+# 32. Eventos e geração procedural de Dún Liath
 
-Depois do primeiro clear, runs combinam combate, Elite, evento, tesouro, armadilha, recuperação, segredo e Boss, com limites para evitar gerações incoerentes.
+Depois do primeiro clear, runs combinam combate, Elite, evento, tesouro, armadilha, recuperação, segredo e Boss.
 
 ## Bifurcações
+
 Usam pistas ambientais, nunca informação explícita da recompensa.
 
-Exemplos de leitura:
+Exemplos:
+
 - marcas recentes atravessando poeira;
-- vento com cheiro de sal/ferrugem;
+- cheiro de sal/ferrugem;
 - ruído de metal;
 - sinais de uso recente.
 
 > **A descrição informa risco e contexto, não o resultado exato.**
 
-O conhecimento acumulado do próprio jogador pode tornar certas pistas reconhecíveis ao longo das runs.
-
 ## Eventos-base
-Dún Liath começa com aproximadamente 8–10 eventos possíveis, dos quais apenas alguns aparecem por run. Quantidade exata pode mudar no balanceamento de conteúdo.
 
 ### Barricada Abandonada
-Opções como Forçar Passagem ou procurar outro acesso. Pode usar atributos/condições e reforça que a comunidade estava se defendendo.
+
+Pode permitir Forçar Passagem ou procurar outro acesso.
 
 ### Depósito Esquecido
-Antigo depósito humano com Sucata, consumíveis ou equipamento normal; pode conter mecanismo antigo.
+
+Antigo depósito humano com Sucata, consumíveis ou equipamento normal.
 
 ### Ferido Ausente
-Curativos usados, água e sinais de alguém que estava sendo tratado. Evento ambiental sem NPC necessário.
+
+Curativos usados, água e sinais de alguém que estava sendo tratado.
 
 ### Vozes Atrás da Parede
-O jogador ouve moradores em área inacessível, demonstrando vida além das salas de combate.
+
+Moradores em área inacessível demonstram vida além das salas de combate.
 
 ### Soldado Antigo
-Cadáver humano de período claramente anterior à ocupação atual, podendo conter insígnia, documento ou loot e separando eras históricas.
+
+Cadáver humano de período anterior à ocupação atual, separando eras históricas.
 
 ### Suprimentos da Comunidade
-O jogador pode **Levar** ou **Deixar**. Não existe barra moral. Levar dá recursos; deixar pode mudar conteúdo posterior. Nenhuma opção é declarada correta.
+
+Escolha como **Levar** ou **Deixar**, sem barra moral. Nenhuma opção é declarada correta.
 
 ## Armadilhas
+
 ### Queda de Pedras
+
 Dano e possível Atordoamento.
 
 ### Piso Instável
-Pode causar dano, consumir Vida antes de encontro ou ocasionalmente levar a sala alternativa.
+
+Pode causar dano, consumir Vida antes de encontro ou levar a sala alternativa.
 
 ### Dispositivo Militar Antigo
-Mecanismo humano de lança, peso, portão ou defesa antiga.
+
+Mecanismo humano de lança, peso, portão ou defesa.
 
 ### Barricada Improvisada
-Defesa recente da comunidade, distinguível visualmente das estruturas humanas antigas. Pode causar dano ou iniciar combate.
+
+Defesa recente da comunidade, visualmente distinta das estruturas humanas antigas.
 
 A Dungeon diferencia:
 
 > **defesas humanas antigas** vs **defesas recentes da comunidade**.
 
-## Detecção
-Interface pode evoluir de alerta vago para informação mais precisa conforme atributos, parceiro, equipamento ou conhecimento. Não é necessário mostrar percentual na leitura padrão.
-
-## Salas de recuperação
-Podem assumir visual de:
-- **Antiga Enfermaria** humana;
-- **Abrigo Abandonado** recentemente usado pela comunidade.
-
-Mesma função mecânica, interpretação narrativa diferente.
-
-## Persistência de Matar/Poupar
-### Se poupou
-Podem aparecer sinais de passagem sem combate, mudanças em inscrições, recursos deixados em determinado contexto, diálogos ou encontro futuro relacionado aos sobreviventes.
-
-### Se matou
-Podem aparecer barricadas diferentes, outro personagem, registros, interpretações ou caminhos narrativos alternativos.
-
-Nenhum lado recebe simplesmente “mais loot”.
-
-## Segredos por dificuldade
-- Fácil: estrutura básica;
-- Normal: mais eventos militares/documentos;
-- Difícil: armadilhas e eventos históricos mais exigentes;
-- Impossível: camadas profundas, incluindo caminho do Arquivo Selado.
-
-> **Dificuldade não aumenta apenas números; ela expande a própria Dungeon.**
-
 ## Regras de geração
+
 - pelo menos uma bifurcação significativa por run;
 - eventos narrativos raros não aparecem sempre;
 - segredo nunca é obrigatório para concluir;
@@ -2105,6 +2253,7 @@ Nenhum lado recebe simplesmente “mais loot”.
 - requisitos servem a vantagens, atalhos, conteúdo opcional ou segredo.
 
 ## Conhecimento persistente
+
 A descrição de Dún Liath pode evoluir conforme descobertas:
 
 1. antiga fortificação ocupada por monstros;
@@ -2112,26 +2261,26 @@ A descrição de Dún Liath pode evoluir conforme descobertas:
 3. registros mostrando relevância histórica anterior;
 4. novas informações após Arquivo Selado.
 
-O jogador ganha não apenas loot, mas conhecimento permanente sobre o local.
-
 ---
 
-# Dificuldades de Dún Liath
-
-Regra de progressão:
+# 33. Dificuldades de Dún Liath
 
 > **Fácil ensina cada peça. Normal ensina como as peças trabalham juntas. Difícil exige resposta aos sistemas. Impossível exige domínio completo da Dungeon.**
 
 ## Fácil
+
 ### Crúbach
+
 - Talho;
 - Salto Curto.
 
 ### Tromghiallach
+
 - Golpe Pesado;
 - Firmar Posição.
 
 ### Cosantóir
+
 - Estocada;
 - Golpe de Escudo;
 - Postura de Defesa;
@@ -2139,99 +2288,52 @@ Regra de progressão:
 - proteção simples de aliado.
 
 ### Fairtheoir
+
 Fase 1: Pancada, Golpe Pesado, Varredura, Postura de Guarda.
 
 Fase 2: maior agressividade, menor defesa e Última Investida.
 
-Objetivo: ensinar telegraphs, ritmos e a existência das duas fases.
-
 ## Normal
+
 Inimigos começam a interagir entre si.
 
-### Crúbach — Cerco
-Aumenta pressão quando outro inimigo mantém a atenção do jogador.
+- Crúbach — Cerco;
+- Tromghiallach — Cobertura Pesada;
+- Cosantóir — Interposição;
+- Fairtheoir — Contra-Impacto.
 
-### Tromghiallach — Cobertura Pesada
-Firmar Posição concede pequena proteção temporária a aliados próximos.
-
-### Cosantóir — Interposição
-Ao detectar aliado em condição crítica, pode priorizar sua defesa e assumir pressão/Ameaça.
-
-### Fairtheoir — Contra-Impacto
-Durante Postura de Guarda, receber ataques suficientes/intensos prepara contra-ataque de Impacto ao terminar a postura. Não pune atacar; pune ignorar completamente o estado defensivo.
-
-Última Investida pode gerar **Destroços** ou consequência temporária de arena. Forma exata **A definir**.
+Última Investida pode gerar Destroços ou consequência temporária de arena.
 
 ## Difícil
+
 Status e formações tornam-se centrais.
 
-### Crúbach — Ferida Aberta
-Pressão de ataques consecutivos pode gerar Sangramento.
-
-### Tromghiallach — Golpe Concussivo
-Golpe Pesado gera buildup relevante de Atordoamento.
-
-### Cosantóir — Formação Defensiva
-Com Crúbach, protege o aliado rápido e mantém pressão. Com Tromghiallach, cria linha defensiva limitada enquanto ambos estão ativos.
-
-### Fairtheoir — Ruptura
-Golpeia chão/estrutura com a Viga de Guarda, causando Impacto, Atordoamento e alteração temporária da arena. Forma exata da alteração **A definir**.
-
-Postura de Guarda torna determinados ataques menos eficientes sem criar imunidade.
-
-Fase 2 alterna agressão intensa e breves retornos defensivos.
+- Crúbach — Ferida Aberta;
+- Tromghiallach — Golpe Concussivo;
+- Cosantóir — Formação Defensiva;
+- Fairtheoir — Ruptura.
 
 ## Impossível
+
 A defesa da fortificação funciona de forma coordenada.
 
-### Crúbach — Caçada Coordenada
-IA oportunista: pressiona quando aliado defende, acelera após Atordoamento e reage a vulnerabilidades legíveis.
+- Crúbach — Caçada Coordenada;
+- Tromghiallach — Muralha Viva;
+- Cosantóir — Última Linha;
+- Fairtheoir usa kit definitivo em duas fases.
 
-### Tromghiallach — Muralha Viva
-Firmar Posição ganha função de cobertura/formação, exigindo decisão de pressionar ou aguardar mudança de estado.
-
-### Cosantóir — Última Linha
-Alterna de forma comunicada entre:
-- Proteger;
-- Avançar;
-- Reorganizar.
-
-### Fairtheoir — kit definitivo
-Mantém duas fases.
-
-Fase 1 usa Guarda, Contra-Impacto, Ruptura e posicionamento defensivo completo.
-
-Nova mecânica: **Linha Intransponível** — durante determinada postura, a rotação/forma de ataque do jogador pode fortalecer ou enfraquecer a defesa do Boss. Fórmula **A definir**.
-
-Transição de fase é mais expressiva: Fairtheoir percebe movimento atrás do portão e abandona parte da própria defesa, reforçando visualmente que está comprando tempo.
+Fairtheoir pode possuir **Linha Intransponível**, em que a forma de ataque/rotação do jogador influencia a eficiência da defesa do Boss.
 
 Fase 2: **Desespero Absoluto**.
 
-Combina Última Investida, Ruptura, ataques mais rápidos e Golpe Pesado modificado.
-
-Final: **Até o Último** — em Vida muito baixa, deixa de utilizar Postura de Guarda e executa última sequência agressiva. Não cura, não recebe nova barra, não ressuscita.
-
-A versão Impossível da Última Investida é extremamente perigosa, porém continua com telegraph longo e janela posterior clara.
-
-## Armadilhas por dificuldade
-- Fácil: poucas e simples;
-- Normal: mais variedade e alguns status;
-- Difícil: podem influenciar próximo combate;
-- Impossível: mecanismos mais complexos e atalhos acompanhados de risco.
-
-Nunca existir armadilha aleatória de morte instantânea sem informação adequada.
-
-## Recuperação por dificuldade
-Pode ficar menos frequente ou menos completa em dificuldades maiores, mas não precisa desaparecer totalmente. Continua importante para troca de equipamento e preparação pré-Boss.
-
-## Elites
-Cosantóir não deve ser banalizado por aparecer em excesso. Frequência e composição aumentam, mas sua identidade permanece especial.
+Final em Vida muito baixa: **Até o Último**, sequência agressiva sem cura, nova barra ou ressurreição.
 
 ---
 
-## Equipamentos
+# 34. Equipamentos
 
-##### Slots
+## Slots
+
 - Cabeça;
 - Peitoral;
 - Luvas;
@@ -2243,7 +2345,10 @@ Cosantóir não deve ser banalizado por aparecer em excesso. Frequência e compo
 - Anel 1;
 - Anel 2.
 
-##### Tipos iniciais
+Sem peso e sem durabilidade.
+
+## Tipos iniciais
+
 - Espada;
 - Espadão;
 - Machado;
@@ -2254,12 +2359,13 @@ Cosantóir não deve ser banalizado por aparecer em excesso. Frequência e compo
 - Catalisador mágico;
 - Escudo.
 
-Sem peso e sem durabilidade.
+## Procedural
 
-##### Procedural
 Equipamento normal = parte fixa + atributos procedurais.
 
-Atributos procedurais podem sair do papel tradicional do item, favorecendo builds híbridas.
+Atributos procedurais podem sair do papel tradicional do item e favorecer builds híbridas.
+
+Raridades:
 
 ```text
 Comum      → 1 atributo
@@ -2271,36 +2377,50 @@ Lendário   → 5
 
 Sem atributos negativos e sem nomes procedurais.
 
-##### Upgrade
-`+0 / +1 / +2`.
+Um mesmo atributo procedural não precisa ser permitido repetidamente no mesmo item; regras exatas do pool são dados de geração.
 
-Sem falha. Melhora apenas atributos base; não rerrola procedurais nem efeitos únicos.
+## Smart loot
 
-+1 usa materiais normais. +2 exige componente especial de Dungeon/Boss/evento. Sem custo em dinheiro.
+O jogo não depende de smart loot por classe como regra geral.
 
-Troca dentro de Dungeon somente em recuperação.
+Um Guerreiro pode encontrar um Cajado e um Mago pode encontrar uma Lança.
+
+Proteções contra RNG ruim devem vir de recompensas garantidas, crafting, comércio, Banco e progressão — não de transformar a classe inicial em filtro permanente de loot.
 
 ---
 
-## Inventário e armazenamento
+# 35. Inventário e armazenamento
 
-Inventário limitado e permanentemente expansível.
+Inventário é limitado e permanentemente expansível.
 
-Materiais e consumíveis empilham. Equipamentos são individuais.
+Materiais e consumíveis empilham.
 
-Banco separado do inventário carregado.
+Equipamentos são individuais.
 
-Bolsa de Expedição separa loot de Dungeon e o perde em caso de morte da run.
+Banco é separado do inventário carregado.
 
-Relíquias ficam no **Relicário**, com origem, identificador, primeiro dono, dono atual e histórico.
+Bolsa de Expedição separa loot de Dungeon em risco.
+
+Relíquias ficam no **Relicário**, com:
+
+- origem;
+- identificador;
+- primeiro dono;
+- dono atual;
+- histórico.
 
 Filtros, favoritos e bloqueio de itens devem evitar venda/desmontagem acidental.
 
+Capacidades numéricas e limites de stack são dados de economia/UX, não regras estruturais.
+
 ---
 
-## Relíquias e mercado
+# 36. Relíquias e mercado
 
-Relíquias são exceções ao equipamento normal:
+## Relíquias
+
+São exceções ao equipamento normal:
+
 - extremamente raras;
 - poderosas;
 - identidade/efeito próprios;
@@ -2310,16 +2430,20 @@ Relíquias são exceções ao equipamento normal:
 
 Somente Relíquias podem ser negociadas entre jogadores.
 
-Algumas podem ter quantidade global limitada; isso é definido individualmente.
+Algumas podem possuir quantidade global limitada, definida individualmente.
 
-##### Mercado
-Preço fixo definido livremente pelo vendedor. Sem leilão ou ofertas inicialmente.
+## Mercado
 
-Anúncio permanece até venda ou cancelamento. Limite de anúncios **A definir**.
+Preço fixo definido pelo vendedor.
+
+Sem leilão ou ofertas inicialmente.
+
+Anúncio permanece até venda ou cancelamento.
 
 Venda possui taxa removida da economia.
 
 Mercado acompanha:
+
 - última venda;
 - média;
 - maior venda;
@@ -2328,7 +2452,7 @@ Mercado acompanha:
 
 ---
 
-## Economia
+# 37. Economia
 
 Uma única moeda principal.
 
@@ -2336,9 +2460,10 @@ NPCs compram itens/equipamentos por valores do sistema.
 
 Desmontagem concede somente dinheiro.
 
-Sinks:
+Sinks principais:
+
 - expansão de inventário;
-- expansão de banco;
+- expansão de Banco;
 - taxas de mercado;
 - morte fora de Dungeon;
 - serviços de NPC quando aplicável.
@@ -2349,38 +2474,69 @@ Dungeons não possuem taxa monetária normal de entrada.
 
 Prestígio não custa dinheiro.
 
-NPCs podem exercer papéis de ferreiro, cozinheiro, mercador, curandeiro e vendedor básico **dentro das estruturas já existentes**, sem exigir novos edifícios iniciais.
+NPCs podem exercer papéis de ferreiro, cozinheiro, mercador, curandeiro e vendedor básico dentro das estruturas já existentes, sem exigir novos edifícios iniciais.
 
-Equipamento avançado vem principalmente de crafting, exploração, Dungeons, Bosses e eventos.
+Equipamento avançado vem principalmente de:
+
+- crafting;
+- exploração;
+- Dungeons;
+- Bosses;
+- eventos.
+
+## Morte fora de Dungeon
+
+Retorna o personagem à Cidade Livre e destrói uma parcela de dinheiro como sink.
+
+A fórmula exata é dado de balanceamento econômico.
+
+Dentro de Dungeon, a perda da Bolsa de Expedição já funciona como risco próprio e não precisa ser acompanhada automaticamente de segunda penalidade monetária.
 
 ---
 
-## Cidade e estrutura do mundo
+# 38. Cidade e estrutura do mundo
 
-##### Cidade Livre
+## Cidade Livre
+
 Uma única cidade principal inicialmente.
 
-Centro de NPCs, serviços, comércio, gerenciamento, narrativa e preparação.
+Centro de:
+
+- NPCs;
+- serviços;
+- comércio;
+- gerenciamento;
+- narrativa;
+- preparação.
 
 Território neutro de trégua:
-- ataques humanos/monstros proibidos;
+
+- ataques entre humanos/monstros proibidos;
 - comércio permitido;
 - origem/aparência não definem direitos;
 - estabilidade e contratos têm prioridade.
 
 Coexistência não significa amizade.
 
-##### Estruturas iniciais — somente cinco
-1. **Taverna** — parceiros e NPCs;
-2. **Banco** — armazenamento;
-3. **Relicário** — coleção/gestão de Relíquias;
-4. **Mercado** — negociação de Relíquias;
-5. **Ferreiro** — serviços de equipamento.
+## Estruturas iniciais
 
-##### Mundo
-Não existe estrutura de progressão por regiões nem sistema de viagem entre regiões. Atividades e Dungeons são acessadas diretamente pelos sistemas do jogo respeitando requisitos.
+Somente cinco estruturas principais:
 
-Cidade não possui nível/evolução própria por enquanto.
+1. Taverna;
+2. Banco;
+3. Relicário;
+4. Mercado;
+5. Ferreiro.
+
+Outros papéis de NPC podem existir dentro dessas estruturas.
+
+## Mundo
+
+Não existe estrutura de progressão por regiões nem sistema de viagem entre regiões.
+
+Atividades e Dungeons são acessadas diretamente pelos sistemas do jogo respeitando requisitos.
+
+A Cidade Livre não possui nível/evolução própria por enquanto.
 
 NPCs e estados da cidade podem mudar por Dungeon, quest, evento, decisão e progressão narrativa.
 
@@ -2388,9 +2544,10 @@ Eventos globais temporários podem alterar NPCs, diálogos, serviços, aparênci
 
 ---
 
-## Quests, NPCs e narrativa
+# 39. Quests, NPCs e narrativa
 
 Tipos:
+
 - Principal;
 - Secundária;
 - Parceiro;
@@ -2399,28 +2556,54 @@ Tipos:
 
 Quest principal não bloqueia progressão Idle básica.
 
-Escolhas podem alterar relação, NPCs, quests futuras, recompensas, eventos e estados narrativos.
+Escolhas podem alterar:
+
+- relações;
+- NPCs;
+- quests futuras;
+- recompensas;
+- eventos;
+- estados narrativos.
 
 Falha permanente de quest pode existir com moderação.
 
-NPCs não morrem nem desaparecem definitivamente devido às escolhas do jogador; presença, comportamento e disponibilidade podem mudar.
+NPCs não morrem nem desaparecem definitivamente do mundo devido às escolhas do jogador; presença, comportamento e disponibilidade podem mudar.
 
-Quests secretas podem nascer de itens, Dungeons, parceiros, diálogos, eventos e combinações de condições, sem marcador tradicional.
+Quests secretas podem nascer de:
 
-Diálogos são curtos e objetivos; lore profundo é opcional.
+- itens;
+- Dungeons;
+- parceiros;
+- diálogos;
+- eventos;
+- combinações de condições.
+
+Diálogos são curtos e objetivos. Lore profundo é opcional.
 
 NPCs lembram decisões relevantes.
 
-Requisitos podem usar atributos, skill/Prestígio, item, parceiro, quest ou estado anterior.
+Requisitos podem usar:
+
+- atributo;
+- Skill/Prestígio;
+- item;
+- parceiro;
+- quest;
+- estado anterior.
 
 ---
 
-## Prólogo e início do jogo
+# 40. Prólogo e onboarding
 
-##### Origem
-Personagem de terra distante, passado propositalmente aberto. Chega à Cidade Livre buscando sobrevivência, trabalho ou recomeço. Não conhece profecia nem manifesta poder especial.
+## Origem
 
-##### Fluxo
+Personagem de terra distante, passado propositalmente aberto.
+
+Chega à Cidade Livre buscando sobrevivência, trabalho ou recomeço.
+
+Não conhece profecia nem manifesta poder especial.
+
+## Fluxo
 
 ```text
 Criação
@@ -2435,17 +2618,21 @@ Taverna
 ↓
 primeira coleta escolhida
 ↓
-primeira melhoria/crafting
+primeira produção/preparação
 ↓
 primeiro combate
+↓
+técnicas básicas
 ↓
 primeiro contrato
 ↓
 Dún Liath
 ```
 
-##### Criação
+## Criação
+
 Mostra principalmente:
+
 - identidade;
 - atributos destacados;
 - equipamento inicial;
@@ -2455,56 +2642,164 @@ Mensagem explícita:
 
 > **A classe define apenas o início. Todas as formas de combate poderão ser aprendidas posteriormente.**
 
-##### Cidade Livre
-Introdução curta e visual. Pode mostrar humanos, monstros sob trégua, guardas, comércio e tensão. Sem lore dump.
+## Cidade Livre
 
-##### Taverna
-Primeira conversa obrigatória curta. Respostas podem envolver trabalho, dinheiro, fugir do passado ou sobreviver, caracterizando sem fixar origem canônica.
+Introdução curta e visual. Pode mostrar humanos e monstros sob trégua, comércio e tensão.
 
-##### Primeira atividade Idle
+Sem lore dump.
+
+## Taverna
+
+Primeira conversa obrigatória curta.
+
+Respostas podem envolver trabalho, dinheiro, fugir do passado ou sobreviver, caracterizando o personagem sem fixar origem canônica.
+
+## Primeira atividade Idle
+
 Escolha livre entre:
+
 1. Mineração;
 2. Lenhador;
 3. Pesca;
 4. Herbologia.
 
-Ensina `escolher → iniciar → aguardar → recurso + XP → automático` e reforça ausência de drops secundários aleatórios.
+Ensina:
 
-##### Produção
-Primeira pequena melhoria de equipamento segue. Metalurgia, Forja e Culinária são ensinadas separadamente no primeiro uso.
+`escolher → iniciar → aguardar → recurso + XP → automático`
 
-##### Primeiro combate
-Ensina apenas:
+## Produção
+
+Primeira preparação útil demonstra o ciclo correspondente à coleta escolhida.
+
+Metalurgia, Forja e Culinária são ensinadas no primeiro uso relevante.
+
+## Primeiro combate
+
+Deve ser um encontro simples que ensina:
+
 - ataque automático;
 - Vida/Mana/Stamina;
-- ativo;
+- habilidade ativa;
 - consumível;
-- estilos Agressivo/Defensivo/Misto.
+- estilos;
+- primeiro telegraph simples.
 
-Pode sugerir estilo amigável à classe — Guerreiro Agressivo, Acólito Defensivo, Errante Misto — mas o jogador pode mudar imediatamente.
+O primeiro inimigo deve preferencialmente ser uma ameaça selvagem ou neutra ao conflito político, para não antecipar a revelação narrativa sobre a inteligência dos monstros.
 
-##### Tutorial contextual
+## Técnicas básicas
 
-> **O jogador aprende jogando; nenhum sistema avançado é explicado antes de se tornar relevante.**
+Habilidades gerais podem ser aprendidas por contexto e uso dos sistemas, não por uma árvore de habilidades precoce obrigatória.
 
-Aplicações: primeira Metalurgia, Forja, Culinária, minigame, Prestígio, parceiro, Relíquia, Relicário e mercado.
+Antes do primeiro contrato de Dungeon, o personagem deve ter opções suficientes para que os quatro slots ativos sejam um sistema real, ainda que não seja obrigatório preenchê-los todos.
 
-Jogador começa sozinho. Mira é introduzida depois de Dún Liath.
+## Contrato de Dún Liath
 
-##### Visão inicial dos monstros
-A narrativa inicial usa principalmente a visão humana dominante. Dún Liath é a primeira contradição clara.
+Antes de entrar, o jogador deve ter oportunidade clara de:
+
+- revisar equipamento;
+- revisar habilidades;
+- selecionar estilo;
+- configurar consumíveis;
+- entender o risco da Bolsa de Expedição.
+
+## Regra de diálogo obrigatório
+
+Conversas obrigatórias do onboarding devem devolver controle ao jogador rapidamente; referência de 3–5 falas antes de nova ação do jogador.
+
+> **O jogador aprende jogando.**
 
 ---
 
-## História e lore
+# 41. UX e interface
 
-##### Identidade cultural/geográfica
+## Direção
+
+- minimalista;
+- elegante;
+- padronizada;
+- moderna;
+- inspiração Apple em clareza e consistência;
+- claramente Game UI, não aplicativo genérico.
+
+## Regras de UX
+
+> **A informação necessária para decidir deve aparecer antes da decisão.**
+
+> **Combate automático deve ser explicável visualmente.**
+
+> **Nenhuma ação manual concede uma ação adicional.**
+
+> **Itens em risco devem ser visualmente distintos dos itens seguros.**
+
+> **Telegraph perigoso deve ser legível antes de ser punitivo.**
+
+> **Valores podem mudar sem exigir reconstrução da hierarquia das telas.**
+
+## Combate
+
+A interface deve permitir observar:
+
+- Vida e recursos;
+- ação atual;
+- cooldowns;
+- condição inválida;
+- falta de recurso;
+- habilidade escolhida pela automação;
+- telegraphs;
+- buildup de status;
+- log recolhível.
+
+O jogador deve conseguir entender por que uma ação foi escolhida.
+
+## Habilidades
+
+Os quatro slots aparecem em ordem de prioridade real.
+
+A interface mostra:
+
+- categoria;
+- perfil;
+- custo;
+- cooldown;
+- requisito;
+- condição defensiva quando houver.
+
+## Consumíveis
+
+Slots mostram item, condição automática e estado de cooldown.
+
+A interface informa explicitamente que consumir ocupa a ação atual.
+
+## Dungeon
+
+A navegação mostra:
+
+- sala atual;
+- conexões disponíveis;
+- rota percorrida;
+- bifurcações irreversíveis;
+- Bolsa de Expedição;
+- itens seguros vs encontrados.
+
+Uma decisão irreversível deve ser comunicada antes da confirmação.
+
+## Matar/Poupar
+
+A interface não usa cores, ícones ou linguagem que classifiquem uma opção como moralmente correta.
+
+---
+
+# 42. História e lore
+
+## Identidade cultural/geográfica
 
 > **O mundo possui uma identidade atlântica sombria, inspirada culturalmente na transição entre tradições célticas e nórdicas, sem representar literalmente Irlanda ou Islândia.**
 
-Referências visuais/geográficas:
+Referências:
+
 - florestas antigas e úmidas;
-- penhascos e costas severas;
+- penhascos;
+- costas severas;
 - mares frios;
 - ilhas;
 - montanhas;
@@ -2512,69 +2807,83 @@ Referências visuais/geográficas:
 - ruínas;
 - fortificações costeiras.
 
-Culturas tiveram contato por comércio, migração, conflito e civilizações antigas. Camadas linguísticas e arquitetônicas podem coexistir.
+Culturas tiveram contato por comércio, migração, conflito e civilizações antigas.
 
 Humanos e monstros não representam diretamente povos históricos reais.
 
-##### Conflito
-Dark Fantasy centrado em guerra extremamente antiga entre humanos e monstros. A origem do conflito foi perdida.
+## Conflito
 
-Ambos cometeram atrocidades e produzem propaganda. O jogador encontra evidências, mas a verdade completa nunca precisa ser confirmada.
+Dark Fantasy centrado em guerra extremamente antiga entre humanos e monstros.
+
+A origem foi perdida.
+
+Ambos cometeram atrocidades e produzem propaganda.
 
 > **A guerra continua funcionando mesmo depois de todos terem esquecido por que ela começou.**
 
-##### Monstros
-Possuem inteligência, sentimentos, linguagem, memória, cultura, capacidade moral e política equivalentes às humanas.
+## Monstros
 
-Diferença central percebida é aparência grotesca segundo padrões humanos. Entre monstros, aparência não possui valor social.
+Possuem inteligência, sentimentos, linguagem, memória, cultura e capacidade moral/política equivalentes às humanas.
+
+Diferença principal percebida é aparência grotesca segundo padrões humanos.
+
+Entre monstros, aparência não possui valor social.
 
 > **Monstros não são inimigos por natureza. São um povo tratado como inimigo.**
 
-O termo “monstro” é principalmente classificação humana; o próprio povo poderá usar outra autodesignação futuramente.
+O termo “monstro” é principalmente classificação humana; o próprio povo pode usar outra autodesignação futuramente.
 
-Monstros também podem ser cruéis, corruptos ou violentos; a narrativa não os idealiza.
+Monstros também podem ser cruéis, corruptos ou violentos. A narrativa não os idealiza.
 
-##### Sociedade humana
-Aproximação política:
+## Sociedade humana
+
+Aproximação política inicial:
+
 - 90% apoiam/seguem/participam da guerra;
 - 5% Dissidentes;
 - 5% Conciliadores.
 
-Doutrina dominante: não negociar e não deixar monstros vivos fora das exceções impostas pela Cidade Livre.
-
 Facções:
+
 - **Ordem de Ferro** — principal força militar, pró-guerra;
 - **Dissidentes** — desertores/rebeldes/recusam guerra;
 - **Conciliadores** — defendem diálogo e fim do conflito reconhecendo atrocidades de ambos os lados.
 
-##### Liderança humana
-Poder militar hereditário: maior patente permanece na mesma família, formando dinastia de fato.
+Doutrina dominante: não negociar e não deixar monstros vivos fora das exceções impostas pela Cidade Livre.
 
-Líder atual lucra com economia da guerra.
+## Liderança humana
+
+Poder militar hereditário, formando dinastia de fato.
+
+O líder atual lucra com a economia da guerra.
 
 > **A guerra deixou de ser apenas um conflito e se tornou uma indústria.**
 
 O jogador nunca encontra pessoalmente o líder máximo; percebe sua influência por ordens, documentos, soldados, propaganda e economia.
 
-##### Política monstruosa
-Estrutura democrática com partidos, debate, instituições e presidente eleito por voto.
+## Política monstruosa
 
-O presidente quer paz, mas enfrenta pressão crescente conforme ataques humanos fortalecem grupos retaliadores.
+Estrutura democrática com partidos, debate, instituições e presidente eleito.
+
+O presidente quer paz, mas sofre pressão conforme ataques humanos fortalecem grupos retaliadores.
 
 O jogador nunca o encontra pessoalmente.
 
 Facções:
+
 - **Retaliadores** — resposta violenta;
 - **Sobreviventes** — continuidade/proteção do povo;
 - **Pactários** — coexistência e negociação.
 
-Não existe regra universal monstruosa equivalente à proibição humana de colaboração.
+## Cidade Livre
 
-##### Cidade Livre
-Território neutro onde humanos e monstros podem coexistir publicamente sob regras de trégua e comércio. NPCs podem demonstrar preconceito, medo, respeito, curiosidade ou pragmatismo.
+Território neutro onde humanos e monstros coexistem publicamente sob regras de trégua e comércio.
 
-##### Profecia
-Versão original perdida. Restam histórias, tradições e interpretações distorcidas.
+NPCs podem demonstrar preconceito, medo, respeito, curiosidade ou pragmatismo.
+
+## Profecia
+
+A versão original foi perdida. Restam histórias, tradições e interpretações distorcidas.
 
 Ideia preservada:
 
@@ -2582,51 +2891,91 @@ Ideia preservada:
 
 Não identifica claramente nome, aparência, origem, família, momento ou resultado.
 
-O personagem poderá cumpri-la, mas ela não garante sucesso.
+O personagem pode cumpri-la, mas a profecia não garante sucesso.
 
 > **A profecia prevê que alguém surgirá, mas não garante que essa pessoa chegará ao fim de sua jornada.**
 
-Registro muito antigo poderá ser encontrado posteriormente e mostrar distorções modernas, sem ser apresentado como verdade absoluta.
+Não existe poder profético explícito no início do jogo.
 
-##### Civilização antiga
-Existiu civilização/reino extremamente importante antes do presente. Sua queda permanece ambígua.
+## Civilização antiga
 
-Vestígios por ruínas, equipamentos, Relíquias, Dungeons, inscrições, NPCs e relatos contraditórios.
+Existiu civilização/reino extremamente importante antes do presente.
 
-##### Religião e Fé
-Diferentes crenças e interpretações. Fé como atributo não confirma qual religião é objetivamente verdadeira.
+Sua queda permanece ambígua.
 
-##### Antagonismo
-Não depende de um único grande vilão. O jogador primeiro conhece consequências e depois interesses políticos, líderes, grupos e manipulações.
+Vestígios aparecem em:
 
-##### Facções e escolhas
-Jogador não escolhe “Humanos” ou “Monstros” em seleção permanente. Relações são construídas por decisões.
+- ruínas;
+- equipamentos;
+- Relíquias;
+- Dungeons;
+- inscrições;
+- NPCs;
+- relatos contraditórios.
 
-Parceiros podem representar posições humanas e monstruosas diferentes.
+## Religião e Fé
 
-##### Encontro histórico de lideranças
-Há relatos contraditórios de antigos encontros/negociações entre representantes máximos. Nenhuma versão é totalmente confiável; qualquer tentativa não produziu paz duradoura.
+Diferentes crenças e interpretações coexistem.
 
-##### Dungeons como arqueologia narrativa
-Dungeons contam história por arquitetura, inimigos, Bosses, itens, Relíquias, NPCs, eventos e segredos. Um local pode mudar de significado quando novas informações são descobertas.
+Fé como atributo não confirma objetivamente qual religião é verdadeira.
+
+## Antagonismo
+
+A história não depende de um único grande vilão.
+
+O jogador conhece primeiro consequências, depois interesses políticos, lideranças, grupos e manipulações.
+
+## Facções e escolhas
+
+O jogador não escolhe permanentemente “Humanos” ou “Monstros” em uma tela de facção.
+
+Relações são construídas por decisões.
+
+## Dungeons como arqueologia narrativa
+
+Dungeons contam história por:
+
+- arquitetura;
+- inimigos;
+- Bosses;
+- itens;
+- Relíquias;
+- NPCs;
+- eventos;
+- segredos.
+
+Um local pode mudar de significado quando novas informações são descobertas.
 
 ---
 
-## Finais
+# 43. Finais
 
 Dois finais principais para o primeiro grande arco:
+
 1. **Continuar o ciclo da guerra**;
 2. **Romper o ciclo da guerra**.
 
-Sem classificação oficial de bom/ruim.
+Sem classificação oficial de bom ou ruim.
 
-##### Continuar o ciclo
-Estrutura política/econômica/cultural da guerra permanece, ainda que um lado ou liderança mude. A profecia pode ser considerada cumprida porque o personagem alterou destinos sem encerrar o conflito.
+## Continuar o ciclo
 
-##### Romper o ciclo
+A estrutura política/econômica/cultural da guerra permanece, ainda que lados ou lideranças mudem.
+
+A profecia pode ser considerada cumprida porque o personagem alterou destinos sem encerrar o conflito.
+
+## Romper o ciclo
+
 A guerra deixa de ser inevitável, mas não surge paz perfeita.
 
-Continuam ódio, preconceito, extremismo, famílias marcadas, desconfiança, ataques isolados e interesses econômicos ameaçados.
+Continuam:
+
+- ódio;
+- preconceito;
+- extremismo;
+- famílias marcadas;
+- desconfiança;
+- ataques isolados;
+- interesses econômicos ameaçados.
 
 > **A guerra deixa de ser inevitável.**
 
@@ -2636,12 +2985,14 @@ O jogo pode continuar após qualquer final com progressão, eventos e expansões
 
 ---
 
-## Arte
+# 44. Arte
 
-##### Temática
+## Temática
+
 Dark Fantasy: decadência, mistério, antiguidade, perigo, grandeza perdida e conflito atual.
 
-##### Identidade visual atlântica
+## Identidade visual atlântica
+
 - florestas antigas/úmidas;
 - penhascos;
 - costas rochosas;
@@ -2652,697 +3003,58 @@ Dark Fantasy: decadência, mistério, antiguidade, perigo, grandeza perdida e co
 - fortalezas/ruínas costeiras;
 - camadas culturais em arquitetura e objetos.
 
-Não reproduzir literalmente Irlanda, Islândia ou outro país real.
+Não reproduzir literalmente países reais.
 
-##### Interface
+## Interface
+
 - minimalista;
 - elegante;
 - padronizada;
 - moderna;
-- inspiração Apple na experiência de uso;
-- claramente Game UI e não interface genérica de aplicativo.
-
-Uso de 2D ou 3D permanece **A definir**.
+- informação hierarquizada;
+- inspiração Apple em experiência de uso;
+- Game UI reconhecível.
 
 ---
 
-# Build de Validação Interna
+# 45. Regras documentais
 
-## Objetivo
-O foco atual do projeto deixa temporariamente de ser expansão de conteúdo e passa a ser a montagem de uma **versão jogável interna para o próprio desenvolvimento**, destinada a verificar se os sistemas já definidos realmente se encaixam quando executados juntos.
+Este GDD contém somente especificação canônica do jogo.
 
-Essa versão **não é tratada como BETA público**.
+Devem ficar fora deste arquivo:
 
-Nome de trabalho:
+- escopo de uma build específica;
+- números provisórios exclusivos de playtest;
+- cronogramas;
+- critérios de entrada/saída de versão;
+- matriz de testes;
+- resultados de simulações de balanceamento;
+- ferramentas temporárias de desenvolvimento.
 
-> **Build de Validação 0.1**
+Esses itens pertencem aos documentos em `docs/builds/`.
 
-O objetivo é responder:
+Quando uma decisão de build revelar uma nova **regra permanente de negócio**, a regra deve ser promovida para este GDD e reescrita sem referência à build que a originou.
 
-> **Quando os sistemas são jogados juntos, o resultado continua parecendo o mesmo jogo imaginado no GDD?**
-
-## Princípio de escopo
-Até a Build de Validação 0.1 demonstrar que o núcleo funciona:
-
-> **não expandir o mundo com novos sistemas grandes, novas Dungeons ou grande volume de conteúdo sem necessidade de validação.**
-
-Conteúdo já desenhado para etapas futuras permanece documentado, mas não precisa ser implementado imediatamente.
-
-### Regra incremental das builds
-
-A Build 0.1 não é um protótipo descartável.
-
-> **Cada build incrementa a anterior.**
-
-A fundação implementada deve permanecer e ser ampliada nas builds seguintes. Sistemas centrais devem nascer de acordo com a estrutura real pretendida, mesmo quando a primeira build possui pouco conteúdo.
-
-> **Pouco conteúdo, estrutura real.**
-
-Combate, inventário, crafting, skills, equipamentos, Dungeon e save não devem ser soluções temporárias feitas para descarte. Valores, conteúdo, quantidades, tempos, XP, dano, loot e balanceamento podem mudar livremente entre builds.
-
-Referência conceitual:
-
-```text
-Build 0.1 → núcleo real + conteúdo reduzido
-Build 0.2 → correções + aprofundamento dos sistemas existentes
-Build 0.3+ → expansão incremental de conteúdo e sistemas já planejados
-```
-
-## Recorte integrado principal
-O fluxo mais importante a ser validado é:
-
-```text
-Criação
-↓
-Classe + Presente
-↓
-Cidade Livre / Taverna
-↓
-coleta escolhida
-↓
-produção / pequena melhoria
-↓
-combate
-↓
-contrato
-↓
-Dún Liath
-↓
-Fairtheoir
-↓
-consequência e retorno à Cidade Livre
-```
-
-O endpoint natural da campanha jogável da Build 0.1 é:
-
-> **primeira conclusão de Dún Liath na dificuldade Fácil.**
-
-Dún Liath funciona como principal ponto de integração porque já conecta:
-- build;
-- recursos;
-- equipamentos;
-- consumíveis;
-- combate;
-- status;
-- Elite;
-- Boss;
-- loot em risco;
-- exploração;
-- escolha narrativa;
-- persistência;
-- recompensa.
-
-## Conteúdo reduzido é permitido
-A Build de Validação não precisa implementar imediatamente toda a progressão 1–99/P3 de cada skill.
-
-Pode usar subconjuntos suficientes para provar ciclos como:
-
-```text
-Mineração → Metalurgia → Forja → equipamento → combate
-```
-
-E:
-
-```text
-Pesca / Herbologia → Culinária → consumível → combate
-```
-
-O objetivo é validar relações entre sistemas antes de produzir grande volume de conteúdo.
-
-### Conteúdo mínimo inicial das coletas
-
-A Build 0.1 usa inicialmente os dois primeiros recursos de cada coleta como referência de conteúdo:
-
-| Skill | Nível 1 | Nível 10 |
-|---|---|---|
-| Mineração | Cloch | Stán |
-| Lenhador | Giúis | Beith |
-| Pesca | Scadán | Breac |
-| Herbologia | Neantóg | Seamair |
-
-Metalurgia deve possuir pelo menos **Cloch Tratada** e **Lingote de Stán** no primeiro recorte.
-
-Forja e Culinária usam poucas receitas, mas suficientes para provar os ciclos reais de produção.
-
-### Convergência das quatro coletas
-
-Não pode existir uma escolha inicial secretamente correta.
-
-As quatro opções devem gerar uma preparação útil e permitir continuar o tutorial:
-
-```text
-Mineração → material → Metalurgia/Forja → reforço/equipamento → combate
-Lenhador → material → Forja → equipamento/ferramenta → combate
-Pesca → alimento → Culinária → preparação → combate
-Herbologia → preparado → Culinária → recuperação/preparação → combate
-```
-
-O primeiro combate deve ser vencível e compreensível independentemente da coleta escolhida, sem exigir grind desproporcional ou troca obrigatória para outra rota.
-
-## Sistemas avançados
-Prestígio, progressão longa, dificuldades avançadas, Relíquias e outros estados podem usar ferramentas internas/atalhos de desenvolvimento para validação, sem exigir que o testador reproduza naturalmente centenas de horas.
-
-A forma técnica desses atalhos será definida somente durante implementação.
-
-Mira, Party, segunda Dungeon, Dún Liath Normal/Difícil/Impossível, Arquivo Selado, Selo de Dún Liath, mercado de jogadores, progressão completa 1–99/P3 e minigames completos não precisam fazer parte da progressão natural da campanha da Build 0.1.
-
-## Mira e Party nesta etapa
-O design de Mira e de sua introdução permanece oficial.
-
-A Build de Validação principal prioriza o personagem Solo e Dún Liath antes de implementar a campanha da segunda Dungeon. Party/Aggro/Mira podem ser validados separadamente ou em etapa posterior da build, sem alterar o design já aprovado.
-
-## Valores de balanceamento da Build
-Valores atualmente marcados como **A definir** podem receber números provisórios explicitamente tratados como **Valores de Balanceamento da Build de Validação**, sem se tornarem valores finais do GDD.
-
-Esses números existem para teste e podem mudar livremente conforme resultados.
-
-### Recursos máximos provisórios
-
-```text
-Vida máxima    = 100 + (Vitalidade × 12)
-Mana máxima    = 30  + (Mente × 10)
-Stamina máxima = 60  + (Vigor × 8)
-```
-
-### Regeneração provisória
-
-```text
-Mana por segundo    = 1,5 + (Mente × 0,35)
-Stamina por segundo = 5 + (Vigor × 0,6)
-```
-
-Vida não possui regeneração natural significativa durante combate.
-
-Fora de combate normal, a recuperação pode ser rápida para evitar tempo morto. Em Dungeon, Vida, Mana e Stamina persistem entre encontros até recuperação por sistema apropriado.
-
-### Scaling provisório
-
-Ataques e habilidades usam a estrutura:
-
-```text
-Poder Base + soma(Atributo × multiplicador de scaling)
-```
-
-| Scaling | Multiplicador |
-|---|---:|
-| S | 1,00 |
-| A | 0,85 |
-| B | 0,70 |
-| C | 0,50 |
-| D | 0,30 |
-| E | 0,15 |
-
-### Defesa provisória
-
-```text
-Mitigação = Defesa / (Defesa + 100 + 5 × Nível do atacante)
-```
-
-Teto provisório de mitigação por Defesa: **75%**.
-
-```text
-Dano recebido = Dano bruto × (1 - Mitigação)
-```
-
-### Resistências provisórias
-
-Dano recebido:
-
-| Leitura | Multiplicador |
-|---|---:|
-| Fraco | 125% |
-| Normal | 100% |
-| Resistente | 80% |
-| Muito Resistente | 60% |
-| Imune | 0% |
-
-Buildup recebido:
-
-| Leitura | Multiplicador |
-|---|---:|
-| Fraco | 125% |
-| Normal | 100% |
-| Resistente | 75% |
-| Muito Resistente | 50% |
-| Imune | 0% |
-
-### Precisão provisória
-
-```text
-Precisão = 100 + (Destreza × 2) + bônus
-```
-
-```text
-Chance de acerto = 90% + (Precisão - Evasão) × 0,25%
-```
-
-Limite provisório: mínimo **70%**, máximo **99%**.
-
-### Crítico provisório
-
-```text
-Chance de crítico = 5% + (Destreza × 0,25%) + bônus
-```
-
-Crítico-base: **150% do dano normal**.
-
-### Velocidade provisória
-
-```text
-Bônus de velocidade de ataque = Destreza × 0,4%
-```
-
-Cap provisório: **25%**.
-
-Destreza não reduz cooldowns globalmente.
-
-### Responsabilidade dos atributos na Build 0.1
-
-| Atributo | Papel principal |
-|---|---|
-| Vitalidade | Vida |
-| Mente | Mana máxima e regeneração |
-| Vigor | Stamina máxima e regeneração |
-| Força | scaling físico apropriado e requisitos |
-| Destreza | scaling apropriado, Precisão, crítico e velocidade |
-| Inteligência | Magias e Arcano |
-| Fé | Milagres, cura e Sagrado |
-
-Mente e Vigor não aumentam dano diretamente na referência inicial.
-
-Destreza possui mais funções derivadas que os demais atributos ofensivos e deve ser observada explicitamente durante os testes para evitar que se torne obrigatória em todas as builds.
-
-## Fichas iniciais provisórias da Build 0.1
-
-As cópias de equipamento recebidas na criação são **fixas e sem RNG procedural**. Modelos equivalentes obtidos posteriormente seguem o sistema procedural normal quando aplicável.
-
-Slots que não fazem parte do kit começam vazios, salvo presente equipado aplicável. Isso permite que primeiros crafts e drops tenham valor imediato.
-
-As habilidades iniciais não são permanentemente exclusivas das classes e poderão ser aprendidas posteriormente por outros personagens que cumpram seus requisitos.
-
-### Guerreiro
-
-**Espada de Milícia**
-- Corte;
-- Poder Base 14;
-- intervalo-base 2,1 s;
-- Força B;
-- Destreza C;
-- requisito Força 5 / Destreza 3.
-
-**Escudo de Milícia:** Defesa 8.
-
-**Peitoral de Milícia:** Defesa 18.
-
-Defesa inicial de referência: **26**.
-
-**Golpe de Força — Física Agressiva**
-- 155% do dano da arma;
-- custo 28 Stamina;
-- cooldown 6 s.
-
-### Mago
-
-**Cajado Simples**
-- ataque básico Arcano;
-- Poder Base 9;
-- intervalo-base 2,4 s;
-- Inteligência C;
-- requisito Inteligência 6.
-
-**Vestes Simples:** Defesa 6.
-
-**Pulso Arcano — Magia Agressiva**
-- Poder Base 18;
-- Inteligência A;
-- dano Arcano;
-- custo 24 Mana;
-- cooldown 5 s.
-
-### Caçador
-
-**Arco Curto**
-- Perfuração;
-- Poder Base 12;
-- intervalo-base 2,3 s;
-- Força D;
-- Destreza A;
-- requisito Destreza 7.
-
-**Gibão de Caça:** Defesa 10.
-
-**Disparo Preciso — Física Agressiva**
-- 150% do dano da arma;
-- +15 pontos percentuais de chance de acerto nessa ação;
-- custo 24 Stamina;
-- cooldown 6 s.
-
-### Acólito
-
-**Maça Simples**
-- Impacto;
-- Poder Base 14;
-- intervalo-base 2,3 s;
-- Força C;
-- Destreza D;
-- requisito Força 3.
-
-**Catalisador Simples**
-- requisito Fé 7;
-- necessário para Milagres apropriados.
-
-**Vestes do Acólito:** Defesa 8.
-
-**Prece Restauradora — Milagre Defensivo**
-- cura-base 24;
-- Fé S;
-- custo 36 Mana;
-- cooldown 10 s.
-
-### Ladino
-
-**Adaga de Caça**
-- Perfuração;
-- Poder Base 7;
-- intervalo-base 1,45 s;
-- Força D;
-- Destreza B;
-- requisito Destreza 8.
-
-**Traje Leve:** Defesa 9.
-
-**Golpe Oportuno — Física Agressiva**
-- 125% do dano da arma;
-- +25 pontos percentuais de crítico nessa ação;
-- custo 20 Stamina;
-- cooldown 5 s.
-
-### Errante
-
-**Lança de Viagem**
-- Perfuração;
-- Poder Base 13;
-- intervalo-base 2,1 s;
-- Força B;
-- Destreza C;
-- requisito Força 4 / Destreza 4.
-
-**Proteção de Viagem:** Defesa 12.
-
-**Abertura — Universal Agressiva**
-- funciona independentemente da categoria da arma;
-- 135% do dano-base da ação apropriada;
-- +10 pontos percentuais de Precisão;
-- sem custo de Mana ou Stamina;
-- cooldown 7 s.
-
-## Resolução do combate automático
-
-### Regra central
-
-> **Uma habilidade ativa substitui o ataque básico que seria realizado naquela ação.**
-
-Habilidades não acontecem como dano adicional paralelo ao ataque básico.
-
-Cada combatente possui seu próprio intervalo. Quando fica pronto para agir, escolhe uma única ação e depois reinicia seu intervalo.
-
-Cooldowns são relógios separados e continuam transcorrendo durante outras ações.
-
-### Ordem de decisão do personagem
-
-```text
-1. Consumível automático válido
-2. Habilidade válida conforme estilo, condição e ordem dos slots
-3. Ataque básico
-```
-
-Uma habilidade só entra em cooldown quando realmente é usada. Falta de recurso, requisito ou condição apenas faz o sistema continuar para a próxima opção.
-
-### Ordem dos quatro slots
-
-A ordem visual é a prioridade real:
-
-```text
-Slot 1 → Slot 2 → Slot 3 → Slot 4 → Ataque básico
-```
-
-### Estilos
-
-**Agressivo:** prioriza habilidades Agressivas; Defensivas entram quando suas condições apropriadas forem atingidas.
-
-**Defensivo:** prioriza habilidades Defensivas válidas; depois considera Agressivas.
-
-**Misto:** Agressivas e Defensivas competem de forma mais direta segundo ordem dos slots e condições.
-
-A implementação pode ajustar detalhes de prioridade após teste sem alterar o princípio desses três estilos.
-
-## Condições defensivas configuráveis
-
-Habilidades defensivas podem usar limiar percentual configurável pelo jogador.
-
-Exemplos:
-- Vida ≤ X%;
-- Mana ≤ X%;
-- Stamina ≤ X%;
-- futuramente, aliado com Vida ≤ X%.
-
-A condição é verificada quando chega o momento de ação. A Build 0.1 não precisa de editor de lógica, AND/OR ou scripting.
-
-## Consumíveis em combate
-
-A Build 0.1 usa **2 slots de consumíveis**.
-
-Cada slot pode possuir condição automática simples, como Vida, Mana ou Stamina abaixo de um percentual.
-
-Prioridade:
-
-```text
-Consumível 1 → Consumível 2
-```
-
-Uso automático ou manual ocupa a ação atual.
-
-> **Jogar ativamente concede controle, não ações extras.**
-
-O jogo executa o limiar configurado pelo jogador e não utiliza IA oculta para ignorar a configuração por considerar o uso “ineficiente”.
-
-Cooldown global provisório de consumíveis: **8 segundos** após o uso de qualquer consumível.
-
-Durante Dungeon, consumíveis vêm da preparação da expedição. Não existe acesso ao Banco durante a run.
-
-## Telegraphs, preparação e interrupções
-
-Ataques normais resolvem na ação. Habilidades perigosas podem possuir tempo de preparação.
-
-Durante um telegraph:
-- o usuário fica comprometido com a ação;
-- não realiza ataques básicos ou outras habilidades;
-- outros combatentes continuam agindo normalmente;
-- ao resolver, o intervalo normal do usuário reinicia.
-
-A UI deve comunicar pelo menos nome, ícone, barra regressiva, alvo quando aplicável, destaque visual e registro no log.
-
-Não existe botão universal de interrupção.
-
-Interrupções vêm de Atordoamento ou de efeitos/habilidades que explicitamente possam interromper.
-
-Uma habilidade telegráfica pode ser:
-- **Interrompível**;
-- **Resistente**;
-- **Ininterruptível**.
-
-Se uma habilidade for interrompida:
-- seu efeito não ocorre;
-- ela entra em cooldown normalmente.
-
-Morte durante a preparação cancela a ação, salvo exceção futura explícita.
-
-Habilidades começam o combate disponíveis, salvo regra individual. Uma habilidade pode possuir **Atraso Inicial** para controlar quando pode ser escolhida pela primeira vez sem alterar seu cooldown normal.
-
-## Ordem determinística de ações
-
-Uma ação já iniciada resolve antes de uma nova ação que fique disponível exatamente no mesmo instante, salvo interrupção válida.
-
-Se duas novas ações ficam disponíveis no mesmo timestamp, a referência é:
-
-```text
-1. personagem principal
-2. parceiros pela posição
-3. inimigos
-```
-
-Na Build 0.1 Solo, personagem principal vence empate exato contra inimigo.
-
-## Fases de Boss
-
-Quando a Vida cruza o limiar de uma nova fase, uma ação já iniciada termina normalmente. A mudança de fase ocorre depois da resolução da ação atual.
-
-Para Fairtheoir:
-- Fase 1: **O Vigia**;
-- Fase 2: **Desespero**;
-- limiar numérico ainda **A definir**.
-
-**Última Investida** deve possuir telegraph longo, dano alto de Impacto, buildup alto de Atordoamento e janela posterior de vulnerabilidade.
-
-## Comportamento de inimigos
-
-Inimigos e Bosses utilizam a mesma fundação temporal e de resolução do combate, mas não precisam imitar os quatro slots configuráveis do jogador.
-
-Cada inimigo pode possuir sua própria lista de comportamentos, condições, cooldowns, fases e Atrasos Iniciais.
-
-> **O motor de combate fornece regras universais; a identidade do inimigo surge da combinação dessas regras.**
-
-## Ciclos que precisam fechar
-A Build de Validação deve permitir testar pelo menos os seguintes encadeamentos conceituais:
-
-> **Tempo → recurso → progressão**
-
-> **Recurso → crafting → equipamento**
-
-> **Equipamento + build → combate**
-
-> **Combate → loot → nova preparação**
-
-> **Preparação → Dungeon → risco/recompensa**
-
-> **Exploração → informação → decisão narrativa**
-
-> **Decisão → estado persistente**
-
-> **Progressão longa → Prestígio → nova forma de executar sistemas**
-
-O último ciclo pode ser testado com progressão acelerada interna enquanto a duração real ainda não estiver balanceada.
-
-## Perguntas de validação
-A build deve revelar, entre outros problemas:
-- crafting demora demais ou de menos;
-- loot de Dungeon invalida Forja;
-- Mana ou Stamina não criam decisões reais;
-- recursos Idle entram rápido/lento demais na economia;
-- consumíveis são irrelevantes ou obrigatórios;
-- raridade procedural supera demais identidade-base;
-- Dún Liath fica longa/curta demais;
-- escolha Matar/Poupar perde impacto na execução;
-- atributos não geram builds suficientemente distintas;
-- Destreza concentra poder demais;
-- automação não deixa claro por que uma ação foi escolhida;
-- Prestige não altera a execução de forma percebida.
-
-O plano operacional, cenários de teste e critérios de sucesso da Build 0.1 são mantidos também em `docs/BUILD_0.1_TESTES.md`.
-
-Arquitetura técnica, modelagem de dados e decisões de implementação continuam deliberadamente posteriores ao fechamento do design necessário para essa validação.
+Quando um número continuar sendo apenas baseline de balanceamento de uma versão, ele permanece no documento da build.
 
 ---
 
-## Conclusão do projeto
+# 46. Pontos ainda A definir
 
-##### Créditos
-A definir.
+Continuam deliberadamente em aberto quando não houver decisão canônica:
 
-##### Desvio da idealização inicial
-Será registrado conforme o projeto evoluir.
+- nome e slogan do jogo;
+- público-alvo formal;
+- modelo de monetização;
+- custo de desenvolvimento;
+- 2D ou 3D;
+- fórmulas e números finais de balanceamento;
+- limites definitivos de inventário/stack;
+- preços finais da economia;
+- valores finais de habilidades, consumíveis, inimigos e status;
+- limites finais dos buffs de Culinária;
+- eficiências exatas dos Prestígios;
+- detalhes numéricos de Relíquias e dificuldades avançadas;
+- conteúdo da segunda Dungeon e expansões posteriores ainda não desenhadas.
 
-##### Defeitos e mudanças posteriores
-Registrar:
-- melhorias;
-- expansões;
-- novos sistemas;
-- mudanças de balanceamento;
-- resultados da Build de Validação;
-- feedback futuro.
-
----
-
-## Observações atuais
-
-O projeto deve permanecer modular e preparado para expansão.
-
-Princípios centrais consolidados:
-
-> A classe define o começo, não o destino do personagem.
-
-> Todas as classes usam o mesmo orçamento inicial de atributos; referência atual de 35 pontos.
-
-> Existem sete presentes iniciais e nenhum concede vantagem permanente dominante ou conteúdo essencial exclusivo.
-
-> Existem exatamente sete skills: Mineração, Lenhador, Pesca, Herbologia, Metalurgia, Forja e Culinária.
-
-> Atividades Idle entregam apenas o resultado escolhido, XP e possíveis unidades adicionais desse mesmo resultado; materiais especiais possuem fontes explícitas.
-
-> Prestígio muda a forma de executar a skill, não apenas números.
-
-> O antigo endgame se torna o novo início após Prestígio.
-
-> A Árvore de Prestígio do personagem possui 32 nós, quatro ramos puros e quatro combinações híbridas iniciais.
-
-> Combate é automático, mas build, preparação, equipamentos, habilidades e escolhas determinam o resultado.
-
-> Uma habilidade ativa substitui o ataque básico daquela ação; não acontece gratuitamente em paralelo.
-
-> O personagem equipa até quatro habilidades ativas e a ordem dos slots participa da prioridade real da automação.
-
-> Habilidades defensivas podem utilizar limiares percentuais configuráveis pelo jogador.
-
-> A Build 0.1 usa dois slots de consumíveis; uso manual ou automático consome a ação e compartilha cooldown global provisório de 8 segundos.
-
-> Telegraphs não pausam os demais combatentes e podem possuir regras explícitas de interrupção.
-
-> Inimigos usam a mesma fundação temporal de combate, mas possuem comportamentos próprios em vez de copiar os quatro slots do jogador.
-
-> Inimigos são Comuns, Elites ou Bosses e usam sete tipos de dano e cinco status principais.
-
-> Quanto mais perigosa uma habilidade, mais legível ela deve ser.
-
-> Dificuldades alteram comportamento, mecânicas e conteúdo, não apenas Vida e dano.
-
-> Dungeons possuem identidade fixa e exploração procedural; a geração nunca deve contradizer a história do local.
-
-> Escolhas narrativas mudam caminhos e conteúdo, não escolhem entre recompensa e castigo.
-
-> Dún Liath — A Fortaleza Cinzenta é a primeira Dungeon oficial e funciona como fortificação humana antiga transformada em refúgio sitiado por uma comunidade monstruosa.
-
-> Crúbach e Tromghiallach são os dois Comuns básicos de Dún Liath; Cosantóir é o Elite defensivo; Fairtheoir — O Último Vigia é o Boss fixo.
-
-> A progressão dos defensores de Dún Liath é Patrulha → Resistência → Defesa → Proteção → Último Vigia.
-
-> Fairtheoir possui duas fases e sua segunda fase representa Desespero, não apenas aumento numérico.
-
-> Dún Liath utiliza Sucata de Dún Liath como material geral e Fragmento de Fairtheoir como recurso exclusivo garantido do Boss.
-
-> Os primeiros clears de Dún Liath garantem Guarda Instintiva no Fácil, Reforço do Vigia no Normal, Escudo do Último Vigia no Difícil e Lacre do Comandante no Impossível.
-
-> O Arquivo Selado e o Selo de Dún Liath representam a camada de segredo de longo prazo da primeira Dungeon.
-
-> Selo de Dún Liath é Relíquia e sua mecânica Trégua Instável recompensa alternância apropriada entre perfis Agressivo e Defensivo; valores permanecem A definir.
-
-> Fácil ensina cada peça; Normal ensina como as peças trabalham juntas; Difícil exige resposta aos sistemas; Impossível exige domínio completo da Dungeon.
-
-> A primeira Dungeon não revela a verdade; ela apenas cria a primeira rachadura na versão que o jogador recebeu.
-
-> Mira é a primeira parceira recrutável, é encontrada sobrevivendo sozinha na segunda Dungeon e introduz Party/Aggro por cooperação pragmática.
-
-> Mira nunca abandona a party por discordância e sua quest pessoal não é uma história de vingança.
-
-> O primeiro encontro de um parceiro deve demonstrar quem ele é antes de explicar sua ficha.
-
-> Relíquias são os únicos itens negociáveis entre jogadores e nunca são craftáveis.
-
-> A Cidade Livre possui inicialmente somente Taverna, Banco, Relicário, Mercado e Ferreiro.
-
-> O mundo não utiliza regiões nem viagem como estrutura de progressão.
-
-> O mundo possui identidade atlântica sombria inspirada em tradições célticas e nórdicas sem representar literalmente países reais.
-
-> Nomes culturais podem funcionar como pistas históricas; termos funcionais de sistema permanecem em português.
-
-> Humanos e monstros possuem capacidade moral e política equivalente; aparência é a principal diferença percebida e não possui valor social entre monstros.
-
-> A guerra é antiga demais para que sua origem seja conhecida com certeza; ambos os lados cometeram atrocidades e produzem versões contraditórias do passado.
-
-> Existem dois finais principais: continuar o ciclo ou romper o ciclo, sem classificação oficial de bom ou ruim.
-
-> A Build 0.1 é a primeira fundação real e incremental do jogo, com conteúdo reduzido e endpoint natural no primeiro clear de Dún Liath no Fácil.
-
-> Cada build incrementa a anterior; sistemas centrais não são protótipos descartáveis.
-
-> O foco atual é montar a Build de Validação Interna para verificar se os sistemas já definidos fecham juntos antes de expandir o mundo ou entrar na arquitetura técnica definitiva.
+Esses pontos podem ser fechados incrementalmente sem misturar planejamento de versão com a especificação do jogo.
