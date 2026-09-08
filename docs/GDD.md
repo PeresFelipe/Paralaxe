@@ -1,8 +1,8 @@
 # Game Design Document — Especificação do Jogo
 
-> **Este documento é a fonte canônica das regras de negócio, sistemas, conteúdo e princípios de design do jogo.**
+> **Este documento é a fonte canônica das regras de negócio, sistemas, conteúdo, princípios de design e requisitos arquiteturais agnósticos de tecnologia do jogo.**
 >
-> Ele não descreve escopo de builds, valores provisórios de balanceamento, cenários de teste ou critérios de aceite de uma versão específica. Esses itens pertencem aos documentos de build em `docs/builds/`.
+> Ele não descreve escopo de builds, valores provisórios de balanceamento, cenários de teste, critérios de aceite de uma versão específica nem escolhas concretas de stack. Esses itens pertencem aos documentos apropriados de build ou implementação.
 
 ---
 
@@ -3019,7 +3019,7 @@ Não reproduzir literalmente países reais.
 
 # 45. Regras documentais
 
-Este GDD contém somente especificação canônica do jogo.
+Este GDD contém a especificação canônica do jogo e requisitos arquiteturais que independem da tecnologia escolhida.
 
 Devem ficar fora deste arquivo:
 
@@ -3029,11 +3029,20 @@ Devem ficar fora deste arquivo:
 - critérios de entrada/saída de versão;
 - matriz de testes;
 - resultados de simulações de balanceamento;
-- ferramentas temporárias de desenvolvimento.
+- ferramentas temporárias de desenvolvimento;
+- linguagem de programação concreta;
+- framework concreto;
+- produto de banco de dados específico;
+- ORM específico;
+- framework de UI específico;
+- provedor de infraestrutura;
+- estratégia concreta de deploy.
 
-Esses itens pertencem aos documentos em `docs/builds/`.
+Esses itens pertencem aos documentos de build ou implementação.
 
 Quando uma decisão de build revelar uma nova **regra permanente de negócio**, a regra deve ser promovida para este GDD e reescrita sem referência à build que a originou.
+
+Quando uma decisão técnica estabelecer um requisito arquitetural permanente, ela pode ser registrada neste GDD de maneira agnóstica à stack.
 
 Quando um número continuar sendo apenas baseline de balanceamento de uma versão, ele permanece no documento da build.
 
@@ -3055,6 +3064,996 @@ Continuam deliberadamente em aberto quando não houver decisão canônica:
 - limites finais dos buffs de Culinária;
 - eficiências exatas dos Prestígios;
 - detalhes numéricos de Relíquias e dificuldades avançadas;
-- conteúdo da segunda Dungeon e expansões posteriores ainda não desenhadas.
+- conteúdo da segunda Dungeon e expansões posteriores ainda não desenhadas;
+- estratégia de retomada de combate interrompido no meio da execução;
+- stack tecnológica concreta.
 
-Esses pontos podem ser fechados incrementalmente sem misturar planejamento de versão com a especificação do jogo.
+Esses pontos podem ser fechados incrementalmente sem misturar planejamento de versão, balanceamento e implementação com a especificação permanente do jogo.
+
+---
+
+# 47. Arquitetura conceitual
+
+## Princípio geral
+
+A aplicação deve nascer como um **monólito modular**: os sistemas permanecem fisicamente próximos no início, mas são logicamente independentes e possuem fronteiras claras.
+
+> **Separar módulos fisicamente cedo demais adiciona complexidade sem benefício; separar responsabilidades logicamente desde o início reduz acoplamento e retrabalho.**
+
+A arquitetura não deve depender de microserviços para obter modularidade.
+
+Um módulo pode conhecer o **contrato público** de outro módulo, mas não seus detalhes internos.
+
+Nenhum módulo deve manipular diretamente o armazenamento interno de outro.
+
+## Módulos de domínio
+
+Estrutura conceitual:
+
+```text
+Player
+├── Character
+├── Progression
+├── Skills
+├── Inventory
+├── Equipment
+└── Abilities
+
+Gameplay
+├── Idle
+├── Crafting
+├── Combat
+├── Dungeon
+├── Quests
+└── Narrative
+
+World
+├── Economy
+├── City
+├── NPCs
+└── Content Catalog
+
+Infrastructure
+├── Persistence
+├── Clock
+├── RNG
+├── Telemetry
+└── Save/Data Versioning
+```
+
+Essa divisão expressa responsabilidade de domínio, não necessariamente diretórios ou processos físicos finais.
+
+## Ownership de estado
+
+Cada estado possui um único módulo responsável por sua integridade.
+
+Exemplos:
+
+- Inventory é dono da posse e localização dos itens;
+- Equipment é dono do loadout equipado, mas referencia itens pertencentes ao sistema de itens;
+- Skills é dono da progressão das Skills;
+- Dungeon é dono do estado de uma run;
+- Combat é dono do estado temporário da luta;
+- Narrative é dono dos estados narrativos persistentes;
+- Economy é dono das operações econômicas e regras correspondentes.
+
+> **Uma entidade pertence a um único módulo, mesmo quando outros módulos podem referenciá-la.**
+
+---
+
+# 48. Content Catalog e conteúdo orientado a dados
+
+Itens, habilidades, inimigos, receitas, recursos, Dungeons, status, quests, NPCs e tabelas de loot devem ser descritos como conteúdo interpretado pelos sistemas sempre que possível.
+
+O motor implementa regras universais; o Content Catalog descreve combinações concretas dessas regras.
+
+Exemplo:
+
+```text
+Combat Engine
+↓ interpreta
+EnemyDefinition
+↓
+Crúbach
+```
+
+O motor não deve possuir lógica especial baseada no nome de um inimigo quando a mesma mecânica pode ser representada por dados.
+
+## Conteúdo × motor
+
+O motor sabe que:
+
+- habilidades ocupam ações;
+- cooldowns existem;
+- telegraphs possuem preparação;
+- status usam buildup;
+- equipamentos possuem propriedades e afixos;
+- Dungeons possuem salas, eventos e encontros.
+
+O conteúdo define:
+
+- quais habilidades um inimigo possui;
+- duração/custo/poder de uma habilidade;
+- resistências específicas;
+- modelo de um equipamento;
+- ingredientes de uma receita;
+- composição de uma Dungeon;
+- loot possível.
+
+Exceções programáticas só devem existir quando representarem uma regra realmente exclusiva e formalizada.
+
+---
+
+# 49. Definition × State / Instance
+
+A arquitetura separa explicitamente **definição de conteúdo** de **estado de execução**.
+
+## Definition
+
+Representa algo que existe nas regras/conteúdo do jogo.
+
+Exemplos:
+
+- ItemDefinition;
+- AbilityDefinition;
+- EnemyDefinition;
+- SkillDefinition;
+- RecipeDefinition;
+- DungeonDefinition;
+- QuestDefinition.
+
+## State / Instance
+
+Representa algo que pertence a um jogador ou aconteceu em uma execução.
+
+Exemplos:
+
+- ItemInstance;
+- SkillProgress;
+- CharacterAbility;
+- DungeonRun;
+- QuestState;
+- NarrativeState;
+- CombatState.
+
+> **Definitions dizem o que uma coisa pode ser. State diz o que aconteceu com aquela coisa.**
+
+## Identificadores
+
+Definições de conteúdo utilizam IDs estáveis e independentes do texto exibido.
+
+Exemplos conceituais:
+
+```text
+item.dun_liath.garrison_sword
+enemy.dun_liath.crubach
+ability.combat.calculated_strike
+skill.mining
+dungeon.dun_liath
+```
+
+Mudar o nome exibido não muda o ID.
+
+Um ID de conteúdo publicado em estado persistente não deve ser reutilizado posteriormente com outro significado.
+
+Instâncias e estados de jogador usam identificadores próprios e opacos, separados dos IDs de definição.
+
+---
+
+# 50. Estado fundamental e estado derivado
+
+> **Dados fundamentais são persistidos; dados derivados são calculados.**
+
+Exemplos de estado fundamental:
+
+- atributos distribuídos;
+- XP;
+- nível;
+- item e seus afixos;
+- upgrade de um item;
+- equipamento selecionado;
+- habilidade aprendida;
+- decisão narrativa.
+
+Exemplos de estado derivado:
+
+- Vida máxima;
+- Mana máxima;
+- Stamina máxima;
+- Defesa total;
+- Precisão total;
+- crítico final;
+- outros valores calculáveis a partir do estado fundamental e das definições.
+
+Valores derivados não devem ser duplicados como fonte concorrente de verdade quando podem ser recalculados de maneira determinística.
+
+---
+
+# 51. Player, Character e progressão
+
+A conta do usuário e o personagem do jogo são conceitos separados.
+
+Conceitualmente:
+
+```text
+PlayerAccount
+↓
+Character
+```
+
+O jogo continua possuindo um único personagem principal por jogador como regra de design atual; a separação existe para impedir que responsabilidades de conta e personagem sejam misturadas.
+
+## Character
+
+O Character mantém identidade e estado fundamental como:
+
+- nome;
+- classe inicial escolhida;
+- presente inicial;
+- nível geral;
+- XP geral;
+- pontos de atributo não distribuídos.
+
+Os sete atributos são estado próprio do personagem.
+
+## Classe inicial
+
+A classe inicial funciona como definição de criação:
+
+```text
+StartingClassDefinition
+├── atributos iniciais
+├── equipamentos iniciais
+└── habilidade inicial
+```
+
+Na criação, a definição é aplicada ao personagem.
+
+Depois disso, as regras permanentes do personagem vêm de seus atributos, equipamentos, habilidades e progressão, não de uma restrição contínua da classe inicial.
+
+Isso traduz arquiteturalmente:
+
+> **A classe define o começo, não o destino.**
+
+---
+
+# 52. Skills, Idle e receitas
+
+## SkillProgress
+
+A definição da Skill é separada da progressão do personagem.
+
+Estado conceitual:
+
+```text
+SkillProgress
+- character
+- skill
+- level
+- xp
+- prestige
+```
+
+Não existe uma cópia da definição de Mineração por personagem.
+
+## IdleActivityState
+
+Uma atividade Idle ativa mantém estado suficiente para calcular progresso a partir do tempo transcorrido.
+
+O sistema não deve depender de executar uma operação física por ciclo para cada jogador conectado ou offline.
+
+Conceitualmente:
+
+```text
+started_at
+last_processed_at
+activity_definition_id
+status
+```
+
+Ao processar:
+
+```text
+tempo transcorrido
+↓
+quantidade de ciclos válidos
+↓
+recompensas + XP
+↓
+atualização de last_processed_at
+```
+
+O processamento de progresso e a atualização do marcador temporal precisam ocorrer atomicamente para impedir recompensa duplicada por múltiplas sessões/dispositivos.
+
+## RecipeDefinition
+
+Receitas descrevem:
+
+- Skill relacionada;
+- requisitos;
+- duração;
+- entradas;
+- saídas.
+
+Crafting interpreta a receita em vez de codificar uma função exclusiva para cada produto.
+
+---
+
+# 53. Itens, stacks, instâncias e equipamento
+
+## ItemDefinition
+
+Materiais, consumíveis, equipamentos, itens de quest e Relíquias compartilham uma identidade de item no Content Catalog, com categoria e regras próprias.
+
+## Stack
+
+Itens fungíveis e empilháveis usam quantidade associada à definição.
+
+Exemplos:
+
+- materiais;
+- alimentos;
+- consumíveis normais;
+- Sucata.
+
+## ItemInstance
+
+Itens com identidade individual usam instância própria.
+
+Equipamentos procedurais devem possuir pelo menos:
+
+- identificador da instância;
+- definição do modelo;
+- raridade;
+- nível de upgrade;
+- afixos gerados.
+
+Duas instâncias da mesma definição podem possuir propriedades procedurais diferentes.
+
+## Ownership
+
+Inventory é a fonte de verdade da posse dos itens carregados pelo personagem.
+
+Equipment não duplica a instância equipada; mantém referência para a mesma instância pertencente ao sistema de itens.
+
+> **Um item existe em um único local lógico por vez.**
+
+Mover item entre Inventory, Banco, Bolsa de Expedição ou outros containers deve representar transferência de ownership/localização, não clonagem.
+
+## Consumable Loadout
+
+Equipar um consumível em slot de combate referencia sua definição/tipo disponível; a quantidade consumível continua pertencendo ao estoque real do personagem.
+
+Equipar um consumível nunca implica estoque infinito.
+
+---
+
+# 54. Habilidades e automação
+
+## AbilityDefinition
+
+Uma habilidade deve ser descrita por propriedades estruturadas, incluindo quando aplicável:
+
+- categoria;
+- perfil;
+- requisitos;
+- custo de recurso;
+- cooldown;
+- targeting;
+- efeitos.
+
+Efeitos devem ser compostos por comportamentos reutilizáveis sempre que possível, como:
+
+- dano;
+- cura;
+- aplicação de status;
+- modificação temporária de atributo/defesa;
+- recuperação de recurso.
+
+## Habilidades aprendidas
+
+O personagem mantém estado separado para quais AbilityDefinitions já aprendeu.
+
+Aprender uma habilidade e equipá-la no loadout são operações diferentes.
+
+## Loadout
+
+O loadout mantém:
+
+- estilo de combate;
+- ordem dos quatro slots;
+- habilidade referenciada por slot;
+- condição automática quando aplicável.
+
+## AutomationCondition
+
+Condições devem ser persistidas de forma estruturada, não como texto interpretado.
+
+Exemplo conceitual:
+
+```text
+type: health_percent_below
+value: 40
+```
+
+Essa estrutura permite validação, evolução e interpretação determinística pelo motor.
+
+---
+
+# 55. DungeonRun como estado persistente
+
+DungeonDefinition descreve a Dungeon.
+
+DungeonRun representa uma execução específica.
+
+A run deve possuir identidade e estado próprios, incluindo quando aplicável:
+
+- personagem;
+- Dungeon;
+- dificuldade;
+- seed;
+- estado da run;
+- sala atual;
+- estrutura gerada;
+- salas visitadas;
+- decisões de bifurcação;
+- decisões narrativas da run;
+- recursos atuais do personagem na run;
+- Expedition Bag.
+
+## Aggregate da run
+
+Alterações relevantes da Dungeon passam pelo módulo Dungeon.
+
+Operações conceituais incluem:
+
+```text
+enterRoom()
+resolveEncounter()
+chooseBranch()
+retreat()
+die()
+complete()
+```
+
+Outros módulos não devem alterar diretamente o status interno de uma run.
+
+## Expedition Bag
+
+A Bolsa de Expedição pertence à DungeonRun, não ao Inventory normal.
+
+Ao sair em segurança:
+
+```text
+Expedition Bag
+↓ transferência atômica
+Inventory / Banco
+```
+
+Ao morrer:
+
+```text
+Expedition Bag
+↓
+conteúdo em risco é descartado
+```
+
+## Persistência da geração procedural
+
+A seed da run deve ser armazenada para reprodução/auditoria.
+
+A seed, porém, não é a única fonte de verdade de uma run já iniciada.
+
+Ao gerar a estrutura:
+
+```text
+DungeonDefinition
++ seed
++ algoritmo de geração
+↓
+DungeonRunGraph
+↓
+persistido
+```
+
+Isso evita que uma alteração futura no algoritmo regenere uma run ativa de maneira diferente.
+
+---
+
+# 56. Combat Engine e estado de combate
+
+O Combat Engine deve funcionar sem precisar conhecer a Dungeon, quest ou contexto narrativo que originou o encontro.
+
+Recebe definições/snapshots necessários e cria um estado de combate temporário.
+
+Conceitualmente:
+
+```text
+CharacterCombatSnapshot
++ EnemyDefinition / encounter
++ CombatConfiguration
+↓
+CombatState
+```
+
+CombatState controla apenas o necessário à luta, como:
+
+- Vida atual;
+- Mana/Stamina atuais;
+- intervalos;
+- cooldowns;
+- buildup;
+- status ativos;
+- telegraphs;
+- ações em execução;
+- timeline;
+- estado do RNG.
+
+Ao terminar:
+
+```text
+CombatResult
+```
+
+é devolvido ao sistema superior.
+
+O Combat Engine não concede diretamente recompensa econômica ou narrativa de uma Dungeon. O módulo que iniciou o encontro interpreta o resultado e aplica as consequências apropriadas.
+
+## Timeline determinística
+
+O combate deve ser modelável como uma sequência determinística de eventos temporais quando a mesma entrada e a mesma sequência de RNG são utilizadas.
+
+Eventos conceituais podem incluir:
+
+- ActorReady;
+- ActionStarted;
+- ActionResolved;
+- DamageApplied;
+- StatusApplied;
+- StatusTriggered;
+- ActorDied;
+- PhaseChanged.
+
+Essa característica deve permitir:
+
+- debug;
+- combat log;
+- testes automatizados;
+- simulações;
+- reprodução de problemas.
+
+---
+
+# 57. RNG reproduzível
+
+Aleatoriedade deve ser centralizada e permitir seed/reprodução.
+
+O código de domínio não deve espalhar fontes de aleatoriedade independentes sem controle.
+
+Sistemas que dependem de RNG incluem:
+
+- crítico;
+- acerto/erro;
+- loot;
+- raridade;
+- afixos;
+- geração de Dungeon;
+- eventos procedurais.
+
+Uma execução importante deve poder registrar informação suficiente para reproduzir a sequência relevante quando necessário para debug/testes.
+
+---
+
+# 58. Comunicação entre módulos
+
+A arquitetura utiliza três mecanismos conceituais distintos:
+
+1. **contratos públicos entre módulos**;
+2. **Use Cases para coordenar operações que atravessam módulos**;
+3. **Domain Events para representar fatos e permitir reações desacopladas**.
+
+## Contratos públicos
+
+Cada módulo expõe somente operações necessárias aos demais.
+
+Exemplo conceitual de Inventory:
+
+```text
+hasItems(...)
+consumeItems(...)
+addStack(...)
+addItemInstance(...)
+moveItem(...)
+```
+
+Outros módulos não recebem acesso direto ao repositório, tabela ou estrutura interna do Inventory.
+
+## Application Use Cases
+
+Operações que envolvem múltiplos módulos são coordenadas por casos de uso da aplicação.
+
+Exemplo de crafting:
+
+```text
+CraftRecipeUseCase
+├── Crafting valida receita
+├── Skills valida requisito
+├── Inventory valida/consome materiais
+├── Crafting determina resultado
+├── Inventory recebe resultado
+└── Skills recebe XP
+```
+
+O Use Case conhece a sequência da operação, mas não reimplementa as regras internas dos módulos.
+
+> **Use Cases coordenam; módulos executam suas próprias regras.**
+
+## Evitar dependências circulares
+
+Quando uma operação exigir Inventory + Equipment + Character, por exemplo, ela deve ser coordenada pelo Use Case apropriado em vez de fazer os módulos chamarem uns aos outros circularmente.
+
+---
+
+# 59. Commands e Domain Events
+
+## Command / intenção
+
+Representa algo que o usuário ou outro sistema deseja executar.
+
+Exemplos:
+
+- CraftRecipe;
+- EquipItem;
+- StartDungeon;
+- ChooseBranch;
+- UseConsumable.
+
+## Domain Event / fato ocorrido
+
+Representa algo que já aconteceu.
+
+Exemplos:
+
+- ItemCrafted;
+- ItemEquipped;
+- DungeonStarted;
+- NarrativeChoiceMade;
+- BossDefeated;
+- SkillLeveledUp.
+
+Eventos não substituem todas as chamadas síncronas.
+
+> **Se algo é necessário para considerar a operação concluída, normalmente participa da operação síncrona e atômica. Se é uma reação ao que já aconteceu, pode ser tratado como evento.**
+
+A utilização de Domain Events não implica event sourcing. O estado atual continua sendo persistido normalmente.
+
+Efeitos externos ou secundários não devem ser publicados como definitivamente concluídos antes do commit da operação principal.
+
+---
+
+# 60. Atomicidade e consistência
+
+Operações de negócio que alteram múltiplos estados devem ser atômicas.
+
+Exemplos:
+
+## Crafting
+
+```text
+validar receita
+↓
+validar materiais
+↓
+consumir materiais
+↓
+gerar produto
+↓
+adicionar produto
+↓
+conceder XP
+```
+
+Ou toda a operação é confirmada, ou nenhuma alteração parcial permanece.
+
+## Extração de Dungeon
+
+```text
+validar retirada
+↓
+transferir Expedition Bag
+↓
+marcar run como extraída
+↓
+confirmar operação
+```
+
+Uma falha intermediária não pode perder o loot nem duplicá-lo.
+
+## Unidade de trabalho
+
+Cada Use Case importante deve possuir uma fronteira clara de unidade de trabalho/transação.
+
+A implementação concreta dessa transação depende da tecnologia escolhida, mas a propriedade de atomicidade é requisito arquitetural.
+
+---
+
+# 61. Idempotência e concorrência
+
+Operações capazes de entregar valor ou alterar estados críticos precisam ser resistentes a repetição acidental da mesma solicitação.
+
+Exemplos:
+
+- recompensa de first clear;
+- conclusão de quest;
+- extração de Dungeon;
+- compra/venda;
+- crafting em lote;
+- processamento Idle.
+
+Repetir uma operação já confirmada não deve duplicar recompensa.
+
+## First Clear
+
+O first clear deve possuir estado explícito por personagem, Dungeon e dificuldade, em vez de depender apenas de inferências como “o personagem já possui a recompensa?”.
+
+A concessão da recompensa e a marcação do first clear pertencem à mesma operação atômica.
+
+## Concorrência entre sessões
+
+O mesmo jogador pode abrir o jogo em mais de um dispositivo ou sessão.
+
+Operações críticas precisam detectar/evitar que duas alterações simultâneas gastem os mesmos recursos ou processem o mesmo período Idle duas vezes.
+
+Pode-se utilizar controle otimista, locks, constraints ou mecanismo equivalente conforme a tecnologia escolhida.
+
+O requisito é:
+
+> **um mesmo estado lógico não pode ser consumido ou recompensado duas vezes por concorrência.**
+
+---
+
+# 62. Autoridade do servidor
+
+Como o jogo prevê estado persistente online, economia, mercado, Relíquias negociáveis e histórico de propriedade, o estado oficial deve ser validado por uma autoridade de servidor.
+
+O cliente envia intenções e apresenta resultados; não declara unilateralmente alterações de estado valiosas.
+
+Exemplos:
+
+O cliente pode solicitar:
+
+```text
+CraftRecipe
+StartIdleActivity
+EquipItem
+ChooseBranch
+```
+
+Mas não deve poder afirmar como fato:
+
+```text
+recebi 1000 moedas
+gerou item raro
+minei 900 recursos
+venci o Boss
+```
+
+A autoridade valida regras, resolve a operação e persiste o resultado.
+
+O cliente pode calcular previews não autoritativos para UX, desde que o servidor continue sendo a fonte de verdade da operação.
+
+---
+
+# 63. Persistência conceitual
+
+## Estado operacional × Content Catalog
+
+A persistência do estado do jogador é separada das definições do Content Catalog.
+
+```text
+Persistência operacional
+= o que aconteceu / pertence ao jogador
+
+Content Catalog
+= o que existe e como funciona no jogo
+```
+
+Uma instância de equipamento pode persistir:
+
+- ID da instância;
+- ID da definição;
+- raridade;
+- upgrade;
+- afixos.
+
+Propriedades-base do modelo permanecem no Content Catalog e não precisam ser duplicadas como fonte de verdade em cada instância.
+
+## Modelo relacional/transacional
+
+O estado operacional possui relações fortes, invariantes, unicidade e operações atômicas. A persistência deve favorecer um modelo transacional e relacional para esse estado, podendo utilizar estruturas flexíveis pontualmente quando o domínio realmente exigir.
+
+Isso é um requisito de modelagem, não a escolha de um produto de banco específico.
+
+## Separação por módulo
+
+Mesmo que módulos compartilhem inicialmente a mesma infraestrutura de persistência, cada módulo controla seus próprios repositórios/estruturas e não acessa diretamente os detalhes internos de outro.
+
+---
+
+# 64. Versionamento e migrations
+
+Devem existir dois conceitos independentes:
+
+```text
+save_schema_version
+content_version
+```
+
+## Save schema version
+
+Representa a estrutura persistida do estado.
+
+Quando o formato estrutural mudar, deve existir migration explícita e versionada.
+
+## Content version
+
+Representa a versão das definições do jogo utilizadas pelo sistema.
+
+Alterações de conteúdo e alterações de schema não devem ser tratadas como a mesma coisa.
+
+## Migrations
+
+Mudanças estruturais e transformações necessárias de dados existentes precisam ser reproduzíveis e versionadas.
+
+Não se deve depender de uma aplicação “adivinhar” informalmente como converter saves antigos.
+
+IDs de conteúdo precisam permanecer estáveis ao longo dessas mudanças.
+
+---
+
+# 65. Estado persistente × estado temporário
+
+## Persistente
+
+Sobrevive entre sessões quando aplicável:
+
+- personagem;
+- atributos;
+- progressão;
+- Skills;
+- itens;
+- Banco;
+- equipamentos;
+- habilidades aprendidas;
+- quests;
+- decisões narrativas;
+- dinheiro;
+- descobertas;
+- DungeonRun ativa.
+
+## Temporário
+
+Existe durante uma execução e pode ser reconstruído/descartado conforme a regra do sistema:
+
+- cooldown de combate;
+- buildup corrente;
+- telegraph atual;
+- ação em execução;
+- Vida atual de inimigo;
+- fila de eventos de uma luta.
+
+DungeonRun é um estado persistente de atividade e pode conter recursos atuais do personagem entre encontros.
+
+Vida/Mana/Stamina máximas permanecem derivadas; Vida/Mana/Stamina atuais podem ser persistidas dentro do contexto de uma run quando a regra de gameplay exigir continuidade.
+
+---
+
+# 66. Persistência de combate
+
+O CombatState normal deve permanecer predominantemente temporário e não exige escrita persistente a cada ataque ou evento.
+
+Ao concluir uma luta, CombatResult é aplicado ao estado persistente apropriado.
+
+Não deve haver gravação obrigatória do tipo:
+
+```text
+HP 371
+HP 365
+HP 348
+```
+
+para cada passo da timeline apenas por existir um banco persistente.
+
+A estratégia para fechar o jogo exatamente no meio de um combate permanece **A definir** entre possibilidades como reinício controlado do encontro ou snapshot retomável.
+
+Se snapshots forem adotados futuramente, precisam incluir estado suficiente para retomada determinística, inclusive RNG quando necessário.
+
+---
+
+# 67. Narrative State e Quest State
+
+Decisões narrativas não devem gerar uma nova coluna fixa no Character para cada escolha do jogo.
+
+Estados narrativos precisam ser extensíveis e identificados por chave/definição estruturada.
+
+Exemplo conceitual:
+
+```text
+key: dun_liath.protector
+value: spared
+```
+
+O Content Catalog pode validar quais estados e valores são permitidos.
+
+## Quests
+
+QuestDefinition descreve objetivos, requisitos e recompensas.
+
+QuestState descreve a progressão daquele personagem.
+
+Objetivos individuais possuem estado próprio quando precisam acompanhar progresso.
+
+Essa separação permite adicionar novas quests sem ampliar a estrutura central do Character a cada conteúdo novo.
+
+---
+
+# 68. Telemetry, logs e histórico de negócio
+
+Esses três conceitos são distintos.
+
+## Estado/histórico de negócio
+
+Mantém informações necessárias às regras do jogo, como:
+
+- propriedade de Relíquias;
+- transações de mercado;
+- first clears;
+- quests;
+- estados narrativos relevantes.
+
+## Telemetry
+
+Serve para medir comportamento e balanceamento, como duração de combate, frequência de ações, uso de consumíveis e progressão.
+
+## Logs
+
+Servem para diagnóstico e investigação técnica.
+
+Não é necessário transformar cada ataque, recurso coletado ou ação comum em histórico permanente de negócio.
+
+---
+
+# 69. Baseline arquitetural aprovado
+
+As seguintes decisões formam a baseline arquitetural atual:
+
+1. arquitetura monolítica modular no início;
+2. módulos com ownership explícito de estado;
+3. contratos públicos pequenos entre módulos;
+4. nenhum acesso direto aos detalhes internos de outro módulo;
+5. Content Catalog orientado a dados;
+6. separação Definition × State/Instance;
+7. IDs de conteúdo estáveis e independentes do texto exibido;
+8. estado fundamental persistido e estado derivado calculado;
+9. Inventory como fonte de verdade de posse/localização de itens normais;
+10. Equipment referencia instâncias em vez de duplicá-las;
+11. DungeonRun como estado persistível e aggregate próprio;
+12. Expedition Bag pertencente à DungeonRun;
+13. Combat Engine isolado do contexto narrativo/Dungeon;
+14. timeline de combate determinística e RNG reproduzível;
+15. Use Cases coordenam operações entre módulos;
+16. módulos executam suas próprias regras;
+17. Commands representam intenções e Domain Events representam fatos;
+18. operações críticas são atômicas;
+19. recompensas e operações críticas são idempotentes;
+20. concorrência entre sessões não pode duplicar consumo/recompensa;
+21. servidor é autoridade do estado oficial;
+22. estado operacional e Content Catalog são separados;
+23. persistência favorece modelo relacional/transacional sem fixar produto específico;
+24. save schema e content version são versionados separadamente;
+25. migrations são explícitas e reproduzíveis;
+26. DungeonRun persiste estrutura gerada, não somente seed;
+27. CombatState permanece predominantemente temporário;
+28. stack tecnológica concreta permanece deliberadamente fora desta baseline até decisão específica.
+
+Essas decisões podem ser reabertas quando surgir evidência concreta de problema estrutural, mas não devem ser rediscutidas sem motivo a cada etapa.
