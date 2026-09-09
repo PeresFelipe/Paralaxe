@@ -30,6 +30,6 @@ export const EQUIPMENT_DEFINITIONS = [
   { id: 'shield.watch-shield', name: 'Escudo do Vigia', slot: 'offHand', primaryStat: { kind: 'defense', value: 11 } },
 ] as const satisfies readonly EquipmentDefinition[]
 
-export function getEquipmentDefinition(definitionId: string) {
+export function getEquipmentDefinition(definitionId: string): EquipmentDefinition | null {
   return EQUIPMENT_DEFINITIONS.find((definition) => definition.id === definitionId) ?? null
 }
