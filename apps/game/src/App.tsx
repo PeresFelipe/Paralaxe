@@ -1,13 +1,23 @@
 import { useEffect, useState } from 'react'
-import { CHARACTER_CLASSES, CONTENT_VERSION, INITIAL_GIFTS } from '@greywake/content'
+import {
+  CHARACTER_CLASSES,
+  CONTENT_VERSION,
+  INITIAL_GIFTS,
+  INITIAL_IDLE_ACTIVITIES,
+  getIdleActivityDefinition,
+} from '@greywake/content'
 import {
   ATTRIBUTE_KEYS,
   BUILD_SAVE_MODE,
   createOfflineGameSave,
+  processIdleProgress,
+  startIdleActivity,
+  stopIdleActivity,
   type AttributeKey,
   type CharacterClassId,
   type GiftId,
   type OfflineGameSave,
+  type SkillId,
 } from '@greywake/domain'
 import { createIndexedDbSaveRepository } from '@greywake/persistence'
 
@@ -25,12 +35,45 @@ const attributeLabels: Record<AttributeKey, string> = {
   faith: 'Fé',
 }
 
+const skillLabels: Record<SkillId, string> = {
+  mining: 'Mineração',
+  woodcutting: 'Lenhador',
+  fishing: 'Pesca',
+  herbology: 'Herbologia',
+  metallurgy: 'Metalurgia',
+  smithing: 'Forja',
+  cooking: 'Culinária',
+}
+
 function getClassName(classId: CharacterClassId) {
   return CHARACTER_CLASSES.find((definition) => definition.id === classId)?.name ?? classId
 }
 
 function getGiftName(giftId: GiftId) {
   return INITIAL_GIFTS.find((definition) => definition.id === giftId)?.name ?? giftId
+}
+
+function getInventoryQuantity(save: OfflineGameSave, definitionId: string) {
+  return save.character.inventory.find((stack) => stack.definitionId === definitionId)?.quantity ?? 0
+}
+
+function describeIdleResult(
+  completedActions: number,
+  resultName: string,
+  gainedSkillLevels: number,
+  cappedSeconds: number,
+) {
+  const parts = [`+${completedActions} ${resultName}`]
+
+  if (gainedSkillLevels > 0) {
+    parts.push(`+${gainedSkillLevels} nível${gainedSkillLevels === 1 ? '' : 'is'} de Skill`)
+  }
+
+  if (cappedSeconds > 0) {
+    parts.push('limite offline atingido')
+  }
+
+  return parts.join(' · ')
 }
 
 function App() {
@@ -63,6 +106,36 @@ function App() {
       cancelled = true
     }
   }, [])
+
+  useEffect(() => {
+    if (screen !== 'character' || !activeSave?.idle.activeActivity) return
+
+    const timer = window.setInterval(() => {
+      const activity = getIdleActivityDefinition(activeSave.idle.activeActivity?.activityDefinitionId ?? '')
+
+      if (!activity) return
+
+      const result = processIdleProgress(activeSave, activity, new Date().toISOString())
+
+      void saveRepository.put(result.save).then(() => {
+        setActiveSave(result.save)
+        setSaves((current) => current.map((save) => (save.saveId === result.save.saveId ? result.save : save)))
+
+        if (result.completedActions > 0) {
+          setMessage(
+            describeIdleResult(
+              result.completedActions,
+              activity.resultName,
+              result.gainedSkillLevels,
+              result.cappedSeconds,
+            ),
+          )
+        }
+      })
+    }, 5000)
+
+    return () => window.clearInterval(timer)
+  }, [screen, activeSave])
 
   async function handleCreateSave() {
     const characterClass = CHARACTER_CLASSES.find((definition) => definition.id === selectedClassId)
@@ -99,18 +172,82 @@ function App() {
     setMessage(null)
 
     try {
-      const save = await saveRepository.get(saveId)
+      const storedSave = await saveRepository.get(saveId)
 
-      if (!save) {
+      if (!storedSave) {
         setMessage('Esse save não foi encontrado no armazenamento local.')
         return
       }
 
+      let save = storedSave
+      const activeActivityId = save.idle.activeActivity?.activityDefinitionId
+      const activity = activeActivityId ? getIdleActivityDefinition(activeActivityId) : null
+
+      if (activity) {
+        const result = processIdleProgress(save, activity, new Date().toISOString())
+        save = result.save
+        await saveRepository.put(save)
+
+        if (result.completedActions > 0) {
+          setMessage(
+            `Enquanto você esteve fora: ${describeIdleResult(
+              result.completedActions,
+              activity.resultName,
+              result.gainedSkillLevels,
+              result.cappedSeconds,
+            )}`,
+          )
+        }
+      } else if (storedSave.saveSchemaVersion === 2) {
+        await saveRepository.put(storedSave)
+      }
+
+      setSaves((current) => current.map((currentSave) => (currentSave.saveId === save.saveId ? save : currentSave)))
       setActiveSave(save)
       setScreen('character')
     } catch (error) {
       setMessage(error instanceof Error ? error.message : 'Não foi possível carregar o save.')
     }
+  }
+
+  async function handleStartActivity(activityDefinitionId: string) {
+    if (!activeSave) return
+
+    const activity = getIdleActivityDefinition(activityDefinitionId)
+    if (!activity) return
+
+    const now = new Date().toISOString()
+    let save = activeSave
+    const previousActivityId = save.idle.activeActivity?.activityDefinitionId
+    const previousActivity = previousActivityId ? getIdleActivityDefinition(previousActivityId) : null
+
+    if (previousActivity) {
+      save = processIdleProgress(save, previousActivity, now).save
+    }
+
+    save = startIdleActivity(save, activity, now)
+    await saveRepository.put(save)
+    setActiveSave(save)
+    setSaves((current) => current.map((currentSave) => (currentSave.saveId === save.saveId ? save : currentSave)))
+    setMessage(`${activity.name} iniciado. A atividade continuará com o jogo fechado.`)
+  }
+
+  async function handleStopActivity() {
+    if (!activeSave?.idle.activeActivity) return
+
+    const now = new Date().toISOString()
+    const activity = getIdleActivityDefinition(activeSave.idle.activeActivity.activityDefinitionId)
+    let save = activeSave
+
+    if (activity) {
+      save = processIdleProgress(save, activity, now).save
+    }
+
+    save = stopIdleActivity(save, now)
+    await saveRepository.put(save)
+    setActiveSave(save)
+    setSaves((current) => current.map((currentSave) => (currentSave.saveId === save.saveId ? save : currentSave)))
+    setMessage('Atividade Idle interrompida.')
   }
 
   function startNewSave() {
@@ -141,6 +278,8 @@ function App() {
   }
 
   if (screen === 'character' && activeSave) {
+    const activeActivityId = activeSave.idle.activeActivity?.activityDefinitionId ?? null
+
     return (
       <main className="app-shell">
         <header className="topbar">
@@ -167,6 +306,79 @@ function App() {
           </div>
         </section>
 
+        {message ? <p className="inline-message">{message}</p> : null}
+
+        <section className="dashboard-grid">
+          <article className="panel">
+            <div className="panel-heading">
+              <div>
+                <p className="section-kicker">M2 · Idle</p>
+                <h2>Primeiras coletas</h2>
+              </div>
+              <span className="pill">1 atividade por vez</span>
+            </div>
+
+            <div className="choice-grid">
+              {INITIAL_IDLE_ACTIVITIES.map((activity) => {
+                const skill = activeSave.skills[activity.skillId]
+                const isActive = activeActivityId === activity.id
+                const quantity = getInventoryQuantity(activeSave, activity.resultItemDefinitionId)
+
+                return (
+                  <button
+                    className={`choice-card ${isActive ? 'selected' : ''}`}
+                    type="button"
+                    key={activity.id}
+                    onClick={() => void handleStartActivity(activity.id)}
+                  >
+                    <span className="choice-title">{activity.name}</span>
+                    <span className="muted">
+                      {skillLabels[activity.skillId]} Nv. {skill.level} · {skill.xp} XP
+                    </span>
+                    <span className="attribute-preview">
+                      {activity.actionSeconds}s → 1 {activity.resultName} · {activity.skillXpPerAction} XP
+                    </span>
+                    <span className="save-card-footer">Em posse: {quantity}</span>
+                  </button>
+                )
+              })}
+            </div>
+
+            {activeActivityId ? (
+              <button className="ghost-button" type="button" onClick={() => void handleStopActivity()}>
+                Parar atividade
+              </button>
+            ) : null}
+          </article>
+
+          <article className="panel">
+            <p className="section-kicker">Save local</p>
+            <h2>M2 em execução</h2>
+            <dl className="save-details">
+              <div>
+                <dt>Modo</dt>
+                <dd>{activeSave.saveMode}</dd>
+              </div>
+              <div>
+                <dt>Schema</dt>
+                <dd>v{activeSave.saveSchemaVersion}</dd>
+              </div>
+              <div>
+                <dt>XP geral</dt>
+                <dd>{activeSave.character.xp}</dd>
+              </div>
+              <div>
+                <dt>Atividade</dt>
+                <dd>{activeActivityId ? getIdleActivityDefinition(activeActivityId)?.name ?? 'Ativa' : 'Nenhuma'}</dd>
+              </div>
+            </dl>
+            <div className="milestone-note">
+              <span>Comportamento</span>
+              <strong>Fecha o navegador → relógio continua → progresso é processado ao voltar</strong>
+            </div>
+          </article>
+        </section>
+
         <section className="dashboard-grid">
           <article className="panel">
             <div className="panel-heading">
@@ -187,30 +399,11 @@ function App() {
           </article>
 
           <article className="panel">
-            <p className="section-kicker">Save local</p>
-            <h2>M1 carregado</h2>
-            <dl className="save-details">
-              <div>
-                <dt>Modo</dt>
-                <dd>{activeSave.saveMode}</dd>
-              </div>
-              <div>
-                <dt>Schema</dt>
-                <dd>v{activeSave.saveSchemaVersion}</dd>
-              </div>
-              <div>
-                <dt>Conteúdo</dt>
-                <dd>{activeSave.contentVersion}</dd>
-              </div>
-              <div>
-                <dt>Moedas</dt>
-                <dd>{activeSave.character.gold}</dd>
-              </div>
-            </dl>
-            <div className="milestone-note">
-              <span>Próximo marco</span>
-              <strong>M2 — Idle persiste e funciona offline</strong>
-            </div>
+            <p className="section-kicker">Próximo marco</p>
+            <h2>M3 — Crafting e equipamento</h2>
+            <p className="muted">
+              O progresso Idle agora já possui estado próprio, timestamps, limite offline, recompensa de recurso e XP de Skill.
+            </p>
           </article>
         </section>
       </main>
