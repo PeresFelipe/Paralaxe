@@ -15,14 +15,12 @@ A Build 0.1 não possui backend, conta Online, Cloud Save ou Mercado entre jogad
 ### Marco técnico atual
 
 ```text
-M5 — Dún Liath completa
+M6 — Build 0.1 validável
 ```
 
-Já existem criação/carregamento de personagem, Idle offline, crafting/equipamento, combate seedable e o fluxo estrutural completo da primeira expedição. **Dún Liath — Fácil** possui `DungeonRun` persistível, rota irreversível de 16–17 salas, Bolsa de Expedição, attrition entre encontros, Crúbach, Tromghiallach, Cosantóir, retirada pré-Boss, evento Matar/Poupar, Registro de Suprimentos, Fragmento do Tratado e Fairtheoir encadeado em duas fases.
+Os marcos estruturais M0–M5 estão implementados: criação/carregamento de personagem, Idle offline, crafting/equipamento, combate seedable e o fluxo de Dún Liath — Fácil com `DungeonRun` persistível, rota irreversível de 16–17 salas, Bolsa de Expedição, attrition real entre encontros, retirada pré-Boss, evento Matar/Poupar e Fairtheoir em duas fases.
 
-O primeiro clear pode assegurar loot, concluir o contrato, persistir a decisão narrativa e desbloquear **Guarda Instintiva**.
-
-Próximo marco: **M6 — Build 0.1 validável**.
+A validação automatizada já roda no GitHub Actions com Node 22. `pnpm check` e `pnpm build` passam em runner real; o M6 agora concentra validação integrada de gameplay e fechamento das diferenças de fidelidade restantes.
 
 ## Stack da Build 0.1
 
@@ -33,7 +31,8 @@ Próximo marco: **M6 — Build 0.1 validável**.
 - **IndexedDB** — persistência local do save;
 - **pnpm workspaces** — organização do monorepo;
 - **Oxlint** — lint da base TypeScript/React;
-- **Vitest** — testes automatizados do domínio.
+- **Vitest** — testes automatizados do domínio;
+- **GitHub Actions** — CI de lint, typecheck, testes e build.
 
 O domínio do jogo permanece independente da UI e da implementação concreta de persistência.
 
@@ -55,9 +54,10 @@ Validação da fundação:
 
 ```bash
 pnpm check
+pnpm build
 ```
 
-Esse comando executa lint, typecheck e os testes existentes.
+O mesmo fluxo é executado automaticamente em `.github/workflows/validate.yml`.
 
 ## Documentação
 
@@ -78,6 +78,9 @@ Esse comando executa lint, typecheck e os testes existentes.
 │   ├── content/              # Content Catalog
 │   ├── persistence/          # contratos e IndexedDB
 │   └── ui/                   # design system e componentes compartilhados
+├── .github/
+│   └── workflows/
+│       └── validate.yml       # CI da Build 0.1
 └── docs/
     ├── GDD.md
     ├── builds/
