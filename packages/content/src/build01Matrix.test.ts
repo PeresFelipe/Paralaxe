@@ -6,11 +6,17 @@ import {
   createOfflineGameSave,
   derivePlayerCombatStats,
   simulateCombat,
+  teachAndEquipCombatAbilities,
   type CombatResources,
   type OfflineGameSave,
 } from '@greywake/domain'
 import { CHARACTER_CLASSES, INITIAL_GIFTS } from './characterCreation'
-import { getCombatAbilityDefinition, getCombatConsumableDefinition, getEnemyDefinition } from './combat'
+import {
+  getCombatAbilityDefinition,
+  getCombatConsumableDefinition,
+  getEnemyDefinition,
+  getPreDungeonAbilityLoadout,
+} from './combat'
 import { getEquipmentDefinition } from './equipment'
 
 const catalog = {
@@ -34,7 +40,12 @@ function addItem(save: OfflineGameSave, definitionId: string, quantity: number) 
 }
 
 function prepareRoute(save: OfflineGameSave, route: RouteId) {
-  let prepared = acceptDunLiathContract(save, '2026-09-09T12:01:00.000Z')
+  let prepared = teachAndEquipCombatAbilities(
+    save,
+    getPreDungeonAbilityLoadout(save.character.classId),
+    '2026-09-09T12:00:59.000Z',
+  )
+  prepared = acceptDunLiathContract(prepared, '2026-09-09T12:01:00.000Z')
 
   if (route === 'mining') {
     const mainHandId = prepared.character.equipment.mainHand
