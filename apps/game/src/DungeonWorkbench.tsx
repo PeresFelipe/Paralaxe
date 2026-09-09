@@ -6,6 +6,7 @@ import {
   getDungeonDefinition,
   getEnemyDefinition,
   getEquipmentDefinition,
+  getPreDungeonAbilityLoadout,
 } from '@greywake/content'
 import {
   acceptDunLiathContract,
@@ -14,6 +15,7 @@ import {
   extractDungeonRun,
   resolveDungeonRoom,
   startDungeon,
+  teachAndEquipCombatAbilities,
   type CombatResult,
   type DungeonRoomDefinition,
   type OfflineGameSave,
@@ -95,9 +97,15 @@ export default function DungeonWorkbench() {
       if (!latest.combat.wolfDefeated) {
         throw new Error('Conclua primeiro o Serviço — Estrada Baixa.')
       }
-      const save = acceptDunLiathContract(latest, new Date().toISOString())
+      const now = new Date().toISOString()
+      let save = teachAndEquipCombatAbilities(
+        latest,
+        getPreDungeonAbilityLoadout(latest.character.classId),
+        now,
+      )
+      save = acceptDunLiathContract(save, now)
       await persist(save)
-      setMessage('Contrato aceito. Brann entrega 2× Preparado de Campo; essa entrega acontece uma única vez.')
+      setMessage('Contrato aceito. Técnicas básicas preparadas e 2× Preparado de Campo entregues uma única vez.')
     } catch (error) {
       setMessage(error instanceof Error ? error.message : 'Não foi possível aceitar o contrato.')
     } finally {
@@ -226,7 +234,7 @@ export default function DungeonWorkbench() {
             <p className="muted">Recupere o Registro de Suprimentos, atravesse a fortaleza e decida se arrisca a Bolsa contra Fairtheoir.</p>
           </div>
           {!selectedSave.dungeon.contractAccepted && !selectedSave.dungeon.contractCompleted ? (
-            <button className="primary-button compact" type="button" disabled={busy} onClick={() => void handleAcceptContract()}>Aceitar contrato · receber 2 Preparados</button>
+            <button className="primary-button compact" type="button" disabled={busy} onClick={() => void handleAcceptContract()}>Aceitar contrato · preparar técnicas + 2 Preparados</button>
           ) : (
             <button className="primary-button compact" type="button" disabled={busy} onClick={() => void handleStart()}>Entrar em Dún Liath</button>
           )}
