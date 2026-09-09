@@ -68,8 +68,6 @@ function addAndEquip(save: OfflineGameSave, definitionId: string, slot: 'gloves'
 
 function prepareRoute(save: OfflineGameSave, route: RouteId) {
   const mageUsesFirstPoint = save.character.classId === 'mage'
-  // Estado previsto após a coleta, primeira produção, Lobo e Serviço — Estrada Baixa.
-  // O Mago usa o primeiro ponto em Vitalidade; as demais classes ainda passam sem gastar o ponto.
   let prepared: OfflineGameSave = {
     ...save,
     character: {
@@ -90,31 +88,26 @@ function prepareRoute(save: OfflineGameSave, route: RouteId) {
     '2026-09-09T12:00:59.000Z',
   )
 
-  // O Mercado vende Luvas Simples e Botas Simples por 20 moedas cada.
-  // Lenhador já converge para Braçadeiras de Giúis, então compra apenas as botas.
   prepared = addAndEquip(prepared, 'armor.simple-boots', 'boots')
-  prepared = {
-    ...prepared,
-    character: { ...prepared.character, gold: prepared.character.gold - 20 },
-  }
+  prepared = { ...prepared, character: { ...prepared.character, gold: prepared.character.gold - 20 } }
   if (route !== 'woodcutting') {
     prepared = addAndEquip(prepared, 'armor.simple-gloves', 'gloves')
-    prepared = {
-      ...prepared,
-      character: { ...prepared.character, gold: prepared.character.gold - 20 },
-    }
+    prepared = { ...prepared, character: { ...prepared.character, gold: prepared.character.gold - 20 } }
   }
 
   prepared = acceptDunLiathContract(prepared, '2026-09-09T12:01:00.000Z')
 
   if (route === 'mining') {
-    const mainHandId = prepared.character.equipment.mainHand
+    const reinforcedInstanceId =
+      prepared.character.classId === 'mage'
+        ? prepared.character.equipment.chest
+        : prepared.character.equipment.mainHand
     prepared = {
       ...prepared,
       character: {
         ...prepared.character,
         equipmentItems: prepared.character.equipmentItems.map((item) =>
-          item.instanceId === mainHandId ? { ...item, upgradeLevel: 1 as const } : item,
+          item.instanceId === reinforcedInstanceId ? { ...item, upgradeLevel: 1 as const } : item,
         ),
       },
     }
@@ -126,36 +119,15 @@ function prepareRoute(save: OfflineGameSave, route: RouteId) {
 
   if (route === 'fishing') {
     prepared = addItem(prepared, 'item.food.roasted-scadan', 6)
-    prepared = configureCombatConsumableSlot(
-      prepared,
-      0,
-      'item.food.roasted-scadan',
-      'health',
-      70,
-      '2026-09-09T12:01:01.000Z',
-    )
+    prepared = configureCombatConsumableSlot(prepared, 0, 'item.food.roasted-scadan', 'health', 70, '2026-09-09T12:01:01.000Z')
   }
 
   if (route === 'herbology') {
     prepared = addItem(prepared, 'item.consumable.neantog-preparation', 6)
-    prepared = configureCombatConsumableSlot(
-      prepared,
-      0,
-      'item.consumable.neantog-preparation',
-      'health',
-      70,
-      '2026-09-09T12:01:01.000Z',
-    )
+    prepared = configureCombatConsumableSlot(prepared, 0, 'item.consumable.neantog-preparation', 'health', 70, '2026-09-09T12:01:01.000Z')
   }
 
-  return configureCombatConsumableSlot(
-    prepared,
-    1,
-    'item.consumable.field-preparation',
-    'health',
-    70,
-    '2026-09-09T12:01:02.000Z',
-  )
+  return configureCombatConsumableSlot(prepared, 1, 'item.consumable.field-preparation', 'health', 70, '2026-09-09T12:01:02.000Z')
 }
 
 function fullResources(save: OfflineGameSave): CombatResources {
@@ -172,10 +144,7 @@ function fullResources(save: OfflineGameSave): CombatResources {
 
 function fight(save: OfflineGameSave, enemyId: string, seed: number, resources: CombatResources) {
   const result = simulateCombat(save, catalog, enemyId, seed, 180, resources)
-  return {
-    result,
-    save: applyCombatResult(save, enemyId, result, '2026-09-09T12:30:00.000Z'),
-  }
+  return { result, save: applyCombatResult(save, enemyId, result, '2026-09-09T12:30:00.000Z') }
 }
 
 function equipGuaranteedHelmet(save: OfflineGameSave) {
@@ -213,31 +182,23 @@ function runReferenceRoute(save: OfflineGameSave, seedBase: number): RouteDiagno
   resources = crubach.result.player
 
   const tromghiallach = fight(current, 'enemy.tromghiallach', seedBase + 1, resources)
-  if (tromghiallach.result.outcome !== 'victory') {
-    return diagnostic(tromghiallach.save, 'Tromghiallach', tromghiallach.result.player.health)
-  }
+  if (tromghiallach.result.outcome !== 'victory') return diagnostic(tromghiallach.save, 'Tromghiallach', tromghiallach.result.player.health)
   current = tromghiallach.save
   resources = tromghiallach.result.player
 
   current = equipGuaranteedHelmet(current)
   const guardian = fight(current, 'enemy.cosantoir', seedBase + 10, resources)
-  if (guardian.result.outcome !== 'victory') {
-    return diagnostic(guardian.save, 'Cosantóir', guardian.result.player.health)
-  }
+  if (guardian.result.outcome !== 'victory') return diagnostic(guardian.save, 'Cosantóir', guardian.result.player.health)
   current = guardian.save
 
   current = addItem(current, 'item.consumable.field-preparation', 3)
   resources = fullResources(current)
 
   const phase1 = fight(current, 'enemy.fairtheoir-phase1', seedBase + 20, resources)
-  if (phase1.result.outcome !== 'victory') {
-    return diagnostic(phase1.save, 'Fairtheoir Fase 1', phase1.result.player.health)
-  }
+  if (phase1.result.outcome !== 'victory') return diagnostic(phase1.save, 'Fairtheoir Fase 1', phase1.result.player.health)
 
   const phase2 = fight(phase1.save, 'enemy.fairtheoir-phase2', seedBase + 21, phase1.result.player)
-  if (phase2.result.outcome !== 'victory') {
-    return diagnostic(phase2.save, 'Fairtheoir Fase 2', phase2.result.player.health)
-  }
+  if (phase2.result.outcome !== 'victory') return diagnostic(phase2.save, 'Fairtheoir Fase 2', phase2.result.player.health)
 
   return {
     complete: true,
