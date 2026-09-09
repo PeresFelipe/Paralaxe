@@ -15,12 +15,14 @@ A Build 0.1 não possui backend, conta Online, Cloud Save ou Mercado entre jogad
 ### Marco técnico atual
 
 ```text
-M4 — Primeiro combate completo
+M5 — Dún Liath completa
 ```
 
-Já existem criação/carregamento de personagem, Idle offline, crafting/equipamento e um primeiro Combat Engine determinístico/seedable. O **Lobo de Estrada** pode ser enfrentado com ataque básico automático, habilidade inicial, recursos, cooldowns e telegraph de Bote; o resultado e a recompensa de vitória são persistidos no save.
+Já existem criação/carregamento de personagem, Idle offline, crafting/equipamento, combate seedable e o fluxo estrutural completo da primeira expedição. **Dún Liath — Fácil** possui `DungeonRun` persistível, rota irreversível de 16–17 salas, Bolsa de Expedição, attrition entre encontros, Crúbach, Tromghiallach, Cosantóir, retirada pré-Boss, evento Matar/Poupar, Registro de Suprimentos, Fragmento do Tratado e Fairtheoir encadeado em duas fases.
 
-Próximo marco: **M5 — Dún Liath completa**.
+O primeiro clear pode assegurar loot, concluir o contrato, persistir a decisão narrativa e desbloquear **Guarda Instintiva**.
+
+Próximo marco: **M6 — Build 0.1 validável**.
 
 ## Stack da Build 0.1
 
