@@ -2,6 +2,7 @@ import {
   SAVE_SCHEMA_VERSION,
   createInitialSkillProgress,
   createStartingEquipmentState,
+  type CraftingState,
   type IdleState,
   type OfflineGameSave,
   type SkillProgressById,
@@ -46,6 +47,11 @@ interface LegacyOfflineGameSaveV2 extends Omit<LegacyOfflineGameSaveV1, 'saveSch
   idle: IdleState
 }
 
+interface LegacyOfflineGameSaveV3 extends Omit<OfflineGameSave, 'saveSchemaVersion' | 'combat'> {
+  saveSchemaVersion: 3
+  crafting: CraftingState
+}
+
 function requestToPromise<T>(request: IDBRequest<T>) {
   return new Promise<T>((resolve, reject) => {
     request.addEventListener('success', () => resolve(request.result), { once: true })
@@ -73,6 +79,17 @@ function transactionToPromise(transaction: IDBTransaction) {
   })
 }
 
+function createDefaultCombatState(): OfflineGameSave['combat'] {
+  return {
+    preferences: {
+      style: 'mixed',
+      defensiveHealthThresholdPercent: 60,
+    },
+    lastRun: null,
+    wolfDefeated: false,
+  }
+}
+
 function migrateLegacyCharacter(character: LegacyCharacterState): OfflineGameSave['character'] {
   const startingEquipment = createStartingEquipmentState(character.equipment)
 
@@ -95,6 +112,15 @@ function migrateSave(rawSave: unknown): OfflineGameSave {
     return rawSave as OfflineGameSave
   }
 
+  if (candidate.saveSchemaVersion === 3) {
+    const legacy = rawSave as LegacyOfflineGameSaveV3
+    return {
+      ...legacy,
+      saveSchemaVersion: SAVE_SCHEMA_VERSION,
+      combat: createDefaultCombatState(),
+    }
+  }
+
   if (candidate.saveSchemaVersion === 2) {
     const legacy = rawSave as LegacyOfflineGameSaveV2
 
@@ -103,6 +129,7 @@ function migrateSave(rawSave: unknown): OfflineGameSave {
       saveSchemaVersion: SAVE_SCHEMA_VERSION,
       character: migrateLegacyCharacter(legacy.character),
       crafting: { activeRecipe: null },
+      combat: createDefaultCombatState(),
     }
   }
 
@@ -116,6 +143,7 @@ function migrateSave(rawSave: unknown): OfflineGameSave {
       skills: createInitialSkillProgress(),
       idle: { activeActivity: null },
       crafting: { activeRecipe: null },
+      combat: createDefaultCombatState(),
     }
   }
 
