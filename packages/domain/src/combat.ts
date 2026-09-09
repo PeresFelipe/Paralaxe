@@ -81,11 +81,7 @@ export interface EnemyDefinition {
 export interface CombatConsumableDefinition {
   id: string
   name: string
-  restore: {
-    health?: number
-    mana?: number
-    stamina?: number
-  }
+  restore: { health?: number; mana?: number; stamina?: number }
 }
 
 export interface CombatEquipmentCatalog {
@@ -159,37 +155,16 @@ export interface CombatState {
   wolfDefeated: boolean
 }
 
-const SCALING_MULTIPLIERS: Record<ScalingGrade, number> = {
-  S: 1,
-  A: 0.85,
-  B: 0.7,
-  C: 0.5,
-  D: 0.3,
-  E: 0.15,
-}
-
-const DAMAGE_RESISTANCE_MULTIPLIERS: Record<ResistanceLevel, number> = {
+const SCALING: Record<ScalingGrade, number> = { S: 1, A: 0.85, B: 0.7, C: 0.5, D: 0.3, E: 0.15 }
+const DAMAGE_RESISTANCE: Record<ResistanceLevel, number> = {
   weak: 1.25,
   normal: 1,
   resistant: 0.8,
   'very-resistant': 0.6,
   immune: 0,
 }
-
-const STATUS_RESISTANCE_MULTIPLIERS: Record<ResistanceLevel, number> = {
-  weak: 1.25,
-  normal: 1,
-  resistant: 0.75,
-  'very-resistant': 0.5,
-  immune: 0,
-}
-
-const STATUS_THRESHOLD = 100
-const BUILDUP_DECAY_DELAY_SECONDS = 3
-const BUILDUP_DECAY_PER_SECOND = 12
-const POST_PROC_RESISTANCE_SECONDS = 6
-const POST_PROC_BUILDUP_MULTIPLIER = 0.5
 const EPSILON = 0.000001
+const STATUS_THRESHOLD = 100
 
 interface DerivedPlayerCombatStats {
   maxHealth: number
@@ -216,19 +191,12 @@ interface BuildupState {
   value: number
   lastAppliedAt: number
   lastEvaluatedAt: number
-  temporaryResistanceUntil: number
+  resistanceUntil: number
 }
 
-interface TimedDamageTakenEffect {
+interface TimedMultiplier {
   multiplier: number
   expiresAt: number
-  label: string
-}
-
-interface ActivePlayerStatuses {
-  poisonUntil: number
-  burnUntil: number
-  freezeUntil: number
 }
 
 function clamp(value: number, min: number, max: number) {
@@ -237,7 +205,6 @@ function clamp(value: number, min: number, max: number) {
 
 function createRng(seed: number) {
   let state = seed >>> 0
-
   return () => {
     state = (Math.imul(state, 1664525) + 1013904223) >>> 0
     return state / 0x1_0000_0000
@@ -248,10 +215,9 @@ function scalingContribution(
   attributes: CharacterAttributes,
   scaling: Partial<Record<keyof CharacterAttributes, ScalingGrade>>,
 ) {
-  return Object.entries(scaling).reduce((total, [attributeKey, grade]) => {
+  return Object.entries(scaling).reduce((total, [attribute, grade]) => {
     if (!grade) return total
-    const value = attributes[attributeKey as keyof CharacterAttributes]
-    return total + value * SCALING_MULTIPLIERS[grade]
+    return total + attributes[attribute as keyof CharacterAttributes] * SCALING[grade]
   }, 0)
 }
 
@@ -259,15 +225,14 @@ function mitigation(defense: number, attackerLevel: number) {
   return Math.min(0.75, defense / (defense + 100 + 5 * attackerLevel))
 }
 
-function calculateHitChance(accuracy: number, evasion: number, bonusPercentagePoints = 0) {
-  return clamp(0.9 + (accuracy - evasion) * 0.0025 + bonusPercentagePoints / 100, 0.7, 0.99)
+function hitChance(accuracy: number, evasion: number, bonus = 0) {
+  return clamp(0.9 + (accuracy - evasion) * 0.0025 + bonus / 100, 0.7, 0.99)
 }
 
 function getEquippedDefinitions(save: OfflineGameSave, catalog: CombatEquipmentCatalog) {
   return Object.values(save.character.equipment).flatMap((instanceId) => {
     const instance = save.character.equipmentItems.find((item) => item.instanceId === instanceId)
     if (!instance) return []
-
     const definition = catalog.getEquipmentDefinition(instance.definitionId)
     return definition ? [{ instance, definition }] : []
   })
@@ -289,10 +254,10 @@ export function configureCombatConsumableSlot(
   now: string,
 ): OfflineGameSave {
   if (autoUseThresholdPercent !== null) {
-    if (!Number.isFinite(autoUseThresholdPercent) || autoUseThresholdPercent < 1 || autoUseThresholdPercent > 100) {
+    if (autoUseThresholdPercent < 1 || autoUseThresholdPercent > 100) {
       throw new Error('Threshold automático precisa estar entre 1% e 100%.')
     }
-    if (!autoUseResource) throw new Error('Escolha o recurso que dispara o uso automático.')
+    if (!autoUseResource) throw new Error('Escolha o recurso do threshold automático.')
   }
 
   const slots: [CombatConsumableSlot, CombatConsumableSlot] = [
@@ -308,10 +273,7 @@ export function configureCombatConsumableSlot(
   return {
     ...save,
     updatedAt: now,
-    combat: {
-      ...save.combat,
-      preferences: { ...save.combat.preferences, consumableSlots: slots },
-    },
+    combat: { ...save.combat, preferences: { ...save.combat.preferences, consumableSlots: slots } },
   }
 }
 
@@ -321,9 +283,8 @@ export function derivePlayerCombatStats(
 ): DerivedPlayerCombatStats {
   const { attributes } = save.character
   const equipped = getEquippedDefinitions(save, catalog)
-  const mainHandInstanceId = save.character.equipment.mainHand
-  const mainHand = equipped.find((entry) => entry.instance.instanceId === mainHandInstanceId)
-
+  const mainHandId = save.character.equipment.mainHand
+  const mainHand = equipped.find((entry) => entry.instance.instanceId === mainHandId)
   if (!mainHand?.definition.weaponCombat) {
     throw new Error('O personagem precisa de uma arma válida equipada para combater.')
   }
@@ -332,7 +293,6 @@ export function derivePlayerCombatStats(
     if (entry.definition.primaryStat?.kind !== 'defense') return total
     return total + (getEquipmentPrimaryValue(entry.definition, entry.instance.upgradeLevel) ?? 0)
   }, 0)
-
   const weaponPower =
     mainHand.definition.primaryStat?.kind === 'attack'
       ? getEquipmentPrimaryValue(mainHand.definition, mainHand.instance.upgradeLevel) ?? 0
@@ -356,87 +316,64 @@ export function derivePlayerCombatStats(
   }
 }
 
-function initialCombatResources(
-  stats: DerivedPlayerCombatStats,
-  persisted?: CombatResources,
-): CombatResources {
-  if (!persisted) {
-    return {
-      health: stats.maxHealth,
-      maxHealth: stats.maxHealth,
-      mana: stats.maxMana,
-      maxMana: stats.maxMana,
-      stamina: stats.maxStamina,
-      maxStamina: stats.maxStamina,
-    }
-  }
-
+function initialResources(stats: DerivedPlayerCombatStats, persisted?: CombatResources): CombatResources {
   return {
-    health: clamp(persisted.health, 0, stats.maxHealth),
+    health: clamp(persisted?.health ?? stats.maxHealth, 0, stats.maxHealth),
     maxHealth: stats.maxHealth,
-    mana: clamp(persisted.mana, 0, stats.maxMana),
+    mana: clamp(persisted?.mana ?? stats.maxMana, 0, stats.maxMana),
     maxMana: stats.maxMana,
-    stamina: clamp(persisted.stamina, 0, stats.maxStamina),
+    stamina: clamp(persisted?.stamina ?? stats.maxStamina, 0, stats.maxStamina),
     maxStamina: stats.maxStamina,
   }
 }
 
 function rollDamage(
-  rawDamage: number,
-  targetDefense: number,
-  attackerLevel: number,
+  raw: number,
+  defense: number,
+  level: number,
   criticalChance: number,
   random: () => number,
-  externalMultiplier = 1,
+  multiplier = 1,
 ) {
-  const isCritical = random() < criticalChance
-  const criticalMultiplier = isCritical ? 1.5 : 1
-  const finalDamage =
-    rawDamage * criticalMultiplier * externalMultiplier * (1 - mitigation(targetDefense, attackerLevel))
-  return { damage: Math.max(1, Math.round(finalDamage)), isCritical }
+  const critical = random() < criticalChance
+  const damage = raw * (critical ? 1.5 : 1) * multiplier * (1 - mitigation(defense, level))
+  return { damage: Math.max(1, Math.round(damage)), critical }
 }
 
-function choosePlayerAbility(
+function chooseAbility(
   save: OfflineGameSave,
   catalog: CombatContentCatalog,
-  preferences: CombatPreferences,
   resources: CombatResources,
-  cooldownReadyAt: Map<string, number>,
+  cooldowns: Map<string, number>,
   now: number,
 ) {
   const healthPercent = (resources.health / resources.maxHealth) * 100
-  const available = save.character.activeAbilitySlots
-    .map((abilityId, slot) => ({ abilityId, slot }))
-    .filter((entry): entry is { abilityId: string; slot: number } => Boolean(entry.abilityId))
-    .map((entry) => ({ ...entry, definition: catalog.getAbilityDefinition(entry.abilityId) }))
-    .filter((entry) => entry.definition !== null)
-    .filter((entry) => (cooldownReadyAt.get(entry.abilityId) ?? 0) <= now + EPSILON)
+  const candidates = save.character.activeAbilitySlots
+    .map((id, slot) => ({ id, slot }))
+    .filter((entry): entry is { id: string; slot: number } => Boolean(entry.id))
+    .map((entry) => ({ ...entry, definition: catalog.getAbilityDefinition(entry.id) }))
+    .filter((entry): entry is { id: string; slot: number; definition: CombatAbilityDefinition } =>
+      entry.definition !== null,
+    )
+    .filter((entry) => (cooldowns.get(entry.id) ?? 0) <= now + EPSILON)
     .filter((entry) => {
       const ability = entry.definition
-      if (!ability) return false
       if (ability.resource === 'mana' && resources.mana < (ability.resourceCost ?? 0)) return false
       if (ability.resource === 'stamina' && resources.stamina < (ability.resourceCost ?? 0)) return false
       if (ability.profile === 'defensive') {
-        return healthPercent <= preferences.defensiveHealthThresholdPercent
+        return healthPercent <= save.combat.preferences.defensiveHealthThresholdPercent
       }
       return true
     })
 
-  const ranked = available.toSorted((a, b) => {
-    if (preferences.style === 'mixed') return a.slot - b.slot
-    const wantedProfile = preferences.style === 'aggressive' ? 'aggressive' : 'defensive'
-    const aPreferred = a.definition?.profile === wantedProfile ? 0 : 1
-    const bPreferred = b.definition?.profile === wantedProfile ? 0 : 1
-    return aPreferred - bPreferred || a.slot - b.slot
-  })
-
-  return ranked[0]?.definition ?? null
-}
-
-function consumeAbilityResource(resources: CombatResources, ability: CombatAbilityDefinition) {
-  const cost = ability.resourceCost ?? 0
-  if (ability.resource === 'mana') resources.mana -= cost
-  if (ability.resource === 'stamina') resources.stamina -= cost
+  return candidates.toSorted((a, b) => {
+    const style = save.combat.preferences.style
+    if (style === 'mixed') return a.slot - b.slot
+    const preferred = style === 'aggressive' ? 'aggressive' : 'defensive'
+    const aRank = a.definition.profile === preferred ? 0 : 1
+    const bRank = b.definition.profile === preferred ? 0 : 1
+    return aRank - bRank || a.slot - b.slot
+  })[0]?.definition ?? null
 }
 
 function resourcePercent(resources: CombatResources, resource: CombatThresholdResource) {
@@ -445,57 +382,14 @@ function resourcePercent(resources: CombatResources, resource: CombatThresholdRe
   return (resources.stamina / resources.maxStamina) * 100
 }
 
-function canBenefitFromConsumable(resources: CombatResources, definition: CombatConsumableDefinition) {
-  return (
-    ((definition.restore.health ?? 0) > 0 && resources.health < resources.maxHealth) ||
-    ((definition.restore.mana ?? 0) > 0 && resources.mana < resources.maxMana) ||
-    ((definition.restore.stamina ?? 0) > 0 && resources.stamina < resources.maxStamina)
-  )
-}
-
-function applyConsumable(resources: CombatResources, definition: CombatConsumableDefinition) {
-  const before = { ...resources }
-  resources.health = Math.min(resources.maxHealth, resources.health + (definition.restore.health ?? 0))
-  resources.mana = Math.min(resources.maxMana, resources.mana + (definition.restore.mana ?? 0))
-  resources.stamina = Math.min(resources.maxStamina, resources.stamina + (definition.restore.stamina ?? 0))
-  return {
-    health: Math.round(resources.health - before.health),
-    mana: Math.round(resources.mana - before.mana),
-    stamina: Math.round(resources.stamina - before.stamina),
-  }
-}
-
 function removeConsumedItems(inventory: InventoryStack[], consumedItems: InventoryStack[]) {
   const consumed = new Map(consumedItems.map((stack) => [stack.definitionId, stack.quantity]))
   return inventory
     .map((stack) => ({
       ...stack,
-      quantity: Math.max(0, stack.quantity - (consumed.get(stack.definitionId) ?? 0)),
+      quantity: stack.quantity - (consumed.get(stack.definitionId) ?? 0),
     }))
     .filter((stack) => stack.quantity > 0)
-}
-
-function resistanceMultiplier(level: ResistanceLevel | undefined) {
-  return DAMAGE_RESISTANCE_MULTIPLIERS[level ?? 'normal']
-}
-
-function statusResistanceMultiplier(level: ResistanceLevel | undefined) {
-  return STATUS_RESISTANCE_MULTIPLIERS[level ?? 'normal']
-}
-
-function currentTimedMultiplier(effects: TimedDamageTakenEffect[], now: number) {
-  return effects
-    .filter((effect) => effect.expiresAt > now + EPSILON)
-    .reduce((total, effect) => total * effect.multiplier, 1)
-}
-
-function decayBuildup(state: BuildupState, now: number) {
-  const decayStartsAt = state.lastAppliedAt + BUILDUP_DECAY_DELAY_SECONDS
-  const from = Math.max(state.lastEvaluatedAt, decayStartsAt)
-  if (now > from) {
-    state.value = Math.max(0, state.value - (now - from) * BUILDUP_DECAY_PER_SECOND)
-  }
-  state.lastEvaluatedAt = now
 }
 
 export function simulateCombat(
@@ -511,27 +405,23 @@ export function simulateCombat(
     throw new Error('Interrompa a atividade Idle antes de iniciar um combate.')
   }
 
-  const enemy = catalog.getEnemyDefinition(enemyDefinitionId)
-  if (!enemy) throw new Error('Inimigo não encontrado no Content Catalog.')
-
+  const foundEnemy = catalog.getEnemyDefinition(enemyDefinitionId)
+  if (!foundEnemy) throw new Error('Inimigo não encontrado no Content Catalog.')
+  const enemy: EnemyDefinition = foundEnemy
   const stats = derivePlayerCombatStats(save, catalog)
-  const resources = initialCombatResources(stats, startingResources)
-  const preferences = save.combat.preferences
+  const resources = initialResources(stats, startingResources)
   const random = createRng(seed)
   const log: CombatLogEntry[] = []
   const playerCooldowns = new Map<string, number>()
   const enemyCooldowns = new Map<string, number>()
-  const inventoryAvailable = new Map(save.character.inventory.map((stack) => [stack.definitionId, stack.quantity]))
-  const consumedByDefinition = new Map<string, number>()
+  const availableInventory = new Map(save.character.inventory.map((stack) => [stack.definitionId, stack.quantity]))
+  const consumed = new Map<string, number>()
   const buildup = new Map<CombatStatusId, BuildupState>()
-  const activePlayerStatuses: ActivePlayerStatuses = {
-    poisonUntil: 0,
-    burnUntil: 0,
-    freezeUntil: 0,
-  }
-  let enemyDamageTakenEffects: TimedDamageTakenEffect[] = []
-  let manualConsumablePending = manualConsumableSlotIndex ?? null
-
+  let timedEnemyMultipliers: TimedMultiplier[] = []
+  let poisonUntil = 0
+  let burnUntil = 0
+  let freezeUntil = 0
+  let manualPending: 0 | 1 | null = manualConsumableSlotIndex ?? null
   let enemyHealth = enemy.maxHealth
   let now = 0
   let lastTime = 0
@@ -543,38 +433,47 @@ export function simulateCombat(
     enemyCooldowns.set(ability.id, ability.initialDelaySeconds ?? 0)
   }
 
-  function playerDefenseAt(time: number) {
-    return stats.defense * (activePlayerStatuses.burnUntil > time + EPSILON ? 0.85 : 1)
+  function playerDefense() {
+    return stats.defense * (burnUntil > now + EPSILON ? 0.85 : 1)
   }
 
-  function playerActionIntervalAt(time: number) {
-    return stats.actionIntervalSeconds * (activePlayerStatuses.freezeUntil > time + EPSILON ? 1.3 : 1)
+  function playerInterval() {
+    return stats.actionIntervalSeconds * (freezeUntil > now + EPSILON ? 1.3 : 1)
   }
 
-  function advanceContinuousEffects(from: number, to: number) {
+  function enemyDamageMultiplier(type: DamageType) {
+    const base = DAMAGE_RESISTANCE[enemy.damageResistances?.[type] ?? 'normal']
+    const timed = timedEnemyMultipliers.reduce(
+      (total, effect) => (effect.expiresAt > now + EPSILON ? total * effect.multiplier : total),
+      1,
+    )
+    return base * timed
+  }
+
+  function advanceEffects(to: number) {
+    const from = lastTime
     if (to <= from) return
-    const poisonSeconds = Math.max(0, Math.min(to, activePlayerStatuses.poisonUntil) - from)
-    const burnSeconds = Math.max(0, Math.min(to, activePlayerStatuses.burnUntil) - from)
-    const poisonDamage = poisonSeconds * resources.maxHealth * 0.02
-    const burnDamage = burnSeconds * 3
-    const total = poisonDamage + burnDamage
-    if (total > 0) resources.health = Math.max(0, resources.health - total)
+    const poisonSeconds = Math.max(0, Math.min(to, poisonUntil) - from)
+    const burnSeconds = Math.max(0, Math.min(to, burnUntil) - from)
+    resources.health = Math.max(0, resources.health - poisonSeconds * resources.maxHealth * 0.02 - burnSeconds * 3)
 
-    for (const state of buildup.values()) decayBuildup(state, to)
-    enemyDamageTakenEffects = enemyDamageTakenEffects.filter((effect) => effect.expiresAt > to + EPSILON)
+    for (const state of buildup.values()) {
+      const decayStart = state.lastAppliedAt + 3
+      const decayFrom = Math.max(state.lastEvaluatedAt, decayStart)
+      if (to > decayFrom) state.value = Math.max(0, state.value - (to - decayFrom) * 12)
+      state.lastEvaluatedAt = to
+    }
+    timedEnemyMultipliers = timedEnemyMultipliers.filter((effect) => effect.expiresAt > to + EPSILON)
   }
 
-  function applyStatusBuildup(application: StatusApplicationDefinition) {
+  function applyBuildup(application: StatusApplicationDefinition) {
     const state = buildup.get(application.status) ?? {
       value: 0,
       lastAppliedAt: now,
       lastEvaluatedAt: now,
-      temporaryResistanceUntil: 0,
+      resistanceUntil: 0,
     }
-    decayBuildup(state, now)
-    const temporaryMultiplier =
-      state.temporaryResistanceUntil > now + EPSILON ? POST_PROC_BUILDUP_MULTIPLIER : 1
-    const received = application.buildup * temporaryMultiplier
+    const received = application.buildup * (state.resistanceUntil > now + EPSILON ? 0.5 : 1)
     state.value += received
     state.lastAppliedAt = now
     state.lastEvaluatedAt = now
@@ -582,13 +481,12 @@ export function simulateCombat(
       atSeconds: now,
       actor: 'system',
       kind: 'status',
-      message: `${application.status}: +${Math.round(received)} buildup (${Math.round(state.value)}/${STATUS_THRESHOLD}).`,
+      message: `${application.status}: ${Math.round(state.value)}/${STATUS_THRESHOLD} buildup.`,
     })
 
     if (state.value >= STATUS_THRESHOLD) {
       state.value = 0
-      state.temporaryResistanceUntil = now + POST_PROC_RESISTANCE_SECONDS
-
+      state.resistanceUntil = now + 6
       if (application.status === 'bleed') {
         const damage = Math.max(1, Math.round(resources.health * 0.08))
         resources.health = Math.max(0, resources.health - damage)
@@ -597,29 +495,23 @@ export function simulateCombat(
         playerReadyAt = Math.max(playerReadyAt, now) + 1.5
         log.push({ atSeconds: now, actor: 'system', kind: 'status', message: 'Atordoamento pausa a ação por 1,5 s.' })
       } else if (application.status === 'poison') {
-        activePlayerStatuses.poisonUntil = now + 10
-        log.push({ atSeconds: now, actor: 'system', kind: 'status', message: 'Veneno aplicado por 10 s.' })
+        poisonUntil = now + 10
       } else if (application.status === 'burn') {
-        activePlayerStatuses.burnUntil = now + 6
-        log.push({ atSeconds: now, actor: 'system', kind: 'status', message: 'Queimadura aplicada por 6 s; Defesa reduzida em 15%.' })
+        burnUntil = now + 6
       } else if (application.status === 'freeze') {
-        const remaining = Math.max(0, playerReadyAt - now)
-        playerReadyAt = now + remaining * 1.3
-        activePlayerStatuses.freezeUntil = now + 5
-        log.push({ atSeconds: now, actor: 'system', kind: 'status', message: 'Congelamento aplicado por 5 s; ações ficam 30% mais lentas.' })
+        freezeUntil = now + 5
+        playerReadyAt = now + Math.max(0, playerReadyAt - now) * 1.3
       }
     }
-
     buildup.set(application.status, state)
   }
 
-  function applyEnemyHitEffects(ability: EnemyAbilityDefinition) {
-    for (const application of ability.statusApplications ?? []) applyStatusBuildup(application)
+  function afterEnemyHit(ability: EnemyAbilityDefinition) {
+    for (const application of ability.statusApplications ?? []) applyBuildup(application)
     if (ability.vulnerabilityAfter) {
-      enemyDamageTakenEffects.push({
+      timedEnemyMultipliers.push({
         multiplier: ability.vulnerabilityAfter.damageTakenMultiplier,
         expiresAt: now + ability.vulnerabilityAfter.durationSeconds,
-        label: `${ability.name} — vulnerabilidade`,
       })
       log.push({
         atSeconds: now,
@@ -630,67 +522,56 @@ export function simulateCombat(
     }
   }
 
-  function tryUseConsumable() {
-    const slotCandidates: Array<{ slotIndex: 0 | 1; manual: boolean }> = []
-    if (manualConsumablePending !== null) {
-      slotCandidates.push({ slotIndex: manualConsumablePending, manual: true })
-    }
-    for (const slotIndex of [0, 1] as const) {
-      if (slotIndex !== manualConsumablePending) slotCandidates.push({ slotIndex, manual: false })
+  function tryConsumable() {
+    const order: Array<{ index: 0 | 1; manual: boolean }> = []
+    if (manualPending !== null) order.push({ index: manualPending, manual: true })
+    for (const index of [0, 1] as const) {
+      if (index !== manualPending) order.push({ index, manual: false })
     }
 
-    for (const candidate of slotCandidates) {
-      const slot = preferences.consumableSlots[candidate.slotIndex]
-      if (!slot.definitionId) {
-        if (candidate.manual) manualConsumablePending = null
-        continue
-      }
-      const quantity = inventoryAvailable.get(slot.definitionId) ?? 0
-      if (quantity <= 0) {
-        if (candidate.manual) manualConsumablePending = null
-        continue
-      }
+    for (const candidate of order) {
+      const slot = save.combat.preferences.consumableSlots[candidate.index]
+      if (!slot.definitionId) continue
+      if ((availableInventory.get(slot.definitionId) ?? 0) <= 0) continue
       const definition = catalog.getConsumableDefinition?.(slot.definitionId)
-      if (!definition) {
-        if (candidate.manual) manualConsumablePending = null
-        continue
-      }
-      if (!canBenefitFromConsumable(resources, definition)) continue
+      if (!definition) continue
+      const canRestore =
+        ((definition.restore.health ?? 0) > 0 && resources.health < resources.maxHealth) ||
+        ((definition.restore.mana ?? 0) > 0 && resources.mana < resources.maxMana) ||
+        ((definition.restore.stamina ?? 0) > 0 && resources.stamina < resources.maxStamina)
+      if (!canRestore) continue
 
       if (!candidate.manual) {
         if (!slot.autoUseResource || slot.autoUseThresholdPercent === null) continue
         if (resourcePercent(resources, slot.autoUseResource) > slot.autoUseThresholdPercent) continue
       }
 
-      inventoryAvailable.set(slot.definitionId, quantity - 1)
-      consumedByDefinition.set(slot.definitionId, (consumedByDefinition.get(slot.definitionId) ?? 0) + 1)
-      const restored = applyConsumable(resources, definition)
-      if (candidate.manual) manualConsumablePending = null
+      const before = { ...resources }
+      resources.health = Math.min(resources.maxHealth, resources.health + (definition.restore.health ?? 0))
+      resources.mana = Math.min(resources.maxMana, resources.mana + (definition.restore.mana ?? 0))
+      resources.stamina = Math.min(resources.maxStamina, resources.stamina + (definition.restore.stamina ?? 0))
+      availableInventory.set(slot.definitionId, (availableInventory.get(slot.definitionId) ?? 0) - 1)
+      consumed.set(slot.definitionId, (consumed.get(slot.definitionId) ?? 0) + 1)
+      if (candidate.manual) manualPending = null
       log.push({
         atSeconds: now,
         actor: 'player',
         kind: 'consumable',
-        message: `${definition.name} usado${candidate.manual ? ' manualmente' : ' automaticamente'}: +${restored.health} Vida, +${restored.mana} Mana, +${restored.stamina} Stamina.`,
+        message: `${definition.name}: +${Math.round(resources.health - before.health)} Vida, +${Math.round(resources.mana - before.mana)} Mana, +${Math.round(resources.stamina - before.stamina)} Stamina.`,
       })
       return true
     }
     return false
   }
 
-  function enemyDamageMultiplierFor(damageType: DamageType) {
-    const resistance = resistanceMultiplier(enemy.damageResistances?.[damageType])
-    return resistance * currentTimedMultiplier(enemyDamageTakenEffects, now)
-  }
-
   while (now <= maxDurationSeconds + EPSILON && resources.health > 0 && enemyHealth > 0) {
-    const telegraphResolutionAt = telegraph?.resolvesAt ?? Number.POSITIVE_INFINITY
-    const nextTime = Math.min(playerReadyAt, enemyReadyAt, telegraphResolutionAt, maxDurationSeconds)
-
+    const telegraphAt = telegraph?.resolvesAt ?? Number.POSITIVE_INFINITY
+    const nextTime = Math.min(playerReadyAt, enemyReadyAt, telegraphAt, maxDurationSeconds)
     if (!Number.isFinite(nextTime)) break
 
     now = nextTime
     const delta = Math.max(0, now - lastTime)
-    advanceContinuousEffects(lastTime, now)
+    advanceEffects(now)
     resources.mana = Math.min(resources.maxMana, resources.mana + stats.manaRegenPerSecond * delta)
     resources.stamina = Math.min(resources.maxStamina, resources.stamina + stats.staminaRegenPerSecond * delta)
     lastTime = now
@@ -698,28 +579,16 @@ export function simulateCombat(
 
     if (telegraph && Math.abs(telegraph.resolvesAt - now) <= EPSILON) {
       const ability = telegraph.ability
-      const hitChance = calculateHitChance(enemy.accuracy, stats.evasion)
-      if (random() < hitChance) {
-        const raw = enemy.power * (ability.damageMultiplier ?? 0)
+      if (random() < hitChance(enemy.accuracy, stats.evasion)) {
         const damage = Math.max(
           1,
-          Math.round(raw * (1 - mitigation(playerDefenseAt(now), enemy.combatLevel))),
+          Math.round(enemy.power * (ability.damageMultiplier ?? 0) * (1 - mitigation(playerDefense(), enemy.combatLevel))),
         )
         resources.health = Math.max(0, resources.health - damage)
-        log.push({
-          atSeconds: now,
-          actor: 'enemy',
-          kind: 'ability',
-          message: `${enemy.name} usa ${ability.name} e causa ${damage} de dano.`,
-        })
-        applyEnemyHitEffects(ability)
+        log.push({ atSeconds: now, actor: 'enemy', kind: 'ability', message: `${enemy.name} usa ${ability.name} e causa ${damage} de dano.` })
+        afterEnemyHit(ability)
       } else {
-        log.push({
-          atSeconds: now,
-          actor: 'enemy',
-          kind: 'ability',
-          message: `${enemy.name} usa ${ability.name}, mas erra.`,
-        })
+        log.push({ atSeconds: now, actor: 'enemy', kind: 'ability', message: `${enemy.name} usa ${ability.name}, mas erra.` })
       }
       telegraph = null
       enemyReadyAt = now + enemy.actionIntervalSeconds * (ability.nextIntervalMultiplier ?? 1)
@@ -727,186 +596,89 @@ export function simulateCombat(
     }
 
     if (Math.abs(playerReadyAt - now) <= EPSILON && resources.health > 0 && enemyHealth > 0) {
-      if (tryUseConsumable()) {
-        playerReadyAt = now + playerActionIntervalAt(now)
-      } else {
-        const ability = choosePlayerAbility(save, catalog, preferences, resources, playerCooldowns, now)
-
+      if (!tryConsumable()) {
+        const ability = chooseAbility(save, catalog, resources, playerCooldowns, now)
         if (ability) {
-          consumeAbilityResource(resources, ability)
+          const cost = ability.resourceCost ?? 0
+          if (ability.resource === 'mana') resources.mana -= cost
+          if (ability.resource === 'stamina') resources.stamina -= cost
           playerCooldowns.set(ability.id, now + ability.cooldownSeconds)
 
           if (telegraph && ability.canInterrupt && telegraph.ability.interruptible) {
-            log.push({
-              atSeconds: now,
-              actor: 'player',
-              kind: 'interrupt',
-              message: `${ability.name} interrompe ${telegraph.ability.name}.`,
-            })
+            log.push({ atSeconds: now, actor: 'player', kind: 'interrupt', message: `${ability.name} interrompe ${telegraph.ability.name}.` })
             telegraph = null
             enemyReadyAt = now + enemy.actionIntervalSeconds
           }
 
           if (ability.heal) {
-            const heal = Math.round(
-              ability.heal.basePower + scalingContribution(save.character.attributes, ability.heal.scaling),
-            )
+            const heal = Math.round(ability.heal.basePower + scalingContribution(save.character.attributes, ability.heal.scaling))
             const recovered = Math.min(heal, resources.maxHealth - resources.health)
             resources.health += recovered
-            log.push({
-              atSeconds: now,
-              actor: 'player',
-              kind: 'ability',
-              message: `${ability.name} recupera ${recovered} de Vida.`,
-            })
+            log.push({ atSeconds: now, actor: 'player', kind: 'ability', message: `${ability.name} recupera ${recovered} de Vida.` })
           } else if (ability.damage) {
-            const hitChance = calculateHitChance(
-              stats.accuracy,
-              enemy.evasion,
-              ability.damage.accuracyBonusPercentagePoints ?? 0,
-            )
-
-            if (random() < hitChance) {
-              const rawDamage =
+            if (random() < hitChance(stats.accuracy, enemy.evasion, ability.damage.accuracyBonusPercentagePoints ?? 0)) {
+              const raw =
                 ability.damage.kind === 'weapon-multiplier'
-                  ? (stats.basicAttackPower + scalingContribution(save.character.attributes, stats.weaponScaling)) *
-                    (ability.damage.multiplier ?? 1)
-                  : (ability.damage.basePower ?? 0) +
-                    scalingContribution(save.character.attributes, ability.damage.scaling ?? {})
-              const criticalChance = clamp(
-                stats.criticalChance + (ability.damage.criticalBonusPercentagePoints ?? 0) / 100,
-                0,
-                1,
-              )
+                  ? (stats.basicAttackPower + scalingContribution(save.character.attributes, stats.weaponScaling)) * (ability.damage.multiplier ?? 1)
+                  : (ability.damage.basePower ?? 0) + scalingContribution(save.character.attributes, ability.damage.scaling ?? {})
               const rolled = rollDamage(
-                rawDamage,
+                raw,
                 enemy.defense,
                 save.character.level,
-                criticalChance,
+                clamp(stats.criticalChance + (ability.damage.criticalBonusPercentagePoints ?? 0) / 100, 0, 1),
                 random,
-                enemyDamageMultiplierFor(ability.damage.damageType),
+                enemyDamageMultiplier(ability.damage.damageType),
               )
               enemyHealth = Math.max(0, enemyHealth - rolled.damage)
-              log.push({
-                atSeconds: now,
-                actor: 'player',
-                kind: 'ability',
-                message: `${ability.name} causa ${rolled.damage} de dano${rolled.isCritical ? ' crítico' : ''}.`,
-              })
+              log.push({ atSeconds: now, actor: 'player', kind: 'ability', message: `${ability.name} causa ${rolled.damage} de dano${rolled.critical ? ' crítico' : ''}.` })
             } else {
-              log.push({
-                atSeconds: now,
-                actor: 'player',
-                kind: 'ability',
-                message: `${ability.name} erra.`,
-              })
+              log.push({ atSeconds: now, actor: 'player', kind: 'ability', message: `${ability.name} erra.` })
             }
           }
         } else {
-          const hitChance = calculateHitChance(stats.accuracy, enemy.evasion)
-          if (random() < hitChance) {
-            const rawDamage = stats.basicAttackPower + scalingContribution(save.character.attributes, stats.weaponScaling)
-            const rolled = rollDamage(
-              rawDamage,
-              enemy.defense,
-              save.character.level,
-              stats.criticalChance,
-              random,
-              enemyDamageMultiplierFor(stats.basicDamageType),
-            )
+          if (random() < hitChance(stats.accuracy, enemy.evasion)) {
+            const raw = stats.basicAttackPower + scalingContribution(save.character.attributes, stats.weaponScaling)
+            const rolled = rollDamage(raw, enemy.defense, save.character.level, stats.criticalChance, random, enemyDamageMultiplier(stats.basicDamageType))
             enemyHealth = Math.max(0, enemyHealth - rolled.damage)
-            log.push({
-              atSeconds: now,
-              actor: 'player',
-              kind: 'basic',
-              message: `Ataque básico causa ${rolled.damage} de dano${rolled.isCritical ? ' crítico' : ''}.`,
-            })
+            log.push({ atSeconds: now, actor: 'player', kind: 'basic', message: `Ataque básico causa ${rolled.damage} de dano${rolled.critical ? ' crítico' : ''}.` })
           } else {
             log.push({ atSeconds: now, actor: 'player', kind: 'basic', message: 'Ataque básico erra.' })
           }
         }
-
-        playerReadyAt = now + playerActionIntervalAt(now)
       }
+      playerReadyAt = now + playerInterval()
       if (enemyHealth <= 0) break
     }
 
-    if (
-      Math.abs(enemyReadyAt - now) <= EPSILON &&
-      resources.health > 0 &&
-      enemyHealth > 0 &&
-      !telegraph
-    ) {
-      const readyAbility = enemy.abilities.find(
-        (ability) => (enemyCooldowns.get(ability.id) ?? 0) <= now + EPSILON,
-      )
-
-      if (readyAbility) {
-        enemyCooldowns.set(readyAbility.id, now + readyAbility.cooldownSeconds)
-
-        if (readyAbility.selfDamageTakenMultiplier !== undefined) {
-          const duration = readyAbility.selfEffectDurationSeconds ?? 0
-          enemyDamageTakenEffects.push({
-            multiplier: readyAbility.selfDamageTakenMultiplier,
-            expiresAt: now + duration,
-            label: readyAbility.name,
-          })
-          log.push({
-            atSeconds: now,
-            actor: 'enemy',
-            kind: 'posture',
-            message: `${enemy.name} usa ${readyAbility.name}: dano recebido ×${readyAbility.selfDamageTakenMultiplier.toFixed(2)} por ${duration}s.`,
-          })
+    if (Math.abs(enemyReadyAt - now) <= EPSILON && resources.health > 0 && enemyHealth > 0 && !telegraph) {
+      const ready = enemy.abilities.find((ability) => (enemyCooldowns.get(ability.id) ?? 0) <= now + EPSILON)
+      if (ready) {
+        enemyCooldowns.set(ready.id, now + ready.cooldownSeconds)
+        if (ready.selfDamageTakenMultiplier !== undefined) {
+          const duration = ready.selfEffectDurationSeconds ?? 0
+          timedEnemyMultipliers.push({ multiplier: ready.selfDamageTakenMultiplier, expiresAt: now + duration })
+          log.push({ atSeconds: now, actor: 'enemy', kind: 'posture', message: `${enemy.name} usa ${ready.name} por ${duration}s.` })
           enemyReadyAt = now + enemy.actionIntervalSeconds
-        } else if ((readyAbility.telegraphSeconds ?? 0) > 0) {
-          telegraph = { ability: readyAbility, resolvesAt: now + (readyAbility.telegraphSeconds ?? 0) }
+        } else if ((ready.telegraphSeconds ?? 0) > 0) {
+          telegraph = { ability: ready, resolvesAt: now + (ready.telegraphSeconds ?? 0) }
           enemyReadyAt = Number.POSITIVE_INFINITY
-          log.push({
-            atSeconds: now,
-            actor: 'enemy',
-            kind: 'telegraph',
-            message: `${enemy.name} prepara ${readyAbility.name} por ${readyAbility.telegraphSeconds}s.`,
-          })
+          log.push({ atSeconds: now, actor: 'enemy', kind: 'telegraph', message: `${enemy.name} prepara ${ready.name} por ${ready.telegraphSeconds}s.` })
         } else {
-          const hitChance = calculateHitChance(enemy.accuracy, stats.evasion)
-          if (random() < hitChance) {
-            const raw = enemy.power * (readyAbility.damageMultiplier ?? 0)
-            const damage = Math.max(
-              1,
-              Math.round(raw * (1 - mitigation(playerDefenseAt(now), enemy.combatLevel))),
-            )
+          if (random() < hitChance(enemy.accuracy, stats.evasion)) {
+            const damage = Math.max(1, Math.round(enemy.power * (ready.damageMultiplier ?? 0) * (1 - mitigation(playerDefense(), enemy.combatLevel))))
             resources.health = Math.max(0, resources.health - damage)
-            log.push({
-              atSeconds: now,
-              actor: 'enemy',
-              kind: 'ability',
-              message: `${enemy.name} usa ${readyAbility.name} e causa ${damage} de dano.`,
-            })
-            applyEnemyHitEffects(readyAbility)
+            log.push({ atSeconds: now, actor: 'enemy', kind: 'ability', message: `${enemy.name} usa ${ready.name} e causa ${damage} de dano.` })
+            afterEnemyHit(ready)
           } else {
-            log.push({
-              atSeconds: now,
-              actor: 'enemy',
-              kind: 'ability',
-              message: `${enemy.name} usa ${readyAbility.name}, mas erra.`,
-            })
+            log.push({ atSeconds: now, actor: 'enemy', kind: 'ability', message: `${enemy.name} usa ${ready.name}, mas erra.` })
           }
-          enemyReadyAt = now + enemy.actionIntervalSeconds * (readyAbility.nextIntervalMultiplier ?? 1)
+          enemyReadyAt = now + enemy.actionIntervalSeconds * (ready.nextIntervalMultiplier ?? 1)
         }
       } else {
-        const hitChance = calculateHitChance(enemy.accuracy, stats.evasion)
-        if (random() < hitChance) {
-          const damage = Math.max(
-            1,
-            Math.round(enemy.power * (1 - mitigation(playerDefenseAt(now), enemy.combatLevel))),
-          )
+        if (random() < hitChance(enemy.accuracy, stats.evasion)) {
+          const damage = Math.max(1, Math.round(enemy.power * (1 - mitigation(playerDefense(), enemy.combatLevel))))
           resources.health = Math.max(0, resources.health - damage)
-          log.push({
-            atSeconds: now,
-            actor: 'enemy',
-            kind: 'basic',
-            message: `${enemy.name} causa ${damage} de dano.`,
-          })
+          log.push({ atSeconds: now, actor: 'enemy', kind: 'basic', message: `${enemy.name} causa ${damage} de dano.` })
         } else {
           log.push({ atSeconds: now, actor: 'enemy', kind: 'basic', message: `${enemy.name} erra.` })
         }
@@ -917,19 +689,13 @@ export function simulateCombat(
     if (Math.abs(now - maxDurationSeconds) <= EPSILON) break
   }
 
-  const outcome: CombatResult['outcome'] =
-    enemyHealth <= 0 ? 'victory' : resources.health <= 0 ? 'defeat' : 'timeout'
+  const outcome: CombatResult['outcome'] = enemyHealth <= 0 ? 'victory' : resources.health <= 0 ? 'defeat' : 'timeout'
   const xpGranted = outcome === 'victory' ? enemy.xpReward : 0
   log.push({
     atSeconds: now,
     actor: 'system',
     kind: 'result',
-    message:
-      outcome === 'victory'
-        ? `Vitória. +${xpGranted} XP geral.`
-        : outcome === 'defeat'
-          ? 'Derrota. O personagem retorna à Cidade Livre.'
-          : 'Combate encerrado por limite de simulação.',
+    message: outcome === 'victory' ? `Vitória. +${xpGranted} XP geral.` : outcome === 'defeat' ? 'Derrota. O personagem retorna à Cidade Livre.' : 'Combate encerrado por limite de simulação.',
   })
 
   return {
@@ -943,10 +709,7 @@ export function simulateCombat(
     },
     enemyHealth,
     xpGranted,
-    consumedItems: [...consumedByDefinition.entries()].map(([definitionId, quantity]) => ({
-      definitionId,
-      quantity,
-    })),
+    consumedItems: [...consumed.entries()].map(([definitionId, quantity]) => ({ definitionId, quantity })),
     log,
     seed,
   }
