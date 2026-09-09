@@ -1,4 +1,4 @@
-import { type CombatState } from './combat'
+import { createDefaultConsumableSlots, type CombatState } from './combat'
 import { type CraftingState } from './crafting'
 import { type DungeonProgressState } from './dungeon'
 import {
@@ -98,7 +98,7 @@ export interface CharacterState {
   currentLocationId: string
 }
 
-export const SAVE_SCHEMA_VERSION = 5 as const
+export const SAVE_SCHEMA_VERSION = 6 as const
 
 export interface OfflineGameSave {
   saveId: string
@@ -218,6 +218,7 @@ export function createOfflineGameSave(input: CreateOfflineGameSaveInput): Offlin
       preferences: {
         style: 'mixed',
         defensiveHealthThresholdPercent: 60,
+        consumableSlots: createDefaultConsumableSlots(),
       },
       lastRun: null,
       wolfDefeated: false,
@@ -228,6 +229,7 @@ export function createOfflineGameSave(input: CreateOfflineGameSaveInput): Offlin
       dunLiathProtector: null,
       contractCompleted: false,
       instinctiveGuardUnlocked: false,
+      contractAccepted: false,
     },
   }
 }
