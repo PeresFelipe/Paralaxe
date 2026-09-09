@@ -29,6 +29,17 @@ const catalog = {
 const routes = ['mining', 'woodcutting', 'fishing', 'herbology'] as const
 type RouteId = (typeof routes)[number]
 
+type RouteDiagnostic = {
+  complete: boolean
+  stage: string
+  health: number
+  fieldPreparations: number
+}
+
+function itemQuantity(save: OfflineGameSave, definitionId: string) {
+  return save.character.inventory.find((item) => item.definitionId === definitionId)?.quantity ?? 0
+}
+
 function addItem(save: OfflineGameSave, definitionId: string, quantity: number) {
   const existing = save.character.inventory.find((item) => item.definitionId === definitionId)
   const inventory = existing
@@ -40,8 +51,6 @@ function addItem(save: OfflineGameSave, definitionId: string, quantity: number) 
 }
 
 function prepareRoute(save: OfflineGameSave, route: RouteId) {
-  // O onboarding da Build 0.1 entrega exatamente 100 XP Geral antes do contrato,
-  // levando o personagem ao nível 2 com 1 ponto ainda não distribuído.
   let prepared: OfflineGameSave = {
     ...save,
     character: {
@@ -157,30 +166,57 @@ function equipGuaranteedHelmet(save: OfflineGameSave) {
   }
 }
 
-function completesReferenceRoute(save: OfflineGameSave, seedBase: number) {
+function diagnostic(save: OfflineGameSave, stage: string, health: number): RouteDiagnostic {
+  return {
+    complete: false,
+    stage,
+    health: Math.round(health),
+    fieldPreparations: itemQuantity(save, 'item.consumable.field-preparation'),
+  }
+}
+
+function runReferenceRoute(save: OfflineGameSave, seedBase: number): RouteDiagnostic {
   let current = save
   let resources = fullResources(current)
 
-  for (const [offset, enemyId] of ['enemy.crubach', 'enemy.tromghiallach'].entries()) {
-    const encounter = fight(current, enemyId, seedBase + offset, resources)
-    if (encounter.result.outcome !== 'victory') return false
-    current = encounter.save
-    resources = encounter.result.player
+  const crubach = fight(current, 'enemy.crubach', seedBase, resources)
+  if (crubach.result.outcome !== 'victory') return diagnostic(crubach.save, 'Crúbach', crubach.result.player.health)
+  current = crubach.save
+  resources = crubach.result.player
+
+  const tromghiallach = fight(current, 'enemy.tromghiallach', seedBase + 1, resources)
+  if (tromghiallach.result.outcome !== 'victory') {
+    return diagnostic(tromghiallach.save, 'Tromghiallach', tromghiallach.result.player.health)
   }
+  current = tromghiallach.save
+  resources = tromghiallach.result.player
 
   current = equipGuaranteedHelmet(current)
   const guardian = fight(current, 'enemy.cosantoir', seedBase + 10, resources)
-  if (guardian.result.outcome !== 'victory') return false
+  if (guardian.result.outcome !== 'victory') {
+    return diagnostic(guardian.save, 'Cosantóir', guardian.result.player.health)
+  }
   current = guardian.save
 
   current = addItem(current, 'item.consumable.field-preparation', 3)
   resources = fullResources(current)
 
   const phase1 = fight(current, 'enemy.fairtheoir-phase1', seedBase + 20, resources)
-  if (phase1.result.outcome !== 'victory') return false
+  if (phase1.result.outcome !== 'victory') {
+    return diagnostic(phase1.save, 'Fairtheoir Fase 1', phase1.result.player.health)
+  }
 
   const phase2 = fight(phase1.save, 'enemy.fairtheoir-phase2', seedBase + 21, phase1.result.player)
-  return phase2.result.outcome === 'victory'
+  if (phase2.result.outcome !== 'victory') {
+    return diagnostic(phase2.save, 'Fairtheoir Fase 2', phase2.result.player.health)
+  }
+
+  return {
+    complete: true,
+    stage: 'clear',
+    health: Math.round(phase2.result.player.health),
+    fieldPreparations: itemQuantity(phase2.save, 'item.consumable.field-preparation'),
+  }
 }
 
 describe('Build 0.1 — matriz 6 classes × 4 rotas', () => {
@@ -200,12 +236,14 @@ describe('Build 0.1 — matriz 6 classes × 4 rotas', () => {
         })
         const prepared = prepareRoute(base, route)
         const baseSeed = 1000 + classIndex * 100 + routeIndex * 10
+        const attempts = Array.from({ length: 8 }, (_, attempt) =>
+          runReferenceRoute(prepared, baseSeed + attempt * 10_000),
+        )
 
-        const canComplete = Array.from({ length: 8 }, (_, attempt) =>
-          completesReferenceRoute(prepared, baseSeed + attempt * 10_000),
-        ).some(Boolean)
-
-        expect(canComplete).toBe(true)
+        expect(
+          attempts.some((attempt) => attempt.complete),
+          `Falhas: ${JSON.stringify(attempts)}`,
+        ).toBe(true)
       })
     }
   }
