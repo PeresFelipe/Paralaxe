@@ -203,7 +203,7 @@ export function processIdleProgress(
     idle: {
       activeActivity: {
         ...active,
-        lastProcessedAt: new Date(lastProcessedMs + processedSeconds * 1000).toISOString(),
+        lastProcessedAt: now,
         remainderSeconds,
       },
     },
