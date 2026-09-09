@@ -10,9 +10,11 @@
 
 ## Marco atual
 
-**M5 — Dún Liath completa**.
+**M6 — Build 0.1 validável**.
 
-Implementado até este marco:
+A fundação estrutural M0–M5 está implementada. O trabalho atual é fechar diferenças de fidelidade, validar o fluxo integrado e registrar o resultado da Build 0.1.
+
+## Implementado até aqui
 
 - criação e carregamento de save `OFFLINE`;
 - classes, presentes e estado inicial do personagem;
@@ -37,7 +39,8 @@ Implementado até este marco:
 - Bolsa de Expedição separada do inventário seguro;
 - loot da run perdido em derrota;
 - loot transferido somente em retirada segura/clear;
-- recursos de combate persistidos entre encontros como attrition da expedição;
+- Vida/Mana/Stamina realmente persistem entre encontros e cada combate inicia com os recursos restantes da run;
+- Fase 2 de Fairtheoir inicia com os recursos restantes da Fase 1;
 - sala de recuperação pré-Boss restaura Vida/Mana/Stamina;
 - retirada segura disponível antes de Fairtheoir;
 - Crúbach;
@@ -59,16 +62,45 @@ Implementado até este marco:
 - contrato concluível por 150 moedas + 150 XP;
 - primeiro clear desbloqueia Guarda Instintiva;
 - UI funcional para iniciar run, resolver salas, escolher rota, decidir Matar/Poupar, acompanhar Bolsa/recursos, retirar ou enfrentar o Boss;
-- testes de `DungeonRun`, irreversibilidade, idempotência, retirada, perda de loot e recompensa de primeiro clear.
+- CI no GitHub Actions com Node 22 + pnpm;
+- `pnpm check` validado em runner real;
+- lint validado em runner real;
+- typecheck estrito validado em runner real;
+- 21 testes automatizados do domínio passando;
+- build de produção Vite validado em runner real.
+
+## Validação automatizada atual
+
+Workflow:
+
+```text
+.github/workflows/validate.yml
+```
+
+Pipeline:
+
+```text
+pnpm install --no-frozen-lockfile
+↓
+pnpm check
+  ├── lint
+  ├── typecheck
+  └── tests
+↓
+pnpm build
+```
+
+Última execução verificada neste marco: **sucesso completo**.
 
 ## Fronteiras preservadas
 
 - UI envia intenções e não implementa regras da Dungeon;
-- `@greywake/domain` concentra `DungeonRun`, resolução, loot, risco e consequências;
-- `@greywake/content` fornece Definitions de salas, inimigos e equipamentos;
+- `@greywake/domain` concentra regras de progressão, crafting, combate e `DungeonRun`;
+- `@greywake/content` fornece Definitions de classes, atividades, receitas, salas, inimigos e equipamentos;
 - `@greywake/persistence` continua atrás de contrato local;
 - Definitions não são duplicadas no save;
 - a run salva somente IDs, seed e estado mutável necessário;
+- `exactOptionalPropertyTypes` e demais regras estritas de TypeScript permanecem ativas;
 - nenhuma capacidade Online foi adicionada.
 
 ## Schema atual
@@ -106,29 +138,23 @@ DungeonRun:
 
 Saves v1–v4 são migrados automaticamente ao serem carregados.
 
-## Próximo marco
+## M6 — trabalho restante
 
-**M6 — Build 0.1 validável**.
+1. validar o fluxo completo do novo save até o primeiro clear em execução integrada;
+2. validar a matriz 6 classes × 4 rotas iniciais;
+3. integrar/validar consumíveis de combate e seus thresholds;
+4. integrar os status/buildup necessários para a fidelidade dos encontros da 0.1;
+5. revisar posturas defensivas de Tromghiallach/Cosantóir/Fairtheoir que ainda estão simplificadas;
+6. validar persistência fechando/reabrindo durante uma `DungeonRun` real no navegador;
+7. corrigir concessão dos 2 Preparados de Campo para ocorrer ao aceitar o contrato, não a cada nova run;
+8. registrar resultados, balanceamento observado e bugs da Build 0.1.
 
-Objetivo imediato:
+## Limitações conhecidas no M6
 
-1. executar `pnpm check` em checkout real com Node/pnpm;
-2. corrigir qualquer erro de lint/typecheck/teste encontrado;
-3. validar o fluxo completo do novo save até o primeiro clear;
-4. validar as 6 classes × 4 rotas iniciais;
-5. fechar diferenças entre o Combat Engine atual e a matriz completa do plano;
-6. validar consumíveis e thresholds no fluxo integrado;
-7. validar status/buildup que forem necessários para a fidelidade dos encontros da 0.1;
-8. revisar regras defensivas dos inimigos que ainda estejam simplificadas na implementação estrutural;
-9. validar persistência fechando/reabrindo durante uma DungeonRun;
-10. registrar resultados e bugs da Build 0.1.
-
-## Limitações conhecidas antes do M6
-
-- nesta sessão não há runner local conectado ao checkout, então `pnpm check` ainda não foi executado;
 - a fundação de status existe no GDD/Build, mas Veneno/Sangramento/Atordoamento/Queimadura/Congelamento ainda não estão todos conectados ao motor;
 - posturas defensivas específicas de Tromghiallach/Cosantóir/Fairtheoir ainda estão simplificadas;
 - consumíveis em combate e seus thresholds ainda precisam de validação integrada;
+- os 2 Preparados de Campo do contrato ainda são concedidos no início de cada run em vez de uma única vez na aceitação;
 - a primeira estrutura de Dún Liath é controlada e seedable; proceduralidade estrutural mais ampla deve ser validada/expandida depois que o vertical slice estiver estável.
 
 ## Não implementar ainda
