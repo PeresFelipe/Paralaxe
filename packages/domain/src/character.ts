@@ -1,3 +1,10 @@
+import { type CraftingState } from './crafting'
+import {
+  createStartingEquipmentState,
+  type EquippedItemIds,
+  type EquipmentInstance,
+  type StartingEquipmentLoadout,
+} from './equipment'
 import { createInitialSkillProgress, type IdleState, type SkillProgressById } from './idle'
 
 export const ATTRIBUTE_KEYS = [
@@ -22,21 +29,6 @@ export interface CharacterAttributes {
   faith: number
 }
 
-export const EQUIPMENT_SLOTS = [
-  'head',
-  'chest',
-  'gloves',
-  'legs',
-  'boots',
-  'mainHand',
-  'offHand',
-  'amulet',
-  'ring1',
-  'ring2',
-] as const
-
-export type EquipmentSlot = (typeof EQUIPMENT_SLOTS)[number]
-
 export type CharacterClassId =
   | 'warrior'
   | 'mage'
@@ -54,14 +46,12 @@ export type GiftId =
   | 'survival-kit'
   | 'none'
 
-export type EquipmentLoadout = Partial<Record<EquipmentSlot, string>>
-
 export interface CharacterClassDefinition {
   id: CharacterClassId
   name: string
   summary: string
   attributes: CharacterAttributes
-  startingEquipment: EquipmentLoadout
+  startingEquipment: StartingEquipmentLoadout
   startingAbilityId: string
 }
 
@@ -98,13 +88,15 @@ export interface CharacterState {
   attributes: CharacterAttributes
   gold: number
   inventory: InventoryStack[]
-  equipment: EquipmentLoadout
+  equipment: EquippedItemIds
+  equipmentItems: EquipmentInstance[]
+  nextEquipmentSequence: number
   knownAbilityIds: string[]
   activeAbilitySlots: [string | null, string | null, string | null, string | null]
   currentLocationId: string
 }
 
-export const SAVE_SCHEMA_VERSION = 2 as const
+export const SAVE_SCHEMA_VERSION = 3 as const
 
 export interface OfflineGameSave {
   saveId: string
@@ -117,6 +109,7 @@ export interface OfflineGameSave {
   character: CharacterState
   skills: SkillProgressById
   idle: IdleState
+  crafting: CraftingState
 }
 
 export interface CreateOfflineGameSaveInput {
@@ -179,22 +172,15 @@ function buildGiftState(gift: GiftDefinition) {
 export function createOfflineGameSave(input: CreateOfflineGameSaveInput): OfflineGameSave {
   const characterName = input.characterName.trim()
 
-  if (!input.saveId.trim()) {
-    throw new Error('O save precisa possuir um identificador.')
-  }
-
-  if (!input.contentVersion.trim()) {
-    throw new Error('O save precisa registrar a versão do conteúdo.')
-  }
-
-  if (!characterName) {
-    throw new Error('O personagem precisa possuir um nome.')
-  }
+  if (!input.saveId.trim()) throw new Error('O save precisa possuir um identificador.')
+  if (!input.contentVersion.trim()) throw new Error('O save precisa registrar a versão do conteúdo.')
+  if (!characterName) throw new Error('O personagem precisa possuir um nome.')
 
   validateCharacterClass(input.characterClass)
 
   const giftState = buildGiftState(input.gift)
   const startingAbilityId = input.characterClass.startingAbilityId
+  const startingEquipment = createStartingEquipmentState(input.characterClass.startingEquipment)
 
   return {
     saveId: input.saveId,
@@ -214,12 +200,15 @@ export function createOfflineGameSave(input: CreateOfflineGameSaveInput): Offlin
       attributes: { ...input.characterClass.attributes },
       gold: giftState.gold,
       inventory: giftState.inventory,
-      equipment: { ...input.characterClass.startingEquipment },
+      equipment: startingEquipment.equipped,
+      equipmentItems: startingEquipment.equipmentItems,
+      nextEquipmentSequence: startingEquipment.nextEquipmentSequence,
       knownAbilityIds: [startingAbilityId],
       activeAbilitySlots: [startingAbilityId, null, null, null],
       currentLocationId: 'free-city.tavern',
     },
     skills: createInitialSkillProgress(),
     idle: { activeActivity: null },
+    crafting: { activeRecipe: null },
   }
 }
