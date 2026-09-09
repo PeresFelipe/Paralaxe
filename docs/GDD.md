@@ -42,15 +42,19 @@ O personagem pode realizar Prestígios, formar Party com parceiros encontrados d
 - **World of Warcraft:** identidade própria de cada Dungeon e Boss.
 - **Apple:** simplicidade, consistência, organização visual e experiência de uso.
 
-## Plataformas
+## Plataformas e apresentação
 
-Inicialmente previstas:
+Plataformas previstas:
 
-- Web;
-- Desktop;
-- Mobile.
+- **Web**, como experiência primária;
+- **Desktop**, preservando a mesma experiência de jogo quando empacotada como aplicação;
+- **Mobile**, como plataforma futura com adaptação de interface quando necessário.
 
-2D ou 3D permanece **A definir**.
+Direção de apresentação aprovada:
+
+> **Web-first, 2D e UI-heavy.**
+
+O jogo deve priorizar interface rica, legível e responsiva, animações suaves, microinterações e feedback claro. Ambiente 3D não é requisito estrutural da experiência.
 
 ---
 
@@ -2171,10 +2175,12 @@ Valores, janela, chance final e limites são dados de balanceamento/conteúdo ai
 
 Como Relíquia:
 
-- é negociável;
-- possui histórico de donos;
+- é negociável quando existir como instância certificada em save Online;
+- possui histórico de donos quando certificada;
 - utiliza o Relicário;
 - pode registrar primeiro descobridor e vendas.
+
+Relíquias obtidas em contexto Offline nunca entram no registro econômico Online e não podem ser convertidas em instâncias negociáveis.
 
 ---
 
@@ -2409,6 +2415,8 @@ Relíquias ficam no **Relicário**, com:
 - dono atual;
 - histórico.
 
+Para Relíquias certificadas Online, esses dados são derivados do registro oficial e não de declarações do save local.
+
 Filtros, favoritos e bloqueio de itens devem evitar venda/desmontagem acidental.
 
 Capacidades numéricas e limites de stack são dados de economia/UX, não regras estruturais.
@@ -2424,15 +2432,19 @@ São exceções ao equipamento normal:
 - extremamente raras;
 - poderosas;
 - identidade/efeito próprios;
-- provenance/histórico;
-- negociáveis;
+- provenance/histórico quando certificadas Online;
+- negociáveis somente quando certificadas Online;
 - nunca craftáveis.
 
 Somente Relíquias podem ser negociadas entre jogadores.
 
 Algumas podem possuir quantidade global limitada, definida individualmente.
 
+Uma Relíquia negociável precisa existir como instância oficial no Relic Registry. Um identificador presente somente em save local não cria propriedade econômica.
+
 ## Mercado
+
+O Mercado entre jogadores é exclusivo de saves Online e é um sistema autoritativo de servidor.
 
 Preço fixo definido pelo vendedor.
 
@@ -2449,6 +2461,8 @@ Mercado acompanha:
 - maior venda;
 - quantidade de negociações;
 - histórico/provenance.
+
+O Mercado valida existência, propriedade e estado da Relíquia no registro oficial; nunca utiliza o save local como prova de propriedade.
 
 ---
 
@@ -2491,6 +2505,8 @@ Retorna o personagem à Cidade Livre e destrói uma parcela de dinheiro como sin
 A fórmula exata é dado de balanceamento econômico.
 
 Dentro de Dungeon, a perda da Bolsa de Expedição já funciona como risco próprio e não precisa ser acompanhada automaticamente de segunda penalidade monetária.
+
+O mecanismo exato pelo qual a moeda obtida em gameplay local se torna elegível para uso no Mercado Online permanece A definir. O Mercado nunca pode aceitar saldo não certificado apenas porque o cliente ou save local o declarou.
 
 ---
 
@@ -2606,7 +2622,11 @@ Não conhece profecia nem manifesta poder especial.
 ## Fluxo
 
 ```text
-Criação
+Novo Jogo
+↓
+Escolha do modo de Save — Offline ou Online
+↓
+Nome
 ↓
 Classe
 ↓
@@ -2629,9 +2649,11 @@ primeiro contrato
 Dún Liath
 ```
 
+A escolha Offline/Online ocorre **antes** de nome, classe e presente e é imutável para aquele save.
+
 ## Criação
 
-Mostra principalmente:
+Depois da escolha do modo de Save, a criação mostra principalmente:
 
 - identidade;
 - atributos destacados;
@@ -2714,12 +2736,22 @@ Conversas obrigatórias do onboarding devem devolver controle ao jogador rapidam
 
 ## Direção
 
+- Web-first;
+- 2D;
+- UI-heavy;
 - minimalista;
 - elegante;
 - padronizada;
 - moderna;
-- inspiração Apple em clareza e consistência;
+- inspiração Apple em clareza, hierarquia e consistência;
+- feedback lúdico, imediato e suave inspirado na qualidade de interação de bons jogos da Nintendo;
 - claramente Game UI, não aplicativo genérico.
+
+A referência a Apple e Nintendo representa princípios de experiência, movimento, consistência e feedback; não implica copiar identidade visual, componentes, assets ou linguagem de marca.
+
+> **Clareza primeiro; prazer de interação em cada resposta da interface.**
+
+Animações devem ser suaves, curtas, consistentes e informativas. Movimento não deve atrasar decisões nem esconder estado relevante.
 
 ## Regras de UX
 
@@ -2734,6 +2766,8 @@ Conversas obrigatórias do onboarding devem devolver controle ao jogador rapidam
 > **Telegraph perigoso deve ser legível antes de ser punitivo.**
 
 > **Valores podem mudar sem exigir reconstrução da hierarquia das telas.**
+
+> **A mesma ação deve produzir resposta visual consistente em toda a interface.**
 
 ## Combate
 
@@ -3005,15 +3039,20 @@ Dark Fantasy: decadência, mistério, antiguidade, perigo, grandeza perdida e co
 
 Não reproduzir literalmente países reais.
 
-## Interface
+## Interface e movimento
 
+- Web-first;
+- 2D e UI-heavy;
 - minimalista;
 - elegante;
 - padronizada;
 - moderna;
 - informação hierarquizada;
 - inspiração Apple em experiência de uso;
+- feedback e transições suaves com qualidade lúdica comparável a boas interfaces de jogos Nintendo;
 - Game UI reconhecível.
+
+A interface pode utilizar camadas 2D, sprites, ilustrações, partículas e superfícies gráficas quando agregarem legibilidade ou atmosfera, sem transformar um motor 3D em requisito da experiência.
 
 ---
 
@@ -3056,7 +3095,6 @@ Continuam deliberadamente em aberto quando não houver decisão canônica:
 - público-alvo formal;
 - modelo de monetização;
 - custo de desenvolvimento;
-- 2D ou 3D;
 - fórmulas e números finais de balanceamento;
 - limites definitivos de inventário/stack;
 - preços finais da economia;
@@ -3066,6 +3104,11 @@ Continuam deliberadamente em aberto quando não houver decisão canônica:
 - detalhes numéricos de Relíquias e dificuldades avançadas;
 - conteúdo da segunda Dungeon e expansões posteriores ainda não desenhadas;
 - estratégia de retomada de combate interrompido no meio da execução;
+- comportamento exato de um save Online quando perde conexão durante gameplay local;
+- modelo exato de certificação da moeda aceita pelo Mercado Online;
+- pesos, thresholds e decay concretos do Risk Score/Trust Level;
+- frequência exata e payload final dos checkpoints Online;
+- estratégia concreta de execução/validação de Certified Dungeon, desde que preserve autoridade do servidor sobre o resultado econômico;
 - stack tecnológica concreta.
 
 Esses pontos podem ser fechados incrementalmente sem misturar planejamento de versão, balanceamento e implementação com a especificação permanente do jogo.
@@ -3076,7 +3119,7 @@ Esses pontos podem ser fechados incrementalmente sem misturar planejamento de ve
 
 ## Princípio geral
 
-A aplicação deve nascer como um **monólito modular**: os sistemas permanecem fisicamente próximos no início, mas são logicamente independentes e possuem fronteiras claras.
+A aplicação deve nascer como um **monólito modular** quando a camada de servidor for introduzida: os sistemas permanecem fisicamente próximos no início, mas são logicamente independentes e possuem fronteiras claras.
 
 > **Separar módulos fisicamente cedo demais adiciona complexidade sem benefício; separar responsabilidades logicamente desde o início reduz acoplamento e retrabalho.**
 
@@ -3085,6 +3128,8 @@ A arquitetura não deve depender de microserviços para obter modularidade.
 Um módulo pode conhecer o **contrato público** de outro módulo, mas não seus detalhes internos.
 
 Nenhum módulo deve manipular diretamente o armazenamento interno de outro.
+
+A implementação local do jogo deve respeitar as mesmas fronteiras de domínio, de forma que a introdução futura de persistência remota ou autoridade server-side não exija reconstruir os sistemas centrais.
 
 ## Módulos de domínio
 
@@ -3253,7 +3298,8 @@ Exemplos de estado fundamental:
 - upgrade de um item;
 - equipamento selecionado;
 - habilidade aprendida;
-- decisão narrativa.
+- decisão narrativa;
+- modo do save.
 
 Exemplos de estado derivado:
 
@@ -3271,17 +3317,36 @@ Valores derivados não devem ser duplicados como fonte concorrente de verdade qu
 
 # 51. Player, Character e progressão
 
-A conta do usuário e o personagem do jogo são conceitos separados.
+A conta do usuário e o personagem do jogo são conceitos separados quando existe identidade Online.
 
 Conceitualmente:
 
 ```text
+SaveProfile
+↓
+Character
+
+Online:
 PlayerAccount
+↓
+SaveProfile
 ↓
 Character
 ```
 
-O jogo continua possuindo um único personagem principal por jogador como regra de design atual; a separação existe para impedir que responsabilidades de conta e personagem sejam misturadas.
+O jogo continua possuindo um único personagem principal por save como regra de design atual; a separação existe para impedir que responsabilidades de conta, save e personagem sejam misturadas.
+
+## SaveProfile
+
+O save mantém identidade própria, incluindo pelo menos:
+
+- identificador;
+- modo `Offline` ou `Online`;
+- versão de schema;
+- versão de conteúdo;
+- datas relevantes de criação/atualização.
+
+O modo do save é escolhido antes da criação do personagem e não pode ser alterado posteriormente.
 
 ## Character
 
@@ -3363,7 +3428,7 @@ recompensas + XP
 atualização de last_processed_at
 ```
 
-O processamento de progresso e a atualização do marcador temporal precisam ocorrer atomicamente para impedir recompensa duplicada por múltiplas sessões/dispositivos.
+Quando a mesma atividade for reconciliada em uma fronteira Online confiável, o processamento aceito e a atualização do marcador temporal precisam ser tratados de forma atômica para impedir recompensa duplicada por múltiplas sessões/dispositivos.
 
 ## RecipeDefinition
 
@@ -3412,13 +3477,15 @@ Duas instâncias da mesma definição podem possuir propriedades procedurais dif
 
 ## Ownership
 
-Inventory é a fonte de verdade da posse dos itens carregados pelo personagem.
+Inventory é a fonte de verdade da posse dos itens carregados pelo personagem dentro do estado daquele save.
 
 Equipment não duplica a instância equipada; mantém referência para a mesma instância pertencente ao sistema de itens.
 
 > **Um item existe em um único local lógico por vez.**
 
 Mover item entre Inventory, Banco, Bolsa de Expedição ou outros containers deve representar transferência de ownership/localização, não clonagem.
+
+Para Relíquias negociáveis Online, o Relic Registry adiciona uma autoridade externa de existência, propriedade econômica e provenance que prevalece sobre qualquer referência local conflitante.
 
 ## Consumable Loadout
 
@@ -3620,7 +3687,8 @@ Essa característica deve permitir:
 - combat log;
 - testes automatizados;
 - simulações;
-- reprodução de problemas.
+- reprodução de problemas;
+- validação futura de sessões certificadas quando a estratégia escolhida utilizar reprodução determinística.
 
 ---
 
@@ -3641,6 +3709,8 @@ Sistemas que dependem de RNG incluem:
 - eventos procedurais.
 
 Uma execução importante deve poder registrar informação suficiente para reproduzir a sequência relevante quando necessário para debug/testes.
+
+Conteúdo certificado capaz de produzir valor econômico deve utilizar RNG cuja autoridade não possa ser unilateralmente escolhida pelo cliente.
 
 ---
 
@@ -3688,6 +3758,8 @@ O Use Case conhece a sequência da operação, mas não reimplementa as regras i
 
 > **Use Cases coordenam; módulos executam suas próprias regras.**
 
+A interface do usuário não deve manipular diretamente o formato de persistência. A mesma intenção de domínio deve poder ser atendida por uma implementação local ou, futuramente, por uma implementação Online quando a fronteira de confiança exigir.
+
 ## Evitar dependências circulares
 
 Quando uma operação exigir Inventory + Equipment + Character, por exemplo, ela deve ser coordenada pelo Use Case apropriado em vez de fazer os módulos chamarem uns aos outros circularmente.
@@ -3733,7 +3805,7 @@ Efeitos externos ou secundários não devem ser publicados como definitivamente 
 
 # 60. Atomicidade e consistência
 
-Operações de negócio que alteram múltiplos estados devem ser atômicas.
+Operações de negócio que alteram múltiplos estados devem ser atômicas dentro da fronteira de autoridade correspondente.
 
 Exemplos:
 
@@ -3773,13 +3845,15 @@ Uma falha intermediária não pode perder o loot nem duplicá-lo.
 
 Cada Use Case importante deve possuir uma fronteira clara de unidade de trabalho/transação.
 
-A implementação concreta dessa transação depende da tecnologia escolhida, mas a propriedade de atomicidade é requisito arquitetural.
+A implementação concreta dessa transação depende da tecnologia e do modo do save, mas a propriedade de consistência é requisito arquitetural.
+
+Operações de Mercado, emissão de Relíquia certificada e transferência de propriedade Online exigem atomicidade forte no servidor.
 
 ---
 
 # 61. Idempotência e concorrência
 
-Operações capazes de entregar valor ou alterar estados críticos precisam ser resistentes a repetição acidental da mesma solicitação.
+Operações capazes de entregar valor ou alterar estados críticos precisam ser resistentes a repetição acidental da mesma solicitação quando atravessam uma fronteira persistente/Online.
 
 Exemplos:
 
@@ -3788,7 +3862,8 @@ Exemplos:
 - extração de Dungeon;
 - compra/venda;
 - crafting em lote;
-- processamento Idle.
+- processamento Idle reconciliado;
+- emissão de Relíquia certificada.
 
 Repetir uma operação já confirmada não deve duplicar recompensa.
 
@@ -3796,51 +3871,59 @@ Repetir uma operação já confirmada não deve duplicar recompensa.
 
 O first clear deve possuir estado explícito por personagem, Dungeon e dificuldade, em vez de depender apenas de inferências como “o personagem já possui a recompensa?”.
 
-A concessão da recompensa e a marcação do first clear pertencem à mesma operação atômica.
+A concessão da recompensa e a marcação do first clear pertencem à mesma operação atômica dentro da persistência responsável por aquele save.
 
 ## Concorrência entre sessões
 
-O mesmo jogador pode abrir o jogo em mais de um dispositivo ou sessão.
-
-Operações críticas precisam detectar/evitar que duas alterações simultâneas gastem os mesmos recursos ou processem o mesmo período Idle duas vezes.
+Quando um save Online puder ser aberto em mais de um dispositivo ou sessão, operações críticas precisam detectar/evitar que duas alterações simultâneas gastem os mesmos recursos ou processem o mesmo período reconciliado duas vezes.
 
 Pode-se utilizar controle otimista, locks, constraints ou mecanismo equivalente conforme a tecnologia escolhida.
 
 O requisito é:
 
-> **um mesmo estado lógico não pode ser consumido ou recompensado duas vezes por concorrência.**
+> **um mesmo estado lógico certificado não pode ser consumido ou recompensado duas vezes por concorrência.**
 
 ---
 
-# 62. Autoridade do servidor
+# 62. Fronteiras de autoridade local e Online
 
-Como o jogo prevê estado persistente online, economia, mercado, Relíquias negociáveis e histórico de propriedade, o estado oficial deve ser validado por uma autoridade de servidor.
+A arquitetura não exige que o servidor simule continuamente todo o gameplay.
 
-O cliente envia intenções e apresenta resultados; não declara unilateralmente alterações de estado valiosas.
+> **Gameplay é local por padrão; autoridade de servidor é obrigatória quando uma ação atravessa uma fronteira de confiança compartilhada.**
 
-Exemplos:
+## Offline
 
-O cliente pode solicitar:
+No modo Offline, gameplay e persistência pertencem ao ambiente local do jogador.
+
+Alterações locais não produzem propriedade econômica Online e não podem ser promovidas posteriormente para um save Online.
+
+## Online
+
+No modo Online, o jogo pode continuar executando gameplay comum localmente e sincronizar save/checkpoints conforme a política definida.
+
+Armazenar um Cloud Save ou checkpoint **não transforma automaticamente todos os dados recebidos do cliente em fatos autoritativos**.
+
+O servidor é autoridade obrigatória para, no mínimo:
+
+- elegibilidade de acesso a conteúdo certificado que possa gerar valor negociável;
+- estado e resultado econômico de Certified Dungeons capazes de emitir Relíquias negociáveis;
+- criação de RelicInstances certificadas;
+- existência, propriedade, status e provenance dessas Relíquias;
+- listagens e transações do Mercado;
+- saldo ou mecanismo de valor aceito pelo Mercado, conforme o modelo final de certificação econômica.
+
+O cliente pode enviar intenções, checkpoints e dados para análise, mas não pode declarar unilateralmente como fato econômico:
 
 ```text
-CraftRecipe
-StartIdleActivity
-EquipItem
-ChooseBranch
+esta Relíquia existe
+esta Relíquia é minha
+vendi esta Relíquia
+comprei esta Relíquia
+tenho este saldo certificado
+esta run pode emitir uma Relíquia
 ```
 
-Mas não deve poder afirmar como fato:
-
-```text
-recebi 1000 moedas
-gerou item raro
-minei 900 recursos
-venci o Boss
-```
-
-A autoridade valida regras, resolve a operação e persiste o resultado.
-
-O cliente pode calcular previews não autoritativos para UX, desde que o servidor continue sendo a fonte de verdade da operação.
+A autoridade do servidor deve ser concentrada onde fraude local poderia afetar outros jogadores ou a integridade da economia.
 
 ---
 
@@ -3868,9 +3951,25 @@ Uma instância de equipamento pode persistir:
 
 Propriedades-base do modelo permanecem no Content Catalog e não precisam ser duplicadas como fonte de verdade em cada instância.
 
-## Modelo relacional/transacional
+## Persistência local × persistência Online
 
-O estado operacional possui relações fortes, invariantes, unicidade e operações atômicas. A persistência deve favorecer um modelo transacional e relacional para esse estado, podendo utilizar estruturas flexíveis pontualmente quando o domínio realmente exigir.
+A arquitetura deve permitir implementações de persistência diferentes sem alterar o domínio:
+
+```text
+Game Domain
+↓
+Persistence Contract
+├── Local Persistence
+└── Online Persistence / Sync
+```
+
+O modo Offline utiliza persistência local como fonte de verdade daquele save.
+
+O modo Online pode combinar persistência local para execução/experiência, Cloud Save, checkpoints e persistência server-side para estados certificados.
+
+## Modelo relacional/transacional Online
+
+O estado operacional server-side que possui relações fortes, invariantes, unicidade e operações atômicas deve favorecer um modelo transacional e relacional, podendo utilizar estruturas flexíveis pontualmente quando o domínio realmente exigir.
 
 Isso é um requisito de modelagem, não a escolha de um produto de banco específico.
 
@@ -3909,6 +4008,8 @@ Não se deve depender de uma aplicação “adivinhar” informalmente como conv
 
 IDs de conteúdo precisam permanecer estáveis ao longo dessas mudanças.
 
+Risk/Trust, checkpoints e validações de plausibilidade devem considerar a versão de conteúdo/balanceamento aplicável à época do estado analisado para não transformar mudanças legítimas de balanceamento em suspeita.
+
 ---
 
 # 65. Estado persistente × estado temporário
@@ -3917,6 +4018,7 @@ IDs de conteúdo precisam permanecer estáveis ao longo dessas mudanças.
 
 Sobrevive entre sessões quando aplicável:
 
+- identidade e modo do save;
 - personagem;
 - atributos;
 - progressão;
@@ -3930,6 +4032,8 @@ Sobrevive entre sessões quando aplicável:
 - dinheiro;
 - descobertas;
 - DungeonRun ativa.
+
+Em Online, checkpoints, Trust/Risk e estados econômicos certificados também podem possuir persistência própria no servidor.
 
 ## Temporário
 
@@ -3962,11 +4066,13 @@ HP 365
 HP 348
 ```
 
-para cada passo da timeline apenas por existir um banco persistente.
+para cada passo da timeline apenas por existir uma persistência.
 
 A estratégia para fechar o jogo exatamente no meio de um combate permanece **A definir** entre possibilidades como reinício controlado do encontro ou snapshot retomável.
 
 Se snapshots forem adotados futuramente, precisam incluir estado suficiente para retomada determinística, inclusive RNG quando necessário.
+
+Certified Dungeons podem adotar política de persistência de sessão diferente do combate local comum quando a segurança econômica exigir.
 
 ---
 
@@ -3997,15 +4103,15 @@ Essa separação permite adicionar novas quests sem ampliar a estrutura central 
 
 ---
 
-# 68. Telemetry, logs e histórico de negócio
+# 68. Telemetry, logs, Risk/Trust e histórico de negócio
 
-Esses três conceitos são distintos.
+Esses conceitos são distintos.
 
 ## Estado/histórico de negócio
 
 Mantém informações necessárias às regras do jogo, como:
 
-- propriedade de Relíquias;
+- propriedade de Relíquias certificadas;
 - transações de mercado;
 - first clears;
 - quests;
@@ -4014,6 +4120,14 @@ Mantém informações necessárias às regras do jogo, como:
 ## Telemetry
 
 Serve para medir comportamento e balanceamento, como duração de combate, frequência de ações, uso de consumíveis e progressão.
+
+No modo Online, telemetria e checkpoints também podem alimentar detecção de anomalias, sem se tornarem por si só prova absoluta de legitimidade.
+
+## Risk/Trust
+
+Risk Score e Trust Level representam avaliação interna de confiança para acesso a sistemas econômicos protegidos.
+
+Eles não substituem Relic Registry, Certified Dungeon nem validação transacional do Mercado.
 
 ## Logs
 
@@ -4027,7 +4141,7 @@ Não é necessário transformar cada ataque, recurso coletado ou ação comum em
 
 As seguintes decisões formam a baseline arquitetural atual:
 
-1. arquitetura monolítica modular no início;
+1. arquitetura monolítica modular quando a camada de servidor for introduzida;
 2. módulos com ownership explícito de estado;
 3. contratos públicos pequenos entre módulos;
 4. nenhum acesso direto aos detalhes internos de outro módulo;
@@ -4035,7 +4149,7 @@ As seguintes decisões formam a baseline arquitetural atual:
 6. separação Definition × State/Instance;
 7. IDs de conteúdo estáveis e independentes do texto exibido;
 8. estado fundamental persistido e estado derivado calculado;
-9. Inventory como fonte de verdade de posse/localização de itens normais;
+9. Inventory como fonte de verdade de posse/localização dos itens daquele save;
 10. Equipment referencia instâncias em vez de duplicá-las;
 11. DungeonRun como estado persistível e aggregate próprio;
 12. Expedition Bag pertencente à DungeonRun;
@@ -4044,16 +4158,294 @@ As seguintes decisões formam a baseline arquitetural atual:
 15. Use Cases coordenam operações entre módulos;
 16. módulos executam suas próprias regras;
 17. Commands representam intenções e Domain Events representam fatos;
-18. operações críticas são atômicas;
-19. recompensas e operações críticas são idempotentes;
-20. concorrência entre sessões não pode duplicar consumo/recompensa;
-21. servidor é autoridade do estado oficial;
+18. operações críticas são atômicas dentro da fronteira de autoridade responsável;
+19. recompensas e operações críticas Online são idempotentes;
+20. concorrência entre sessões não pode duplicar consumo/recompensa certificada;
+21. gameplay comum é local por padrão; servidor é autoridade obrigatória nas fronteiras Online/econômicas definidas;
 22. estado operacional e Content Catalog são separados;
-23. persistência favorece modelo relacional/transacional sem fixar produto específico;
+23. persistência server-side crítica favorece modelo relacional/transacional sem fixar produto específico;
 24. save schema e content version são versionados separadamente;
 25. migrations são explícitas e reproduzíveis;
 26. DungeonRun persiste estrutura gerada, não somente seed;
 27. CombatState permanece predominantemente temporário;
-28. stack tecnológica concreta permanece deliberadamente fora desta baseline até decisão específica.
+28. stack tecnológica concreta permanece deliberadamente fora desta baseline;
+29. existem dois modos de save, Offline e Online;
+30. o modo do save é escolhido antes de nome/classe/presente e é imutável;
+31. Offline não pode ser convertido em Online e Online não pode ser convertido em Offline;
+32. estado Offline nunca é promovido para a economia Online;
+33. Cloud Save/checkpoint Online não é sinônimo de autoridade sobre todo gameplay recebido do cliente;
+34. Risk Score e Trust Level podem restringir acesso a sistemas econômicos protegidos, mas não são a única barreira de segurança;
+35. conteúdo capaz de emitir Relíquia negociável exige Certified Dungeon/execução certificada Online;
+36. Relíquias negociáveis são criadas como instâncias oficiais pelo servidor e registradas no Relic Registry;
+37. Relic Registry é a fonte de verdade de existência, propriedade, estado e provenance das Relíquias negociáveis;
+38. Mercado entre jogadores é server-side e nunca usa save local como prova de propriedade;
+39. listagem, compra, venda e transferência de Relíquia precisam ser atômicas e idempotentes;
+40. o mecanismo de saldo aceito pelo Mercado deve ser certificado pelo servidor; o modelo concreto permanece A definir;
+41. a apresentação do jogo é Web-first, 2D e UI-heavy, com interface suave, consistente e fortemente orientada a feedback.
 
 Essas decisões podem ser reabertas quando surgir evidência concreta de problema estrutural, mas não devem ser rediscutidas sem motivo a cada etapa.
+
+---
+
+# 70. Modos de Save — Offline e Online
+
+Existem exatamente dois modos de save:
+
+1. **Offline**;
+2. **Online**.
+
+A escolha acontece ao iniciar um novo save, antes de nome, classe e presente.
+
+> **O modo do save é uma propriedade imutável.**
+
+Não existe conversão:
+
+```text
+Offline → Online  ❌
+Online  → Offline ❌
+```
+
+## Offline
+
+- fonte de verdade local;
+- não depende da economia compartilhada Online;
+- não acessa Mercado entre jogadores;
+- não pode registrar Relíquias no Relic Registry Online;
+- conteúdo local nunca é promovido posteriormente para propriedade econômica Online.
+
+## Online
+
+- ligado a identidade de conta;
+- pode utilizar Cloud Save e checkpoints;
+- pode acessar sistemas Online protegidos quando elegível;
+- pode participar de Certified Dungeons e Mercado conforme regras de Risk/Trust e certificação.
+
+O fato de ser Online não obriga o servidor a processar continuamente toda coleta, combate, crafting ou progressão comum.
+
+---
+
+# 71. Checkpoints e fronteira de confiança
+
+O modo Online pode sincronizar snapshots/checkpoints relevantes do estado produzido durante gameplay local.
+
+Checkpoints existem para:
+
+- continuidade de Cloud Save;
+- histórico de evolução;
+- detecção de saltos/inconsistências;
+- preparação para acesso a sistemas protegidos;
+- recuperação e investigação de problemas.
+
+Eventos adequados para checkpoint podem incluir, conforme implementação:
+
+- login/logout;
+- mudanças relevantes de progressão;
+- conclusão de Dungeon;
+- aquisição de item relevante;
+- grande mudança econômica;
+- tentativa de acessar Mercado;
+- tentativa de iniciar Certified Dungeon.
+
+A frequência exata não é regra do GDD.
+
+> **Cloud Save armazena estado; certificação decide em que esse estado pode ser confiado.**
+
+Antes de atravessar uma fronteira econômica, o servidor pode comparar estado atual, histórico, tempo, progressão, itens e outras evidências para determinar risco e elegibilidade.
+
+---
+
+# 72. Risk Score e Trust Level
+
+## Objetivo
+
+Risk/Trust existe para detectar comportamento anômalo e impedir que um save suspeito alcance sistemas capazes de afetar outros jogadores.
+
+Não é um substituto para autoridade server-side.
+
+## Risk Score
+
+O sistema pode avaliar categorias separadas, como:
+
+- Progression Risk;
+- Economy Risk;
+- Item Risk;
+- Save Integrity Risk;
+- Combat Risk;
+- Dungeon Risk;
+- Protocol Risk.
+
+Um sinal pode possuir:
+
+- categoria;
+- gravidade;
+- confiança;
+- timestamp;
+- versão de conteúdo relevante;
+- evidência;
+- regra de decay quando aplicável.
+
+O valor exato do Risk Score é interno e não deve ser exposto como número operacional ao jogador.
+
+## Trust Level
+
+Trust Level representa quanto histórico confiável existe para permitir acesso a recursos protegidos.
+
+Estados conceituais podem distinguir, por exemplo:
+
+- novo/não verificado;
+- normal;
+- confiável;
+- restrito.
+
+Os nomes finais de UI permanecem A definir.
+
+Conta nova não é automaticamente suspeita; pode apenas possuir pouco histórico.
+
+## Restrições
+
+Risk/Trust elevado pode:
+
+- exigir validação adicional;
+- bloquear temporariamente acesso ao Mercado;
+- impedir início de Certified Dungeon;
+- impedir emissão de Relíquia certificada.
+
+Gameplay local que não ameaça a economia compartilhada não precisa ser bloqueado automaticamente.
+
+Um único score não deve gerar punição irreversível sem contexto suficiente; sinais precisam ser investigáveis e o sistema deve ser desenhado para minimizar falsos positivos.
+
+---
+
+# 73. Certified Dungeons e emissão econômica
+
+Toda Dungeon, rota, dificuldade ou evento capaz de criar uma **Relíquia negociável certificada** exige um save Online elegível e uma execução reconhecida pelo servidor.
+
+Fluxo conceitual:
+
+```text
+solicitar conteúdo certificado
+↓
+validar identidade Online
+↓
+validar pré-requisitos
+↓
+validar checkpoint / Risk / Trust
+↓
+criar CertifiedDungeonRun
+↓
+servidor determina o resultado econômico válido
+↓
+se condição de Relíquia for satisfeita
+↓
+emitir RelicInstance oficial
+```
+
+A Certified Dungeon deve possuir autoridade server-side suficiente para impedir que o cliente declare unilateralmente vitória, RNG, dano, drop ou condição econômica.
+
+O cliente continua responsável por apresentação:
+
+- UI;
+- animações;
+- áudio;
+- efeitos;
+- input;
+- interpolação e feedback visual.
+
+O servidor é responsável pelo que precisa ser confiável para o resultado certificado, incluindo quando aplicável:
+
+- identidade da run;
+- seed/RNG oficial;
+- regras lógicas da Dungeon;
+- regras lógicas do combate;
+- resultado;
+- condição de emissão de Relíquia.
+
+A estratégia concreta pode utilizar processamento ao vivo, reprodução determinística ou outra técnica, desde que preserve essa propriedade de autoridade.
+
+---
+
+# 74. Relic Registry, propriedade e Mercado
+
+## Relic Registry
+
+Uma Relíquia negociável existe como uma instância oficial emitida pelo servidor.
+
+Campos conceituais mínimos:
+
+```text
+RelicInstance
+- id
+- definition_id
+- owner_account_id
+- source_run_id
+- minted_at
+- status
+- content_version
+```
+
+O identificador pode ser opaco e imprevisível, mas **o identificador por si só não é a prova**. A prova é a existência do registro oficial.
+
+Uma referência inventada no cliente não cria uma Relíquia econômica.
+
+## Provenance
+
+Transferências precisam permitir reconstruir histórico de propriedade quando essa informação fizer parte do produto.
+
+Conceitualmente:
+
+```text
+RelicTransfer
+- relic_id
+- from_account
+- to_account
+- market_transaction_id
+- transferred_at
+```
+
+## Estados
+
+Estados mínimos incluem:
+
+- `OWNED`;
+- `LISTED`.
+
+Estados adicionais só devem ser criados quando possuírem função real.
+
+Ao ser listada, a Relíquia deve ficar bloqueada para operações incompatíveis até venda ou cancelamento.
+
+## Mercado
+
+O Mercado executa as operações economicamente relevantes no servidor.
+
+Ao listar, comprar, vender ou cancelar, valida:
+
+- identidade da conta;
+- Risk/Trust quando aplicável;
+- existência da Relíquia;
+- proprietário atual;
+- status atual;
+- saldo certificado quando necessário;
+- unicidade/idempotência da solicitação.
+
+Uma compra precisa concluir atomicamente transferência de valor, taxa, mudança de proprietário, mudança de status e histórico, ou não concluir nenhuma dessas alterações.
+
+---
+
+# 75. Princípio de segurança econômica
+
+> **Não é necessário tornar o computador do jogador inviolável; é necessário tornar inviolável a passagem entre o estado local e a economia compartilhada.**
+
+A arquitetura assume que um jogador determinado pode alterar apresentação, memória ou arquivos locais.
+
+A segurança econômica, portanto, não depende de esconder permanentemente um algoritmo no cliente.
+
+Valores secretos, hashes locais, ofuscação e telemetria podem dificultar fraude casual e auxiliar investigação, mas não substituem:
+
+- Certified Dungeon;
+- Relic Registry;
+- autoridade do Mercado;
+- transações atômicas;
+- validação de propriedade;
+- Risk/Trust como camada adicional.
+
+O objetivo é garantir que uma alteração local não consiga criar valor negociável, duplicar uma Relíquia, transferir propriedade inexistente ou consumir saldo não certificado.
