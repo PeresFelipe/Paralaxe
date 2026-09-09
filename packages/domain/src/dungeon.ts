@@ -1,4 +1,4 @@
-import type { CombatContentCatalog, CombatResult } from './combat'
+import type { CombatContentCatalog, CombatResult, CombatResources } from './combat'
 import { applyCombatResult, simulateCombat } from './combat'
 import type { EquipmentInstance, EquipmentRarity } from './equipment'
 import type { OfflineGameSave } from './character'
@@ -49,6 +49,7 @@ export interface DungeonRun {
   chosenBranches: Record<string, string>
   expeditionBag: ExpeditionStack[]
   expeditionEquipment: ExpeditionEquipment[]
+  resources: CombatResources
   protectorDecision: 'killed' | 'spared' | null
   supplyRegisterRecovered: boolean
   treatyFragmentRecovered: boolean
@@ -98,6 +99,33 @@ function addInventoryStack(
   )
 }
 
+function initialResources(save: OfflineGameSave): CombatResources {
+  const { vitality, mind, vigor } = save.character.attributes
+  const maxHealth = 100 + vitality * 12
+  const maxMana = 30 + mind * 10
+  const maxStamina = 60 + vigor * 8
+  return {
+    health: maxHealth,
+    maxHealth,
+    mana: maxMana,
+    maxMana,
+    stamina: maxStamina,
+    maxStamina,
+  }
+}
+
+function applyEncounterAttrition(resources: CombatResources, result: CombatResult): CombatResources {
+  const healthSpent = result.player.maxHealth - result.player.health
+  const manaSpent = Math.max(0, result.player.maxMana - result.player.mana)
+  const staminaSpent = Math.max(0, result.player.maxStamina - result.player.stamina)
+  return {
+    ...resources,
+    health: Math.max(0, resources.health - healthSpent),
+    mana: Math.max(0, resources.mana - manaSpent),
+    stamina: Math.max(0, resources.stamina - staminaSpent),
+  }
+}
+
 function rollRarity(random: () => number, common: number, uncommon: number): EquipmentRarity {
   const value = random()
   if (value < common) return 'common'
@@ -144,6 +172,7 @@ function rollEquipment(
 }
 
 export function createDungeonRun(
+  save: OfflineGameSave,
   dungeon: DungeonDefinition,
   seed: number,
   now: string,
@@ -158,6 +187,7 @@ export function createDungeonRun(
     chosenBranches: {},
     expeditionBag: [],
     expeditionEquipment: [],
+    resources: initialResources(save),
     protectorDecision: null,
     supplyRegisterRecovered: false,
     treatyFragmentRecovered: false,
@@ -187,7 +217,7 @@ export function startDungeon(
       currentLocationId: dungeon.id,
       inventory: addInventoryStack(save.character.inventory, 'item.consumable.field-preparation', 2),
     },
-    dungeon: { ...save.dungeon, activeRun: createDungeonRun(dungeon, seed, now) },
+    dungeon: { ...save.dungeon, activeRun: createDungeonRun(save, dungeon, seed, now) },
   }
 }
 
@@ -255,12 +285,17 @@ export function resolveDungeonRoom(
       return { save: failDungeonRun(save, now), combatResult }
     }
 
+    const resources = applyEncounterAttrition(run.resources, combatResult)
+    if (resources.health <= 0) {
+      return { save: failDungeonRun(save, now), combatResult: { ...combatResult, outcome: 'defeat' } }
+    }
+
     nextSave = applyCombatResult(save, room.enemyDefinitionId, combatResult, now)
     nextSave = {
       ...nextSave,
       character: { ...nextSave.character, currentLocationId: dungeon.id },
     }
-    nextRun = nextSave.dungeon.activeRun ?? run
+    nextRun = { ...(nextSave.dungeon.activeRun ?? run), resources }
 
     if (room.enemyDefinitionId === 'enemy.crubach' && random() < 0.35) {
       nextRun = {
@@ -349,6 +384,12 @@ export function resolveDungeonRoom(
     nextRun = {
       ...nextRun,
       safeExtractionAvailable: true,
+      resources: {
+        ...nextRun.resources,
+        health: nextRun.resources.maxHealth,
+        mana: nextRun.resources.maxMana,
+        stamina: nextRun.resources.maxStamina,
+      },
       expeditionBag: addStack(nextRun.expeditionBag, 'item.consumable.field-preparation', 3),
     }
   }
@@ -415,7 +456,10 @@ export function extractDungeonRun(save: OfflineGameSave, now: string): OfflineGa
 
   const equipment = materializeExpeditionEquipment(save, run.expeditionEquipment)
   const firstClear = run.completed && !save.dungeon.dunLiathEasyCleared
-  const contractCanComplete = run.completed && run.supplyRegisterRecovered
+  const alreadyHasRegister = inventory.some(
+    (stack) => stack.definitionId === 'item.garrison-supply-register' && stack.quantity > 0,
+  )
+  const contractCanComplete = run.completed && (run.supplyRegisterRecovered || alreadyHasRegister)
   const contractReward = contractCanComplete && !save.dungeon.contractCompleted
 
   return {
@@ -445,10 +489,15 @@ export function extractDungeonRun(save: OfflineGameSave, now: string): OfflineGa
 }
 
 export function failDungeonRun(save: OfflineGameSave, now: string): OfflineGameSave {
+  const run = save.dungeon.activeRun
   return {
     ...save,
     updatedAt: now,
     character: { ...save.character, currentLocationId: 'free-city.tavern' },
-    dungeon: { ...save.dungeon, activeRun: null },
+    dungeon: {
+      ...save.dungeon,
+      activeRun: null,
+      dunLiathProtector: run?.protectorDecision ?? save.dungeon.dunLiathProtector,
+    },
   }
 }
