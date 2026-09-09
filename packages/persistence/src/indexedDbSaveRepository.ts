@@ -2,6 +2,7 @@ import {
   SAVE_SCHEMA_VERSION,
   createInitialSkillProgress,
   createStartingEquipmentState,
+  type CombatState,
   type CraftingState,
   type IdleState,
   type OfflineGameSave,
@@ -47,9 +48,16 @@ interface LegacyOfflineGameSaveV2 extends Omit<LegacyOfflineGameSaveV1, 'saveSch
   idle: IdleState
 }
 
-interface LegacyOfflineGameSaveV3 extends Omit<OfflineGameSave, 'saveSchemaVersion' | 'combat'> {
+interface LegacyOfflineGameSaveV3
+  extends Omit<OfflineGameSave, 'saveSchemaVersion' | 'combat' | 'dungeon'> {
   saveSchemaVersion: 3
   crafting: CraftingState
+}
+
+interface LegacyOfflineGameSaveV4
+  extends Omit<OfflineGameSave, 'saveSchemaVersion' | 'dungeon'> {
+  saveSchemaVersion: 4
+  combat: CombatState
 }
 
 function requestToPromise<T>(request: IDBRequest<T>) {
@@ -90,6 +98,16 @@ function createDefaultCombatState(): OfflineGameSave['combat'] {
   }
 }
 
+function createDefaultDungeonState(): OfflineGameSave['dungeon'] {
+  return {
+    activeRun: null,
+    dunLiathEasyCleared: false,
+    dunLiathProtector: null,
+    contractCompleted: false,
+    instinctiveGuardUnlocked: false,
+  }
+}
+
 function migrateLegacyCharacter(character: LegacyCharacterState): OfflineGameSave['character'] {
   const startingEquipment = createStartingEquipmentState(character.equipment)
 
@@ -112,12 +130,22 @@ function migrateSave(rawSave: unknown): OfflineGameSave {
     return rawSave as OfflineGameSave
   }
 
+  if (candidate.saveSchemaVersion === 4) {
+    const legacy = rawSave as LegacyOfflineGameSaveV4
+    return {
+      ...legacy,
+      saveSchemaVersion: SAVE_SCHEMA_VERSION,
+      dungeon: createDefaultDungeonState(),
+    }
+  }
+
   if (candidate.saveSchemaVersion === 3) {
     const legacy = rawSave as LegacyOfflineGameSaveV3
     return {
       ...legacy,
       saveSchemaVersion: SAVE_SCHEMA_VERSION,
       combat: createDefaultCombatState(),
+      dungeon: createDefaultDungeonState(),
     }
   }
 
@@ -130,6 +158,7 @@ function migrateSave(rawSave: unknown): OfflineGameSave {
       character: migrateLegacyCharacter(legacy.character),
       crafting: { activeRecipe: null },
       combat: createDefaultCombatState(),
+      dungeon: createDefaultDungeonState(),
     }
   }
 
@@ -144,6 +173,7 @@ function migrateSave(rawSave: unknown): OfflineGameSave {
       idle: { activeActivity: null },
       crafting: { activeRecipe: null },
       combat: createDefaultCombatState(),
+      dungeon: createDefaultDungeonState(),
     }
   }
 
