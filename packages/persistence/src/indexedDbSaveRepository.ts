@@ -1,13 +1,33 @@
 import {
   SAVE_SCHEMA_VERSION,
   createInitialSkillProgress,
+  createStartingEquipmentState,
+  type IdleState,
   type OfflineGameSave,
+  type SkillProgressById,
+  type StartingEquipmentLoadout,
 } from '@greywake/domain'
 import type { OfflineSaveRepository } from './saveRepository'
 
 const DATABASE_NAME = 'greywake'
 const DATABASE_VERSION = 1
 const SAVE_STORE = 'saves'
+
+interface LegacyCharacterState {
+  name: string
+  classId: OfflineGameSave['character']['classId']
+  giftId: OfflineGameSave['character']['giftId']
+  level: number
+  xp: number
+  unspentAttributePoints: number
+  attributes: OfflineGameSave['character']['attributes']
+  gold: number
+  inventory: OfflineGameSave['character']['inventory']
+  equipment: StartingEquipmentLoadout
+  knownAbilityIds: string[]
+  activeAbilitySlots: [string | null, string | null, string | null, string | null]
+  currentLocationId: string
+}
 
 interface LegacyOfflineGameSaveV1 {
   saveId: string
@@ -17,7 +37,13 @@ interface LegacyOfflineGameSaveV1 {
   createdAt: string
   updatedAt: string
   playtimeSeconds: number
-  character: OfflineGameSave['character']
+  character: LegacyCharacterState
+}
+
+interface LegacyOfflineGameSaveV2 extends Omit<LegacyOfflineGameSaveV1, 'saveSchemaVersion'> {
+  saveSchemaVersion: 2
+  skills: SkillProgressById
+  idle: IdleState
 }
 
 function requestToPromise<T>(request: IDBRequest<T>) {
@@ -47,6 +73,17 @@ function transactionToPromise(transaction: IDBTransaction) {
   })
 }
 
+function migrateLegacyCharacter(character: LegacyCharacterState): OfflineGameSave['character'] {
+  const startingEquipment = createStartingEquipmentState(character.equipment)
+
+  return {
+    ...character,
+    equipment: startingEquipment.equipped,
+    equipmentItems: startingEquipment.equipmentItems,
+    nextEquipmentSequence: startingEquipment.nextEquipmentSequence,
+  }
+}
+
 function migrateSave(rawSave: unknown): OfflineGameSave {
   if (!rawSave || typeof rawSave !== 'object') {
     throw new Error('Save local inválido.')
@@ -58,14 +95,27 @@ function migrateSave(rawSave: unknown): OfflineGameSave {
     return rawSave as OfflineGameSave
   }
 
+  if (candidate.saveSchemaVersion === 2) {
+    const legacy = rawSave as LegacyOfflineGameSaveV2
+
+    return {
+      ...legacy,
+      saveSchemaVersion: SAVE_SCHEMA_VERSION,
+      character: migrateLegacyCharacter(legacy.character),
+      crafting: { activeRecipe: null },
+    }
+  }
+
   if (candidate.saveSchemaVersion === 1) {
     const legacy = rawSave as LegacyOfflineGameSaveV1
 
     return {
       ...legacy,
       saveSchemaVersion: SAVE_SCHEMA_VERSION,
+      character: migrateLegacyCharacter(legacy.character),
       skills: createInitialSkillProgress(),
       idle: { activeActivity: null },
+      crafting: { activeRecipe: null },
     }
   }
 
