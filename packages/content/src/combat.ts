@@ -123,6 +123,7 @@ export const COMBAT_ABILITIES = [
     name: 'Recuo',
     profile: 'defensive',
     cooldownSeconds: 10,
+    triggerOnTelegraph: true,
     evasionBuff: {
       bonus: 60,
       durationSeconds: 4,
