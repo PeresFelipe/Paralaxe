@@ -15,10 +15,12 @@ A Build 0.1 não possui backend, conta Online, Cloud Save ou Mercado entre jogad
 ### Marco técnico atual
 
 ```text
-M0 — Projeto abre
+M1 — Criar e carregar personagem
 ```
 
-O workspace inicial conecta a aplicação Web às camadas de domínio, conteúdo, persistência e UI. O próximo marco é **M1 — criar e carregar personagem**.
+O app já possui criação de save Offline, escolha de nome, classe e presente, modelo de personagem no domínio, catálogo de criação orientado a dados e persistência real em IndexedDB. Saves existentes são listados e carregados novamente pelo repositório local.
+
+Próximo marco: **M2 — Idle persiste e funciona offline**.
 
 ## Stack da Build 0.1
 
@@ -26,12 +28,12 @@ O workspace inicial conecta a aplicação Web às camadas de domínio, conteúdo
 - **React** — interface;
 - **Vite** — desenvolvimento e build;
 - **HTML + CSS** — layout, design system e responsividade;
-- **IndexedDB** — alvo da persistência local do save;
+- **IndexedDB** — persistência local do save;
 - **pnpm workspaces** — organização do monorepo;
 - **Oxlint** — lint da base TypeScript/React;
 - **Vitest** — testes automatizados do domínio.
 
-O domínio do jogo deve permanecer independente da UI e da implementação concreta de persistência.
+O domínio do jogo permanece independente da UI e da implementação concreta de persistência.
 
 ## Executar localmente
 
@@ -61,6 +63,7 @@ Esse comando executa lint, typecheck e os testes existentes.
 |---|---|
 | [`docs/GDD.md`](docs/GDD.md) | Especificação canônica do jogo e requisitos arquiteturais permanentes |
 | [`docs/builds/0.1-validation-plan.md`](docs/builds/0.1-validation-plan.md) | Escopo, stack, valores provisórios, implementação e validação da Build 0.1 |
+| [`docs/implementation/CURRENT-STATUS.md`](docs/implementation/CURRENT-STATUS.md) | Ponto curto de retomada da implementação |
 
 ## Estrutura inicial
 
@@ -71,12 +74,14 @@ Esse comando executa lint, typecheck e os testes existentes.
 ├── packages/
 │   ├── domain/               # regras do jogo
 │   ├── content/              # Content Catalog
-│   ├── persistence/          # contratos e persistência local
+│   ├── persistence/          # contratos e IndexedDB
 │   └── ui/                   # design system e componentes compartilhados
 └── docs/
     ├── GDD.md
-    └── builds/
-        └── 0.1-validation-plan.md
+    ├── builds/
+    │   └── 0.1-validation-plan.md
+    └── implementation/
+        └── CURRENT-STATUS.md
 ```
 
 Dentro de `packages/domain/`, os sistemas continuam separados por responsabilidade (`character`, `skills`, `inventory`, `equipment`, `combat`, `dungeon` etc.). O mesmo princípio vale para as subdivisões já preparadas nos demais packages.

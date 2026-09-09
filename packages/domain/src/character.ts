@@ -1,0 +1,219 @@
+export const ATTRIBUTE_KEYS = [
+  'vitality',
+  'mind',
+  'vigor',
+  'strength',
+  'dexterity',
+  'intelligence',
+  'faith',
+] as const
+
+export type AttributeKey = (typeof ATTRIBUTE_KEYS)[number]
+
+export interface CharacterAttributes {
+  vitality: number
+  mind: number
+  vigor: number
+  strength: number
+  dexterity: number
+  intelligence: number
+  faith: number
+}
+
+export const EQUIPMENT_SLOTS = [
+  'head',
+  'chest',
+  'gloves',
+  'legs',
+  'boots',
+  'mainHand',
+  'offHand',
+  'amulet',
+  'ring1',
+  'ring2',
+] as const
+
+export type EquipmentSlot = (typeof EQUIPMENT_SLOTS)[number]
+
+export type CharacterClassId =
+  | 'warrior'
+  | 'mage'
+  | 'hunter'
+  | 'acolyte'
+  | 'rogue'
+  | 'wanderer'
+
+export type GiftId =
+  | 'rusted-key'
+  | 'coin-pouch'
+  | 'crimson-flask'
+  | 'traveller-ring'
+  | 'nameless-stone'
+  | 'survival-kit'
+  | 'none'
+
+export type EquipmentLoadout = Partial<Record<EquipmentSlot, string>>
+
+export interface CharacterClassDefinition {
+  id: CharacterClassId
+  name: string
+  summary: string
+  attributes: CharacterAttributes
+  startingEquipment: EquipmentLoadout
+  startingAbilityId: string
+}
+
+export type StartingGrant =
+  | {
+      kind: 'gold'
+      amount: number
+    }
+  | {
+      kind: 'item'
+      definitionId: string
+      quantity: number
+    }
+
+export interface GiftDefinition {
+  id: GiftId
+  name: string
+  summary: string
+  grants: readonly StartingGrant[]
+}
+
+export interface InventoryStack {
+  definitionId: string
+  quantity: number
+}
+
+export interface CharacterState {
+  name: string
+  classId: CharacterClassId
+  giftId: GiftId
+  level: number
+  xp: number
+  unspentAttributePoints: number
+  attributes: CharacterAttributes
+  gold: number
+  inventory: InventoryStack[]
+  equipment: EquipmentLoadout
+  knownAbilityIds: string[]
+  activeAbilitySlots: [string | null, string | null, string | null, string | null]
+  currentLocationId: string
+}
+
+export const SAVE_SCHEMA_VERSION = 1 as const
+
+export interface OfflineGameSave {
+  saveId: string
+  saveMode: 'OFFLINE'
+  saveSchemaVersion: typeof SAVE_SCHEMA_VERSION
+  contentVersion: string
+  createdAt: string
+  updatedAt: string
+  playtimeSeconds: number
+  character: CharacterState
+}
+
+export interface CreateOfflineGameSaveInput {
+  saveId: string
+  createdAt: string
+  contentVersion: string
+  characterName: string
+  characterClass: CharacterClassDefinition
+  gift: GiftDefinition
+}
+
+function attributeTotal(attributes: CharacterAttributes) {
+  return ATTRIBUTE_KEYS.reduce((total, key) => total + attributes[key], 0)
+}
+
+function validateCharacterClass(definition: CharacterClassDefinition) {
+  for (const key of ATTRIBUTE_KEYS) {
+    const value = definition.attributes[key]
+
+    if (!Number.isInteger(value) || value < 0) {
+      throw new Error(`Atributo inicial inválido em ${definition.id}: ${key}.`)
+    }
+  }
+
+  if (attributeTotal(definition.attributes) !== 35) {
+    throw new Error(`A classe ${definition.id} precisa iniciar com exatamente 35 pontos.`)
+  }
+}
+
+function buildGiftState(gift: GiftDefinition) {
+  const inventoryByDefinition = new Map<string, number>()
+  let gold = 0
+
+  for (const grant of gift.grants) {
+    if (grant.kind === 'gold') {
+      if (!Number.isInteger(grant.amount) || grant.amount < 0) {
+        throw new Error(`Quantidade de moedas inválida no presente ${gift.id}.`)
+      }
+
+      gold += grant.amount
+      continue
+    }
+
+    if (!Number.isInteger(grant.quantity) || grant.quantity <= 0) {
+      throw new Error(`Quantidade de item inválida no presente ${gift.id}.`)
+    }
+
+    const currentQuantity = inventoryByDefinition.get(grant.definitionId) ?? 0
+    inventoryByDefinition.set(grant.definitionId, currentQuantity + grant.quantity)
+  }
+
+  const inventory = [...inventoryByDefinition.entries()].map(([definitionId, quantity]) => ({
+    definitionId,
+    quantity,
+  }))
+
+  return { gold, inventory }
+}
+
+export function createOfflineGameSave(input: CreateOfflineGameSaveInput): OfflineGameSave {
+  const characterName = input.characterName.trim()
+
+  if (!input.saveId.trim()) {
+    throw new Error('O save precisa possuir um identificador.')
+  }
+
+  if (!input.contentVersion.trim()) {
+    throw new Error('O save precisa registrar a versão do conteúdo.')
+  }
+
+  if (!characterName) {
+    throw new Error('O personagem precisa possuir um nome.')
+  }
+
+  validateCharacterClass(input.characterClass)
+
+  const giftState = buildGiftState(input.gift)
+  const startingAbilityId = input.characterClass.startingAbilityId
+
+  return {
+    saveId: input.saveId,
+    saveMode: 'OFFLINE',
+    saveSchemaVersion: SAVE_SCHEMA_VERSION,
+    contentVersion: input.contentVersion,
+    createdAt: input.createdAt,
+    updatedAt: input.createdAt,
+    playtimeSeconds: 0,
+    character: {
+      name: characterName,
+      classId: input.characterClass.id,
+      giftId: input.gift.id,
+      level: 1,
+      xp: 0,
+      unspentAttributePoints: 0,
+      attributes: { ...input.characterClass.attributes },
+      gold: giftState.gold,
+      inventory: giftState.inventory,
+      equipment: { ...input.characterClass.startingEquipment },
+      knownAbilityIds: [startingAbilityId],
+      activeAbilitySlots: [startingAbilityId, null, null, null],
+      currentLocationId: 'free-city.tavern',
+    },
+  }
+}
