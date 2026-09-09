@@ -5,3 +5,4 @@ export type BuildPhase = typeof BUILD_PHASE
 export type BuildSaveMode = typeof BUILD_SAVE_MODE
 
 export * from './character'
+export * from './idle'
