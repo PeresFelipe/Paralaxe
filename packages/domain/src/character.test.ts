@@ -44,7 +44,7 @@ describe('character creation', () => {
     })
 
     expect(save.saveMode).toBe('OFFLINE')
-    expect(save.saveSchemaVersion).toBe(5)
+    expect(save.saveSchemaVersion).toBe(6)
     expect(save.character.name).toBe('Ailith')
     expect(save.character.classId).toBe('wanderer')
     expect(save.character.giftId).toBe('coin-pouch')
@@ -63,10 +63,18 @@ describe('character creation', () => {
     )
     expect(mainHand?.definitionId).toBe('weapon.travel-spear')
 
-    expect(save.combat.preferences).toEqual({ style: 'mixed', defensiveHealthThresholdPercent: 60 })
+    expect(save.combat.preferences).toEqual({
+      style: 'mixed',
+      defensiveHealthThresholdPercent: 60,
+      consumableSlots: [
+        { definitionId: null, autoUseResource: null, autoUseThresholdPercent: null },
+        { definitionId: null, autoUseResource: null, autoUseThresholdPercent: null },
+      ],
+    })
     expect(save.combat.wolfDefeated).toBe(false)
     expect(save.dungeon.activeRun).toBeNull()
     expect(save.dungeon.dunLiathEasyCleared).toBe(false)
+    expect(save.dungeon.contractAccepted).toBe(false)
   })
 
   it('rejects a blank character name', () => {
