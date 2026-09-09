@@ -1,3 +1,4 @@
+import { type CombatState } from './combat'
 import { type CraftingState } from './crafting'
 import {
   createStartingEquipmentState,
@@ -96,7 +97,7 @@ export interface CharacterState {
   currentLocationId: string
 }
 
-export const SAVE_SCHEMA_VERSION = 3 as const
+export const SAVE_SCHEMA_VERSION = 4 as const
 
 export interface OfflineGameSave {
   saveId: string
@@ -110,6 +111,7 @@ export interface OfflineGameSave {
   skills: SkillProgressById
   idle: IdleState
   crafting: CraftingState
+  combat: CombatState
 }
 
 export interface CreateOfflineGameSaveInput {
@@ -210,5 +212,13 @@ export function createOfflineGameSave(input: CreateOfflineGameSaveInput): Offlin
     skills: createInitialSkillProgress(),
     idle: { activeActivity: null },
     crafting: { activeRecipe: null },
+    combat: {
+      preferences: {
+        style: 'mixed',
+        defensiveHealthThresholdPercent: 60,
+      },
+      lastRun: null,
+      wolfDefeated: false,
+    },
   }
 }
