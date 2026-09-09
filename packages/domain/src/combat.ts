@@ -20,6 +20,7 @@ export interface CombatAbilityDefinition {
   cooldownSeconds: number
   resource?: CombatResource
   resourceCost?: number
+  triggerOnTelegraph?: boolean
   damage?: {
     kind: 'weapon-multiplier' | 'base-scaling'
     multiplier?: number
@@ -390,8 +391,13 @@ function chooseAbility(
   resources: CombatResources,
   cooldowns: Map<string, number>,
   now: number,
+  telegraphActive: boolean,
 ) {
   const healthPercent = (resources.health / resources.maxHealth) * 100
+  const defensiveCondition = (ability: CombatAbilityDefinition) =>
+    healthPercent <= save.combat.preferences.defensiveHealthThresholdPercent ||
+    (telegraphActive && ability.triggerOnTelegraph === true)
+
   const candidates = save.character.activeAbilitySlots
     .map((id, slot) => ({ id, slot }))
     .filter((entry): entry is { id: string; slot: number } => Boolean(entry.id))
@@ -405,17 +411,15 @@ function chooseAbility(
       const ability = entry.definition
       if (ability.resource === 'mana' && resources.mana < (ability.resourceCost ?? 0)) return false
       if (ability.resource === 'stamina' && resources.stamina < (ability.resourceCost ?? 0)) return false
-      if (ability.profile === 'defensive') {
-        return healthPercent <= save.combat.preferences.defensiveHealthThresholdPercent
-      }
+      if (ability.profile === 'defensive') return defensiveCondition(ability)
       return true
     })
 
   return candidates.toSorted((a, b) => {
     const style = save.combat.preferences.style
     if (style === 'mixed') {
-      const aDefensiveNeeded = a.definition.profile === 'defensive' && healthPercent <= save.combat.preferences.defensiveHealthThresholdPercent
-      const bDefensiveNeeded = b.definition.profile === 'defensive' && healthPercent <= save.combat.preferences.defensiveHealthThresholdPercent
+      const aDefensiveNeeded = a.definition.profile === 'defensive' && defensiveCondition(a.definition)
+      const bDefensiveNeeded = b.definition.profile === 'defensive' && defensiveCondition(b.definition)
       if (aDefensiveNeeded !== bDefensiveNeeded) return aDefensiveNeeded ? -1 : 1
       return a.slot - b.slot
     }
@@ -759,7 +763,14 @@ export function simulateCombat(
 
     if (Math.abs(playerReadyAt - now) <= EPSILON && resources.health > 0 && enemyHealth > 0) {
       if (!tryConsumable()) {
-        const ability = chooseAbility(save, catalog, resources, playerCooldowns, now)
+        const ability = chooseAbility(
+          save,
+          catalog,
+          resources,
+          playerCooldowns,
+          now,
+          telegraph !== null,
+        )
         if (ability) {
           const cost = ability.resourceCost ?? 0
           if (ability.resource === 'mana') resources.mana -= cost
