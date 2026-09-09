@@ -56,7 +56,13 @@ describe('character creation', () => {
     expect(save.idle.activeActivity).toBeNull()
     expect(save.crafting.activeRecipe).toBeNull()
     expect(save.character.equipmentItems).toHaveLength(2)
-    expect(save.character.equipment.mainHand).toBe('eq-1')
+
+    const mainHandInstanceId = save.character.equipment.mainHand
+    const mainHand = save.character.equipmentItems.find(
+      (item) => item.instanceId === mainHandInstanceId,
+    )
+    expect(mainHand?.definitionId).toBe('weapon.travel-spear')
+
     expect(save.combat.preferences).toEqual({ style: 'mixed', defensiveHealthThresholdPercent: 60 })
     expect(save.combat.wolfDefeated).toBe(false)
     expect(save.dungeon.activeRun).toBeNull()
