@@ -71,6 +71,23 @@ export interface DungeonContentCatalog extends CombatContentCatalog {
   getDungeonDefinition(dungeonId: string): DungeonDefinition | null
 }
 
+export interface DungeonRoomResolution {
+  save: OfflineGameSave
+  combatResult?: CombatResult
+}
+
+const AFFIX_IDS = [
+  'affix.vitality-1',
+  'affix.mind-1',
+  'affix.vigor-1',
+  'affix.strength-1',
+  'affix.dexterity-1',
+  'affix.intelligence-1',
+  'affix.faith-1',
+  'affix.accuracy-4',
+  'affix.defense-2',
+] as const
+
 function createRng(seed: number) {
   let state = seed >>> 0
   return () => {
@@ -80,10 +97,13 @@ function createRng(seed: number) {
 }
 
 function addStack(stacks: ExpeditionStack[], definitionId: string, quantity = 1) {
-  const current = stacks.find((stack) => stack.definitionId === definitionId)
-  if (!current) return [...stacks, { definitionId, quantity }]
+  const existing = stacks.find((stack) => stack.definitionId === definitionId)
+  if (!existing) return [...stacks, { definitionId, quantity }]
+
   return stacks.map((stack) =>
-    stack.definitionId === definitionId ? { ...stack, quantity: stack.quantity + quantity } : stack,
+    stack.definitionId === definitionId
+      ? { ...stack, quantity: stack.quantity + quantity }
+      : stack,
   )
 }
 
@@ -92,10 +112,13 @@ function addInventoryStack(
   definitionId: string,
   quantity: number,
 ) {
-  const current = inventory.find((stack) => stack.definitionId === definitionId)
-  if (!current) return [...inventory, { definitionId, quantity }]
+  const existing = inventory.find((stack) => stack.definitionId === definitionId)
+  if (!existing) return [...inventory, { definitionId, quantity }]
+
   return inventory.map((stack) =>
-    stack.definitionId === definitionId ? { ...stack, quantity: stack.quantity + quantity } : stack,
+    stack.definitionId === definitionId
+      ? { ...stack, quantity: stack.quantity + quantity }
+      : stack,
   )
 }
 
@@ -104,6 +127,7 @@ function initialResources(save: OfflineGameSave): CombatResources {
   const maxHealth = 100 + vitality * 12
   const maxMana = 30 + mind * 10
   const maxStamina = 60 + vigor * 8
+
   return {
     health: maxHealth,
     maxHealth,
@@ -115,19 +139,22 @@ function initialResources(save: OfflineGameSave): CombatResources {
 }
 
 function applyEncounterAttrition(resources: CombatResources, result: CombatResult): CombatResources {
-  const healthSpent = result.player.maxHealth - result.player.health
-  const manaSpent = Math.max(0, result.player.maxMana - result.player.mana)
-  const staminaSpent = Math.max(0, result.player.maxStamina - result.player.stamina)
   return {
     ...resources,
-    health: Math.max(0, resources.health - healthSpent),
-    mana: Math.max(0, resources.mana - manaSpent),
-    stamina: Math.max(0, resources.stamina - staminaSpent),
+    health: Math.max(0, resources.health - (result.player.maxHealth - result.player.health)),
+    mana: Math.max(0, resources.mana - Math.max(0, result.player.maxMana - result.player.mana)),
+    stamina: Math.max(
+      0,
+      resources.stamina - Math.max(0, result.player.maxStamina - result.player.stamina),
+    ),
   }
 }
 
 function offsetLog(log: CombatLogEntry[], offset: number) {
-  return log.map((entry) => ({ ...entry, atSeconds: Number((entry.atSeconds + offset).toFixed(3)) }))
+  return log.map((entry) => ({
+    ...entry,
+    atSeconds: Number((entry.atSeconds + offset).toFixed(3)),
+  }))
 }
 
 function simulateFairtheoirEncounter(
@@ -138,30 +165,16 @@ function simulateFairtheoirEncounter(
   const phase1 = simulateCombat(save, catalog, 'enemy.fairtheoir-phase1', seed)
   if (phase1.outcome !== 'victory') return phase1
 
-  const phase2Seed = (seed ^ 0x9e3779b9) >>> 0
-  const phase2 = simulateCombat(save, catalog, 'enemy.fairtheoir-phase2', phase2Seed)
+  const phase2 = simulateCombat(save, catalog, 'enemy.fairtheoir-phase2', (seed ^ 0x9e3779b9) >>> 0)
   const phaseTransitionAt = phase1.durationSeconds
-  const transition: CombatLogEntry = {
-    atSeconds: phaseTransitionAt,
-    actor: 'system',
-    kind: 'result',
-    message: 'Fairtheoir chega a 45% da Vida total. Fase 2 — Desespero.',
-  }
-
-  const phase1UsefulLog = phase1.log.filter((entry) => entry.kind !== 'result')
-  const combinedLog = [
-    ...phase1UsefulLog,
-    transition,
-    ...offsetLog(phase2.log, phaseTransitionAt),
-  ]
   const damageTaken =
-    (phase1.player.maxHealth - phase1.player.health) +
+    phase1.player.maxHealth - phase1.player.health +
     (phase2.player.maxHealth - phase2.player.health)
   const manaSpent =
-    (phase1.player.maxMana - phase1.player.mana) +
+    phase1.player.maxMana - phase1.player.mana +
     (phase2.player.maxMana - phase2.player.mana)
   const staminaSpent =
-    (phase1.player.maxStamina - phase1.player.stamina) +
+    phase1.player.maxStamina - phase1.player.stamina +
     (phase2.player.maxStamina - phase2.player.stamina)
 
   return {
@@ -177,8 +190,17 @@ function simulateFairtheoirEncounter(
     },
     enemyHealth: phase2.enemyHealth,
     xpGranted: phase2.outcome === 'victory' ? 120 : 0,
-    log: combinedLog,
     seed,
+    log: [
+      ...phase1.log.filter((entry) => entry.kind !== 'result'),
+      {
+        atSeconds: phaseTransitionAt,
+        actor: 'system',
+        kind: 'result',
+        message: 'Fairtheoir chega a 45% da Vida total. Fase 2 — Desespero.',
+      },
+      ...offsetLog(phase2.log, phaseTransitionAt),
+    ],
   }
 }
 
@@ -193,26 +215,16 @@ function affixCount(rarity: EquipmentRarity) {
   return rarity === 'common' ? 1 : rarity === 'uncommon' ? 2 : 3
 }
 
-const AFFIX_IDS = [
-  'affix.vitality-1',
-  'affix.mind-1',
-  'affix.vigor-1',
-  'affix.strength-1',
-  'affix.dexterity-1',
-  'affix.intelligence-1',
-  'affix.faith-1',
-  'affix.accuracy-4',
-  'affix.defense-2',
-] as const
-
 function rollAffixes(random: () => number, count: number) {
   const pool = [...AFFIX_IDS]
   const result: string[] = []
+
   while (result.length < count && pool.length > 0) {
     const index = Math.floor(random() * pool.length)
     const [picked] = pool.splice(index, 1)
     if (picked) result.push(picked)
   }
+
   return result
 }
 
@@ -223,8 +235,13 @@ function rollEquipment(
 ): ExpeditionEquipment {
   const definitionId = definitionIds[Math.floor(random() * definitionIds.length)] ?? definitionIds[0]
   if (!definitionId) throw new Error('Pool de equipamento vazio.')
+
   const rarity = rollRarity(random, rarityThresholds.common, rarityThresholds.uncommon)
-  return { definitionId, rarity, affixIds: rollAffixes(random, affixCount(rarity)) }
+  return {
+    definitionId,
+    rarity,
+    affixIds: rollAffixes(random, affixCount(rarity)),
+  }
 }
 
 export function createDungeonRun(
@@ -271,9 +288,16 @@ export function startDungeon(
     character: {
       ...save.character,
       currentLocationId: dungeon.id,
-      inventory: addInventoryStack(save.character.inventory, 'item.consumable.field-preparation', 2),
+      inventory: addInventoryStack(
+        save.character.inventory,
+        'item.consumable.field-preparation',
+        2,
+      ),
     },
-    dungeon: { ...save.dungeon, activeRun: createDungeonRun(save, dungeon, seed, now) },
+    dungeon: {
+      ...save.dungeon,
+      activeRun: createDungeonRun(save, dungeon, seed, now),
+    },
   }
 }
 
@@ -285,11 +309,18 @@ export function chooseDungeonPath(
 ): OfflineGameSave {
   const run = save.dungeon.activeRun
   if (!run) throw new Error('Nenhuma DungeonRun ativa.')
+
   const room = dungeon.rooms.find((candidate) => candidate.id === run.currentRoomId)
   if (!room) throw new Error('Sala atual inválida.')
-  if (!run.resolvedRoomIds.includes(room.id)) throw new Error('Resolva a sala atual antes de avançar.')
-  if (!room.nextRoomIds.includes(nextRoomId)) throw new Error('Esse caminho não parte da sala atual.')
-  if (run.visitedRoomIds.includes(nextRoomId)) throw new Error('A rota da Dungeon é irreversível.')
+  if (!run.resolvedRoomIds.includes(room.id)) {
+    throw new Error('Resolva a sala atual antes de avançar.')
+  }
+  if (!room.nextRoomIds.includes(nextRoomId)) {
+    throw new Error('Esse caminho não parte da sala atual.')
+  }
+  if (run.visitedRoomIds.includes(nextRoomId)) {
+    throw new Error('A rota da Dungeon é irreversível.')
+  }
 
   return {
     ...save,
@@ -310,14 +341,117 @@ export function chooseDungeonPath(
   }
 }
 
+function resolveCombatRoom(
+  save: OfflineGameSave,
+  dungeon: DungeonDefinition,
+  catalog: DungeonContentCatalog,
+  run: DungeonRun,
+  room: DungeonRoomDefinition,
+  random: () => number,
+  now: string,
+): { save: OfflineGameSave; run: DungeonRun; combatResult: CombatResult } {
+  if (!room.enemyDefinitionId) throw new Error('Sala não possui inimigo.')
+
+  const encounterSeed = (run.seed + run.visitedRoomIds.length * 7919) >>> 0
+  const isFairtheoir = room.id === 'room.fairtheoir'
+  const combatResult = isFairtheoir
+    ? simulateFairtheoirEncounter(save, catalog, encounterSeed)
+    : simulateCombat(save, catalog, room.enemyDefinitionId, encounterSeed)
+
+  if (combatResult.outcome !== 'victory') {
+    return { save: failDungeonRun(save, now), run, combatResult }
+  }
+
+  const resources = applyEncounterAttrition(run.resources, combatResult)
+  if (resources.health <= 0) {
+    return {
+      save: failDungeonRun(save, now),
+      run,
+      combatResult: { ...combatResult, outcome: 'defeat' },
+    }
+  }
+
+  const appliedEnemyId = isFairtheoir ? 'enemy.fairtheoir-phase2' : room.enemyDefinitionId
+  let nextSave = applyCombatResult(save, appliedEnemyId, combatResult, now)
+  nextSave = {
+    ...nextSave,
+    character: { ...nextSave.character, currentLocationId: dungeon.id },
+  }
+
+  let nextRun: DungeonRun = {
+    ...(nextSave.dungeon.activeRun ?? run),
+    resources,
+  }
+
+  if (room.enemyDefinitionId === 'enemy.crubach' && random() < 0.35) {
+    nextRun = {
+      ...nextRun,
+      expeditionEquipment: [
+        ...nextRun.expeditionEquipment,
+        rollEquipment(
+          random,
+          ['armor.garrison-gloves', 'armor.garrison-boots', 'weapon.garrison-sword'],
+          { common: 0.85, uncommon: 0.14 },
+        ),
+      ],
+    }
+  }
+
+  if (room.enemyDefinitionId === 'enemy.tromghiallach' && random() < 0.45) {
+    nextRun = {
+      ...nextRun,
+      expeditionEquipment: [
+        ...nextRun.expeditionEquipment,
+        rollEquipment(
+          random,
+          ['armor.garrison-helmet', 'armor.garrison-legs', 'weapon.bastion-mace'],
+          { common: 0.8, uncommon: 0.18 },
+        ),
+      ],
+    }
+  }
+
+  if (room.enemyDefinitionId === 'enemy.cosantoir') {
+    nextRun = {
+      ...nextRun,
+      expeditionBag: addStack(nextRun.expeditionBag, 'item.dun-liath.beam', 1),
+    }
+
+    if (random() < 0.25) {
+      nextRun = {
+        ...nextRun,
+        expeditionEquipment: [
+          ...nextRun.expeditionEquipment,
+          rollEquipment(
+            random,
+            ['weapon.watch-spear', 'shield.watch-shield', 'armor.garrison-legs'],
+            { common: 0.55, uncommon: 0.4 },
+          ),
+        ],
+      }
+    }
+  }
+
+  if (isFairtheoir) {
+    nextRun = {
+      ...nextRun,
+      expeditionBag: addStack(nextRun.expeditionBag, 'item.fairtheoir-fragment', 1),
+      completed: true,
+    }
+  }
+
+  return { save: nextSave, run: nextRun, combatResult }
+}
+
 export function resolveDungeonRoom(
   save: OfflineGameSave,
   dungeon: DungeonDefinition,
   catalog: DungeonContentCatalog,
   now: string,
-): { save: OfflineGameSave; combatResult?: CombatResult } {
+): DungeonRoomResolution {
   const run = save.dungeon.activeRun
   if (!run) throw new Error('Nenhuma DungeonRun ativa.')
+
   const room = dungeon.rooms.find((candidate) => candidate.id === run.currentRoomId)
   if (!room) throw new Error('Sala atual inválida.')
   if (run.resolvedRoomIds.includes(room.id)) throw new Error('Essa sala já foi resolvida.')
@@ -328,87 +462,26 @@ export function resolveDungeonRoom(
   const random = createRng((run.seed ^ run.visitedRoomIds.length * 2654435761) >>> 0)
   let nextSave = save
   let nextRun = run
-  let combatResult: CombatResult | undefined
+  let combatResult: CombatResult | null = null
 
   if (room.enemyDefinitionId) {
-    const encounterSeed = (run.seed + run.visitedRoomIds.length * 7919) >>> 0
-    const isFairtheoir = room.id === 'room.fairtheoir'
-    combatResult = isFairtheoir
-      ? simulateFairtheoirEncounter(save, catalog, encounterSeed)
-      : simulateCombat(save, catalog, room.enemyDefinitionId, encounterSeed)
+    const combatResolution = resolveCombatRoom(
+      save,
+      dungeon,
+      catalog,
+      run,
+      room,
+      random,
+      now,
+    )
+    combatResult = combatResolution.combatResult
 
-    if (combatResult.outcome !== 'victory') {
-      return { save: failDungeonRun(save, now), combatResult }
+    if (!combatResolution.save.dungeon.activeRun) {
+      return { save: combatResolution.save, combatResult }
     }
 
-    const resources = applyEncounterAttrition(run.resources, combatResult)
-    if (resources.health <= 0) {
-      return { save: failDungeonRun(save, now), combatResult: { ...combatResult, outcome: 'defeat' } }
-    }
-
-    const appliedEnemyId = isFairtheoir ? 'enemy.fairtheoir-phase2' : room.enemyDefinitionId
-    nextSave = applyCombatResult(save, appliedEnemyId, combatResult, now)
-    nextSave = {
-      ...nextSave,
-      character: { ...nextSave.character, currentLocationId: dungeon.id },
-    }
-    nextRun = { ...(nextSave.dungeon.activeRun ?? run), resources }
-
-    if (room.enemyDefinitionId === 'enemy.crubach' && random() < 0.35) {
-      nextRun = {
-        ...nextRun,
-        expeditionEquipment: [
-          ...nextRun.expeditionEquipment,
-          rollEquipment(
-            random,
-            ['armor.garrison-gloves', 'armor.garrison-boots', 'weapon.garrison-sword'],
-            { common: 0.85, uncommon: 0.14 },
-          ),
-        ],
-      }
-    }
-
-    if (room.enemyDefinitionId === 'enemy.tromghiallach' && random() < 0.45) {
-      nextRun = {
-        ...nextRun,
-        expeditionEquipment: [
-          ...nextRun.expeditionEquipment,
-          rollEquipment(
-            random,
-            ['armor.garrison-helmet', 'armor.garrison-legs', 'weapon.bastion-mace'],
-            { common: 0.8, uncommon: 0.18 },
-          ),
-        ],
-      }
-    }
-
-    if (room.enemyDefinitionId === 'enemy.cosantoir') {
-      nextRun = {
-        ...nextRun,
-        expeditionBag: addStack(nextRun.expeditionBag, 'item.dun-liath.beam', 1),
-      }
-      if (random() < 0.25) {
-        nextRun = {
-          ...nextRun,
-          expeditionEquipment: [
-            ...nextRun.expeditionEquipment,
-            rollEquipment(
-              random,
-              ['weapon.watch-spear', 'shield.watch-shield', 'armor.garrison-legs'],
-              { common: 0.55, uncommon: 0.4 },
-            ),
-          ],
-        }
-      }
-    }
-
-    if (isFairtheoir) {
-      nextRun = {
-        ...nextRun,
-        expeditionBag: addStack(nextRun.expeditionBag, 'item.fairtheoir-fragment', 1),
-        completed: true,
-      }
-    }
+    nextSave = combatResolution.save
+    nextRun = combatResolution.run
   }
 
   if (room.id === 'room.treaty') {
@@ -418,6 +491,7 @@ export function resolveDungeonRoom(
       expeditionBag: addStack(nextRun.expeditionBag, 'item.treaty-fragment', 1),
     }
   }
+
   if (room.id === 'room.register') {
     nextRun = {
       ...nextRun,
@@ -425,6 +499,7 @@ export function resolveDungeonRoom(
       expeditionBag: addStack(nextRun.expeditionBag, 'item.garrison-supply-register', 1),
     }
   }
+
   if (
     room.id === 'room.arsenal' &&
     !nextRun.expeditionEquipment.some((item) => item.definitionId === 'armor.garrison-helmet')
@@ -437,6 +512,7 @@ export function resolveDungeonRoom(
       ],
     }
   }
+
   if (room.kind === 'recovery') {
     nextRun = {
       ...nextRun,
@@ -447,7 +523,11 @@ export function resolveDungeonRoom(
         mana: nextRun.resources.maxMana,
         stamina: nextRun.resources.maxStamina,
       },
-      expeditionBag: addStack(nextRun.expeditionBag, 'item.consumable.field-preparation', 3),
+      expeditionBag: addStack(
+        nextRun.expeditionBag,
+        'item.consumable.field-preparation',
+        3,
+      ),
     }
   }
 
@@ -457,15 +537,14 @@ export function resolveDungeonRoom(
     updatedAt: now,
   }
 
-  return {
-    save: {
-      ...nextSave,
-      updatedAt: now,
-      character: { ...nextSave.character, currentLocationId: dungeon.id },
-      dungeon: { ...nextSave.dungeon, activeRun: nextRun },
-    },
-    combatResult,
+  const resolvedSave: OfflineGameSave = {
+    ...nextSave,
+    updatedAt: now,
+    character: { ...nextSave.character, currentLocationId: dungeon.id },
+    dungeon: { ...nextSave.dungeon, activeRun: nextRun },
   }
+
+  return combatResult ? { save: resolvedSave, combatResult } : { save: resolvedSave }
 }
 
 export function decideProtector(
@@ -475,8 +554,11 @@ export function decideProtector(
 ): OfflineGameSave {
   const run = save.dungeon.activeRun
   if (!run) throw new Error('Nenhuma DungeonRun ativa.')
-  if (run.currentRoomId !== 'room.protector') throw new Error('Essa decisão só existe no Abrigo Improvisado.')
+  if (run.currentRoomId !== 'room.protector') {
+    throw new Error('Essa decisão só existe no Abrigo Improvisado.')
+  }
   if (run.protectorDecision) throw new Error('Essa decisão já foi tomada nesta run.')
+
   return {
     ...save,
     updatedAt: now,
@@ -487,16 +569,20 @@ export function decideProtector(
   }
 }
 
-function materializeExpeditionEquipment(save: OfflineGameSave, loot: ExpeditionEquipment[]) {
-  let sequence = save.character.nextEquipmentSequence
+function materializeExpeditionEquipment(
+  save: OfflineGameSave,
+  loot: ExpeditionEquipment[],
+) {
+  let nextSequence = save.character.nextEquipmentSequence
   const created: EquipmentInstance[] = loot.map((item) => ({
-    instanceId: `eq-${sequence++}`,
+    instanceId: `eq-${nextSequence++}`,
     definitionId: item.definitionId,
     upgradeLevel: 0,
     rarity: item.rarity,
     affixIds: [...item.affixIds],
   }))
-  return { created, nextSequence: sequence }
+
+  return { created, nextSequence }
 }
 
 export function extractDungeonRun(save: OfflineGameSave, now: string): OfflineGameSave {
@@ -514,9 +600,11 @@ export function extractDungeonRun(save: OfflineGameSave, now: string): OfflineGa
   const equipment = materializeExpeditionEquipment(save, run.expeditionEquipment)
   const firstClear = run.completed && !save.dungeon.dunLiathEasyCleared
   const alreadyHasRegister = inventory.some(
-    (stack) => stack.definitionId === 'item.garrison-supply-register' && stack.quantity > 0,
+    (stack) =>
+      stack.definitionId === 'item.garrison-supply-register' && stack.quantity > 0,
   )
-  const contractCanComplete = run.completed && (run.supplyRegisterRecovered || alreadyHasRegister)
+  const contractCanComplete =
+    run.completed && (run.supplyRegisterRecovered || alreadyHasRegister)
   const contractReward = contractCanComplete && !save.dungeon.contractCompleted
 
   return {
@@ -547,6 +635,7 @@ export function extractDungeonRun(save: OfflineGameSave, now: string): OfflineGa
 
 export function failDungeonRun(save: OfflineGameSave, now: string): OfflineGameSave {
   const run = save.dungeon.activeRun
+
   return {
     ...save,
     updatedAt: now,
@@ -554,7 +643,8 @@ export function failDungeonRun(save: OfflineGameSave, now: string): OfflineGameS
     dungeon: {
       ...save.dungeon,
       activeRun: null,
-      dunLiathProtector: save.dungeon.dunLiathProtector ?? run?.protectorDecision ?? null,
+      dunLiathProtector:
+        save.dungeon.dunLiathProtector ?? run?.protectorDecision ?? null,
     },
   }
 }
