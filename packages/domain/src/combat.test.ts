@@ -138,6 +138,27 @@ describe('combat engine', () => {
     expect(first.log.some((entry) => entry.kind === 'telegraph' && entry.message.includes('Bote'))).toBe(true)
   })
 
+  it('starts a fight from persisted expedition resources instead of refilling Vida', () => {
+    const result = simulateCombat(
+      createSave(),
+      catalog,
+      roadWolf.id,
+      4242,
+      180,
+      {
+        health: 120,
+        maxHealth: 160,
+        mana: 20,
+        maxMana: 80,
+        stamina: 30,
+        maxStamina: 100,
+      },
+    )
+
+    expect(result.player.maxHealth).toBe(160)
+    expect(result.player.health).toBeLessThanOrEqual(120)
+  })
+
   it('resolves the first fight and grants the wolf XP only on victory', () => {
     const save = createSave()
     const result = simulateCombat(save, catalog, roadWolf.id, 42)
