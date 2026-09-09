@@ -1,4 +1,5 @@
 import type {
+  CharacterClassId,
   CombatAbilityDefinition,
   CombatConsumableDefinition,
   EnemyDefinition,
@@ -78,12 +79,117 @@ export const COMBAT_ABILITIES = [
     },
   },
   {
+    id: 'ability.calculated-attack',
+    name: 'Ataque Calculado',
+    profile: 'aggressive',
+    cooldownSeconds: 4.5,
+    resource: 'stamina',
+    resourceCost: 16,
+    damage: {
+      kind: 'weapon-multiplier',
+      multiplier: 1.2,
+      damageType: 'pierce',
+      accuracyBonusPercentagePoints: 10,
+    },
+  },
+  {
+    id: 'ability.arcane-spark',
+    name: 'Faísca Arcana',
+    profile: 'aggressive',
+    cooldownSeconds: 4,
+    resource: 'mana',
+    resourceCost: 16,
+    damage: {
+      kind: 'base-scaling',
+      basePower: 17,
+      damageType: 'arcane',
+      scaling: { intelligence: 'B' },
+    },
+  },
+  {
+    id: 'ability.faith-barrier',
+    name: 'Barreira de Fé',
+    profile: 'defensive',
+    cooldownSeconds: 10,
+    resource: 'mana',
+    resourceCost: 24,
+    damageReductionBuff: {
+      multiplier: 0.7,
+      durationSeconds: 4,
+    },
+  },
+  {
+    id: 'ability.retreat',
+    name: 'Recuo',
+    profile: 'defensive',
+    cooldownSeconds: 10,
+    evasionBuff: {
+      bonus: 60,
+      durationSeconds: 4,
+    },
+  },
+  {
+    id: 'ability.combat-breath',
+    name: 'Fôlego de Combate',
+    profile: 'defensive',
+    cooldownSeconds: 12,
+    restore: { stamina: 24 },
+  },
+  {
     id: 'ability.instinctive-guard',
     name: 'Guarda Instintiva',
     profile: 'defensive',
     cooldownSeconds: 14,
+    damageReductionBuff: {
+      multiplier: 0.5,
+      durationSeconds: 6,
+      consumeOnDirectHit: true,
+    },
   },
 ] as const satisfies readonly CombatAbilityDefinition[]
+
+export const PRE_DUNGEON_LOADOUTS: Record<CharacterClassId, readonly string[]> = {
+  warrior: [
+    'ability.strength-strike',
+    'ability.calculated-attack',
+    'ability.retreat',
+    'ability.combat-breath',
+  ],
+  mage: [
+    'ability.arcane-pulse',
+    'ability.arcane-spark',
+    'ability.retreat',
+    'ability.combat-breath',
+  ],
+  hunter: [
+    'ability.precise-shot',
+    'ability.calculated-attack',
+    'ability.retreat',
+    'ability.combat-breath',
+  ],
+  acolyte: [
+    'ability.restoring-prayer',
+    'ability.faith-barrier',
+    'ability.calculated-attack',
+    'ability.retreat',
+  ],
+  rogue: [
+    'ability.opportunistic-strike',
+    'ability.calculated-attack',
+    'ability.retreat',
+    'ability.combat-breath',
+  ],
+  wanderer: [
+    'ability.opening',
+    'ability.calculated-attack',
+    'ability.retreat',
+    'ability.combat-breath',
+  ],
+}
+
+export function getPreDungeonAbilityLoadout(classId: CharacterClassId) {
+  return PRE_DUNGEON_LOADOUTS[classId]
+}
 
 export const COMBAT_CONSUMABLES = [
   {
