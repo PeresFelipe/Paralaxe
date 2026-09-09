@@ -247,12 +247,13 @@ export function processCraftingProgress(
   }
 
   if (recipe.output.kind === 'equipment' && completedActions > 0) {
+    const equipmentDefinitionId = recipe.output.definitionId
     const created = Array.from({ length: completedActions }, () => {
       const instanceId = `eq-${nextEquipmentSequence}`
       nextEquipmentSequence += 1
       return {
         instanceId,
-        definitionId: recipe.output.definitionId,
+        definitionId: equipmentDefinitionId,
         upgradeLevel: 0 as const,
       }
     })
