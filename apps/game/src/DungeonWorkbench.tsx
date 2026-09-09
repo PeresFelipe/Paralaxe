@@ -39,6 +39,8 @@ const roomCopy: Record<string, string> = {
   'room.tromghiallach': 'A massa de Tromghiallach ocupa o salão como uma muralha viva.',
   'room.arsenal': 'O arsenal abandonado ainda guarda uma peça utilizável da antiga guarnição.',
   'room.register': 'O Registro de Suprimentos da Guarnição sobreviveu entre caixas partidas.',
+  'room.lower-hall': 'O salão inferior carrega sinais de evacuação e improviso defensivo.',
+  'room.rampart': 'Da muralha interna, a passagem para o coração do bastião fica evidente.',
   'room.passage': 'A arquitetura se estreita antes da passagem interna do bastião.',
   'room.cosantoir': 'Cosantóir guarda o acesso às câmaras finais.',
   'room.recovery': 'Uma capela silenciosa oferece a última oportunidade de se recompor ou retirar.',
@@ -64,7 +66,7 @@ export default function DungeonWorkbench() {
   )
 
   const run = selectedSave?.dungeon.activeRun ?? null
-  const currentRoom = run
+  const currentRoom: DungeonRoomDefinition | null = run
     ? DUN_LIATH_EASY.rooms.find((room) => room.id === run.currentRoomId) ?? null
     : null
   const roomResolved = Boolean(currentRoom && run?.resolvedRoomIds.includes(currentRoom.id))
@@ -83,15 +85,17 @@ export default function DungeonWorkbench() {
 
   async function handleStart() {
     if (!selectedSave || busy) return
-    if (!selectedSave.combat.wolfDefeated) {
-      setMessage('Conclua primeiro o Serviço — Estrada Baixa e derrote o Lobo de Estrada.')
-      return
-    }
 
     setBusy(true)
     try {
+      const latestSave = await saveRepository.get(selectedSave.saveId)
+      if (!latestSave) throw new Error('Save não encontrado.')
+      if (!latestSave.combat.wolfDefeated) {
+        throw new Error('Conclua primeiro o Serviço — Estrada Baixa e derrote o Lobo de Estrada.')
+      }
+
       const seed = Date.now() >>> 0
-      const save = startDungeon(selectedSave, DUN_LIATH_EASY, seed, new Date().toISOString())
+      const save = startDungeon(latestSave, DUN_LIATH_EASY, seed, new Date().toISOString())
       await persist(save)
       setCombatResult(null)
       setMessage(`Dún Liath iniciada · seed ${seed}. A rota e a Bolsa agora fazem parte do save.`)
@@ -271,7 +275,7 @@ export default function DungeonWorkbench() {
             {roomResolved && currentRoom.nextRoomIds.length > 0 ? (
               <div className="dungeon-paths">
                 {currentRoom.nextRoomIds.map((roomId) => {
-                  const room = DUN_LIATH_EASY.rooms.find((candidate) => candidate.id === roomId)
+                  const room: DungeonRoomDefinition | undefined = DUN_LIATH_EASY.rooms.find((candidate) => candidate.id === roomId)
                   return room ? (
                     <button className="choice-card" type="button" key={roomId} disabled={busy} onClick={() => void handlePath(roomId)}>
                       <span className="choice-title">{roomLabel(room)}</span>
