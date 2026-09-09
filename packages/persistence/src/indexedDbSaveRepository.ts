@@ -1,9 +1,24 @@
-import type { OfflineGameSave } from '@greywake/domain'
+import {
+  SAVE_SCHEMA_VERSION,
+  createInitialSkillProgress,
+  type OfflineGameSave,
+} from '@greywake/domain'
 import type { OfflineSaveRepository } from './saveRepository'
 
 const DATABASE_NAME = 'greywake'
 const DATABASE_VERSION = 1
 const SAVE_STORE = 'saves'
+
+interface LegacyOfflineGameSaveV1 {
+  saveId: string
+  saveMode: 'OFFLINE'
+  saveSchemaVersion: 1
+  contentVersion: string
+  createdAt: string
+  updatedAt: string
+  playtimeSeconds: number
+  character: OfflineGameSave['character']
+}
 
 function requestToPromise<T>(request: IDBRequest<T>) {
   return new Promise<T>((resolve, reject) => {
@@ -30,6 +45,31 @@ function transactionToPromise(transaction: IDBTransaction) {
       { once: true },
     )
   })
+}
+
+function migrateSave(rawSave: unknown): OfflineGameSave {
+  if (!rawSave || typeof rawSave !== 'object') {
+    throw new Error('Save local inválido.')
+  }
+
+  const candidate = rawSave as Record<string, unknown>
+
+  if (candidate.saveSchemaVersion === SAVE_SCHEMA_VERSION) {
+    return rawSave as OfflineGameSave
+  }
+
+  if (candidate.saveSchemaVersion === 1) {
+    const legacy = rawSave as LegacyOfflineGameSaveV1
+
+    return {
+      ...legacy,
+      saveSchemaVersion: SAVE_SCHEMA_VERSION,
+      skills: createInitialSkillProgress(),
+      idle: { activeActivity: null },
+    }
+  }
+
+  throw new Error(`Schema de save não suportado: ${String(candidate.saveSchemaVersion)}.`)
 }
 
 function openDatabase() {
@@ -70,10 +110,12 @@ export function createIndexedDbSaveRepository(): OfflineSaveRepository {
         const transaction = database.transaction(SAVE_STORE, 'readonly')
         const done = transactionToPromise(transaction)
         const request = transaction.objectStore(SAVE_STORE).getAll()
-        const saves = (await requestToPromise(request)) as OfflineGameSave[]
+        const rawSaves = await requestToPromise(request)
         await done
 
-        return saves.toSorted((a, b) => b.updatedAt.localeCompare(a.updatedAt))
+        return rawSaves
+          .map((save) => migrateSave(save))
+          .toSorted((a, b) => b.updatedAt.localeCompare(a.updatedAt))
       } finally {
         database.close()
       }
@@ -86,10 +128,10 @@ export function createIndexedDbSaveRepository(): OfflineSaveRepository {
         const transaction = database.transaction(SAVE_STORE, 'readonly')
         const done = transactionToPromise(transaction)
         const request = transaction.objectStore(SAVE_STORE).get(saveId)
-        const save = (await requestToPromise(request)) as OfflineGameSave | undefined
+        const rawSave = await requestToPromise(request)
         await done
 
-        return save ?? null
+        return rawSave === undefined ? null : migrateSave(rawSave)
       } finally {
         database.close()
       }
