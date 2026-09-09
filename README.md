@@ -12,15 +12,32 @@ O objetivo desta etapa é provar que os sistemas principais funcionam juntos em 
 
 A Build 0.1 não possui backend, conta Online, Cloud Save ou Mercado entre jogadores. A fundação é local e deve operar sem custo recorrente de infraestrutura.
 
-### Marco técnico atual
+### Marco atual
 
 ```text
-M6 — Build 0.1 validável
+M5.5 — UX Foundation
 ```
 
-Os marcos estruturais M0–M5 estão implementados: criação/carregamento de personagem, Idle offline, crafting/equipamento, combate seedable e o fluxo de Dún Liath — Fácil com `DungeonRun` persistível, rota irreversível de 16–17 salas, Bolsa de Expedição, attrition real entre encontros, retirada pré-Boss, evento Matar/Poupar e Fairtheoir em duas fases.
+O M6 — Build 0.1 validável está temporariamente pausado após um playtest manual revelar um problema de arquitetura de experiência: os sistemas foram implementados e validados incrementalmente através de workbenches técnicos, mas ainda não existe uma navegação de jogo coerente.
 
-A validação automatizada já roda no GitHub Actions com Node 22. `pnpm check` e `pnpm build` passam em runner real; o M6 agora concentra validação integrada de gameplay e fechamento das diferenças de fidelidade restantes.
+O M5.5 entra formalmente entre M5 e M6:
+
+```text
+M0 — Projeto abre                         ✅
+M1 — Criar e carregar personagem          ✅
+M2 — Idle persiste e funciona offline     ✅
+M3 — Crafting e equipamento               ✅
+M4 — Primeiro combate completo            ✅
+M5 — Dún Liath completa                   ✅
+M5.5 — UX Foundation                      🟡
+M6 — Build 0.1 validável                  ⏸
+```
+
+O objetivo do M5.5 é transformar os sistemas existentes em uma experiência navegável: `GameShell`, menu, Cidade Livre como contexto central, atividade Idle persistente durante navegação, telas focadas de combate/Dungeon e estratégia explícita para desktop/mobile.
+
+Documento de trabalho:
+
+[`docs/implementation/M5.5-UX-FOUNDATION.md`](docs/implementation/M5.5-UX-FOUNDATION.md)
 
 ## Stack da Build 0.1
 
@@ -31,7 +48,7 @@ A validação automatizada já roda no GitHub Actions com Node 22. `pnpm check` 
 - **IndexedDB** — persistência local do save;
 - **pnpm workspaces** — organização do monorepo;
 - **Oxlint** — lint da base TypeScript/React;
-- **Vitest** — testes automatizados do domínio;
+- **Vitest** — testes automatizados;
 - **GitHub Actions** — CI de lint, typecheck, testes e build.
 
 O domínio do jogo permanece independente da UI e da implementação concreta de persistência.
@@ -65,6 +82,7 @@ O mesmo fluxo é executado automaticamente em `.github/workflows/validate.yml`.
 |---|---|
 | [`docs/GDD.md`](docs/GDD.md) | Especificação canônica do jogo e requisitos arquiteturais permanentes |
 | [`docs/builds/0.1-validation-plan.md`](docs/builds/0.1-validation-plan.md) | Escopo, stack, valores provisórios, implementação e validação da Build 0.1 |
+| [`docs/implementation/M5.5-UX-FOUNDATION.md`](docs/implementation/M5.5-UX-FOUNDATION.md) | Arquitetura de experiência, navegação e critérios do marco M5.5 |
 | [`docs/implementation/CURRENT-STATUS.md`](docs/implementation/CURRENT-STATUS.md) | Ponto curto de retomada da implementação |
 
 ## Estrutura inicial
@@ -86,10 +104,9 @@ O mesmo fluxo é executado automaticamente em `.github/workflows/validate.yml`.
     ├── builds/
     │   └── 0.1-validation-plan.md
     └── implementation/
+        ├── M5.5-UX-FOUNDATION.md
         └── CURRENT-STATUS.md
 ```
-
-Dentro de `packages/domain/`, os sistemas continuam separados por responsabilidade (`character`, `skills`, `inventory`, `equipment`, `combat`, `dungeon` etc.). O mesmo princípio vale para as subdivisões já preparadas nos demais packages.
 
 ## Princípios técnicos da Fase 1
 
