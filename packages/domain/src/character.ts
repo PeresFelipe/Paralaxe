@@ -1,3 +1,5 @@
+import { createInitialSkillProgress, type IdleState, type SkillProgressById } from './idle'
+
 export const ATTRIBUTE_KEYS = [
   'vitality',
   'mind',
@@ -102,7 +104,7 @@ export interface CharacterState {
   currentLocationId: string
 }
 
-export const SAVE_SCHEMA_VERSION = 1 as const
+export const SAVE_SCHEMA_VERSION = 2 as const
 
 export interface OfflineGameSave {
   saveId: string
@@ -113,6 +115,8 @@ export interface OfflineGameSave {
   updatedAt: string
   playtimeSeconds: number
   character: CharacterState
+  skills: SkillProgressById
+  idle: IdleState
 }
 
 export interface CreateOfflineGameSaveInput {
@@ -215,5 +219,7 @@ export function createOfflineGameSave(input: CreateOfflineGameSaveInput): Offlin
       activeAbilitySlots: [startingAbilityId, null, null, null],
       currentLocationId: 'free-city.tavern',
     },
+    skills: createInitialSkillProgress(),
+    idle: { activeActivity: null },
   }
 }
