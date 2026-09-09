@@ -20,6 +20,7 @@ export type EquippedItemIds = Partial<Record<EquipmentSlot, string>>
 
 export type EquipmentUpgradeLevel = 0 | 1
 export type EquipmentPrimaryStatKind = 'attack' | 'defense'
+export type EquipmentRarity = 'common' | 'uncommon' | 'rare'
 export type ScalingGrade = 'S' | 'A' | 'B' | 'C' | 'D' | 'E'
 export type DamageType = 'slash' | 'pierce' | 'impact' | 'fire' | 'ice' | 'arcane' | 'holy'
 
@@ -46,6 +47,8 @@ export interface EquipmentInstance {
   instanceId: string
   definitionId: string
   upgradeLevel: EquipmentUpgradeLevel
+  rarity?: EquipmentRarity
+  affixIds?: string[]
 }
 
 export interface StartingEquipmentState {
