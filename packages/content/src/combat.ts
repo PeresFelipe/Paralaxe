@@ -13,6 +13,7 @@ export const COMBAT_ABILITIES = [
     cooldownSeconds: 6,
     resource: 'stamina',
     resourceCost: 28,
+    canInterrupt: true,
     damage: { kind: 'weapon-multiplier', multiplier: 1.55, damageType: 'slash' },
   },
   {
@@ -22,6 +23,7 @@ export const COMBAT_ABILITIES = [
     cooldownSeconds: 5,
     resource: 'mana',
     resourceCost: 24,
+    canInterrupt: true,
     damage: {
       kind: 'base-scaling',
       basePower: 24,
@@ -36,6 +38,7 @@ export const COMBAT_ABILITIES = [
     cooldownSeconds: 6,
     resource: 'stamina',
     resourceCost: 24,
+    canInterrupt: true,
     damage: {
       kind: 'weapon-multiplier',
       multiplier: 1.5,
@@ -59,6 +62,7 @@ export const COMBAT_ABILITIES = [
     cooldownSeconds: 5,
     resource: 'stamina',
     resourceCost: 20,
+    canInterrupt: true,
     damage: {
       kind: 'weapon-multiplier',
       multiplier: 1.25,
@@ -71,6 +75,7 @@ export const COMBAT_ABILITIES = [
     name: 'Abertura',
     profile: 'aggressive',
     cooldownSeconds: 7,
+    canInterrupt: true,
     damage: {
       kind: 'weapon-multiplier',
       multiplier: 1.35,
@@ -85,6 +90,7 @@ export const COMBAT_ABILITIES = [
     cooldownSeconds: 4.5,
     resource: 'stamina',
     resourceCost: 16,
+    canInterrupt: true,
     damage: {
       kind: 'weapon-multiplier',
       multiplier: 1.2,
@@ -99,6 +105,7 @@ export const COMBAT_ABILITIES = [
     cooldownSeconds: 4,
     resource: 'mana',
     resourceCost: 16,
+    canInterrupt: true,
     damage: {
       kind: 'base-scaling',
       basePower: 17,
