@@ -1,4 +1,4 @@
-import type { CombatContentCatalog, CombatResult, CombatResources } from './combat'
+import type { CombatContentCatalog, CombatLogEntry, CombatResult, CombatResources } from './combat'
 import { applyCombatResult, simulateCombat } from './combat'
 import type { EquipmentInstance, EquipmentRarity } from './equipment'
 import type { OfflineGameSave } from './character'
@@ -123,6 +123,62 @@ function applyEncounterAttrition(resources: CombatResources, result: CombatResul
     health: Math.max(0, resources.health - healthSpent),
     mana: Math.max(0, resources.mana - manaSpent),
     stamina: Math.max(0, resources.stamina - staminaSpent),
+  }
+}
+
+function offsetLog(log: CombatLogEntry[], offset: number) {
+  return log.map((entry) => ({ ...entry, atSeconds: Number((entry.atSeconds + offset).toFixed(3)) }))
+}
+
+function simulateFairtheoirEncounter(
+  save: OfflineGameSave,
+  catalog: CombatContentCatalog,
+  seed: number,
+): CombatResult {
+  const phase1 = simulateCombat(save, catalog, 'enemy.fairtheoir-phase1', seed)
+  if (phase1.outcome !== 'victory') return phase1
+
+  const phase2Seed = (seed ^ 0x9e3779b9) >>> 0
+  const phase2 = simulateCombat(save, catalog, 'enemy.fairtheoir-phase2', phase2Seed)
+  const phaseTransitionAt = phase1.durationSeconds
+  const transition: CombatLogEntry = {
+    atSeconds: phaseTransitionAt,
+    actor: 'system',
+    kind: 'result',
+    message: 'Fairtheoir chega a 45% da Vida total. Fase 2 — Desespero.',
+  }
+
+  const phase1UsefulLog = phase1.log.filter((entry) => entry.kind !== 'result')
+  const combinedLog = [
+    ...phase1UsefulLog,
+    transition,
+    ...offsetLog(phase2.log, phaseTransitionAt),
+  ]
+  const damageTaken =
+    (phase1.player.maxHealth - phase1.player.health) +
+    (phase2.player.maxHealth - phase2.player.health)
+  const manaSpent =
+    (phase1.player.maxMana - phase1.player.mana) +
+    (phase2.player.maxMana - phase2.player.mana)
+  const staminaSpent =
+    (phase1.player.maxStamina - phase1.player.stamina) +
+    (phase2.player.maxStamina - phase2.player.stamina)
+
+  return {
+    outcome: phase2.outcome,
+    durationSeconds: Number((phase1.durationSeconds + phase2.durationSeconds).toFixed(3)),
+    player: {
+      health: Math.max(0, phase1.player.maxHealth - damageTaken),
+      maxHealth: phase1.player.maxHealth,
+      mana: Math.max(0, phase1.player.maxMana - manaSpent),
+      maxMana: phase1.player.maxMana,
+      stamina: Math.max(0, phase1.player.maxStamina - staminaSpent),
+      maxStamina: phase1.player.maxStamina,
+    },
+    enemyHealth: phase2.enemyHealth,
+    xpGranted: phase2.outcome === 'victory' ? 120 : 0,
+    log: combinedLog,
+    seed,
   }
 }
 
@@ -275,12 +331,12 @@ export function resolveDungeonRoom(
   let combatResult: CombatResult | undefined
 
   if (room.enemyDefinitionId) {
-    combatResult = simulateCombat(
-      save,
-      catalog,
-      room.enemyDefinitionId,
-      (run.seed + run.visitedRoomIds.length * 7919) >>> 0,
-    )
+    const encounterSeed = (run.seed + run.visitedRoomIds.length * 7919) >>> 0
+    const isFairtheoir = room.id === 'room.fairtheoir'
+    combatResult = isFairtheoir
+      ? simulateFairtheoirEncounter(save, catalog, encounterSeed)
+      : simulateCombat(save, catalog, room.enemyDefinitionId, encounterSeed)
+
     if (combatResult.outcome !== 'victory') {
       return { save: failDungeonRun(save, now), combatResult }
     }
@@ -290,7 +346,8 @@ export function resolveDungeonRoom(
       return { save: failDungeonRun(save, now), combatResult: { ...combatResult, outcome: 'defeat' } }
     }
 
-    nextSave = applyCombatResult(save, room.enemyDefinitionId, combatResult, now)
+    const appliedEnemyId = isFairtheoir ? 'enemy.fairtheoir-phase2' : room.enemyDefinitionId
+    nextSave = applyCombatResult(save, appliedEnemyId, combatResult, now)
     nextSave = {
       ...nextSave,
       character: { ...nextSave.character, currentLocationId: dungeon.id },
@@ -345,7 +402,7 @@ export function resolveDungeonRoom(
       }
     }
 
-    if (room.enemyDefinitionId === 'enemy.fairtheoir') {
+    if (isFairtheoir) {
       nextRun = {
         ...nextRun,
         expeditionBag: addStack(nextRun.expeditionBag, 'item.fairtheoir-fragment', 1),
