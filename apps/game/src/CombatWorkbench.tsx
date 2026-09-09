@@ -7,7 +7,7 @@ import {
   getEquipmentDefinition,
 } from '@greywake/content'
 import {
-  applyCombatResult,
+  applyRoadServiceCombatResult,
   configureCombatConsumableSlot,
   derivePlayerCombatStats,
   simulateCombat,
@@ -70,13 +70,16 @@ export default function CombatWorkbench() {
 
     setRunning(false)
     const now = new Date().toISOString()
-    const updated = applyCombatResult(selectedSave, 'enemy.road-wolf', result, now)
+    const firstServiceClear = result.outcome === 'victory' && !selectedSave.combat.wolfDefeated
+    const updated = applyRoadServiceCombatResult(selectedSave, result, now)
 
     void saveRepository.put(updated).then(() => {
       setSaves((current) => current.map((save) => (save.saveId === updated.saveId ? updated : save)))
       setMessage(
         result.outcome === 'victory'
-          ? `Vitória persistida: +${result.xpGranted} XP geral.`
+          ? firstServiceClear
+            ? `Serviço concluído: +${result.xpGranted + 25} XP geral e +40 moedas.`
+            : `Vitória persistida: +${result.xpGranted} XP geral.`
           : 'Resultado persistido. O personagem retornou à Cidade Livre.',
       )
     })
