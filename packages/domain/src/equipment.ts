@@ -1,4 +1,4 @@
-import type { OfflineGameSave } from './character'
+import type { AttributeKey, OfflineGameSave } from './character'
 
 export const EQUIPMENT_SLOTS = [
   'head',
@@ -20,10 +20,18 @@ export type EquippedItemIds = Partial<Record<EquipmentSlot, string>>
 
 export type EquipmentUpgradeLevel = 0 | 1
 export type EquipmentPrimaryStatKind = 'attack' | 'defense'
+export type ScalingGrade = 'S' | 'A' | 'B' | 'C' | 'D' | 'E'
+export type DamageType = 'slash' | 'pierce' | 'impact' | 'fire' | 'ice' | 'arcane' | 'holy'
 
 export interface EquipmentPrimaryStat {
   kind: EquipmentPrimaryStatKind
   value: number
+}
+
+export interface WeaponCombatProfile {
+  damageType: DamageType
+  actionIntervalSeconds: number
+  scaling: Partial<Record<AttributeKey, ScalingGrade>>
 }
 
 export interface EquipmentDefinition {
@@ -31,6 +39,7 @@ export interface EquipmentDefinition {
   name: string
   slot: EquipmentSlot
   primaryStat?: EquipmentPrimaryStat
+  weaponCombat?: WeaponCombatProfile
 }
 
 export interface EquipmentInstance {
