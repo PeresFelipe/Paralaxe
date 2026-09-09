@@ -40,9 +40,20 @@ function addItem(save: OfflineGameSave, definitionId: string, quantity: number) 
 }
 
 function prepareRoute(save: OfflineGameSave, route: RouteId) {
-  let prepared = teachAndEquipCombatAbilities(
-    save,
-    getPreDungeonAbilityLoadout(save.character.classId),
+  // O onboarding da Build 0.1 entrega exatamente 100 XP Geral antes do contrato,
+  // levando o personagem ao nível 2 com 1 ponto ainda não distribuído.
+  let prepared: OfflineGameSave = {
+    ...save,
+    character: {
+      ...save.character,
+      level: 2,
+      xp: 100,
+      unspentAttributePoints: 1,
+    },
+  }
+  prepared = teachAndEquipCombatAbilities(
+    prepared,
+    getPreDungeonAbilityLoadout(prepared.character.classId),
     '2026-09-09T12:00:59.000Z',
   )
   prepared = acceptDunLiathContract(prepared, '2026-09-09T12:01:00.000Z')
@@ -162,7 +173,6 @@ function completesReferenceRoute(save: OfflineGameSave, seedBase: number) {
   if (guardian.result.outcome !== 'victory') return false
   current = guardian.save
 
-  // Sala de recuperação: recursos cheios + 3 Preparados de Campo.
   current = addItem(current, 'item.consumable.field-preparation', 3)
   resources = fullResources(current)
 
