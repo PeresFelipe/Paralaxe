@@ -177,14 +177,13 @@ function calculateHitChance(accuracy: number, evasion: number, bonusPercentagePo
 }
 
 function getEquippedDefinitions(save: OfflineGameSave, catalog: CombatEquipmentCatalog) {
-  return Object.values(save.character.equipment)
-    .map((instanceId) => save.character.equipmentItems.find((item) => item.instanceId === instanceId))
-    .filter((instance) => instance !== undefined)
-    .map((instance) => ({
-      instance,
-      definition: catalog.getEquipmentDefinition(instance.definitionId),
-    }))
-    .filter((entry) => entry.definition !== null)
+  return Object.values(save.character.equipment).flatMap((instanceId) => {
+    const instance = save.character.equipmentItems.find((item) => item.instanceId === instanceId)
+    if (!instance) return []
+
+    const definition = catalog.getEquipmentDefinition(instance.definitionId)
+    return definition ? [{ instance, definition }] : []
+  })
 }
 
 export function derivePlayerCombatStats(
