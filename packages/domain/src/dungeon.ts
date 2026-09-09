@@ -138,18 +138,6 @@ function initialResources(save: OfflineGameSave): CombatResources {
   }
 }
 
-function applyEncounterAttrition(resources: CombatResources, result: CombatResult): CombatResources {
-  return {
-    ...resources,
-    health: Math.max(0, resources.health - (result.player.maxHealth - result.player.health)),
-    mana: Math.max(0, resources.mana - Math.max(0, result.player.maxMana - result.player.mana)),
-    stamina: Math.max(
-      0,
-      resources.stamina - Math.max(0, result.player.maxStamina - result.player.stamina),
-    ),
-  }
-}
-
 function offsetLog(log: CombatLogEntry[], offset: number) {
   return log.map((entry) => ({
     ...entry,
@@ -161,33 +149,32 @@ function simulateFairtheoirEncounter(
   save: OfflineGameSave,
   catalog: CombatContentCatalog,
   seed: number,
+  startingResources: CombatResources,
 ): CombatResult {
-  const phase1 = simulateCombat(save, catalog, 'enemy.fairtheoir-phase1', seed)
+  const phase1 = simulateCombat(
+    save,
+    catalog,
+    'enemy.fairtheoir-phase1',
+    seed,
+    180,
+    startingResources,
+  )
   if (phase1.outcome !== 'victory') return phase1
 
-  const phase2 = simulateCombat(save, catalog, 'enemy.fairtheoir-phase2', (seed ^ 0x9e3779b9) >>> 0)
+  const phase2 = simulateCombat(
+    save,
+    catalog,
+    'enemy.fairtheoir-phase2',
+    (seed ^ 0x9e3779b9) >>> 0,
+    180,
+    phase1.player,
+  )
   const phaseTransitionAt = phase1.durationSeconds
-  const damageTaken =
-    phase1.player.maxHealth - phase1.player.health +
-    (phase2.player.maxHealth - phase2.player.health)
-  const manaSpent =
-    phase1.player.maxMana - phase1.player.mana +
-    (phase2.player.maxMana - phase2.player.mana)
-  const staminaSpent =
-    phase1.player.maxStamina - phase1.player.stamina +
-    (phase2.player.maxStamina - phase2.player.stamina)
 
   return {
     outcome: phase2.outcome,
     durationSeconds: Number((phase1.durationSeconds + phase2.durationSeconds).toFixed(3)),
-    player: {
-      health: Math.max(0, phase1.player.maxHealth - damageTaken),
-      maxHealth: phase1.player.maxHealth,
-      mana: Math.max(0, phase1.player.maxMana - manaSpent),
-      maxMana: phase1.player.maxMana,
-      stamina: Math.max(0, phase1.player.maxStamina - staminaSpent),
-      maxStamina: phase1.player.maxStamina,
-    },
+    player: phase2.player,
     enemyHealth: phase2.enemyHealth,
     xpGranted: phase2.outcome === 'victory' ? 120 : 0,
     seed,
@@ -355,20 +342,18 @@ function resolveCombatRoom(
   const encounterSeed = (run.seed + run.visitedRoomIds.length * 7919) >>> 0
   const isFairtheoir = room.id === 'room.fairtheoir'
   const combatResult = isFairtheoir
-    ? simulateFairtheoirEncounter(save, catalog, encounterSeed)
-    : simulateCombat(save, catalog, room.enemyDefinitionId, encounterSeed)
+    ? simulateFairtheoirEncounter(save, catalog, encounterSeed, run.resources)
+    : simulateCombat(
+        save,
+        catalog,
+        room.enemyDefinitionId,
+        encounterSeed,
+        180,
+        run.resources,
+      )
 
   if (combatResult.outcome !== 'victory') {
     return { save: failDungeonRun(save, now), run, combatResult }
-  }
-
-  const resources = applyEncounterAttrition(run.resources, combatResult)
-  if (resources.health <= 0) {
-    return {
-      save: failDungeonRun(save, now),
-      run,
-      combatResult: { ...combatResult, outcome: 'defeat' },
-    }
   }
 
   const appliedEnemyId = isFairtheoir ? 'enemy.fairtheoir-phase2' : room.enemyDefinitionId
@@ -380,7 +365,7 @@ function resolveCombatRoom(
 
   let nextRun: DungeonRun = {
     ...(nextSave.dungeon.activeRun ?? run),
-    resources,
+    resources: combatResult.player,
   }
 
   if (room.enemyDefinitionId === 'enemy.crubach' && random() < 0.35) {
