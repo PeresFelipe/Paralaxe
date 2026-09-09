@@ -50,7 +50,24 @@ function addItem(save: OfflineGameSave, definitionId: string, quantity: number) 
   return { ...save, character: { ...save.character, inventory } }
 }
 
+function addAndEquip(save: OfflineGameSave, definitionId: string, slot: 'gloves' | 'boots') {
+  const instanceId = `eq-${save.character.nextEquipmentSequence}`
+  return {
+    ...save,
+    character: {
+      ...save.character,
+      equipmentItems: [
+        ...save.character.equipmentItems,
+        { instanceId, definitionId, upgradeLevel: 0 as const },
+      ],
+      nextEquipmentSequence: save.character.nextEquipmentSequence + 1,
+      equipment: { ...save.character.equipment, [slot]: instanceId },
+    },
+  }
+}
+
 function prepareRoute(save: OfflineGameSave, route: RouteId) {
+  // Estado previsto após a coleta, primeira produção, Lobo e Serviço — Estrada Baixa.
   let prepared: OfflineGameSave = {
     ...save,
     character: {
@@ -58,13 +75,31 @@ function prepareRoute(save: OfflineGameSave, route: RouteId) {
       level: 2,
       xp: 100,
       unspentAttributePoints: 1,
+      gold: save.character.gold + 40,
     },
   }
+
   prepared = teachAndEquipCombatAbilities(
     prepared,
     getPreDungeonAbilityLoadout(prepared.character.classId),
     '2026-09-09T12:00:59.000Z',
   )
+
+  // O Mercado vende Luvas Simples e Botas Simples por 20 moedas cada.
+  // Lenhador já converge para Braçadeiras de Giúis, então compra apenas as botas.
+  prepared = addAndEquip(prepared, 'armor.simple-boots', 'boots')
+  prepared = {
+    ...prepared,
+    character: { ...prepared.character, gold: prepared.character.gold - 20 },
+  }
+  if (route !== 'woodcutting') {
+    prepared = addAndEquip(prepared, 'armor.simple-gloves', 'gloves')
+    prepared = {
+      ...prepared,
+      character: { ...prepared.character, gold: prepared.character.gold - 20 },
+    }
+  }
+
   prepared = acceptDunLiathContract(prepared, '2026-09-09T12:01:00.000Z')
 
   if (route === 'mining') {
@@ -81,19 +116,7 @@ function prepareRoute(save: OfflineGameSave, route: RouteId) {
   }
 
   if (route === 'woodcutting') {
-    const instanceId = `eq-${prepared.character.nextEquipmentSequence}`
-    prepared = {
-      ...prepared,
-      character: {
-        ...prepared.character,
-        equipmentItems: [
-          ...prepared.character.equipmentItems,
-          { instanceId, definitionId: 'armor.giuis-bracers', upgradeLevel: 0 as const },
-        ],
-        nextEquipmentSequence: prepared.character.nextEquipmentSequence + 1,
-        equipment: { ...prepared.character.equipment, gloves: instanceId },
-      },
-    }
+    prepared = addAndEquip(prepared, 'armor.giuis-bracers', 'gloves')
   }
 
   if (route === 'fishing') {
