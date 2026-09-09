@@ -2,11 +2,13 @@ import { useEffect, useMemo, useState } from 'react'
 import {
   DUN_LIATH_EASY,
   getCombatAbilityDefinition,
+  getCombatConsumableDefinition,
   getDungeonDefinition,
   getEnemyDefinition,
   getEquipmentDefinition,
 } from '@greywake/content'
 import {
+  acceptDunLiathContract,
   chooseDungeonPath,
   decideProtector,
   extractDungeonRun,
@@ -24,6 +26,7 @@ const dungeonCatalog = {
   getEquipmentDefinition,
   getAbilityDefinition: getCombatAbilityDefinition,
   getEnemyDefinition,
+  getConsumableDefinition: getCombatConsumableDefinition,
   getDungeonDefinition,
 }
 
@@ -83,22 +86,38 @@ export default function DungeonWorkbench() {
     setSaves((current) => current.map((item) => (item.saveId === save.saveId ? save : item)))
   }
 
+  async function handleAcceptContract() {
+    if (!selectedSave || busy) return
+    setBusy(true)
+    try {
+      const latest = await saveRepository.get(selectedSave.saveId)
+      if (!latest) throw new Error('Save não encontrado.')
+      if (!latest.combat.wolfDefeated) {
+        throw new Error('Conclua primeiro o Serviço — Estrada Baixa.')
+      }
+      const save = acceptDunLiathContract(latest, new Date().toISOString())
+      await persist(save)
+      setMessage('Contrato aceito. Brann entrega 2× Preparado de Campo; essa entrega acontece uma única vez.')
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : 'Não foi possível aceitar o contrato.')
+    } finally {
+      setBusy(false)
+    }
+  }
+
   async function handleStart() {
     if (!selectedSave || busy) return
-
     setBusy(true)
     try {
       const latestSave = await saveRepository.get(selectedSave.saveId)
       if (!latestSave) throw new Error('Save não encontrado.')
-      if (!latestSave.combat.wolfDefeated) {
-        throw new Error('Conclua primeiro o Serviço — Estrada Baixa e derrote o Lobo de Estrada.')
-      }
+      if (!latestSave.combat.wolfDefeated) throw new Error('Derrote primeiro o Lobo de Estrada.')
 
       const seed = Date.now() >>> 0
       const save = startDungeon(latestSave, DUN_LIATH_EASY, seed, new Date().toISOString())
       await persist(save)
       setCombatResult(null)
-      setMessage(`Dún Liath iniciada · seed ${seed}. A rota e a Bolsa agora fazem parte do save.`)
+      setMessage(`Dún Liath iniciada · seed ${seed}. A run permanecerá no save mesmo após fechar o jogo.`)
     } catch (error) {
       setMessage(error instanceof Error ? error.message : 'Não foi possível iniciar Dún Liath.')
     } finally {
@@ -110,20 +129,15 @@ export default function DungeonWorkbench() {
     if (!selectedSave || !run || !currentRoom || busy) return
     setBusy(true)
     try {
-      const result = resolveDungeonRoom(
-        selectedSave,
-        DUN_LIATH_EASY,
-        dungeonCatalog,
-        new Date().toISOString(),
-      )
+      const result = resolveDungeonRoom(selectedSave, DUN_LIATH_EASY, dungeonCatalog, new Date().toISOString())
       await persist(result.save)
       setCombatResult(result.combatResult ?? null)
       if (!result.save.dungeon.activeRun) {
-        setMessage('A expedição terminou em derrota. A Bolsa de Expedição foi perdida.')
+        setMessage('A expedição terminou em derrota. A Bolsa foi perdida e consumíveis usados continuam consumidos.')
       } else if (currentRoom.id === 'room.fairtheoir' && result.combatResult?.outcome === 'victory') {
-        setMessage('Fairtheoir caiu. O Fragmento foi colocado na Bolsa; retorne à Cidade Livre para assegurar o clear.')
+        setMessage('Fairtheoir caiu. Retorne à Cidade Livre para assegurar o clear e o loot.')
       } else if (result.combatResult) {
-        setMessage(`${currentRoom.name} resolvida · ${result.combatResult.xpGranted} XP geral · desgaste persistido.`)
+        setMessage(`${currentRoom.name} resolvida · ${result.combatResult.xpGranted} XP · recursos e consumíveis persistidos.`)
       } else {
         setMessage(`${currentRoom.name} resolvida.`)
       }
@@ -138,15 +152,10 @@ export default function DungeonWorkbench() {
     if (!selectedSave || busy) return
     setBusy(true)
     try {
-      const save = chooseDungeonPath(
-        selectedSave,
-        DUN_LIATH_EASY,
-        nextRoomId,
-        new Date().toISOString(),
-      )
+      const save = chooseDungeonPath(selectedSave, DUN_LIATH_EASY, nextRoomId, new Date().toISOString())
       await persist(save)
       setCombatResult(null)
-      setMessage('O caminho foi escolhido. Não há retorno para a bifurcação anterior.')
+      setMessage('Caminho escolhido. A bifurcação anterior não pode ser refeita nesta run.')
     } catch (error) {
       setMessage(error instanceof Error ? error.message : 'Não foi possível seguir por esse caminho.')
     } finally {
@@ -178,8 +187,8 @@ export default function DungeonWorkbench() {
       setCombatResult(null)
       setMessage(
         wasComplete
-          ? 'Primeiro clear assegurado. Loot transferido, contrato processado e Guarda Instintiva registrada quando aplicável.'
-          : 'Retirada segura concluída. A Bolsa foi transferida, mas Fairtheoir permanece e o contrato continua aberto.',
+          ? 'Clear assegurado. Loot transferido, contrato processado e Guarda Instintiva registrada no primeiro clear.'
+          : 'Retirada segura concluída. A Bolsa foi transferida; o contrato permanece aberto até o clear.',
       )
     } catch (error) {
       setMessage(error instanceof Error ? error.message : 'Não foi possível retirar da Dungeon.')
@@ -194,27 +203,15 @@ export default function DungeonWorkbench() {
     <section className="dungeon-workbench" aria-labelledby="dungeon-title">
       <div className="dungeon-workbench__header">
         <div>
-          <p className="section-kicker">M5 · Dungeon</p>
+          <p className="section-kicker">M6 · Dungeon integrada</p>
           <h2 id="dungeon-title">Dún Liath — Fácil</h2>
-          <p className="muted">Run persistível · rota irreversível · loot em risco · retirada pré-Boss</p>
+          <p className="muted">Run persistível · attrition real · consumíveis · retirada pré-Boss</p>
         </div>
 
         <label className="combat-save-select">
           <span>Personagem</span>
-          <select
-            value={selectedSaveId}
-            disabled={busy}
-            onChange={(event) => {
-              setSelectedSaveId(event.target.value)
-              setMessage(null)
-              setCombatResult(null)
-            }}
-          >
-            {saves.map((save) => (
-              <option key={save.saveId} value={save.saveId}>
-                {save.character.name} · Nv. {save.character.level}
-              </option>
-            ))}
+          <select value={selectedSaveId} disabled={busy} onChange={(event) => { setSelectedSaveId(event.target.value); setMessage(null); setCombatResult(null) }}>
+            {saves.map((save) => <option key={save.saveId} value={save.saveId}>{save.character.name} · Nv. {save.character.level}</option>)}
           </select>
         </label>
       </div>
@@ -225,14 +222,14 @@ export default function DungeonWorkbench() {
         <div className="dungeon-start-card panel">
           <div>
             <p className="section-kicker">Contrato — Fortaleza Cinzenta</p>
-            <h3>{selectedSave.dungeon.dunLiathEasyCleared ? 'Retornar a Dún Liath' : 'Iniciar primeira expedição'}</h3>
-            <p className="muted">
-              O contrato exige o Registro de Suprimentos, neutralizar a presença hostil e retornar. O primeiro clear concede Guarda Instintiva.
-            </p>
+            <h3>{selectedSave.dungeon.dunLiathEasyCleared ? 'Retornar a Dún Liath' : selectedSave.dungeon.contractAccepted ? 'Contrato aceito' : 'Brann tem um contrato'}</h3>
+            <p className="muted">Recupere o Registro de Suprimentos, atravesse a fortaleza e decida se arrisca a Bolsa contra Fairtheoir.</p>
           </div>
-          <button className="primary-button compact" type="button" disabled={busy} onClick={() => void handleStart()}>
-            Entrar em Dún Liath
-          </button>
+          {!selectedSave.dungeon.contractAccepted && !selectedSave.dungeon.contractCompleted ? (
+            <button className="primary-button compact" type="button" disabled={busy} onClick={() => void handleAcceptContract()}>Aceitar contrato · receber 2 Preparados</button>
+          ) : (
+            <button className="primary-button compact" type="button" disabled={busy} onClick={() => void handleStart()}>Entrar em Dún Liath</button>
+          )}
         </div>
       ) : null}
 
@@ -250,19 +247,13 @@ export default function DungeonWorkbench() {
             </div>
 
             <div className="dungeon-room-meta">
-              <span>{currentRoom.kind}</span>
-              <span>{run.visitedRoomIds.length} sala(s) visitadas</span>
-              <span>seed {run.seed}</span>
+              <span>{currentRoom.kind}</span><span>{run.visitedRoomIds.length} sala(s)</span><span>seed {run.seed}</span>
             </div>
 
             {currentRoom.id === 'room.protector' && !run.protectorDecision ? (
               <div className="protector-choice">
-                <button className="ghost-button" type="button" disabled={busy} onClick={() => void handleProtector('killed')}>
-                  Matar
-                </button>
-                <button className="ghost-button" type="button" disabled={busy} onClick={() => void handleProtector('spared')}>
-                  Poupar
-                </button>
+                <button className="ghost-button" type="button" disabled={busy} onClick={() => void handleProtector('killed')}>Matar</button>
+                <button className="ghost-button" type="button" disabled={busy} onClick={() => void handleProtector('spared')}>Poupar</button>
               </div>
             ) : null}
 
@@ -276,17 +267,12 @@ export default function DungeonWorkbench() {
               <div className="dungeon-paths">
                 {currentRoom.nextRoomIds.map((roomId) => {
                   const room: DungeonRoomDefinition | undefined = DUN_LIATH_EASY.rooms.find((candidate) => candidate.id === roomId)
-                  return room ? (
-                    <button className="choice-card" type="button" key={roomId} disabled={busy} onClick={() => void handlePath(roomId)}>
-                      <span className="choice-title">{roomLabel(room)}</span>
-                      <span className="muted">Seguir adiante</span>
-                    </button>
-                  ) : null
+                  return room ? <button className="choice-card" type="button" key={roomId} disabled={busy} onClick={() => void handlePath(roomId)}><span className="choice-title">{roomLabel(room)}</span><span className="muted">Seguir adiante</span></button> : null
                 })}
               </div>
             ) : null}
 
-            {(run.safeExtractionAvailable || run.completed) ? (
+            {run.safeExtractionAvailable || run.completed ? (
               <button className="ghost-button dungeon-extract" type="button" disabled={busy} onClick={() => void handleExtract()}>
                 {run.completed ? 'Retornar à Cidade Livre e assegurar clear' : 'Retirar em segurança com a Bolsa'}
               </button>
@@ -296,26 +282,10 @@ export default function DungeonWorkbench() {
           <aside className="panel dungeon-bag-panel">
             <p className="section-kicker">Bolsa de Expedição · em risco</p>
             <h3>Loot da run</h3>
-            {run.expeditionBag.length === 0 && run.expeditionEquipment.length === 0 ? (
-              <p className="muted">Nada assegurado nesta expedição ainda.</p>
-            ) : null}
-            {run.expeditionBag.map((stack) => (
-              <div className="dungeon-loot-row" key={stack.definitionId}>
-                <span>{stack.definitionId}</span><strong>×{stack.quantity}</strong>
-              </div>
-            ))}
-            {run.expeditionEquipment.map((item, index) => (
-              <div className="dungeon-loot-row" key={`${item.definitionId}-${index}`}>
-                <span>{item.definitionId}</span><strong>{item.rarity} · {item.affixIds.length} afixo(s)</strong>
-              </div>
-            ))}
-
-            <div className="milestone-note">
-              <span>Estados críticos</span>
-              <strong>
-                Tratado {run.treatyFragmentRecovered ? '✓' : '—'} · Registro {run.supplyRegisterRecovered ? '✓' : '—'} · Protetor {run.protectorDecision ?? '—'}
-              </strong>
-            </div>
+            {run.expeditionBag.length === 0 && run.expeditionEquipment.length === 0 ? <p className="muted">Nada assegurado nesta expedição ainda.</p> : null}
+            {run.expeditionBag.map((stack) => <div className="dungeon-loot-row" key={stack.definitionId}><span>{stack.definitionId}</span><strong>×{stack.quantity}</strong></div>)}
+            {run.expeditionEquipment.map((item, index) => <div className="dungeon-loot-row" key={`${item.definitionId}-${index}`}><span>{item.definitionId}</span><strong>{item.rarity} · {item.affixIds.length} afixo(s)</strong></div>)}
+            <div className="milestone-note"><span>Estados críticos</span><strong>Tratado {run.treatyFragmentRecovered ? '✓' : '—'} · Registro {run.supplyRegisterRecovered ? '✓' : '—'} · Protetor {run.protectorDecision ?? '—'}</strong></div>
           </aside>
         </div>
       ) : null}
@@ -324,13 +294,9 @@ export default function DungeonWorkbench() {
         <article className="panel dungeon-combat-result">
           <p className="section-kicker">Último encontro</p>
           <h3>{combatResult.outcome === 'victory' ? 'Vitória' : 'Expedição encerrada'}</h3>
-          <p className="muted">{combatResult.durationSeconds.toFixed(1)}s · +{combatResult.xpGranted} XP geral · seed {combatResult.seed}</p>
+          <p className="muted">{combatResult.durationSeconds.toFixed(1)}s · +{combatResult.xpGranted} XP · {combatResult.consumedItems.reduce((sum, item) => sum + item.quantity, 0)} consumível(is) usado(s) · seed {combatResult.seed}</p>
           <div className="combat-log compact-log">
-            {combatResult.log.slice(-8).map((entry, index) => (
-              <div className={`combat-log__entry ${entry.kind}`} key={`${entry.atSeconds}-${index}`}>
-                <time>{entry.atSeconds.toFixed(1)}s</time><span>{entry.message}</span>
-              </div>
-            ))}
+            {combatResult.log.slice(-10).map((entry, index) => <div className={`combat-log__entry ${entry.kind}`} key={`${entry.atSeconds}-${index}`}><time>{entry.atSeconds.toFixed(1)}s</time><span>{entry.message}</span></div>)}
           </div>
         </article>
       ) : null}
