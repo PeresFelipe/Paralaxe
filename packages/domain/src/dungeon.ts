@@ -170,8 +170,16 @@ function simulateFairtheoirEncounter(
   )
   if (phase1.outcome !== 'victory') return phase1
 
-  const phase2 = simulateCombat(
+  // A Fase 2 precisa enxergar o estoque já reduzido pela Fase 1, mas esse estado é
+  // transitório: o resultado combinado será aplicado ao save real apenas uma vez.
+  const phase2InputSave = applyCombatResult(
     save,
+    'enemy.fairtheoir-phase1',
+    phase1,
+    save.updatedAt,
+  )
+  const phase2 = simulateCombat(
+    phase2InputSave,
     catalog,
     'enemy.fairtheoir-phase2',
     (seed ^ 0x9e3779b9) >>> 0,
