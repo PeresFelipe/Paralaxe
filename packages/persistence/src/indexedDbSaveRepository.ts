@@ -56,7 +56,7 @@ interface LegacyOfflineGameSaveV3
 }
 
 interface LegacyOfflineGameSaveV4
-  extends Omit<OfflineGameSave, 'saveSchemaVersion' | 'dungeon'> {
+  extends Omit<OfflineGameSave, 'saveSchemaVersion' | 'combat' | 'dungeon'> {
   saveSchemaVersion: 4
   combat: Omit<CombatState, 'preferences'> & {
     preferences: Omit<CombatState['preferences'], 'consumableSlots'>
