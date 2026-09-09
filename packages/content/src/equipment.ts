@@ -15,6 +15,8 @@ export const EQUIPMENT_DEFINITIONS = [
   { id: 'armor.light-outfit', name: 'Traje Leve', slot: 'chest', primaryStat: { kind: 'defense', value: 9 } },
   { id: 'weapon.travel-spear', name: 'Lança de Viagem', slot: 'mainHand', primaryStat: { kind: 'attack', value: 13 }, weaponCombat: { damageType: 'pierce', actionIntervalSeconds: 2.1, scaling: { strength: 'B', dexterity: 'C' } } },
   { id: 'armor.travel-protection', name: 'Proteção de Viagem', slot: 'chest', primaryStat: { kind: 'defense', value: 12 } },
+  { id: 'armor.simple-gloves', name: 'Luvas Simples', slot: 'gloves', primaryStat: { kind: 'defense', value: 4 } },
+  { id: 'armor.simple-boots', name: 'Botas Simples', slot: 'boots', primaryStat: { kind: 'defense', value: 4 } },
   { id: 'armor.giuis-bracers', name: 'Braçadeiras de Giúis', slot: 'gloves', primaryStat: { kind: 'defense', value: 6 } },
   { id: 'item.equipment.traveller-ring', name: 'Anel do Viajante', slot: 'ring1' },
 
