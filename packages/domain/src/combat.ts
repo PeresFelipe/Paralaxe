@@ -227,6 +227,31 @@ export function derivePlayerCombatStats(
   }
 }
 
+function initialCombatResources(
+  stats: DerivedPlayerCombatStats,
+  persisted?: CombatResources,
+): CombatResources {
+  if (!persisted) {
+    return {
+      health: stats.maxHealth,
+      maxHealth: stats.maxHealth,
+      mana: stats.maxMana,
+      maxMana: stats.maxMana,
+      stamina: stats.maxStamina,
+      maxStamina: stats.maxStamina,
+    }
+  }
+
+  return {
+    health: clamp(persisted.health, 0, stats.maxHealth),
+    maxHealth: stats.maxHealth,
+    mana: clamp(persisted.mana, 0, stats.maxMana),
+    maxMana: stats.maxMana,
+    stamina: clamp(persisted.stamina, 0, stats.maxStamina),
+    maxStamina: stats.maxStamina,
+  }
+}
+
 function rollDamage(
   rawDamage: number,
   targetDefense: number,
@@ -289,6 +314,7 @@ export function simulateCombat(
   enemyDefinitionId: string,
   seed: number,
   maxDurationSeconds = 180,
+  startingResources?: CombatResources,
 ): CombatResult {
   if (save.idle.activeActivity || save.crafting.activeRecipe) {
     throw new Error('Interrompa a atividade Idle antes de iniciar um combate.')
@@ -298,14 +324,7 @@ export function simulateCombat(
   if (!enemy) throw new Error('Inimigo não encontrado no Content Catalog.')
 
   const stats = derivePlayerCombatStats(save, catalog)
-  const resources: CombatResources = {
-    health: stats.maxHealth,
-    maxHealth: stats.maxHealth,
-    mana: stats.maxMana,
-    maxMana: stats.maxMana,
-    stamina: stats.maxStamina,
-    maxStamina: stats.maxStamina,
-  }
+  const resources = initialCombatResources(stats, startingResources)
   const preferences = save.combat.preferences
   const random = createRng(seed)
   const log: CombatLogEntry[] = []
