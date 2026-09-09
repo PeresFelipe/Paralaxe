@@ -45,6 +45,7 @@ export interface DungeonRun {
   seed: number
   currentRoomId: string
   visitedRoomIds: string[]
+  resolvedRoomIds: string[]
   chosenBranches: Record<string, string>
   expeditionBag: ExpeditionStack[]
   expeditionEquipment: ExpeditionEquipment[]
@@ -81,6 +82,18 @@ function addStack(stacks: ExpeditionStack[], definitionId: string, quantity = 1)
   const current = stacks.find((stack) => stack.definitionId === definitionId)
   if (!current) return [...stacks, { definitionId, quantity }]
   return stacks.map((stack) =>
+    stack.definitionId === definitionId ? { ...stack, quantity: stack.quantity + quantity } : stack,
+  )
+}
+
+function addInventoryStack(
+  inventory: OfflineGameSave['character']['inventory'],
+  definitionId: string,
+  quantity: number,
+) {
+  const current = inventory.find((stack) => stack.definitionId === definitionId)
+  if (!current) return [...inventory, { definitionId, quantity }]
+  return inventory.map((stack) =>
     stack.definitionId === definitionId ? { ...stack, quantity: stack.quantity + quantity } : stack,
   )
 }
@@ -141,6 +154,7 @@ export function createDungeonRun(
     seed,
     currentRoomId: dungeon.startRoomId,
     visitedRoomIds: [dungeon.startRoomId],
+    resolvedRoomIds: [],
     chosenBranches: {},
     expeditionBag: [],
     expeditionEquipment: [],
@@ -168,7 +182,11 @@ export function startDungeon(
   return {
     ...save,
     updatedAt: now,
-    character: { ...save.character, currentLocationId: dungeon.id },
+    character: {
+      ...save.character,
+      currentLocationId: dungeon.id,
+      inventory: addInventoryStack(save.character.inventory, 'item.consumable.field-preparation', 2),
+    },
     dungeon: { ...save.dungeon, activeRun: createDungeonRun(dungeon, seed, now) },
   }
 }
@@ -183,6 +201,7 @@ export function chooseDungeonPath(
   if (!run) throw new Error('Nenhuma DungeonRun ativa.')
   const room = dungeon.rooms.find((candidate) => candidate.id === run.currentRoomId)
   if (!room) throw new Error('Sala atual inválida.')
+  if (!run.resolvedRoomIds.includes(room.id)) throw new Error('Resolva a sala atual antes de avançar.')
   if (!room.nextRoomIds.includes(nextRoomId)) throw new Error('Esse caminho não parte da sala atual.')
   if (run.visitedRoomIds.includes(nextRoomId)) throw new Error('A rota da Dungeon é irreversível.')
 
@@ -215,17 +234,32 @@ export function resolveDungeonRoom(
   if (!run) throw new Error('Nenhuma DungeonRun ativa.')
   const room = dungeon.rooms.find((candidate) => candidate.id === run.currentRoomId)
   if (!room) throw new Error('Sala atual inválida.')
+  if (run.resolvedRoomIds.includes(room.id)) throw new Error('Essa sala já foi resolvida.')
+  if (room.id === 'room.protector' && !run.protectorDecision) {
+    throw new Error('Escolha Matar ou Poupar antes de resolver esse evento.')
+  }
+
   const random = createRng((run.seed ^ run.visitedRoomIds.length * 2654435761) >>> 0)
   let nextSave = save
   let nextRun = run
   let combatResult: CombatResult | undefined
 
   if (room.enemyDefinitionId) {
-    combatResult = simulateCombat(save, catalog, room.enemyDefinitionId, (run.seed + run.visitedRoomIds.length * 7919) >>> 0)
+    combatResult = simulateCombat(
+      save,
+      catalog,
+      room.enemyDefinitionId,
+      (run.seed + run.visitedRoomIds.length * 7919) >>> 0,
+    )
     if (combatResult.outcome !== 'victory') {
       return { save: failDungeonRun(save, now), combatResult }
     }
+
     nextSave = applyCombatResult(save, room.enemyDefinitionId, combatResult, now)
+    nextSave = {
+      ...nextSave,
+      character: { ...nextSave.character, currentLocationId: dungeon.id },
+    }
     nextRun = nextSave.dungeon.activeRun ?? run
 
     if (room.enemyDefinitionId === 'enemy.crubach' && random() < 0.35) {
@@ -233,7 +267,11 @@ export function resolveDungeonRoom(
         ...nextRun,
         expeditionEquipment: [
           ...nextRun.expeditionEquipment,
-          rollEquipment(random, ['armor.garrison-gloves', 'armor.garrison-boots', 'weapon.garrison-sword'], { common: 0.85, uncommon: 0.14 }),
+          rollEquipment(
+            random,
+            ['armor.garrison-gloves', 'armor.garrison-boots', 'weapon.garrison-sword'],
+            { common: 0.85, uncommon: 0.14 },
+          ),
         ],
       }
     }
@@ -243,19 +281,30 @@ export function resolveDungeonRoom(
         ...nextRun,
         expeditionEquipment: [
           ...nextRun.expeditionEquipment,
-          rollEquipment(random, ['armor.garrison-helmet', 'armor.garrison-legs', 'weapon.bastion-mace'], { common: 0.8, uncommon: 0.18 }),
+          rollEquipment(
+            random,
+            ['armor.garrison-helmet', 'armor.garrison-legs', 'weapon.bastion-mace'],
+            { common: 0.8, uncommon: 0.18 },
+          ),
         ],
       }
     }
 
     if (room.enemyDefinitionId === 'enemy.cosantoir') {
-      nextRun = { ...nextRun, expeditionBag: addStack(nextRun.expeditionBag, 'item.dun-liath.beam', 1) }
+      nextRun = {
+        ...nextRun,
+        expeditionBag: addStack(nextRun.expeditionBag, 'item.dun-liath.beam', 1),
+      }
       if (random() < 0.25) {
         nextRun = {
           ...nextRun,
           expeditionEquipment: [
             ...nextRun.expeditionEquipment,
-            rollEquipment(random, ['weapon.watch-spear', 'shield.watch-shield', 'armor.garrison-legs'], { common: 0.55, uncommon: 0.4 }),
+            rollEquipment(
+              random,
+              ['weapon.watch-spear', 'shield.watch-shield', 'armor.garrison-legs'],
+              { common: 0.55, uncommon: 0.4 },
+            ),
           ],
         }
       }
@@ -271,12 +320,23 @@ export function resolveDungeonRoom(
   }
 
   if (room.id === 'room.treaty') {
-    nextRun = { ...nextRun, treatyFragmentRecovered: true, expeditionBag: addStack(nextRun.expeditionBag, 'item.treaty-fragment', 1) }
+    nextRun = {
+      ...nextRun,
+      treatyFragmentRecovered: true,
+      expeditionBag: addStack(nextRun.expeditionBag, 'item.treaty-fragment', 1),
+    }
   }
   if (room.id === 'room.register') {
-    nextRun = { ...nextRun, supplyRegisterRecovered: true, expeditionBag: addStack(nextRun.expeditionBag, 'item.garrison-supply-register', 1) }
+    nextRun = {
+      ...nextRun,
+      supplyRegisterRecovered: true,
+      expeditionBag: addStack(nextRun.expeditionBag, 'item.garrison-supply-register', 1),
+    }
   }
-  if (room.id === 'room.arsenal' && !nextRun.expeditionEquipment.some((item) => item.definitionId === 'armor.garrison-helmet')) {
+  if (
+    room.id === 'room.arsenal' &&
+    !nextRun.expeditionEquipment.some((item) => item.definitionId === 'armor.garrison-helmet')
+  ) {
     nextRun = {
       ...nextRun,
       expeditionEquipment: [
@@ -286,14 +346,25 @@ export function resolveDungeonRoom(
     }
   }
   if (room.kind === 'recovery') {
-    nextRun = { ...nextRun, safeExtractionAvailable: true, expeditionBag: addStack(nextRun.expeditionBag, 'item.consumable.field-preparation', 3) }
+    nextRun = {
+      ...nextRun,
+      safeExtractionAvailable: true,
+      expeditionBag: addStack(nextRun.expeditionBag, 'item.consumable.field-preparation', 3),
+    }
+  }
+
+  nextRun = {
+    ...nextRun,
+    resolvedRoomIds: [...nextRun.resolvedRoomIds, room.id],
+    updatedAt: now,
   }
 
   return {
     save: {
       ...nextSave,
       updatedAt: now,
-      dungeon: { ...nextSave.dungeon, activeRun: { ...nextRun, updatedAt: now } },
+      character: { ...nextSave.character, currentLocationId: dungeon.id },
+      dungeon: { ...nextSave.dungeon, activeRun: nextRun },
     },
     combatResult,
   }
@@ -306,6 +377,7 @@ export function decideProtector(
 ): OfflineGameSave {
   const run = save.dungeon.activeRun
   if (!run) throw new Error('Nenhuma DungeonRun ativa.')
+  if (run.currentRoomId !== 'room.protector') throw new Error('Essa decisão só existe no Abrigo Improvisado.')
   if (run.protectorDecision) throw new Error('Essa decisão já foi tomada nesta run.')
   return {
     ...save,
@@ -332,19 +404,19 @@ function materializeExpeditionEquipment(save: OfflineGameSave, loot: ExpeditionE
 export function extractDungeonRun(save: OfflineGameSave, now: string): OfflineGameSave {
   const run = save.dungeon.activeRun
   if (!run) throw new Error('Nenhuma DungeonRun ativa.')
-  if (!run.safeExtractionAvailable && !run.completed) throw new Error('A retirada segura ainda não está disponível.')
+  if (!run.safeExtractionAvailable && !run.completed) {
+    throw new Error('A retirada segura ainda não está disponível.')
+  }
 
   let inventory = save.character.inventory
   for (const stack of run.expeditionBag) {
-    const current = inventory.find((item) => item.definitionId === stack.definitionId)
-    inventory = current
-      ? inventory.map((item) => item.definitionId === stack.definitionId ? { ...item, quantity: item.quantity + stack.quantity } : item)
-      : [...inventory, { ...stack }]
+    inventory = addInventoryStack(inventory, stack.definitionId, stack.quantity)
   }
 
   const equipment = materializeExpeditionEquipment(save, run.expeditionEquipment)
   const firstClear = run.completed && !save.dungeon.dunLiathEasyCleared
   const contractCanComplete = run.completed && run.supplyRegisterRecovered
+  const contractReward = contractCanComplete && !save.dungeon.contractCompleted
 
   return {
     ...save,
@@ -355,8 +427,8 @@ export function extractDungeonRun(save: OfflineGameSave, now: string): OfflineGa
       inventory,
       equipmentItems: [...save.character.equipmentItems, ...equipment.created],
       nextEquipmentSequence: equipment.nextSequence,
-      gold: save.character.gold + (contractCanComplete && !save.dungeon.contractCompleted ? 150 : 0),
-      xp: save.character.xp + (contractCanComplete && !save.dungeon.contractCompleted ? 150 : 0),
+      gold: save.character.gold + (contractReward ? 150 : 0),
+      xp: save.character.xp + (contractReward ? 150 : 0),
       knownAbilityIds:
         firstClear && !save.character.knownAbilityIds.includes('ability.instinctive-guard')
           ? [...save.character.knownAbilityIds, 'ability.instinctive-guard']
