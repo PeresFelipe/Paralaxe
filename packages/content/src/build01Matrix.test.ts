@@ -67,14 +67,19 @@ function addAndEquip(save: OfflineGameSave, definitionId: string, slot: 'gloves'
 }
 
 function prepareRoute(save: OfflineGameSave, route: RouteId) {
+  const mageUsesFirstPoint = save.character.classId === 'mage'
   // Estado previsto após a coleta, primeira produção, Lobo e Serviço — Estrada Baixa.
+  // O Mago usa o primeiro ponto em Vitalidade; as demais classes ainda passam sem gastar o ponto.
   let prepared: OfflineGameSave = {
     ...save,
     character: {
       ...save.character,
       level: 2,
       xp: 100,
-      unspentAttributePoints: 1,
+      unspentAttributePoints: mageUsesFirstPoint ? 0 : 1,
+      attributes: mageUsesFirstPoint
+        ? { ...save.character.attributes, vitality: save.character.attributes.vitality + 1 }
+        : save.character.attributes,
       gold: save.character.gold + 40,
     },
   }
