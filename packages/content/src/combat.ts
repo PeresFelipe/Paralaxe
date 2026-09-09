@@ -1,4 +1,8 @@
-import type { CombatAbilityDefinition, EnemyDefinition } from '@greywake/domain'
+import type {
+  CombatAbilityDefinition,
+  CombatConsumableDefinition,
+  EnemyDefinition,
+} from '@greywake/domain'
 
 export const COMBAT_ABILITIES = [
   {
@@ -81,6 +85,29 @@ export const COMBAT_ABILITIES = [
   },
 ] as const satisfies readonly CombatAbilityDefinition[]
 
+export const COMBAT_CONSUMABLES = [
+  {
+    id: 'item.consumable.field-preparation',
+    name: 'Preparado de Campo',
+    restore: { health: 45 },
+  },
+  {
+    id: 'item.consumable.neantog-preparation',
+    name: 'Preparado de Neantóg',
+    restore: { health: 45 },
+  },
+  {
+    id: 'item.food.roasted-scadan',
+    name: 'Scadán Assado',
+    restore: { health: 35, stamina: 20 },
+  },
+  {
+    id: 'item.consumable.crimson-flask',
+    name: 'Frasco Carmesim',
+    restore: { health: 70, mana: 25, stamina: 25 },
+  },
+] as const satisfies readonly CombatConsumableDefinition[]
+
 export const ENEMIES = [
   {
     id: 'enemy.road-wolf',
@@ -117,9 +144,23 @@ export const ENEMIES = [
     power: 8,
     actionIntervalSeconds: 1.65,
     basicDamageType: 'slash',
+    damageResistances: { pierce: 'weak' },
     abilities: [
-      { id: 'enemy.crubach.slash', name: 'Talho', cooldownSeconds: 5, damageMultiplier: 1.35 },
-      { id: 'enemy.crubach.short-leap', name: 'Salto Curto', cooldownSeconds: 8, initialDelaySeconds: 3, damageMultiplier: 0.75 },
+      {
+        id: 'enemy.crubach.slash',
+        name: 'Talho',
+        cooldownSeconds: 5,
+        damageMultiplier: 1.35,
+        statusApplications: [{ status: 'bleed', buildup: 50 }],
+      },
+      {
+        id: 'enemy.crubach.short-leap',
+        name: 'Salto Curto',
+        cooldownSeconds: 8,
+        initialDelaySeconds: 3,
+        damageMultiplier: 0.75,
+        nextIntervalMultiplier: 0.55,
+      },
     ],
     xpReward: 18,
   },
@@ -135,8 +176,22 @@ export const ENEMIES = [
     actionIntervalSeconds: 2.8,
     basicDamageType: 'impact',
     abilities: [
-      { id: 'enemy.tromghiallach.heavy', name: 'Golpe Pesado', cooldownSeconds: 7, damageMultiplier: 1.65, telegraphSeconds: 1.1, interruptible: true },
-      { id: 'enemy.tromghiallach.hold', name: 'Firmar Posição', cooldownSeconds: 9, damageMultiplier: 0 },
+      {
+        id: 'enemy.tromghiallach.heavy',
+        name: 'Golpe Pesado',
+        cooldownSeconds: 7,
+        damageMultiplier: 1.65,
+        telegraphSeconds: 1.1,
+        interruptible: true,
+        statusApplications: [{ status: 'stun', buildup: 25 }],
+      },
+      {
+        id: 'enemy.tromghiallach.hold',
+        name: 'Firmar Posição',
+        cooldownSeconds: 9,
+        selfDamageTakenMultiplier: 0.65,
+        selfEffectDurationSeconds: 3,
+      },
     ],
     xpReward: 26,
   },
@@ -153,8 +208,33 @@ export const ENEMIES = [
     basicDamageType: 'pierce',
     abilities: [
       { id: 'enemy.cosantoir.thrust', name: 'Estocada', cooldownSeconds: 5, damageMultiplier: 1.25 },
-      { id: 'enemy.cosantoir.shield', name: 'Golpe de Escudo', cooldownSeconds: 7, damageMultiplier: 0.9 },
-      { id: 'enemy.cosantoir.advance', name: 'Avanço do Guardião', cooldownSeconds: 12, initialDelaySeconds: 4, damageMultiplier: 1.8, telegraphSeconds: 1.8, interruptible: true },
+      {
+        id: 'enemy.cosantoir.shield',
+        name: 'Golpe de Escudo',
+        cooldownSeconds: 7,
+        damageMultiplier: 0.9,
+        damageType: 'impact',
+        statusApplications: [{ status: 'stun', buildup: 30 }],
+      },
+      {
+        id: 'enemy.cosantoir.defense',
+        name: 'Postura de Defesa',
+        cooldownSeconds: 10,
+        selfDamageTakenMultiplier: 0.6,
+        selfEffectDurationSeconds: 3.5,
+      },
+      {
+        id: 'enemy.cosantoir.advance',
+        name: 'Avanço do Guardião',
+        cooldownSeconds: 12,
+        initialDelaySeconds: 4,
+        damageMultiplier: 1.8,
+        damageType: 'impact',
+        telegraphSeconds: 1.8,
+        interruptible: true,
+        statusApplications: [{ status: 'stun', buildup: 45 }],
+        vulnerabilityAfter: { damageTakenMultiplier: 1.2, durationSeconds: 2.5 },
+      },
     ],
     xpReward: 70,
   },
@@ -169,9 +249,32 @@ export const ENEMIES = [
     power: 13,
     actionIntervalSeconds: 2.6,
     basicDamageType: 'impact',
+    damageResistances: { slash: 'resistant' },
+    statusResistances: { bleed: 'resistant', stun: 'very-resistant' },
+    isBoss: true,
     abilities: [
-      { id: 'enemy.fairtheoir.heavy', name: 'Golpe Pesado', cooldownSeconds: 7, damageMultiplier: 1.6, telegraphSeconds: 1.4, interruptible: true },
-      { id: 'enemy.fairtheoir.sweep', name: 'Varredura', cooldownSeconds: 5.5, damageMultiplier: 1.05 },
+      {
+        id: 'enemy.fairtheoir.heavy',
+        name: 'Golpe Pesado',
+        cooldownSeconds: 7,
+        damageMultiplier: 1.6,
+        telegraphSeconds: 1.4,
+        interruptible: true,
+        statusApplications: [{ status: 'stun', buildup: 35 }],
+      },
+      {
+        id: 'enemy.fairtheoir.sweep',
+        name: 'Varredura',
+        cooldownSeconds: 5.5,
+        damageMultiplier: 1.05,
+      },
+      {
+        id: 'enemy.fairtheoir.guard',
+        name: 'Postura de Guarda',
+        cooldownSeconds: 10,
+        selfDamageTakenMultiplier: 0.55,
+        selfEffectDurationSeconds: 3,
+      },
     ],
     xpReward: 0,
   },
@@ -186,18 +289,43 @@ export const ENEMIES = [
     power: 14,
     actionIntervalSeconds: 2.15,
     basicDamageType: 'impact',
+    damageResistances: { slash: 'resistant' },
+    statusResistances: { bleed: 'resistant', stun: 'very-resistant' },
+    isBoss: true,
     abilities: [
-      { id: 'enemy.fairtheoir.last-charge', name: 'Última Investida', cooldownSeconds: 13, initialDelaySeconds: 5, damageMultiplier: 2.2, telegraphSeconds: 2.4, interruptible: false },
-      { id: 'enemy.fairtheoir.sweep-phase2', name: 'Varredura Desesperada', cooldownSeconds: 5.5, damageMultiplier: 1.05 },
+      {
+        id: 'enemy.fairtheoir.last-charge',
+        name: 'Última Investida',
+        cooldownSeconds: 13,
+        initialDelaySeconds: 5,
+        damageMultiplier: 2.2,
+        damageType: 'impact',
+        telegraphSeconds: 2.4,
+        interruptible: false,
+        statusApplications: [{ status: 'stun', buildup: 70 }],
+        vulnerabilityAfter: { damageTakenMultiplier: 1.3, durationSeconds: 3 },
+      },
+      {
+        id: 'enemy.fairtheoir.sweep-phase2',
+        name: 'Varredura Desesperada',
+        cooldownSeconds: 5.5,
+        damageMultiplier: 1.05,
+      },
     ],
     xpReward: 120,
   },
 ] as const satisfies readonly EnemyDefinition[]
 
-export function getCombatAbilityDefinition(abilityId: string) {
+export function getCombatAbilityDefinition(abilityId: string): CombatAbilityDefinition | null {
   return COMBAT_ABILITIES.find((ability) => ability.id === abilityId) ?? null
 }
 
-export function getEnemyDefinition(enemyId: string) {
+export function getEnemyDefinition(enemyId: string): EnemyDefinition | null {
   return ENEMIES.find((enemy) => enemy.id === enemyId) ?? null
+}
+
+export function getCombatConsumableDefinition(
+  definitionId: string,
+): CombatConsumableDefinition | null {
+  return COMBAT_CONSUMABLES.find((consumable) => consumable.id === definitionId) ?? null
 }
