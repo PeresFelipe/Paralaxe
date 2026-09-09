@@ -15,12 +15,12 @@ A Build 0.1 não possui backend, conta Online, Cloud Save ou Mercado entre jogad
 ### Marco técnico atual
 
 ```text
-M1 — Criar e carregar personagem
+M4 — Primeiro combate completo
 ```
 
-O app já possui criação de save Offline, escolha de nome, classe e presente, modelo de personagem no domínio, catálogo de criação orientado a dados e persistência real em IndexedDB. Saves existentes são listados e carregados novamente pelo repositório local.
+Já existem criação/carregamento de personagem, Idle offline, crafting/equipamento e um primeiro Combat Engine determinístico/seedable. O **Lobo de Estrada** pode ser enfrentado com ataque básico automático, habilidade inicial, recursos, cooldowns e telegraph de Bote; o resultado e a recompensa de vitória são persistidos no save.
 
-Próximo marco: **M2 — Idle persiste e funciona offline**.
+Próximo marco: **M5 — Dún Liath completa**.
 
 ## Stack da Build 0.1
 
