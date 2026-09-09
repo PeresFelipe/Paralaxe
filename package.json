@@ -1,0 +1,18 @@
+{
+  "name": "greywake",
+  "private": true,
+  "version": "0.0.1",
+  "type": "module",
+  "packageManager": "pnpm@12.3.4",
+  "engines": {
+    "node": "^20.19.0 || >=22.12.0"
+  },
+  "scripts": {
+    "dev": "pnpm --filter @greywake/game dev",
+    "build": "pnpm --filter @greywake/game build",
+    "lint": "pnpm -r --if-present run lint",
+    "typecheck": "pnpm -r --if-present run typecheck",
+    "test": "pnpm --filter @greywake/domain test",
+    "check": "pnpm lint && pnpm typecheck && pnpm test"
+  }
+}

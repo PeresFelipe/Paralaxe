@@ -1,7 +1,12 @@
-# Game App
+# @greywake/game
 
 Aplicação Web da Build 0.1.
 
-Responsável por composição de telas, bootstrap da aplicação e integração da UI com os Use Cases do domínio.
+Responsabilidades desta camada:
 
-A aplicação não deve concentrar regras fundamentais do RPG nem manipular diretamente o formato persistido do save.
+- montar a UI React;
+- receber interação do jogador;
+- apresentar estado e feedback visual;
+- chamar contratos/Use Cases do domínio em vez de alterar o save diretamente.
+
+A aplicação não contém backend na Fase 1.
