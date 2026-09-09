@@ -9,13 +9,15 @@
   "types": "./src/index.ts",
   "scripts": {
     "lint": "oxlint src",
-    "typecheck": "tsc -p tsconfig.json --noEmit"
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run"
   },
   "dependencies": {
     "@greywake/domain": "workspace:*"
   },
   "devDependencies": {
     "oxlint": "^1.81.0",
-    "typescript": "~6.0.2"
+    "typescript": "~6.0.2",
+    "vitest": "^5.0.0"
   }
 }
