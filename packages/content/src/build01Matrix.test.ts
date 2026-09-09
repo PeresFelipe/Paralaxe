@@ -80,7 +80,7 @@ function prepareRoute(save: OfflineGameSave, route: RouteId): OfflineGameSave {
     prepared = configureCombatConsumableSlot(prepared, 0, 'item.consumable.neantog-preparation', 'health', 70, '2026-09-09T12:01:01.000Z')
   }
 
-  return configureCombatConsumableSlot(prepared, 1, 'item.consumable.field-preparation', 'health', 40, '2026-09-09T12:01:02.000Z')
+  return configureCombatConsumableSlot(prepared, 1, 'item.consumable.field-preparation', 'health', 70, '2026-09-09T12:01:02.000Z')
 }
 
 function equipGuaranteedHelmet(save: OfflineGameSave): OfflineGameSave {
