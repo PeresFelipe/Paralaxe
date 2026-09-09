@@ -1,5 +1,6 @@
 import {
   SAVE_SCHEMA_VERSION,
+  createDefaultConsumableSlots,
   createInitialSkillProgress,
   createStartingEquipmentState,
   type CombatState,
@@ -57,7 +58,16 @@ interface LegacyOfflineGameSaveV3
 interface LegacyOfflineGameSaveV4
   extends Omit<OfflineGameSave, 'saveSchemaVersion' | 'dungeon'> {
   saveSchemaVersion: 4
-  combat: CombatState
+  combat: Omit<CombatState, 'preferences'> & {
+    preferences: Omit<CombatState['preferences'], 'consumableSlots'>
+  }
+}
+
+interface LegacyOfflineGameSaveV5
+  extends Omit<OfflineGameSave, 'saveSchemaVersion' | 'combat' | 'dungeon'> {
+  saveSchemaVersion: 5
+  combat: LegacyOfflineGameSaveV4['combat']
+  dungeon: Omit<OfflineGameSave['dungeon'], 'contractAccepted'>
 }
 
 function requestToPromise<T>(request: IDBRequest<T>) {
@@ -92,9 +102,20 @@ function createDefaultCombatState(): OfflineGameSave['combat'] {
     preferences: {
       style: 'mixed',
       defensiveHealthThresholdPercent: 60,
+      consumableSlots: createDefaultConsumableSlots(),
     },
     lastRun: null,
     wolfDefeated: false,
+  }
+}
+
+function migrateCombatState(combat: LegacyOfflineGameSaveV4['combat']): OfflineGameSave['combat'] {
+  return {
+    ...combat,
+    preferences: {
+      ...combat.preferences,
+      consumableSlots: createDefaultConsumableSlots(),
+    },
   }
 }
 
@@ -103,6 +124,7 @@ function createDefaultDungeonState(): OfflineGameSave['dungeon'] {
     activeRun: null,
     dunLiathEasyCleared: false,
     dunLiathProtector: null,
+    contractAccepted: false,
     contractCompleted: false,
     instinctiveGuardUnlocked: false,
   }
@@ -130,11 +152,26 @@ function migrateSave(rawSave: unknown): OfflineGameSave {
     return rawSave as OfflineGameSave
   }
 
+  if (candidate.saveSchemaVersion === 5) {
+    const legacy = rawSave as LegacyOfflineGameSaveV5
+    return {
+      ...legacy,
+      saveSchemaVersion: SAVE_SCHEMA_VERSION,
+      combat: migrateCombatState(legacy.combat),
+      dungeon: {
+        ...legacy.dungeon,
+        contractAccepted:
+          legacy.dungeon.contractCompleted || legacy.dungeon.activeRun !== null,
+      },
+    }
+  }
+
   if (candidate.saveSchemaVersion === 4) {
     const legacy = rawSave as LegacyOfflineGameSaveV4
     return {
       ...legacy,
       saveSchemaVersion: SAVE_SCHEMA_VERSION,
+      combat: migrateCombatState(legacy.combat),
       dungeon: createDefaultDungeonState(),
     }
   }
