@@ -1,5 +1,6 @@
 import { type CombatState } from './combat'
 import { type CraftingState } from './crafting'
+import { type DungeonProgressState } from './dungeon'
 import {
   createStartingEquipmentState,
   type EquippedItemIds,
@@ -97,7 +98,7 @@ export interface CharacterState {
   currentLocationId: string
 }
 
-export const SAVE_SCHEMA_VERSION = 4 as const
+export const SAVE_SCHEMA_VERSION = 5 as const
 
 export interface OfflineGameSave {
   saveId: string
@@ -112,6 +113,7 @@ export interface OfflineGameSave {
   idle: IdleState
   crafting: CraftingState
   combat: CombatState
+  dungeon: DungeonProgressState
 }
 
 export interface CreateOfflineGameSaveInput {
@@ -219,6 +221,13 @@ export function createOfflineGameSave(input: CreateOfflineGameSaveInput): Offlin
       },
       lastRun: null,
       wolfDefeated: false,
+    },
+    dungeon: {
+      activeRun: null,
+      dunLiathEasyCleared: false,
+      dunLiathProtector: null,
+      contractCompleted: false,
+      instinctiveGuardUnlocked: false,
     },
   }
 }
