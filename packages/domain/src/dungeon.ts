@@ -63,6 +63,7 @@ export interface DungeonProgressState {
   activeRun: DungeonRun | null
   dunLiathEasyCleared: boolean
   dunLiathProtector: 'killed' | 'spared' | null
+  contractAccepted: boolean
   contractCompleted: boolean
   instinctiveGuardUnlocked: boolean
 }
@@ -122,6 +123,14 @@ function addInventoryStack(
   )
 }
 
+function mergeConsumedItems(first: CombatResult['consumedItems'], second: CombatResult['consumedItems']) {
+  const quantities = new Map<string, number>()
+  for (const stack of [...first, ...second]) {
+    quantities.set(stack.definitionId, (quantities.get(stack.definitionId) ?? 0) + stack.quantity)
+  }
+  return [...quantities.entries()].map(([definitionId, quantity]) => ({ definitionId, quantity }))
+}
+
 function initialResources(save: OfflineGameSave): CombatResources {
   const { vitality, mind, vigor } = save.character.attributes
   const maxHealth = 100 + vitality * 12
@@ -177,6 +186,7 @@ function simulateFairtheoirEncounter(
     player: phase2.player,
     enemyHealth: phase2.enemyHealth,
     xpGranted: phase2.outcome === 'victory' ? 120 : 0,
+    consumedItems: mergeConsumedItems(phase1.consumedItems, phase2.consumedItems),
     seed,
     log: [
       ...phase1.log.filter((entry) => entry.kind !== 'result'),
@@ -231,6 +241,25 @@ function rollEquipment(
   }
 }
 
+export function acceptDunLiathContract(save: OfflineGameSave, now: string): OfflineGameSave {
+  if (save.dungeon.contractAccepted) return save
+  if (save.dungeon.contractCompleted) return save
+
+  return {
+    ...save,
+    updatedAt: now,
+    character: {
+      ...save.character,
+      inventory: addInventoryStack(
+        save.character.inventory,
+        'item.consumable.field-preparation',
+        2,
+      ),
+    },
+    dungeon: { ...save.dungeon, contractAccepted: true },
+  }
+}
+
 export function createDungeonRun(
   save: OfflineGameSave,
   dungeon: DungeonDefinition,
@@ -268,19 +297,14 @@ export function startDungeon(
     throw new Error('Interrompa a atividade Idle antes de iniciar uma Dungeon.')
   }
   if (save.dungeon.activeRun) throw new Error('Já existe uma DungeonRun ativa.')
+  if (!save.dungeon.contractAccepted && !save.dungeon.contractCompleted) {
+    throw new Error('Aceite primeiro o Contrato — Fortaleza Cinzenta.')
+  }
 
   return {
     ...save,
     updatedAt: now,
-    character: {
-      ...save.character,
-      currentLocationId: dungeon.id,
-      inventory: addInventoryStack(
-        save.character.inventory,
-        'item.consumable.field-preparation',
-        2,
-      ),
-    },
+    character: { ...save.character, currentLocationId: dungeon.id },
     dungeon: {
       ...save.dungeon,
       activeRun: createDungeonRun(save, dungeon, seed, now),
@@ -353,7 +377,8 @@ function resolveCombatRoom(
       )
 
   if (combatResult.outcome !== 'victory') {
-    return { save: failDungeonRun(save, now), run, combatResult }
+    const consumedSave = applyCombatResult(save, room.enemyDefinitionId, combatResult, now)
+    return { save: failDungeonRun(consumedSave, now), run, combatResult }
   }
 
   const appliedEnemyId = isFairtheoir ? 'enemy.fairtheoir-phase2' : room.enemyDefinitionId
@@ -612,6 +637,7 @@ export function extractDungeonRun(save: OfflineGameSave, now: string): OfflineGa
       activeRun: null,
       dunLiathEasyCleared: save.dungeon.dunLiathEasyCleared || run.completed,
       dunLiathProtector: save.dungeon.dunLiathProtector ?? run.protectorDecision,
+      contractAccepted: save.dungeon.contractAccepted,
       contractCompleted: save.dungeon.contractCompleted || contractCanComplete,
       instinctiveGuardUnlocked: save.dungeon.instinctiveGuardUnlocked || firstClear,
     },
