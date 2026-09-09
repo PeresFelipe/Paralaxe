@@ -10,152 +10,171 @@
 
 ## Marco atual
 
-**M6 — Build 0.1 validável**.
+**M5.5 — UX Foundation**.
 
-A fundação estrutural M0–M5 está implementada. O trabalho atual é fechar diferenças de fidelidade, validar o fluxo integrado e registrar o resultado da Build 0.1.
+O M6 — Build 0.1 validável fica temporariamente pausado enquanto a experiência de navegação é redesenhada. A decisão veio de playtest manual: a Build já possui vários sistemas funcionais, mas a interface atual ainda se comporta como um conjunto de workbenches técnicos empilhados, não como um jogo com fluxo claro.
+
+Documento de trabalho do marco:
+
+```text
+docs/implementation/M5.5-UX-FOUNDATION.md
+```
+
+## Objetivo do M5.5
+
+Transformar os sistemas já implementados em uma experiência navegável e coerente antes de retomar a validação final da Build 0.1.
+
+Prioridades:
+
+1. definir arquitetura de informação e menu;
+2. definir `GameShell`;
+3. usar a Cidade Livre como contexto/hub principal;
+4. separar navegação de atividade Idle;
+5. dar foco próprio a combate e Dungeon;
+6. migrar os workbenches atuais para views normais ou ferramentas internas;
+7. encaixar o onboarding completo na navegação;
+8. definir estratégia desktop e mobile;
+9. validar o fluxo novo save → Dún Liath sem depender de ferramentas técnicas.
+
+## Ladder atual
+
+```text
+M0 — Projeto abre                         ✅
+M1 — Criar e carregar personagem          ✅
+M2 — Idle persiste e funciona offline     ✅
+M3 — Crafting e equipamento               ✅
+M4 — Primeiro combate completo            ✅
+M5 — Dún Liath completa                   ✅
+M5.5 — UX Foundation                      🟡 EM DEFINIÇÃO
+M6 — Build 0.1 validável                  ⏸ PAUSADO
+```
 
 ## Implementado até aqui
 
 - criação e carregamento de save `OFFLINE`;
 - classes, presentes e estado inicial do personagem;
 - persistência IndexedDB com schema versionado;
-- migração automática de saves antigos para o schema atual;
-- sete Skills com estado inicial;
+- migração automática de saves antigos;
+- sete Skills;
 - uma atividade Idle por vez;
 - quatro coletas iniciais com progresso offline;
-- limite offline inicial de 4 h;
-- XP de Skill e +5 XP Geral por nível de Skill;
 - produção Idle determinística;
-- receitas mínimas de Metalurgia, Forja e Culinária;
+- receitas iniciais de Metalurgia, Forja e Culinária;
 - equipamentos como instâncias individuais;
-- reforço +1 aplicado a uma instância concreta;
+- reforço +1;
+- progressão geral 1–10 centralizada;
+- Mercado NPC básico;
 - Combat Engine determinístico/seedable;
-- ataque básico, habilidade ativa, cooldown, recursos e telegraph;
-- Lobo de Estrada e primeiro combate persistível;
-- `DungeonRun` persistível no save;
-- seed da expedição;
+- habilidades, cooldown, recursos, telegraph e interrupção;
+- dois slots de consumíveis com uso manual/automático e thresholds;
+- status/buildup necessários à Build 0.1;
+- Serviço — Estrada Baixa;
+- recompensa única do Serviço integrada ao primeiro clear do Lobo;
+- `DungeonRun` persistível;
 - rota irreversível e salas resolvidas idempotentes;
-- primeira visita controlada com 16–17 salas conforme bifurcação;
+- Dún Liath — Fácil com primeira visita controlada de 16–17 salas;
 - Bolsa de Expedição separada do inventário seguro;
-- loot da run perdido em derrota;
-- loot transferido somente em retirada segura/clear;
-- Vida/Mana/Stamina realmente persistem entre encontros e cada combate inicia com os recursos restantes da run;
-- Fase 2 de Fairtheoir inicia com os recursos restantes da Fase 1;
-- sala de recuperação pré-Boss restaura Vida/Mana/Stamina;
-- retirada segura disponível antes de Fairtheoir;
-- Crúbach;
-- Tromghiallach;
-- Cosantóir;
-- pools mínimos de equipamento de Dún Liath;
-- raridade Comum/Incomum/Raro e quantidade correspondente de afixos;
-- Arsenal Abandonado com Capacete da Guarnição garantido;
-- Viga de Dún Liath garantida por Cosantóir;
-- evento Matar/Poupar sem recompensa moral imediata;
-- primeira decisão Matar/Poupar permanece como estado narrativo persistente;
+- attrition real entre encontros;
+- sala de recuperação;
+- retirada segura pré-Boss;
+- Crúbach, Tromghiallach, Cosantóir e Fairtheoir;
+- posturas defensivas e vulnerabilidades dos encontros principais;
+- Fairtheoir em duas fases com recursos e consumíveis persistindo corretamente entre elas;
+- Matar/Poupar persistente;
 - Registro de Suprimentos da Guarnição;
 - Fragmento do Tratado;
-- Fairtheoir encadeado em duas fases mecânicas:
-  - Fase 1 — O Vigia: 206 HP efetivos até o limiar de 45%;
-  - Fase 2 — Desespero: 169 HP restantes;
-- Última Investida disponível na segunda fase;
-- Fragmento de Fairtheoir no clear;
-- contrato concluível por 150 moedas + 150 XP;
+- contrato de Dún Liath com 2 Preparados de Campo concedidos uma única vez na aceitação;
 - primeiro clear desbloqueia Guarda Instintiva;
-- UI funcional para iniciar run, resolver salas, escolher rota, decidir Matar/Poupar, acompanhar Bolsa/recursos, retirar ou enfrentar o Boss;
-- CI no GitHub Actions com Node 22 + pnpm;
-- `pnpm check` validado em runner real;
-- lint validado em runner real;
-- typecheck estrito validado em runner real;
-- 21 testes automatizados do domínio passando;
-- build de produção Vite validado em runner real.
+- técnicas ensináveis pré-Dún Liath implementadas;
+- teste de fechar/reabrir `DungeonRun` via IndexedDB;
+- CI GitHub Actions com Node 22 + pnpm;
+- lint e typecheck estritos;
+- testes automatizados de domínio/content/persistence.
 
-## Validação automatizada atual
+## Problema de UX identificado
 
-Workflow:
+A aplicação normal ainda é conceitualmente composta por múltiplos componentes independentes:
 
 ```text
-.github/workflows/validate.yml
+<App />
+<MarketWorkbench />
+<CombatWorkbench />
+<DungeonWorkbench />
 ```
 
-Pipeline:
+Isso foi útil para desenvolvimento incremental, mas não deve ser a arquitetura final da experiência.
+
+O M5.5 deve convergir para algo conceitualmente próximo de:
 
 ```text
-pnpm install --no-frozen-lockfile
-↓
-pnpm check
-  ├── lint
-  ├── typecheck
-  └── tests
-↓
-pnpm build
+<GameShell>
+  <Navigation />
+  <GameView />
+  <ActivityStatus />
+</GameShell>
 ```
 
-Última execução verificada neste marco: **sucesso completo**.
+com apenas uma `GameView` principal por vez.
 
-## Fronteiras preservadas
+## Hipótese atual de arquitetura de informação
 
-- UI envia intenções e não implementa regras da Dungeon;
-- `@greywake/domain` concentra regras de progressão, crafting, combate e `DungeonRun`;
-- `@greywake/content` fornece Definitions de classes, atividades, receitas, salas, inimigos e equipamentos;
-- `@greywake/persistence` continua atrás de contrato local;
-- Definitions não são duplicadas no save;
-- a run salva somente IDs, seed e estado mutável necessário;
-- `exactOptionalPropertyTypes` e demais regras estritas de TypeScript permanecem ativas;
-- nenhuma capacidade Online foi adicionada.
+Ainda não aprovada como decisão final:
+
+```text
+Personagem
+Cidade Livre
+  Taverna
+  Mercado
+  Ferreiro
+  Banco
+  Relicário
+Atividades
+  Coleta
+  Produção
+Combate
+Dungeon
+```
+
+A Cidade Livre deve funcionar como o contexto central fora de combate/Dungeon.
+
+Atividades Idle devem continuar em andamento enquanto o jogador navega e ter status persistente no shell.
+
+Combate e Dungeon devem reduzir distrações e assumir foco próprio.
+
+## Estado técnico de M6 antes da pausa
+
+A matriz automatizada 6 classes × 4 rotas chegou a **23/24** combinações estruturalmente completáveis.
+
+Único caso ainda não fechado:
+
+```text
+Mago × Mineração → Cosantóir
+```
+
+Esse balanceamento não será mascarado durante o M5.5. A investigação volta depois que a experiência estiver navegável e o fluxo real de preparação puder ser testado corretamente.
 
 ## Schema atual
 
 ```text
-save_schema_version = 5
+save_schema_version = 6
 ```
 
-Principais adições do v5:
+O v6 adiciona configuração persistente dos dois slots de consumíveis de combate e mantém migração automática de versões anteriores.
 
-```text
-dungeon.activeRun
-dungeon.dunLiathEasyCleared
-dungeon.dunLiathProtector
-dungeon.contractCompleted
-dungeon.instinctiveGuardUnlocked
+## Critério de saída do M5.5
 
-DungeonRun:
-  dungeonDefinitionId
-  difficulty
-  seed
-  currentRoomId
-  visitedRoomIds
-  resolvedRoomIds
-  chosenBranches
-  expeditionBag
-  expeditionEquipment
-  resources
-  protectorDecision
-  supplyRegisterRecovered
-  treatyFragmentRecovered
-  safeExtractionAvailable
-  completed
-```
+O M5.5 termina quando:
 
-Saves v1–v4 são migrados automaticamente ao serem carregados.
+- houver uma arquitetura de navegação escolhida;
+- `GameShell` estiver definido;
+- nenhuma ferramenta principal aparecer empilhada na experiência normal;
+- cada sistema da Build 0.1 possuir um lugar claro na navegação;
+- atividade Idle permanecer compreensível durante navegação;
+- combate e Dungeon tiverem estados focados;
+- desktop e mobile tiverem estratégia explícita;
+- o fluxo novo save → Dún Liath puder ser percorrido sem abrir workbenches técnicos.
 
-## M6 — trabalho restante
-
-1. validar o fluxo completo do novo save até o primeiro clear em execução integrada;
-2. validar a matriz 6 classes × 4 rotas iniciais;
-3. integrar/validar consumíveis de combate e seus thresholds;
-4. integrar os status/buildup necessários para a fidelidade dos encontros da 0.1;
-5. revisar posturas defensivas de Tromghiallach/Cosantóir/Fairtheoir que ainda estão simplificadas;
-6. validar persistência fechando/reabrindo durante uma `DungeonRun` real no navegador;
-7. corrigir concessão dos 2 Preparados de Campo para ocorrer ao aceitar o contrato, não a cada nova run;
-8. registrar resultados, balanceamento observado e bugs da Build 0.1.
-
-## Limitações conhecidas no M6
-
-- a fundação de status existe no GDD/Build, mas Veneno/Sangramento/Atordoamento/Queimadura/Congelamento ainda não estão todos conectados ao motor;
-- posturas defensivas específicas de Tromghiallach/Cosantóir/Fairtheoir ainda estão simplificadas;
-- consumíveis em combate e seus thresholds ainda precisam de validação integrada;
-- os 2 Preparados de Campo do contrato ainda são concedidos no início de cada run em vez de uma única vez na aceitação;
-- a primeira estrutura de Dún Liath é controlada e seedable; proceduralidade estrutural mais ampla deve ser validada/expandida depois que o vertical slice estiver estável.
+Depois disso, retomamos o **M6 — Build 0.1 validável**.
 
 ## Não implementar ainda
 
@@ -168,4 +187,5 @@ Saves v1–v4 são migrados automaticamente ao serem carregados.
 - Relic Registry Online;
 - PostgreSQL remoto;
 - Supabase;
-- Tauri obrigatório.
+- Tauri obrigatório;
+- novo conteúdo de gameplay só para preencher telas durante o M5.5.
