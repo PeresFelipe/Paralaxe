@@ -44,7 +44,7 @@ describe('character creation', () => {
     })
 
     expect(save.saveMode).toBe('OFFLINE')
-    expect(save.saveSchemaVersion).toBe(1)
+    expect(save.saveSchemaVersion).toBe(2)
     expect(save.character.name).toBe('Ailith')
     expect(save.character.classId).toBe('wanderer')
     expect(save.character.giftId).toBe('coin-pouch')
@@ -52,6 +52,8 @@ describe('character creation', () => {
     expect(save.character.level).toBe(1)
     expect(save.character.activeAbilitySlots).toEqual(['ability.opening', null, null, null])
     expect(save.character.currentLocationId).toBe('free-city.tavern')
+    expect(save.skills.mining).toEqual({ level: 1, xp: 0, prestige: 0 })
+    expect(save.idle.activeActivity).toBeNull()
   })
 
   it('rejects a blank character name', () => {
