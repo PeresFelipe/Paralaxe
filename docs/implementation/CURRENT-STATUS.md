@@ -10,7 +10,7 @@
 
 ## Marco atual
 
-**M4 — Primeiro combate completo**.
+**M5 — Dún Liath completa**.
 
 Implementado até este marco:
 
@@ -28,71 +28,108 @@ Implementado até este marco:
 - equipamentos como instâncias individuais;
 - reforço +1 aplicado a uma instância concreta;
 - Combat Engine determinístico/seedable;
-- pools derivados de Vida, Mana e Stamina;
-- regeneração provisória de Mana e Stamina;
-- Defesa, Precisão, crítico e velocidade provisórios;
-- armas iniciais com tipo de dano, intervalo e scaling;
-- quatro slots de habilidade já respeitados pelo motor;
-- habilidade ativa substitui o ataque básico da ação;
-- cooldown separado do relógio de ação;
-- custo de Mana/Stamina;
-- estilos Agressivo, Defensivo e Misto no estado persistido;
-- condição defensiva simples por percentual de Vida;
-- telegraph genérico com suporte a interrupção explícita;
-- ordem determinística com prioridade do personagem quando timestamps coincidem;
-- Lobo de Estrada com Bote telegráfico de 1,2 s e atraso inicial;
-- vitória/derrota/timeout;
-- recompensa de 35 XP do Lobo somente em vitória;
-- estado persistente `wolfDefeated` e resumo da última luta;
-- UI de validação do primeiro combate com replay temporal, log e repetição da mesma seed;
-- testes de recursos derivados, determinismo, telegraph e persistência da vitória.
+- ataque básico, habilidade ativa, cooldown, recursos e telegraph;
+- Lobo de Estrada e primeiro combate persistível;
+- `DungeonRun` persistível no save;
+- seed da expedição;
+- rota irreversível e salas resolvidas idempotentes;
+- primeira visita controlada com 16–17 salas conforme bifurcação;
+- Bolsa de Expedição separada do inventário seguro;
+- loot da run perdido em derrota;
+- loot transferido somente em retirada segura/clear;
+- recursos de combate persistidos entre encontros como attrition da expedição;
+- sala de recuperação pré-Boss restaura Vida/Mana/Stamina;
+- retirada segura disponível antes de Fairtheoir;
+- Crúbach;
+- Tromghiallach;
+- Cosantóir;
+- pools mínimos de equipamento de Dún Liath;
+- raridade Comum/Incomum/Raro e quantidade correspondente de afixos;
+- Arsenal Abandonado com Capacete da Guarnição garantido;
+- Viga de Dún Liath garantida por Cosantóir;
+- evento Matar/Poupar sem recompensa moral imediata;
+- primeira decisão Matar/Poupar permanece como estado narrativo persistente;
+- Registro de Suprimentos da Guarnição;
+- Fragmento do Tratado;
+- Fairtheoir encadeado em duas fases mecânicas:
+  - Fase 1 — O Vigia: 206 HP efetivos até o limiar de 45%;
+  - Fase 2 — Desespero: 169 HP restantes;
+- Última Investida disponível na segunda fase;
+- Fragmento de Fairtheoir no clear;
+- contrato concluível por 150 moedas + 150 XP;
+- primeiro clear desbloqueia Guarda Instintiva;
+- UI funcional para iniciar run, resolver salas, escolher rota, decidir Matar/Poupar, acompanhar Bolsa/recursos, retirar ou enfrentar o Boss;
+- testes de `DungeonRun`, irreversibilidade, idempotência, retirada, perda de loot e recompensa de primeiro clear.
 
 ## Fronteiras preservadas
 
-- UI envia intenções e não implementa fórmulas de combate;
-- `@greywake/domain` concentra regras temporais, RNG e resolução;
-- `@greywake/content` fornece armas, habilidades e inimigos como Definitions;
+- UI envia intenções e não implementa regras da Dungeon;
+- `@greywake/domain` concentra `DungeonRun`, resolução, loot, risco e consequências;
+- `@greywake/content` fornece Definitions de salas, inimigos e equipamentos;
 - `@greywake/persistence` continua atrás de contrato local;
-- RNG usa seed explícita e é reproduzível;
+- Definitions não são duplicadas no save;
+- a run salva somente IDs, seed e estado mutável necessário;
 - nenhuma capacidade Online foi adicionada.
 
 ## Schema atual
 
 ```text
-save_schema_version = 4
+save_schema_version = 5
 ```
 
-Principais adições do v4:
+Principais adições do v5:
 
 ```text
-combat.preferences.style
-combat.preferences.defensiveHealthThresholdPercent
-combat.lastRun
-combat.wolfDefeated
+dungeon.activeRun
+dungeon.dunLiathEasyCleared
+dungeon.dunLiathProtector
+dungeon.contractCompleted
+dungeon.instinctiveGuardUnlocked
+
+DungeonRun:
+  dungeonDefinitionId
+  difficulty
+  seed
+  currentRoomId
+  visitedRoomIds
+  resolvedRoomIds
+  chosenBranches
+  expeditionBag
+  expeditionEquipment
+  resources
+  protectorDecision
+  supplyRegisterRecovered
+  treatyFragmentRecovered
+  safeExtractionAvailable
+  completed
 ```
 
-Saves v1–v3 são migrados automaticamente ao serem carregados.
+Saves v1–v4 são migrados automaticamente ao serem carregados.
 
 ## Próximo marco
 
-**M5 — Dún Liath completa**.
+**M6 — Build 0.1 validável**.
 
 Objetivo imediato:
 
-1. modelar `DungeonRun` persistente e seed da expedição;
-2. implementar Bolsa de Expedição separada;
-3. gerar a primeira estrutura de Dún Liath — Fácil;
-4. implementar salas de combate, recuperação, evento e loot;
-5. adicionar Crúbach, Tromghiallach e Cosantóir;
-6. implementar bifurcação irreversível e retirada pré-Boss;
-7. implementar evento Matar/Poupar;
-8. persistir Registro de Suprimentos e Fragmento do Tratado;
-9. implementar Fairtheoir com duas fases;
-10. concluir a Dungeon e retornar à Cidade Livre.
+1. executar `pnpm check` em checkout real com Node/pnpm;
+2. corrigir qualquer erro de lint/typecheck/teste encontrado;
+3. validar o fluxo completo do novo save até o primeiro clear;
+4. validar as 6 classes × 4 rotas iniciais;
+5. fechar diferenças entre o Combat Engine atual e a matriz completa do plano;
+6. validar consumíveis e thresholds no fluxo integrado;
+7. validar status/buildup que forem necessários para a fidelidade dos encontros da 0.1;
+8. revisar regras defensivas dos inimigos que ainda estejam simplificadas na implementação estrutural;
+9. validar persistência fechando/reabrindo durante uma DungeonRun;
+10. registrar resultados e bugs da Build 0.1.
 
-## Observação de validação
+## Limitações conhecidas antes do M6
 
-A implementação foi revisada estruturalmente pelo repositório. Nesta sessão não há runner local conectado ao checkout do projeto, então `pnpm check` ainda deve ser executado em ambiente com Node/pnpm antes de considerar o marco validado por execução.
+- nesta sessão não há runner local conectado ao checkout, então `pnpm check` ainda não foi executado;
+- a fundação de status existe no GDD/Build, mas Veneno/Sangramento/Atordoamento/Queimadura/Congelamento ainda não estão todos conectados ao motor;
+- posturas defensivas específicas de Tromghiallach/Cosantóir/Fairtheoir ainda estão simplificadas;
+- consumíveis em combate e seus thresholds ainda precisam de validação integrada;
+- a primeira estrutura de Dún Liath é controlada e seedable; proceduralidade estrutural mais ampla deve ser validada/expandida depois que o vertical slice estiver estável.
 
 ## Não implementar ainda
 
