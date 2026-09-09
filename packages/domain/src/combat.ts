@@ -33,6 +33,20 @@ export interface CombatAbilityDefinition {
     basePower: number
     scaling: Partial<Record<keyof CharacterAttributes, ScalingGrade>>
   }
+  restore?: {
+    health?: number
+    mana?: number
+    stamina?: number
+  }
+  evasionBuff?: {
+    bonus: number
+    durationSeconds: number
+  }
+  damageReductionBuff?: {
+    multiplier: number
+    durationSeconds: number
+    consumeOnDirectHit?: boolean
+  }
   canInterrupt?: boolean
 }
 
@@ -199,6 +213,12 @@ interface TimedMultiplier {
   expiresAt: number
 }
 
+interface PlayerDamageReductionState {
+  multiplier: number
+  expiresAt: number
+  consumeOnDirectHit: boolean
+}
+
 function clamp(value: number, min: number, max: number) {
   return Math.max(min, Math.min(max, value))
 }
@@ -277,6 +297,30 @@ export function configureCombatConsumableSlot(
   }
 }
 
+export function teachAndEquipCombatAbilities(
+  save: OfflineGameSave,
+  abilityIds: readonly string[],
+  now: string,
+): OfflineGameSave {
+  const unique = [...new Set([...save.character.knownAbilityIds, ...abilityIds])]
+  const active: [string | null, string | null, string | null, string | null] = [
+    abilityIds[0] ?? null,
+    abilityIds[1] ?? null,
+    abilityIds[2] ?? null,
+    abilityIds[3] ?? null,
+  ]
+
+  return {
+    ...save,
+    updatedAt: now,
+    character: {
+      ...save.character,
+      knownAbilityIds: unique,
+      activeAbilitySlots: active,
+    },
+  }
+}
+
 export function derivePlayerCombatStats(
   save: OfflineGameSave,
   catalog: CombatEquipmentCatalog,
@@ -351,6 +395,7 @@ function chooseAbility(
   const candidates = save.character.activeAbilitySlots
     .map((id, slot) => ({ id, slot }))
     .filter((entry): entry is { id: string; slot: number } => Boolean(entry.id))
+    .filter((entry) => save.character.knownAbilityIds.includes(entry.id))
     .map((entry) => ({ ...entry, definition: catalog.getAbilityDefinition(entry.id) }))
     .filter((entry): entry is { id: string; slot: number; definition: CombatAbilityDefinition } =>
       entry.definition !== null,
@@ -368,7 +413,12 @@ function chooseAbility(
 
   return candidates.toSorted((a, b) => {
     const style = save.combat.preferences.style
-    if (style === 'mixed') return a.slot - b.slot
+    if (style === 'mixed') {
+      const aDefensiveNeeded = a.definition.profile === 'defensive' && healthPercent <= save.combat.preferences.defensiveHealthThresholdPercent
+      const bDefensiveNeeded = b.definition.profile === 'defensive' && healthPercent <= save.combat.preferences.defensiveHealthThresholdPercent
+      if (aDefensiveNeeded !== bDefensiveNeeded) return aDefensiveNeeded ? -1 : 1
+      return a.slot - b.slot
+    }
     const preferred = style === 'aggressive' ? 'aggressive' : 'defensive'
     const aRank = a.definition.profile === preferred ? 0 : 1
     const bRank = b.definition.profile === preferred ? 0 : 1
@@ -390,6 +440,54 @@ function removeConsumedItems(inventory: InventoryStack[], consumedItems: Invento
       quantity: stack.quantity - (consumed.get(stack.definitionId) ?? 0),
     }))
     .filter((stack) => stack.quantity > 0)
+}
+
+function totalInventoryForCombat(save: OfflineGameSave) {
+  const totals = new Map<string, number>()
+  for (const stack of save.character.inventory) {
+    totals.set(stack.definitionId, (totals.get(stack.definitionId) ?? 0) + stack.quantity)
+  }
+  for (const stack of save.dungeon.activeRun?.expeditionBag ?? []) {
+    totals.set(stack.definitionId, (totals.get(stack.definitionId) ?? 0) + stack.quantity)
+  }
+  return totals
+}
+
+function consumeAcrossSafeAndExpedition(
+  save: OfflineGameSave,
+  consumedItems: InventoryStack[],
+): Pick<OfflineGameSave, 'character' | 'dungeon'> {
+  let safeInventory = save.character.inventory.map((stack) => ({ ...stack }))
+  let expeditionBag = save.dungeon.activeRun?.expeditionBag.map((stack) => ({ ...stack })) ?? []
+
+  for (const consumed of consumedItems) {
+    let remaining = consumed.quantity
+
+    expeditionBag = expeditionBag
+      .map((stack) => {
+        if (stack.definitionId !== consumed.definitionId || remaining <= 0) return stack
+        const used = Math.min(stack.quantity, remaining)
+        remaining -= used
+        return { ...stack, quantity: stack.quantity - used }
+      })
+      .filter((stack) => stack.quantity > 0)
+
+    if (remaining > 0) {
+      safeInventory = removeConsumedItems(safeInventory, [
+        { definitionId: consumed.definitionId, quantity: remaining },
+      ])
+    }
+  }
+
+  return {
+    character: { ...save.character, inventory: safeInventory },
+    dungeon: {
+      ...save.dungeon,
+      activeRun: save.dungeon.activeRun
+        ? { ...save.dungeon.activeRun, expeditionBag }
+        : null,
+    },
+  }
 }
 
 export function simulateCombat(
@@ -414,13 +512,16 @@ export function simulateCombat(
   const log: CombatLogEntry[] = []
   const playerCooldowns = new Map<string, number>()
   const enemyCooldowns = new Map<string, number>()
-  const availableInventory = new Map(save.character.inventory.map((stack) => [stack.definitionId, stack.quantity]))
+  const availableInventory = totalInventoryForCombat(save)
   const consumed = new Map<string, number>()
   const buildup = new Map<CombatStatusId, BuildupState>()
   let timedEnemyMultipliers: TimedMultiplier[] = []
   let poisonUntil = 0
   let burnUntil = 0
   let freezeUntil = 0
+  let evasionBonus = 0
+  let evasionUntil = 0
+  let damageReduction: PlayerDamageReductionState | null = null
   let manualPending: 0 | 1 | null = manualConsumableSlotIndex ?? null
   let enemyHealth = enemy.maxHealth
   let now = 0
@@ -437,8 +538,21 @@ export function simulateCombat(
     return stats.defense * (burnUntil > now + EPSILON ? 0.85 : 1)
   }
 
+  function playerEvasion() {
+    return stats.evasion + (evasionUntil > now + EPSILON ? evasionBonus : 0)
+  }
+
   function playerInterval() {
     return stats.actionIntervalSeconds * (freezeUntil > now + EPSILON ? 1.3 : 1)
+  }
+
+  function incomingDirectDamage(rawDamage: number) {
+    let finalDamage = rawDamage
+    if (damageReduction && damageReduction.expiresAt > now + EPSILON) {
+      finalDamage *= damageReduction.multiplier
+      if (damageReduction.consumeOnDirectHit) damageReduction = null
+    }
+    return Math.max(1, Math.round(finalDamage))
   }
 
   function enemyDamageMultiplier(type: DamageType) {
@@ -455,7 +569,10 @@ export function simulateCombat(
     if (to <= from) return
     const poisonSeconds = Math.max(0, Math.min(to, poisonUntil) - from)
     const burnSeconds = Math.max(0, Math.min(to, burnUntil) - from)
-    resources.health = Math.max(0, resources.health - poisonSeconds * resources.maxHealth * 0.02 - burnSeconds * 3)
+    resources.health = Math.max(
+      0,
+      resources.health - poisonSeconds * resources.maxHealth * 0.02 - burnSeconds * 3,
+    )
 
     for (const state of buildup.values()) {
       const decayStart = state.lastAppliedAt + 3
@@ -464,6 +581,7 @@ export function simulateCombat(
       state.lastEvaluatedAt = to
     }
     timedEnemyMultipliers = timedEnemyMultipliers.filter((effect) => effect.expiresAt > to + EPSILON)
+    if (damageReduction && damageReduction.expiresAt <= to + EPSILON) damageReduction = null
   }
 
   function applyBuildup(application: StatusApplicationDefinition) {
@@ -501,6 +619,12 @@ export function simulateCombat(
       } else if (application.status === 'freeze') {
         freezeUntil = now + 5
         playerReadyAt = now + Math.max(0, playerReadyAt - now) * 1.3
+        if (telegraph) {
+          telegraph = {
+            ...telegraph,
+            resolvesAt: now + Math.max(0, telegraph.resolvesAt - now) * 1.2,
+          }
+        }
       }
     }
     buildup.set(application.status, state)
@@ -564,6 +688,46 @@ export function simulateCombat(
     return false
   }
 
+  function applyPlayerAbilityEffects(ability: CombatAbilityDefinition) {
+    if (ability.restore) {
+      const before = { ...resources }
+      resources.health = Math.min(resources.maxHealth, resources.health + (ability.restore.health ?? 0))
+      resources.mana = Math.min(resources.maxMana, resources.mana + (ability.restore.mana ?? 0))
+      resources.stamina = Math.min(resources.maxStamina, resources.stamina + (ability.restore.stamina ?? 0))
+      log.push({
+        atSeconds: now,
+        actor: 'player',
+        kind: 'ability',
+        message: `${ability.name} restaura ${Math.round(resources.health - before.health)} Vida, ${Math.round(resources.mana - before.mana)} Mana e ${Math.round(resources.stamina - before.stamina)} Stamina.`,
+      })
+    }
+
+    if (ability.evasionBuff) {
+      evasionBonus = ability.evasionBuff.bonus
+      evasionUntil = now + ability.evasionBuff.durationSeconds
+      log.push({
+        atSeconds: now,
+        actor: 'player',
+        kind: 'ability',
+        message: `${ability.name} concede +${ability.evasionBuff.bonus} Evasão por ${ability.evasionBuff.durationSeconds}s.`,
+      })
+    }
+
+    if (ability.damageReductionBuff) {
+      damageReduction = {
+        multiplier: ability.damageReductionBuff.multiplier,
+        expiresAt: now + ability.damageReductionBuff.durationSeconds,
+        consumeOnDirectHit: ability.damageReductionBuff.consumeOnDirectHit ?? false,
+      }
+      log.push({
+        atSeconds: now,
+        actor: 'player',
+        kind: 'ability',
+        message: `${ability.name} reduz dano direto recebido em ${Math.round((1 - ability.damageReductionBuff.multiplier) * 100)}%.`,
+      })
+    }
+  }
+
   while (now <= maxDurationSeconds + EPSILON && resources.health > 0 && enemyHealth > 0) {
     const telegraphAt = telegraph?.resolvesAt ?? Number.POSITIVE_INFINITY
     const nextTime = Math.min(playerReadyAt, enemyReadyAt, telegraphAt, maxDurationSeconds)
@@ -579,11 +743,9 @@ export function simulateCombat(
 
     if (telegraph && Math.abs(telegraph.resolvesAt - now) <= EPSILON) {
       const ability = telegraph.ability
-      if (random() < hitChance(enemy.accuracy, stats.evasion)) {
-        const damage = Math.max(
-          1,
-          Math.round(enemy.power * (ability.damageMultiplier ?? 0) * (1 - mitigation(playerDefense(), enemy.combatLevel))),
-        )
+      if (random() < hitChance(enemy.accuracy, playerEvasion())) {
+        const mitigated = enemy.power * (ability.damageMultiplier ?? 0) * (1 - mitigation(playerDefense(), enemy.combatLevel))
+        const damage = incomingDirectDamage(mitigated)
         resources.health = Math.max(0, resources.health - damage)
         log.push({ atSeconds: now, actor: 'enemy', kind: 'ability', message: `${enemy.name} usa ${ability.name} e causa ${damage} de dano.` })
         afterEnemyHit(ability)
@@ -609,6 +771,8 @@ export function simulateCombat(
             telegraph = null
             enemyReadyAt = now + enemy.actionIntervalSeconds
           }
+
+          applyPlayerAbilityEffects(ability)
 
           if (ability.heal) {
             const heal = Math.round(ability.heal.basePower + scalingContribution(save.character.attributes, ability.heal.scaling))
@@ -664,8 +828,9 @@ export function simulateCombat(
           enemyReadyAt = Number.POSITIVE_INFINITY
           log.push({ atSeconds: now, actor: 'enemy', kind: 'telegraph', message: `${enemy.name} prepara ${ready.name} por ${ready.telegraphSeconds}s.` })
         } else {
-          if (random() < hitChance(enemy.accuracy, stats.evasion)) {
-            const damage = Math.max(1, Math.round(enemy.power * (ready.damageMultiplier ?? 0) * (1 - mitigation(playerDefense(), enemy.combatLevel))))
+          if (random() < hitChance(enemy.accuracy, playerEvasion())) {
+            const mitigated = enemy.power * (ready.damageMultiplier ?? 0) * (1 - mitigation(playerDefense(), enemy.combatLevel))
+            const damage = incomingDirectDamage(mitigated)
             resources.health = Math.max(0, resources.health - damage)
             log.push({ atSeconds: now, actor: 'enemy', kind: 'ability', message: `${enemy.name} usa ${ready.name} e causa ${damage} de dano.` })
             afterEnemyHit(ready)
@@ -675,8 +840,9 @@ export function simulateCombat(
           enemyReadyAt = now + enemy.actionIntervalSeconds * (ready.nextIntervalMultiplier ?? 1)
         }
       } else {
-        if (random() < hitChance(enemy.accuracy, stats.evasion)) {
-          const damage = Math.max(1, Math.round(enemy.power * (1 - mitigation(playerDefense(), enemy.combatLevel))))
+        if (random() < hitChance(enemy.accuracy, playerEvasion())) {
+          const mitigated = enemy.power * (1 - mitigation(playerDefense(), enemy.combatLevel))
+          const damage = incomingDirectDamage(mitigated)
           resources.health = Math.max(0, resources.health - damage)
           log.push({ atSeconds: now, actor: 'enemy', kind: 'basic', message: `${enemy.name} causa ${damage} de dano.` })
         } else {
@@ -721,15 +887,17 @@ export function applyCombatResult(
   result: CombatResult,
   now: string,
 ): OfflineGameSave {
+  const consumedState = consumeAcrossSafeAndExpedition(save, result.consumedItems)
+
   return {
     ...save,
     updatedAt: now,
     character: {
-      ...save.character,
+      ...consumedState.character,
       xp: save.character.xp + result.xpGranted,
-      inventory: removeConsumedItems(save.character.inventory, result.consumedItems),
       currentLocationId: 'free-city.tavern',
     },
+    dungeon: consumedState.dungeon,
     combat: {
       ...save.combat,
       wolfDefeated:
