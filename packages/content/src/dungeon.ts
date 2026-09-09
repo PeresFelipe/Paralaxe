@@ -21,7 +21,7 @@ export const DUN_LIATH_EASY = {
     { id: 'room.cosantoir', name: 'Porta do Guardião', kind: 'elite', enemyDefinitionId: 'enemy.cosantoir', nextRoomIds: ['room.recovery'] },
     { id: 'room.recovery', name: 'Capela Silenciosa', kind: 'recovery', nextRoomIds: ['room.boss-gate'] },
     { id: 'room.boss-gate', name: 'Porta do Último Vigia', kind: 'event', nextRoomIds: ['room.fairtheoir'] },
-    { id: 'room.fairtheoir', name: 'Salão do Último Vigia', kind: 'boss', enemyDefinitionId: 'enemy.fairtheoir', nextRoomIds: [] },
+    { id: 'room.fairtheoir', name: 'Salão do Último Vigia', kind: 'boss', enemyDefinitionId: 'enemy.fairtheoir-phase1', nextRoomIds: [] },
   ],
 } as const satisfies DungeonDefinition
 
