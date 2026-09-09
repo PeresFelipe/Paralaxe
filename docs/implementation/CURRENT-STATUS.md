@@ -10,53 +10,77 @@
 
 ## Marco atual
 
-**M2 — Idle persiste e funciona offline**.
+**M3 — Crafting e equipamento**.
 
 Implementado até este marco:
 
-- criação exclusiva de save `OFFLINE` na Build 0.1;
-- nome, classe e presente do personagem;
-- save schema versionado, agora em `v2`;
-- migração transparente de saves `v1` criados no M1;
-- estado das sete Skills;
+- criação e carregamento de save `OFFLINE`;
+- classes, presentes e estado inicial do personagem;
+- persistência IndexedDB com schema versionado;
+- migração de saves v1 e v2 para o schema v3;
+- sete Skills com estado inicial;
 - uma atividade Idle por vez;
-- quatro coletas iniciais da Build 0.1: Cloch, Giúis, Scadán e Neantóg;
-- timestamps de início e último processamento;
-- resto parcial de ciclo preservado entre processamentos;
-- progresso por tempo decorrido com 100% de eficiência;
-- limite offline inicial de 4 h e regra de +2 h a cada 10 níveis gerais;
-- descarte correto do tempo que excede o limite offline;
-- recompensa determinística: apenas o recurso escolhido + XP da Skill;
-- progressão de Skill 1–10 conforme valores provisórios da Build 0.1;
-- +5 XP Geral por novo nível de Skill;
-- recursos coletados adicionados ao inventário do personagem;
-- atividade continua conceitualmente com a aplicação fechada e é processada ao carregar o save;
-- atualização periódica enquanto a aplicação está aberta;
-- IndexedDB continua atrás do contrato `OfflineSaveRepository`;
-- UI para iniciar, trocar e interromper uma coleta;
-- feedback de progresso offline ao reabrir;
-- testes de domínio para tempo, ciclos parciais, XP e limite offline.
+- quatro coletas iniciais com progresso offline;
+- limite offline inicial de 4 h;
+- XP de Skill e +5 XP Geral por nível de Skill;
+- produção Idle determinística;
+- produção continua enquanto houver materiais;
+- produção para automaticamente quando os materiais acabam;
+- receitas mínimas de Metalurgia, Forja e Culinária;
+- Cloch Tratada;
+- Braçadeiras de Giúis;
+- Scadán Assado;
+- Preparado de Neantóg;
+- Reforço Simples +1;
+- equipamentos como instâncias individuais;
+- slots equipados apontam para `instanceId`, não para Definition;
+- primeiro equipamento craftável pode ser equipado;
+- reforço +1 aplicado a uma instância concreta;
+- +1 aumenta o atributo-base principal em 15%, arredondando para cima;
+- testes de crafting, consumo de materiais, parada por falta de insumos e reforço.
 
 ## Fronteiras preservadas
 
-- React envia intenções e não contém as regras de cálculo Idle;
-- `@greywake/domain` calcula tempo, XP, níveis e recompensas;
-- `@greywake/content` define quais atividades existem e seus valores;
-- `@greywake/persistence` migra e persiste o State local;
+- UI envia intenções e não escreve diretamente no formato do save;
+- `@greywake/domain` concentra regras de crafting, equipamento e progressão;
+- `@greywake/content` fornece Definitions de receitas e equipamentos;
+- `@greywake/persistence` continua atrás de contrato local;
+- equipamento normal já possui identidade de instância separada da Definition;
+- coleta e produção respeitam a regra de uma atividade Idle por vez;
 - nenhuma capacidade Online foi adicionada.
+
+## Schema atual
+
+```text
+save_schema_version = 3
+```
+
+Principais adições do v3:
+
+```text
+character.equipment          → slot -> equipment_instance_id
+character.equipmentItems     → instâncias individuais
+character.nextEquipmentSequence
+crafting.activeRecipe
+```
+
+Saves v1/v2 são migrados automaticamente ao serem carregados.
 
 ## Próximo marco
 
-**M3 — Crafting e equipamento**.
+**M4 — Primeiro combate completo**.
 
 Objetivo imediato:
 
-1. transformar parte dos recursos coletados em produtos por receitas determinísticas;
-2. implementar consumo de materiais por lote;
-3. criar o primeiro fluxo de Metalurgia, Forja e Culinária da Build 0.1;
-4. representar equipamentos obtidos/produzidos como estado persistente;
-5. implementar o reforço +1 provisório;
-6. conectar inventário, crafting e equipamentos sem colocar regra de negócio na UI.
+1. modelar recursos de combate derivados de atributos;
+2. criar o primeiro Combat Engine determinístico/seedable;
+3. implementar ataque básico e relógio de ação;
+4. implementar quatro slots de habilidade;
+5. implementar cooldown, Mana e Stamina;
+6. implementar telegraph e interrupção;
+7. criar o Lobo de Estrada;
+8. executar o primeiro combate completo até vitória ou morte;
+9. persistir resultado e XP.
 
 ## Não implementar ainda
 
