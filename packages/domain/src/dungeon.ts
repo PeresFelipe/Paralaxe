@@ -244,7 +244,7 @@ export function createDungeonRun(
     expeditionBag: [],
     expeditionEquipment: [],
     resources: initialResources(save),
-    protectorDecision: null,
+    protectorDecision: save.dungeon.dunLiathProtector,
     supplyRegisterRecovered: false,
     treatyFragmentRecovered: false,
     safeExtractionAvailable: false,
@@ -538,7 +538,7 @@ export function extractDungeonRun(save: OfflineGameSave, now: string): OfflineGa
     dungeon: {
       activeRun: null,
       dunLiathEasyCleared: save.dungeon.dunLiathEasyCleared || run.completed,
-      dunLiathProtector: run.protectorDecision ?? save.dungeon.dunLiathProtector,
+      dunLiathProtector: save.dungeon.dunLiathProtector ?? run.protectorDecision,
       contractCompleted: save.dungeon.contractCompleted || contractCanComplete,
       instinctiveGuardUnlocked: save.dungeon.instinctiveGuardUnlocked || firstClear,
     },
@@ -554,7 +554,7 @@ export function failDungeonRun(save: OfflineGameSave, now: string): OfflineGameS
     dungeon: {
       ...save.dungeon,
       activeRun: null,
-      dunLiathProtector: run?.protectorDecision ?? save.dungeon.dunLiathProtector,
+      dunLiathProtector: save.dungeon.dunLiathProtector ?? run?.protectorDecision ?? null,
     },
   }
 }
