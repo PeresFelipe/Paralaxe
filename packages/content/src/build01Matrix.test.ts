@@ -125,9 +125,11 @@ function fight(save: OfflineGameSave, enemyId: string, seed: number, resources: 
 function runConservativeDungeon(save: OfflineGameSave, seedBase: number): MatrixResult {
   let currentSave = save
   let resources = fullResources(currentSave)
+
+  // Rota administrativa: evita o Crúbach opcional dos Alojamentos e encontra somente
+  // o Crúbach obrigatório da Galeria antes de Tromghiallach.
   const encounters = [
-    ['Crúbach 1', 'enemy.crubach'],
-    ['Crúbach 2', 'enemy.crubach'],
+    ['Crúbach', 'enemy.crubach'],
     ['Tromghiallach', 'enemy.tromghiallach'],
   ] as const
 
@@ -143,7 +145,12 @@ function runConservativeDungeon(save: OfflineGameSave, seedBase: number): Matrix
   if (guardian.result.outcome !== 'victory') return { outcome: guardian.result.outcome, stage: 'Cosantóir' }
   currentSave = guardian.save
 
+  // A Capela Silenciosa restaura os três recursos e adiciona 3 Preparados de Campo
+  // à Bolsa. Nesta matriz, eles são materializados no inventário de combate para validar
+  // o poder real disponível antes de Fairtheoir.
+  currentSave = addItem(currentSave, 'item.consumable.field-preparation', 3)
   resources = fullResources(currentSave)
+
   const phase1 = fight(currentSave, 'enemy.fairtheoir-phase1', seedBase + 20, resources)
   if (phase1.result.outcome !== 'victory') return { outcome: phase1.result.outcome, stage: 'Fairtheoir Fase 1' }
   currentSave = phase1.save
