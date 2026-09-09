@@ -2,18 +2,24 @@ import { useEffect, useState } from 'react'
 import {
   CHARACTER_CLASSES,
   CONTENT_VERSION,
+  INITIAL_CRAFTING_RECIPES,
   INITIAL_GIFTS,
   INITIAL_IDLE_ACTIVITIES,
+  getCraftingRecipeDefinition,
+  getEquipmentDefinition,
   getIdleActivityDefinition,
 } from '@greywake/content'
 import {
-  ATTRIBUTE_KEYS,
   BUILD_SAVE_MODE,
   createOfflineGameSave,
+  equipEquipment,
+  getEquipmentPrimaryValue,
+  processCraftingProgress,
   processIdleProgress,
+  startCraftingRecipe,
   startIdleActivity,
+  stopCraftingRecipe,
   stopIdleActivity,
-  type AttributeKey,
   type CharacterClassId,
   type GiftId,
   type OfflineGameSave,
@@ -25,16 +31,6 @@ const saveRepository = createIndexedDbSaveRepository()
 
 type Screen = 'loading' | 'save-list' | 'create' | 'character' | 'error'
 
-const attributeLabels: Record<AttributeKey, string> = {
-  vitality: 'Vitalidade',
-  mind: 'Mente',
-  vigor: 'Vigor',
-  strength: 'Força',
-  dexterity: 'Destreza',
-  intelligence: 'Inteligência',
-  faith: 'Fé',
-}
-
 const skillLabels: Record<SkillId, string> = {
   mining: 'Mineração',
   woodcutting: 'Lenhador',
@@ -43,6 +39,21 @@ const skillLabels: Record<SkillId, string> = {
   metallurgy: 'Metalurgia',
   smithing: 'Forja',
   cooking: 'Culinária',
+}
+
+const itemLabels: Record<string, string> = {
+  'material.cloch': 'Cloch',
+  'material.giuis': 'Giúis',
+  'material.scadan': 'Scadán',
+  'material.neantog': 'Neantóg',
+  'material.treated-cloch': 'Cloch Tratada',
+  'item.food.roasted-scadan': 'Scadán Assado',
+  'item.consumable.neantog-preparation': 'Preparado de Neantóg',
+  'item.consumable.field-preparation': 'Preparado de Campo',
+  'item.consumable.crimson-flask': 'Frasco Carmesim',
+  'item.key.rusted': 'Chave Enferrujada',
+  'item.quest.nameless-stone': 'Pedra Sem Nome',
+  'item.equipment.traveller-ring': 'Anel do Viajante',
 }
 
 function getClassName(classId: CharacterClassId) {
@@ -57,23 +68,37 @@ function getInventoryQuantity(save: OfflineGameSave, definitionId: string) {
   return save.character.inventory.find((stack) => stack.definitionId === definitionId)?.quantity ?? 0
 }
 
-function describeIdleResult(
-  completedActions: number,
-  resultName: string,
-  gainedSkillLevels: number,
-  cappedSeconds: number,
-) {
-  const parts = [`+${completedActions} ${resultName}`]
+function updateSaveInList(saves: OfflineGameSave[], save: OfflineGameSave) {
+  return saves.map((current) => (current.saveId === save.saveId ? save : current))
+}
 
-  if (gainedSkillLevels > 0) {
-    parts.push(`+${gainedSkillLevels} nível${gainedSkillLevels === 1 ? '' : 'is'} de Skill`)
+function processCurrentWork(save: OfflineGameSave, now: string) {
+  const activeIdleId = save.idle.activeActivity?.activityDefinitionId
+  if (activeIdleId) {
+    const activity = getIdleActivityDefinition(activeIdleId)
+    if (activity) {
+      const result = processIdleProgress(save, activity, now)
+      return {
+        save: result.save,
+        text: result.completedActions > 0 ? `+${result.completedActions} ${activity.resultName}` : null,
+      }
+    }
   }
 
-  if (cappedSeconds > 0) {
-    parts.push('limite offline atingido')
+  const activeRecipeId = save.crafting.activeRecipe?.recipeDefinitionId
+  if (activeRecipeId) {
+    const recipe = getCraftingRecipeDefinition(activeRecipeId)
+    if (recipe) {
+      const result = processCraftingProgress(save, recipe, now)
+      const totalOutput = result.producedItems + result.producedEquipment + result.upgradedEquipment
+      return {
+        save: result.save,
+        text: result.completedActions > 0 ? `${recipe.output.name}: ${totalOutput || result.completedActions} concluído(s)` : null,
+      }
+    }
   }
 
-  return parts.join(' · ')
+  return { save, text: null }
 }
 
 function App() {
@@ -108,39 +133,33 @@ function App() {
   }, [])
 
   useEffect(() => {
-    if (screen !== 'character' || !activeSave?.idle.activeActivity) return
+    if (screen !== 'character' || !activeSave) return
+    if (!activeSave.idle.activeActivity && !activeSave.crafting.activeRecipe) return
 
     const timer = window.setInterval(() => {
-      const activity = getIdleActivityDefinition(activeSave.idle.activeActivity?.activityDefinitionId ?? '')
-
-      if (!activity) return
-
-      const result = processIdleProgress(activeSave, activity, new Date().toISOString())
+      const result = processCurrentWork(activeSave, new Date().toISOString())
+      if (result.save === activeSave) return
 
       void saveRepository.put(result.save).then(() => {
         setActiveSave(result.save)
-        setSaves((current) => current.map((save) => (save.saveId === result.save.saveId ? result.save : save)))
-
-        if (result.completedActions > 0) {
-          setMessage(
-            describeIdleResult(
-              result.completedActions,
-              activity.resultName,
-              result.gainedSkillLevels,
-              result.cappedSeconds,
-            ),
-          )
-        }
+        setSaves((current) => updateSaveInList(current, result.save))
+        if (result.text) setMessage(result.text)
       })
     }, 5000)
 
     return () => window.clearInterval(timer)
   }, [screen, activeSave])
 
+  async function persistActive(save: OfflineGameSave, text?: string) {
+    await saveRepository.put(save)
+    setActiveSave(save)
+    setSaves((current) => updateSaveInList(current, save))
+    if (text) setMessage(text)
+  }
+
   async function handleCreateSave() {
     const characterClass = CHARACTER_CLASSES.find((definition) => definition.id === selectedClassId)
     const gift = INITIAL_GIFTS.find((definition) => definition.id === selectedGiftId)
-
     if (!characterClass || !gift || !characterName.trim()) return
 
     setIsSaving(true)
@@ -156,7 +175,6 @@ function App() {
         characterClass,
         gift,
       })
-
       await saveRepository.put(save)
       setSaves((current) => [save, ...current])
       setActiveSave(save)
@@ -170,41 +188,19 @@ function App() {
 
   async function handleLoadSave(saveId: string) {
     setMessage(null)
-
     try {
-      const storedSave = await saveRepository.get(saveId)
-
-      if (!storedSave) {
+      const stored = await saveRepository.get(saveId)
+      if (!stored) {
         setMessage('Esse save não foi encontrado no armazenamento local.')
         return
       }
 
-      let save = storedSave
-      const activeActivityId = save.idle.activeActivity?.activityDefinitionId
-      const activity = activeActivityId ? getIdleActivityDefinition(activeActivityId) : null
-
-      if (activity) {
-        const result = processIdleProgress(save, activity, new Date().toISOString())
-        save = result.save
-        await saveRepository.put(save)
-
-        if (result.completedActions > 0) {
-          setMessage(
-            `Enquanto você esteve fora: ${describeIdleResult(
-              result.completedActions,
-              activity.resultName,
-              result.gainedSkillLevels,
-              result.cappedSeconds,
-            )}`,
-          )
-        }
-      } else if (storedSave.saveSchemaVersion === 2) {
-        await saveRepository.put(storedSave)
-      }
-
-      setSaves((current) => current.map((currentSave) => (currentSave.saveId === save.saveId ? save : currentSave)))
-      setActiveSave(save)
+      const result = processCurrentWork(stored, new Date().toISOString())
+      await saveRepository.put(result.save)
+      setSaves((current) => updateSaveInList(current, result.save))
+      setActiveSave(result.save)
       setScreen('character')
+      if (result.text) setMessage(`Enquanto você esteve fora: ${result.text}`)
     } catch (error) {
       setMessage(error instanceof Error ? error.message : 'Não foi possível carregar o save.')
     }
@@ -212,42 +208,60 @@ function App() {
 
   async function handleStartActivity(activityDefinitionId: string) {
     if (!activeSave) return
-
     const activity = getIdleActivityDefinition(activityDefinitionId)
     if (!activity) return
 
-    const now = new Date().toISOString()
-    let save = activeSave
-    const previousActivityId = save.idle.activeActivity?.activityDefinitionId
-    const previousActivity = previousActivityId ? getIdleActivityDefinition(previousActivityId) : null
-
-    if (previousActivity) {
-      save = processIdleProgress(save, previousActivity, now).save
+    try {
+      const now = new Date().toISOString()
+      let save = processCurrentWork(activeSave, now).save
+      if (save.crafting.activeRecipe) save = stopCraftingRecipe(save, now)
+      if (save.idle.activeActivity) save = stopIdleActivity(save, now)
+      save = startIdleActivity(save, activity, now)
+      await persistActive(save, `${activity.name} iniciado.`)
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : 'Não foi possível iniciar a atividade.')
     }
-
-    save = startIdleActivity(save, activity, now)
-    await saveRepository.put(save)
-    setActiveSave(save)
-    setSaves((current) => current.map((currentSave) => (currentSave.saveId === save.saveId ? save : currentSave)))
-    setMessage(`${activity.name} iniciado. A atividade continuará com o jogo fechado.`)
   }
 
-  async function handleStopActivity() {
-    if (!activeSave?.idle.activeActivity) return
+  async function handleStartRecipe(recipeDefinitionId: string, targetEquipmentInstanceId: string | null = null) {
+    if (!activeSave) return
+    const recipe = getCraftingRecipeDefinition(recipeDefinitionId)
+    if (!recipe) return
 
-    const now = new Date().toISOString()
-    const activity = getIdleActivityDefinition(activeSave.idle.activeActivity.activityDefinitionId)
-    let save = activeSave
-
-    if (activity) {
-      save = processIdleProgress(save, activity, now).save
+    try {
+      const now = new Date().toISOString()
+      let save = processCurrentWork(activeSave, now).save
+      if (save.idle.activeActivity) save = stopIdleActivity(save, now)
+      if (save.crafting.activeRecipe) save = stopCraftingRecipe(save, now)
+      save = startCraftingRecipe(save, recipe, now, targetEquipmentInstanceId)
+      await persistActive(save, `${recipe.name} iniciado. A produção continua enquanto houver materiais.`)
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : 'Não foi possível iniciar a produção.')
     }
+  }
 
-    save = stopIdleActivity(save, now)
-    await saveRepository.put(save)
-    setActiveSave(save)
-    setSaves((current) => current.map((currentSave) => (currentSave.saveId === save.saveId ? save : currentSave)))
-    setMessage('Atividade Idle interrompida.')
+  async function handleStopWork() {
+    if (!activeSave) return
+    const now = new Date().toISOString()
+    let save = processCurrentWork(activeSave, now).save
+    if (save.idle.activeActivity) save = stopIdleActivity(save, now)
+    if (save.crafting.activeRecipe) save = stopCraftingRecipe(save, now)
+    await persistActive(save, 'Atividade interrompida.')
+  }
+
+  async function handleEquip(instanceId: string) {
+    if (!activeSave) return
+    const instance = activeSave.character.equipmentItems.find((item) => item.instanceId === instanceId)
+    if (!instance) return
+    const definition = getEquipmentDefinition(instance.definitionId)
+    if (!definition) return
+
+    try {
+      const save = equipEquipment(activeSave, instanceId, definition, new Date().toISOString())
+      await persistActive(save, `${definition.name} equipado.`)
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : 'Não foi possível equipar o item.')
+    }
   }
 
   function startNewSave() {
@@ -259,151 +273,109 @@ function App() {
   }
 
   if (screen === 'loading') {
-    return (
-      <main className="app-shell centered-shell">
-        <div className="loading-mark" aria-hidden="true" />
-        <p className="muted">Carregando saves locais…</p>
-      </main>
-    )
+    return <main className="app-shell centered-shell"><div className="loading-mark" /><p className="muted">Carregando saves locais…</p></main>
   }
 
   if (screen === 'error') {
-    return (
-      <main className="app-shell centered-shell">
-        <p className="eyebrow">Greywake · Build 0.1</p>
-        <h1>Não foi possível abrir o armazenamento local.</h1>
-        <p className="subtitle">{message}</p>
-      </main>
-    )
+    return <main className="app-shell centered-shell"><p className="eyebrow">Greywake · Build 0.1</p><h1>Não foi possível abrir o armazenamento local.</h1><p className="subtitle">{message}</p></main>
   }
 
   if (screen === 'character' && activeSave) {
-    const activeActivityId = activeSave.idle.activeActivity?.activityDefinitionId ?? null
+    const activeWork = activeSave.idle.activeActivity
+      ? getIdleActivityDefinition(activeSave.idle.activeActivity.activityDefinitionId)?.name
+      : activeSave.crafting.activeRecipe
+        ? getCraftingRecipeDefinition(activeSave.crafting.activeRecipe.recipeDefinitionId)?.name
+        : null
+
+    const upgradeRecipe = INITIAL_CRAFTING_RECIPES.find((recipe) => recipe.output.kind === 'equipment-upgrade')
+    const normalRecipes = INITIAL_CRAFTING_RECIPES.filter((recipe) => recipe.output.kind !== 'equipment-upgrade')
 
     return (
       <main className="app-shell">
         <header className="topbar">
-          <div>
-            <p className="eyebrow">Build 0.1 · {activeSave.saveMode}</p>
-            <strong className="brand">Greywake</strong>
-          </div>
-          <button className="ghost-button" type="button" onClick={() => setScreen('save-list')}>
-            Trocar save
-          </button>
+          <div><p className="eyebrow">Build 0.1 · {activeSave.saveMode}</p><strong className="brand">Greywake</strong></div>
+          <button className="ghost-button" type="button" onClick={() => setScreen('save-list')}>Trocar save</button>
         </header>
 
         <section className="character-hero">
-          <div>
-            <p className="section-kicker">Cidade Livre · Taverna</p>
-            <h1>{activeSave.character.name}</h1>
-            <p className="subtitle">
-              {getClassName(activeSave.character.classId)} · {getGiftName(activeSave.character.giftId)}
-            </p>
-          </div>
-          <div className="level-badge">
-            <span>Nível</span>
-            <strong>{activeSave.character.level}</strong>
-          </div>
+          <div><p className="section-kicker">Cidade Livre · Taverna</p><h1>{activeSave.character.name}</h1><p className="subtitle">{getClassName(activeSave.character.classId)} · {getGiftName(activeSave.character.giftId)}</p></div>
+          <div className="level-badge"><span>Nível</span><strong>{activeSave.character.level}</strong></div>
         </section>
 
         {message ? <p className="inline-message">{message}</p> : null}
 
         <section className="dashboard-grid">
           <article className="panel">
-            <div className="panel-heading">
-              <div>
-                <p className="section-kicker">M2 · Idle</p>
-                <h2>Primeiras coletas</h2>
-              </div>
-              <span className="pill">1 atividade por vez</span>
-            </div>
-
+            <div className="panel-heading"><div><p className="section-kicker">M2 · Coleta</p><h2>Recursos</h2></div><span className="pill">1 atividade por vez</span></div>
             <div className="choice-grid">
-              {INITIAL_IDLE_ACTIVITIES.map((activity) => {
-                const skill = activeSave.skills[activity.skillId]
-                const isActive = activeActivityId === activity.id
-                const quantity = getInventoryQuantity(activeSave, activity.resultItemDefinitionId)
-
-                return (
-                  <button
-                    className={`choice-card ${isActive ? 'selected' : ''}`}
-                    type="button"
-                    key={activity.id}
-                    onClick={() => void handleStartActivity(activity.id)}
-                  >
-                    <span className="choice-title">{activity.name}</span>
-                    <span className="muted">
-                      {skillLabels[activity.skillId]} Nv. {skill.level} · {skill.xp} XP
-                    </span>
-                    <span className="attribute-preview">
-                      {activity.actionSeconds}s → 1 {activity.resultName} · {activity.skillXpPerAction} XP
-                    </span>
-                    <span className="save-card-footer">Em posse: {quantity}</span>
-                  </button>
-                )
-              })}
-            </div>
-
-            {activeActivityId ? (
-              <button className="ghost-button" type="button" onClick={() => void handleStopActivity()}>
-                Parar atividade
-              </button>
-            ) : null}
-          </article>
-
-          <article className="panel">
-            <p className="section-kicker">Save local</p>
-            <h2>M2 em execução</h2>
-            <dl className="save-details">
-              <div>
-                <dt>Modo</dt>
-                <dd>{activeSave.saveMode}</dd>
-              </div>
-              <div>
-                <dt>Schema</dt>
-                <dd>v{activeSave.saveSchemaVersion}</dd>
-              </div>
-              <div>
-                <dt>XP geral</dt>
-                <dd>{activeSave.character.xp}</dd>
-              </div>
-              <div>
-                <dt>Atividade</dt>
-                <dd>{activeActivityId ? getIdleActivityDefinition(activeActivityId)?.name ?? 'Ativa' : 'Nenhuma'}</dd>
-              </div>
-            </dl>
-            <div className="milestone-note">
-              <span>Comportamento</span>
-              <strong>Fecha o navegador → relógio continua → progresso é processado ao voltar</strong>
-            </div>
-          </article>
-        </section>
-
-        <section className="dashboard-grid">
-          <article className="panel">
-            <div className="panel-heading">
-              <div>
-                <p className="section-kicker">Personagem</p>
-                <h2>Atributos iniciais</h2>
-              </div>
-              <span className="pill">35 pontos</span>
-            </div>
-            <div className="attribute-grid">
-              {ATTRIBUTE_KEYS.map((key) => (
-                <div className="attribute-row" key={key}>
-                  <span>{attributeLabels[key]}</span>
-                  <strong>{activeSave.character.attributes[key]}</strong>
-                </div>
+              {INITIAL_IDLE_ACTIVITIES.map((activity) => (
+                <button className={`choice-card ${activeSave.idle.activeActivity?.activityDefinitionId === activity.id ? 'selected' : ''}`} type="button" key={activity.id} onClick={() => void handleStartActivity(activity.id)}>
+                  <span className="choice-title">{activity.name}</span>
+                  <span className="muted">{skillLabels[activity.skillId]} Nv. {activeSave.skills[activity.skillId].level}</span>
+                  <span className="attribute-preview">{activity.actionSeconds}s → 1 {activity.resultName} · posse {getInventoryQuantity(activeSave, activity.resultItemDefinitionId)}</span>
+                </button>
               ))}
             </div>
           </article>
 
           <article className="panel">
-            <p className="section-kicker">Próximo marco</p>
-            <h2>M3 — Crafting e equipamento</h2>
-            <p className="muted">
-              O progresso Idle agora já possui estado próprio, timestamps, limite offline, recompensa de recurso e XP de Skill.
-            </p>
+            <p className="section-kicker">Estado atual</p><h2>{activeWork ?? 'Sem atividade'}</h2>
+            <p className="muted">Coleta e produção usam o mesmo limite de uma atividade Idle por vez.</p>
+            {activeWork ? <button className="ghost-button" type="button" onClick={() => void handleStopWork()}>Parar atividade</button> : null}
+          </article>
+        </section>
+
+        <section className="dashboard-grid section-gap">
+          <article className="panel">
+            <div className="panel-heading"><div><p className="section-kicker">M3 · Produção</p><h2>Metalurgia, Forja e Culinária</h2></div><span className="pill">determinístico</span></div>
+            <div className="choice-grid">
+              {normalRecipes.map((recipe) => {
+                const ingredients = recipe.ingredients.map((ingredient) => `${ingredient.quantity}× ${itemLabels[ingredient.definitionId] ?? ingredient.definitionId} (${getInventoryQuantity(activeSave, ingredient.definitionId)})`).join(' + ')
+                return (
+                  <button className={`choice-card ${activeSave.crafting.activeRecipe?.recipeDefinitionId === recipe.id ? 'selected' : ''}`} type="button" key={recipe.id} onClick={() => void handleStartRecipe(recipe.id)}>
+                    <span className="choice-title">{recipe.name}</span>
+                    <span className="muted">{skillLabels[recipe.skillId]} · {recipe.actionSeconds}s · {recipe.skillXpPerAction} XP</span>
+                    <span className="attribute-preview">{ingredients}</span>
+                  </button>
+                )
+              })}
+            </div>
+          </article>
+
+          <article className="panel">
+            <p className="section-kicker">Inventário</p><h2>Materiais e produtos</h2>
+            <dl className="save-details">
+              {activeSave.character.inventory.length === 0 ? <div><dt>Vazio</dt><dd>—</dd></div> : activeSave.character.inventory.map((stack) => <div key={stack.definitionId}><dt>{itemLabels[stack.definitionId] ?? stack.definitionId}</dt><dd>{stack.quantity}</dd></div>)}
+            </dl>
+          </article>
+        </section>
+
+        <section className="dashboard-grid section-gap">
+          <article className="panel">
+            <div className="panel-heading"><div><p className="section-kicker">Equipamento</p><h2>Instâncias do personagem</h2></div><span className="pill">+0 / +1</span></div>
+            <div className="equipment-list">
+              {activeSave.character.equipmentItems.map((instance) => {
+                const definition = getEquipmentDefinition(instance.definitionId)
+                if (!definition) return null
+                const equipped = Object.values(activeSave.character.equipment).includes(instance.instanceId)
+                const primary = getEquipmentPrimaryValue(definition, instance.upgradeLevel)
+                return (
+                  <div className="equipment-row" key={instance.instanceId}>
+                    <div><strong>{definition.name} +{instance.upgradeLevel}</strong><span className="muted">{definition.slot}{primary !== null ? ` · ${definition.primaryStat?.kind === 'attack' ? 'Poder' : 'Defesa'} ${primary}` : ''}</span></div>
+                    <div className="equipment-actions">
+                      <button className="ghost-button" type="button" onClick={() => void handleEquip(instance.instanceId)}>{equipped ? 'Equipado' : 'Equipar'}</button>
+                      {upgradeRecipe && instance.upgradeLevel === 0 && definition.primaryStat ? <button className="ghost-button" type="button" onClick={() => void handleStartRecipe(upgradeRecipe.id, instance.instanceId)}>Reforçar +1</button> : null}
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          </article>
+
+          <article className="panel">
+            <p className="section-kicker">Marco</p><h2>M3 — Crafting e equipamento</h2>
+            <dl className="save-details"><div><dt>Schema</dt><dd>v{activeSave.saveSchemaVersion}</dd></div><div><dt>XP geral</dt><dd>{activeSave.character.xp}</dd></div><div><dt>Equipamentos</dt><dd>{activeSave.character.equipmentItems.length}</dd></div></dl>
+            <div className="milestone-note"><span>Próximo marco</span><strong>M4 — Primeiro combate completo</strong></div>
           </article>
         </section>
       </main>
@@ -413,37 +385,10 @@ function App() {
   if (screen === 'save-list') {
     return (
       <main className="app-shell">
-        <header className="topbar">
-          <div>
-            <p className="eyebrow">Build 0.1 · Fase 1 local</p>
-            <strong className="brand">Greywake</strong>
-          </div>
-          <button className="primary-button compact" type="button" onClick={startNewSave}>
-            Novo save Offline
-          </button>
-        </header>
-
-        <section className="intro-block">
-          <p className="section-kicker">Continuar</p>
-          <h1>Escolha um personagem</h1>
-          <p className="subtitle">Os saves desta build são locais e permanecem separados de qualquer futuro modo Online.</p>
-        </section>
-
+        <header className="topbar"><div><p className="eyebrow">Build 0.1 · Fase 1 local</p><strong className="brand">Greywake</strong></div><button className="primary-button compact" type="button" onClick={startNewSave}>Novo save Offline</button></header>
+        <section className="intro-block"><p className="section-kicker">Continuar</p><h1>Escolha um personagem</h1><p className="subtitle">Saves locais e separados de qualquer futuro modo Online.</p></section>
         {message ? <p className="inline-message">{message}</p> : null}
-
-        <section className="save-grid" aria-label="Saves Offline">
-          {saves.map((save) => (
-            <button className="save-card" type="button" key={save.saveId} onClick={() => void handleLoadSave(save.saveId)}>
-              <span className="save-card-topline">
-                <span>{getClassName(save.character.classId)}</span>
-                <span>Nv. {save.character.level}</span>
-              </span>
-              <strong>{save.character.name}</strong>
-              <span className="muted">{getGiftName(save.character.giftId)}</span>
-              <span className="save-card-footer">OFFLINE · schema v{save.saveSchemaVersion}</span>
-            </button>
-          ))}
-        </section>
+        <section className="save-grid">{saves.map((save) => <button className="save-card" type="button" key={save.saveId} onClick={() => void handleLoadSave(save.saveId)}><span className="save-card-topline"><span>{getClassName(save.character.classId)}</span><span>Nv. {save.character.level}</span></span><strong>{save.character.name}</strong><span className="muted">{getGiftName(save.character.giftId)}</span><span className="save-card-footer">OFFLINE · schema v{save.saveSchemaVersion}</span></button>)}</section>
       </main>
     )
   }
@@ -452,114 +397,14 @@ function App() {
 
   return (
     <main className="app-shell">
-      <header className="topbar">
-        <div>
-          <p className="eyebrow">Novo jogo · {BUILD_SAVE_MODE}</p>
-          <strong className="brand">Greywake</strong>
-        </div>
-        {saves.length > 0 ? (
-          <button className="ghost-button" type="button" onClick={() => setScreen('save-list')}>
-            Voltar aos saves
-          </button>
-        ) : null}
-      </header>
-
+      <header className="topbar"><div><p className="eyebrow">Novo jogo · {BUILD_SAVE_MODE}</p><strong className="brand">Greywake</strong></div>{saves.length > 0 ? <button className="ghost-button" type="button" onClick={() => setScreen('save-list')}>Voltar aos saves</button> : null}</header>
       <section className="creation-layout">
         <div className="creation-main">
-          <section className="creation-section">
-            <div className="step-heading">
-              <span className="step-number">01</span>
-              <div>
-                <p className="section-kicker">Identidade</p>
-                <h1>Dê um nome ao viajante</h1>
-              </div>
-            </div>
-            <label className="name-field">
-              <span>Nome do personagem</span>
-              <input
-                autoComplete="off"
-                autoFocus
-                placeholder="Nome"
-                value={characterName}
-                onChange={(event) => setCharacterName(event.target.value)}
-              />
-            </label>
-          </section>
-
-          <section className="creation-section">
-            <div className="step-heading">
-              <span className="step-number">02</span>
-              <div>
-                <p className="section-kicker">Classe inicial</p>
-                <h2>Escolha apenas como começar</h2>
-                <p className="muted">A classe não bloqueia sua build futura.</p>
-              </div>
-            </div>
-            <div className="choice-grid class-grid">
-              {CHARACTER_CLASSES.map((definition) => (
-                <button
-                  className={`choice-card ${selectedClassId === definition.id ? 'selected' : ''}`}
-                  type="button"
-                  key={definition.id}
-                  aria-pressed={selectedClassId === definition.id}
-                  onClick={() => setSelectedClassId(definition.id)}
-                >
-                  <span className="choice-title">{definition.name}</span>
-                  <span className="muted">{definition.summary}</span>
-                  <span className="attribute-preview">
-                    FOR {definition.attributes.strength} · DES {definition.attributes.dexterity} · INT {definition.attributes.intelligence} · FÉ {definition.attributes.faith}
-                  </span>
-                </button>
-              ))}
-            </div>
-          </section>
-
-          <section className="creation-section">
-            <div className="step-heading">
-              <span className="step-number">03</span>
-              <div>
-                <p className="section-kicker">Presente</p>
-                <h2>Escolha uma pequena vantagem</h2>
-              </div>
-            </div>
-            <div className="choice-grid gift-grid">
-              {INITIAL_GIFTS.map((definition) => (
-                <button
-                  className={`choice-card ${selectedGiftId === definition.id ? 'selected' : ''}`}
-                  type="button"
-                  key={definition.id}
-                  aria-pressed={selectedGiftId === definition.id}
-                  onClick={() => setSelectedGiftId(definition.id)}
-                >
-                  <span className="choice-title">{definition.name}</span>
-                  <span className="muted">{definition.summary}</span>
-                </button>
-              ))}
-            </div>
-          </section>
+          <section className="creation-section"><div className="step-heading"><span className="step-number">01</span><div><p className="section-kicker">Identidade</p><h1>Dê um nome ao viajante</h1></div></div><label className="name-field"><span>Nome do personagem</span><input autoComplete="off" autoFocus placeholder="Nome" value={characterName} onChange={(event) => setCharacterName(event.target.value)} /></label></section>
+          <section className="creation-section"><div className="step-heading"><span className="step-number">02</span><div><p className="section-kicker">Classe inicial</p><h2>Escolha apenas como começar</h2></div></div><div className="choice-grid class-grid">{CHARACTER_CLASSES.map((definition) => <button className={`choice-card ${selectedClassId === definition.id ? 'selected' : ''}`} type="button" key={definition.id} onClick={() => setSelectedClassId(definition.id)}><span className="choice-title">{definition.name}</span><span className="muted">{definition.summary}</span></button>)}</div></section>
+          <section className="creation-section"><div className="step-heading"><span className="step-number">03</span><div><p className="section-kicker">Presente</p><h2>Escolha uma pequena vantagem</h2></div></div><div className="choice-grid gift-grid">{INITIAL_GIFTS.map((definition) => <button className={`choice-card ${selectedGiftId === definition.id ? 'selected' : ''}`} type="button" key={definition.id} onClick={() => setSelectedGiftId(definition.id)}><span className="choice-title">{definition.name}</span><span className="muted">{definition.summary}</span></button>)}</div></section>
         </div>
-
-        <aside className="creation-summary">
-          <p className="section-kicker">Resumo</p>
-          <h2>{characterName.trim() || 'Novo viajante'}</h2>
-          <div className="summary-row">
-            <span>Save</span>
-            <strong>Offline</strong>
-          </div>
-          <div className="summary-row">
-            <span>Classe</span>
-            <strong>{selectedClassId ? getClassName(selectedClassId) : 'Escolher'}</strong>
-          </div>
-          <div className="summary-row">
-            <span>Presente</span>
-            <strong>{selectedGiftId ? getGiftName(selectedGiftId) : 'Escolher'}</strong>
-          </div>
-          <p className="summary-copy">O personagem começará no nível 1, na Taverna da Cidade Livre.</p>
-          {message ? <p className="inline-message">{message}</p> : null}
-          <button className="primary-button" type="button" disabled={!canCreate} onClick={() => void handleCreateSave()}>
-            {isSaving ? 'Criando…' : 'Criar personagem'}
-          </button>
-        </aside>
+        <aside className="creation-summary"><p className="section-kicker">Resumo</p><h2>{characterName.trim() || 'Novo viajante'}</h2><div className="summary-row"><span>Save</span><strong>Offline</strong></div><div className="summary-row"><span>Classe</span><strong>{selectedClassId ? getClassName(selectedClassId) : 'Escolher'}</strong></div><div className="summary-row"><span>Presente</span><strong>{selectedGiftId ? getGiftName(selectedGiftId) : 'Escolher'}</strong></div>{message ? <p className="inline-message">{message}</p> : null}<button className="primary-button" type="button" disabled={!canCreate} onClick={() => void handleCreateSave()}>{isSaving ? 'Criando…' : 'Criar personagem'}</button></aside>
       </section>
     </main>
   )
