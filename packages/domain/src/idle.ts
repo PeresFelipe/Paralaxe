@@ -82,7 +82,7 @@ function addInventoryItem(inventory: InventoryStack[], definitionId: string, qua
   return [...inventory, { definitionId, quantity }]
 }
 
-function applySkillXp(progress: SkillProgress, gainedXp: number) {
+export function applySkillXp(progress: SkillProgress, gainedXp: number) {
   let level = progress.level
   let xp = progress.xp + gainedXp
   let gainedLevels = 0
@@ -108,6 +108,10 @@ export function startIdleActivity(
   activity: IdleActivityDefinition,
   now: string,
 ): OfflineGameSave {
+  if (save.crafting.activeRecipe) {
+    throw new Error('Interrompa a produção antes de iniciar uma coleta.')
+  }
+
   const skill = save.skills[activity.skillId]
 
   if (skill.level < activity.requiredSkillLevel) {
