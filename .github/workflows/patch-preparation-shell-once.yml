@@ -1,0 +1,75 @@
+name: Patch preparation shell once
+
+on: push
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Align preparation shell behavior
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          dungeon = Path('apps/game/src/DungeonWorkbench.tsx')
+          text = dungeon.read_text()
+          text = text.replace(
+              '  onRiskStateChange?: (active: boolean) => void\n  onReturn?: () => void\n}',
+              '  onRiskStateChange?: (active: boolean) => void\n  onPreparationStateChange?: (active: boolean) => void\n  onReturn?: () => void\n}'
+          )
+          text = text.replace(
+              '  onRiskStateChange,\n  onReturn,\n}: DungeonViewProps) {',
+              '  onRiskStateChange,\n  onPreparationStateChange,\n  onReturn,\n}: DungeonViewProps) {'
+          )
+          marker = "  useEffect(() => () => onRiskStateChange?.(false), [onRiskStateChange])\n"
+          insert = marker + "\n  useEffect(() => {\n    onPreparationStateChange?.(preparing)\n  }, [onPreparationStateChange, preparing])\n\n  useEffect(() => () => onPreparationStateChange?.(false), [onPreparationStateChange])\n"
+          if marker not in text:
+              raise SystemExit('Dungeon effect marker not found')
+          text = text.replace(marker, insert, 1)
+          dungeon.write_text(text)
+
+          shell = Path('apps/game/src/GameShell.tsx')
+          text = shell.read_text()
+          text = text.replace(
+              "  const [quickPanel, setQuickPanel] = useState<QuickPanel>(null)\n",
+              "  const [quickPanel, setQuickPanel] = useState<QuickPanel>(null)\n  const [preparationActive, setPreparationActive] = useState(false)\n"
+          )
+          text = text.replace(
+              "  const mainClass = `game-shell ${focusedRisk ? 'game-shell--risk' : ''}`\n",
+              "  const mainClass = `game-shell ${focusedRisk ? 'game-shell--risk' : ''} ${preparationActive && !focusedRisk ? 'game-shell--preparation' : ''}`\n"
+          )
+          risk_strip = "      {focusedRisk ? <div className=\"risk-state-strip\"><span>ESTADO DE RISCO</span><strong>{dungeonActive ? 'Dún Liath · Idle pausado' : 'Combate · Idle pausado'}</strong></div> : null}\n"
+          prep_strip = "      {preparationActive && !focusedRisk ? <div className=\"preparation-state-strip\"><span>PREPARAÇÃO</span><strong>Dún Liath · Idle continua</strong></div> : null}\n" + risk_strip
+          if risk_strip not in text:
+              raise SystemExit('Risk strip marker not found')
+          text = text.replace(risk_strip, prep_strip, 1)
+          old = "    return <DungeonWorkbench save={save} prepareRisk={prepareRisk} onSaveChange={onPersist} onRiskStateChange={onRiskStateChange} onReturn={() => onView('overview')} />"
+          new = "    return <DungeonWorkbench save={save} prepareRisk={prepareRisk} onSaveChange={onPersist} onRiskStateChange={onRiskStateChange} onPreparationStateChange={setPreparationActive} onReturn={() => onView('overview')} />"
+          if old not in text:
+              raise SystemExit('Dungeon component marker not found')
+          text = text.replace(old, new, 1)
+          shell.write_text(text)
+
+          css = Path('apps/game/src/styles.css')
+          text = css.read_text()
+          marker = ".risk-state-strip { height: 48px; display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 0 28px; border-bottom: 1px solid #4d3937; background: #111517; font-size: .68rem; }\n"
+          addition = ".preparation-state-strip { height: 44px; display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 0 28px; border-bottom: 1px solid #514838; background: #131719; font-size: .68rem; }\n.preparation-state-strip span { color: #c4a377; letter-spacing: .14em; }\n.preparation-state-strip strong { color: var(--muted); }\n.game-shell--preparation .primary-nav { opacity: .48; }\n.game-shell--preparation .continuity-bar { opacity: .78; }\n"
+          if marker not in text:
+              raise SystemExit('CSS risk strip marker not found')
+          text = text.replace(marker, marker + addition, 1)
+          css.write_text(text)
+          PY
+      - name: Commit patch and remove workflow
+        shell: bash
+        run: |
+          rm .github/workflows/patch-preparation-shell-once.yml
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add apps/game/src/DungeonWorkbench.tsx apps/game/src/GameShell.tsx apps/game/src/styles.css .github/workflows/patch-preparation-shell-once.yml
+          git commit -m 'fix(game): preserve reduced shell during preparation'
+          git push
