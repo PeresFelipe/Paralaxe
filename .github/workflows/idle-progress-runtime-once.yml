@@ -1,0 +1,31 @@
+name: idle-progress-runtime-once
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  integrate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: corepack enable
+      - run: pnpm install --no-frozen-lockfile
+      - run: python scripts/apply-idle-progress-runtime.py
+      - run: pnpm check
+      - run: pnpm build
+      - name: Commit integration and cleanup
+        run: |
+          rm scripts/apply-idle-progress-runtime.py .github/workflows/idle-progress-runtime-once.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add apps/game/src/GameShell.tsx scripts/apply-idle-progress-runtime.py .github/workflows/idle-progress-runtime-once.yml
+          git commit -m "feat(ui): integrate live Idle progress into runtime"
+          git push
