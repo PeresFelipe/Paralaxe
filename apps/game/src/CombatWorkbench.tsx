@@ -40,6 +40,16 @@ function inventoryQuantity(save: OfflineGameSave, definitionId: string) {
   return save.character.inventory.find((stack) => stack.definitionId === definitionId)?.quantity ?? 0
 }
 
+function abilityMeta(abilityId: string | null) {
+  if (!abilityId) return null
+  const ability = getCombatAbilityDefinition(abilityId)
+  if (!ability) return null
+  const resource = ability.resource && ability.resourceCost !== undefined
+    ? `${ability.resource} ${ability.resourceCost} · `
+    : ''
+  return { ability, text: `${resource}CD ${ability.cooldownSeconds}s` }
+}
+
 export default function CombatWorkbench({
   save,
   prepareRisk,
@@ -180,7 +190,9 @@ export default function CombatWorkbench({
 
       {!running && !result ? (
         <div className="preparation-layout">
-          <div className="context-art context-art--risk" aria-hidden="true"><span>ARTE 16:9 · ESTRADA BAIXA</span></div>
+          <div className="context-art context-art--risk" aria-hidden="true">
+            <span>ARTE 16:9 · ESTRADA BAIXA</span>
+          </div>
           <aside className="panel preparation-summary">
             <p className="section-kicker">Preparação leve</p>
             <h3>Lobo de Estrada</h3>
@@ -198,7 +210,7 @@ export default function CombatWorkbench({
       {running || result ? (
         <>
           <div className="combat-context-line">
-            <span>Dún Liath não está ativa · Serviço da Estrada Baixa</span>
+            <span>Serviço · Estrada Baixa</span>
             <strong>{running ? 'COMBATE ATIVO · IDLE PAUSADO' : 'RESULTADO'}</strong>
           </div>
           <div className="context-art context-art--combat" aria-hidden="true"><span>ARTE / CENA DE COMBATE</span></div>
@@ -217,13 +229,13 @@ export default function CombatWorkbench({
               <p className="section-kicker">Prioridade real</p>
               <div className="technique-list">
                 {abilitySlots.map((abilityId, index) => {
-                  const ability = abilityId ? getCombatAbilityDefinition(abilityId) : null
+                  const meta = abilityMeta(abilityId)
                   return (
                     <div className="technique-row" key={`${abilityId ?? 'empty'}-${index}`}>
                       <span className="priority-index">{index + 1}</span>
                       <div>
-                        <strong>{ability?.name ?? 'Slot vazio'}</strong>
-                        <small>{ability ? `${ability.resourceCost.resource} ${ability.resourceCost.amount} · CD ${ability.cooldownSeconds}s` : 'Nenhuma Técnica equipada'}</small>
+                        <strong>{meta?.ability.name ?? 'Slot vazio'}</strong>
+                        <small>{meta?.text ?? 'Nenhuma Técnica equipada'}</small>
                       </div>
                     </div>
                   )
@@ -332,9 +344,7 @@ export default function CombatWorkbench({
                     onChange={(event) => void updateConsumableSlot(slotIndex, { threshold: Number(event.target.value) })}
                   />
                 </label>
-                {slot.definitionId ? (
-                  <p className="muted small-copy">Usar consumível ocupa a ação atual; não concede uma ação extra.</p>
-                ) : null}
+                {slot.definitionId ? <p className="muted small-copy">Usar consumível ocupa a ação atual; não concede uma ação extra.</p> : null}
               </article>
             )
           })}
