@@ -414,7 +414,14 @@ function ActivitiesView({
       <div className="skill-card-grid production-cards">{productionSkills.map((skillId) => <button className={`skill-card ${selectedSkill === skillId ? 'active' : ''}`} type="button" key={skillId} onClick={() => onSelectSkill(skillId)}><span>{skillLabels[skillId]}</span><strong>Nv. {save.skills[skillId].level}</strong></button>)}</div>
 
       <div className="skill-detail-layout section-gap">
-        <div className="context-art" aria-hidden="true"><span>ARTE 16:9 · {skillLabels[selectedSkill].toUpperCase()}</span></div>
+        <div className={`context-art${selectedSkill === 'fishing' ? ' context-art--individual' : ''}`} aria-hidden="true">
+          {selectedSkill === 'fishing' ? (
+            <picture>
+              <source media="(prefers-reduced-motion: no-preference)" srcSet="/art/activities/fishing.gif?v=1" />
+              <img src="/art/activities/fishing-still.png?v=1" alt="" width={480} height={270} decoding="async" />
+            </picture>
+          ) : <span>ARTE 16:9 · {skillLabels[selectedSkill].toUpperCase()}</span>}
+        </div>
         <aside className="panel skill-progress-panel"><p className="section-kicker">Progresso da Skill</p><h2>{skillLabels[selectedSkill]}</h2><div className="fact-row"><span>Nível</span><strong>{progress.level}</strong></div><div className="fact-row"><span>XP atual</span><strong>{progress.xp}</strong></div><div className="fact-row"><span>Prestígio</span><strong>{progress.prestige}</strong></div></aside>
       </div>
 

@@ -50,6 +50,7 @@ M6 — Build 0.1 validável                  ✅
 - seis classes e sete presentes iniciais;
 - persistência IndexedDB com schema versionado e migração automática;
 - sete Skills;
+- arte individual de Pesca em pixel art dark fantasy: GIF 480 × 270 com quatro quadros, selecionado apenas sem preferência de redução de movimento; fallback PNG estático via `<picture>`;
 - uma atividade Idle por vez;
 - quatro coletas iniciais com progresso offline;
 - produção Idle determinística;

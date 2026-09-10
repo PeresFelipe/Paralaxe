@@ -26,13 +26,35 @@
 
 .feature-view:has(.skill-card-grid:not(.production-cards) .skill-card:nth-child(1).active) .skill-detail-layout .context-art { background-position: 0 0; }
 .feature-view:has(.skill-card-grid:not(.production-cards) .skill-card:nth-child(2).active) .skill-detail-layout .context-art { background-position: 66.6667% 0; }
-.feature-view:has(.skill-card-grid:not(.production-cards) .skill-card:nth-child(3).active) .skill-detail-layout .context-art { background-position: 33.3333% 0; }
 .feature-view:has(.skill-card-grid:not(.production-cards) .skill-card:nth-child(4).active) .skill-detail-layout .context-art { background-position: 66.6667% 0; }
 .feature-view:has(.production-cards .skill-card.active) .skill-detail-layout .context-art { background-position: 100% 0; }
 .context-art--city { background-position: 0 100%; }
 .market-view .context-art, .market-view .context-art--compact { background-position: 33.3333% 100%; }
 .context-art--adventure, .combat-view .context-art--risk, .combat-view .context-art--combat { background-position: 66.6667% 100%; }
 .context-art--dungeon, .preparation-view .context-art--risk { background-position: 100% 100%; }
+
+/* Individual activity art replaces the sprite without altering the approved colors. */
+.context-art--individual {
+  background-image: none !important;
+}
+
+.context-art--individual::after {
+  content: none;
+}
+
+.context-art--individual > picture {
+  position: absolute;
+  inset: 0;
+  display: block;
+}
+
+.context-art--individual img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  image-rendering: pixelated;
+}
 
 .portrait-placeholder {
   background-image: var(--generated-portrait-sprite) !important;
