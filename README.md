@@ -6,21 +6,13 @@ Idle RPG Dark Fantasy Web-first, 2D e UI-heavy, com progressão de longo prazo, 
 
 ## Status atual
 
-O projeto está na **Build de Validação 0.1 — Fase 1: Jogo Local**.
+A **Build de Validação 0.1 — Fase 1: Jogo Local** concluiu sua ladder técnica até o **M6 — Build 0.1 validável**.
 
-O objetivo desta etapa é provar que os sistemas principais funcionam juntos em uma experiência jogável curta e incremental, encerrando naturalmente no primeiro clear de **Dún Liath — Fácil**.
+A Build 0.1 prova que os sistemas principais funcionam juntos em uma experiência local curta e incremental, encerrando naturalmente no primeiro clear de **Dún Liath — Fácil**.
 
-A Build 0.1 não possui backend, conta Online, Cloud Save ou Mercado entre jogadores. A fundação é local e deve operar sem custo recorrente de infraestrutura.
+Ela não possui backend, conta Online, Cloud Save ou Mercado entre jogadores. A fundação continua local e sem custo recorrente de infraestrutura.
 
-### Marco atual
-
-```text
-M6 — Build 0.1 validável
-```
-
-O **M5.5 — UX Foundation foi concluído**. A build real agora usa o `GameShell` canônico, uma única view principal por vez, continuidade Idle, estados focados de risco e a arquitetura `Personagem / Atividades / Aventura / Cidade`.
-
-O M5.5 permanece formalmente entre M5 e M6:
+### Marcos concluídos
 
 ```text
 M0 — Projeto abre                         ✅
@@ -30,14 +22,18 @@ M3 — Crafting e equipamento               ✅
 M4 — Primeiro combate completo            ✅
 M5 — Dún Liath completa                   ✅
 M5.5 — UX Foundation                      ✅
-M6 — Build 0.1 validável                  🟡
+M6 — Build 0.1 validável                  ✅
 ```
 
-O M5.5 consolidou os sistemas existentes em uma experiência navegável: `GameShell`, navegação canônica, continuidade Idle durante áreas seguras/Preparação, estados focados de Combate/Dungeon e estratégia explícita para desktop/mobile. O M6 retoma a validação da Build 0.1 com o caso conhecido `Mago × Mineração → Cosantóir` ainda em 23/24.
+A matriz automatizada `6 classes × 4 rotas` está em **24/24**. A build possui `GameShell` canônico, continuidade Idle, estados focados de risco, Banco funcional, proteção de capacidade do Inventário nos fluxos implementados e build de produção validada.
 
-Documento de trabalho:
+O próximo marco de produto deve ser definido explicitamente antes de iniciar novo escopo.
 
-[`docs/implementation/M5.5-UX-FOUNDATION.md`](docs/implementation/M5.5-UX-FOUNDATION.md)
+Documentos de fechamento:
+
+- [`docs/implementation/M5.5-UX-FOUNDATION.md`](docs/implementation/M5.5-UX-FOUNDATION.md)
+- [`docs/implementation/M6-VALIDATION.md`](docs/implementation/M6-VALIDATION.md)
+- [`docs/implementation/CURRENT-STATUS.md`](docs/implementation/CURRENT-STATUS.md)
 
 ## Stack da Build 0.1
 
@@ -81,8 +77,10 @@ O mesmo fluxo é executado automaticamente em `.github/workflows/validate.yml`.
 | Documento | Função |
 |---|---|
 | [`docs/GDD.md`](docs/GDD.md) | Especificação canônica do jogo e requisitos arquiteturais permanentes |
+| [`docs/UX-GDD.md`](docs/UX-GDD.md) | Arquitetura e regras canônicas de experiência/UX |
 | [`docs/builds/0.1-validation-plan.md`](docs/builds/0.1-validation-plan.md) | Escopo, stack, valores provisórios, implementação e validação da Build 0.1 |
-| [`docs/implementation/M5.5-UX-FOUNDATION.md`](docs/implementation/M5.5-UX-FOUNDATION.md) | Arquitetura de experiência, navegação e critérios do marco M5.5 |
+| [`docs/implementation/M5.5-UX-FOUNDATION.md`](docs/implementation/M5.5-UX-FOUNDATION.md) | Fechamento da fundação de UX |
+| [`docs/implementation/M6-VALIDATION.md`](docs/implementation/M6-VALIDATION.md) | Fechamento técnico da Build 0.1 validável |
 | [`docs/implementation/CURRENT-STATUS.md`](docs/implementation/CURRENT-STATUS.md) | Ponto curto de retomada da implementação |
 
 ## Estrutura inicial
@@ -101,10 +99,12 @@ O mesmo fluxo é executado automaticamente em `.github/workflows/validate.yml`.
 │       └── validate.yml       # CI da Build 0.1
 └── docs/
     ├── GDD.md
+    ├── UX-GDD.md
     ├── builds/
     │   └── 0.1-validation-plan.md
     └── implementation/
         ├── M5.5-UX-FOUNDATION.md
+        ├── M6-VALIDATION.md
         └── CURRENT-STATUS.md
 ```
 
@@ -122,4 +122,4 @@ O mesmo fluxo é executado automaticamente em `.github/workflows/validate.yml`.
 
 ## Futuro Online
 
-O GDD já prevê saves **Offline** e **Online** separados e imutáveis. As fases futuras poderão adicionar Cloud Save, Risk/Trust, Certified Dungeons, Relic Registry e Mercado server-side. Essas capacidades não fazem parte da Build 0.1.
+O GDD já prevê saves **Offline** e **Online** separados e imutáveis. Fases futuras poderão adicionar Cloud Save, Risk/Trust, Certified Dungeons, Relic Registry e Mercado server-side. Essas capacidades não fazem parte da Build 0.1 e só devem entrar após um novo marco ser definido.
