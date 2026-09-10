@@ -11,6 +11,8 @@ import {
   BUILD_SAVE_MODE,
   allocateAttributePoints,
   createOfflineGameSave,
+  depositEquipmentToBank,
+  depositInventoryStackToBank,
   equipEquipment,
   pauseCurrentWorkForRisk,
   processCraftingProgress,
@@ -19,6 +21,8 @@ import {
   startIdleActivity,
   stopCraftingRecipe,
   stopIdleActivity,
+  withdrawEquipmentFromBank,
+  withdrawInventoryStackFromBank,
   type AttributeAllocation,
   type CharacterClassId,
   type GiftId,
@@ -306,6 +310,46 @@ function App() {
     }
   }
 
+  async function handleDepositBankStack(definitionId: string, quantity: number) {
+    if (!activeSave) return
+    try {
+      const save = depositInventoryStackToBank(activeSave, definitionId, quantity, new Date().toISOString())
+      await persistActive(save, `Depósito realizado: ${quantity} item(ns).`)
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : 'Não foi possível depositar no Banco.')
+    }
+  }
+
+  async function handleWithdrawBankStack(definitionId: string, quantity: number) {
+    if (!activeSave) return
+    try {
+      const save = withdrawInventoryStackFromBank(activeSave, definitionId, quantity, new Date().toISOString())
+      await persistActive(save, `Retirada realizada: ${quantity} item(ns).`)
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : 'Não foi possível retirar do Banco.')
+    }
+  }
+
+  async function handleDepositBankEquipment(instanceId: string) {
+    if (!activeSave) return
+    try {
+      const save = depositEquipmentToBank(activeSave, instanceId, new Date().toISOString())
+      await persistActive(save, 'Equipamento depositado no Banco.')
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : 'Não foi possível depositar o equipamento.')
+    }
+  }
+
+  async function handleWithdrawBankEquipment(instanceId: string) {
+    if (!activeSave) return
+    try {
+      const save = withdrawEquipmentFromBank(activeSave, instanceId, new Date().toISOString())
+      await persistActive(save, 'Equipamento retirado do Banco.')
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : 'Não foi possível retirar o equipamento.')
+    }
+  }
+
   function startNewSave() {
     setCharacterName('')
     setSelectedClassId(null)
@@ -362,6 +406,10 @@ function App() {
         onStopWork={handleStopWork}
         onEquip={handleEquip}
         onAllocateAttributes={handleAllocateAttributes}
+        onDepositBankStack={handleDepositBankStack}
+        onWithdrawBankStack={handleWithdrawBankStack}
+        onDepositBankEquipment={handleDepositBankEquipment}
+        onWithdrawBankEquipment={handleWithdrawBankEquipment}
       />
     )
   }

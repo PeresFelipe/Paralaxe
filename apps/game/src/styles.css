@@ -314,3 +314,18 @@ button:disabled { cursor: not-allowed; opacity: .46; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
 }
+
+
+.bank-capacity-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 10px; }
+.bank-capacity-grid .panel { display: grid; gap: 4px; }
+.bank-capacity-grid strong { font-size: 1.1rem; }
+.bank-columns { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 12px; align-items: start; }
+.bank-row { display: flex; justify-content: space-between; gap: 14px; align-items: center; padding: 11px 0; border-bottom: 1px solid var(--line); }
+.bank-row:last-child { border-bottom: 0; }
+.bank-row > div:first-child { display: grid; min-width: 0; }
+.bank-row small { color: var(--muted); font-size: .68rem; }
+.bank-row .button-row { justify-content: flex-end; }
+@media (max-width: 760px) {
+  .bank-columns, .bank-capacity-grid { grid-template-columns: 1fr; }
+  .bank-row { align-items: flex-start; flex-direction: column; }
+}

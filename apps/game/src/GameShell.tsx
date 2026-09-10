@@ -18,6 +18,7 @@ import CombatWorkbench from './CombatWorkbench'
 import DungeonWorkbench from './DungeonWorkbench'
 import MarketWorkbench from './MarketWorkbench'
 import AttributePanel from './AttributePanel'
+import BankPanel from './BankPanel'
 
 type PrimaryDestination = 'character' | 'activities' | 'adventure' | 'city'
 type CharacterTab = 'overview' | 'attributes' | 'equipment' | 'techniques' | 'inventory'
@@ -38,6 +39,10 @@ type GameShellProps = {
   onStopWork: () => Promise<void>
   onEquip: (instanceId: string) => Promise<void>
   onAllocateAttributes: (allocation: AttributeAllocation) => Promise<void>
+  onDepositBankStack: (definitionId: string, quantity: number) => Promise<void>
+  onWithdrawBankStack: (definitionId: string, quantity: number) => Promise<void>
+  onDepositBankEquipment: (instanceId: string) => Promise<void>
+  onWithdrawBankEquipment: (instanceId: string) => Promise<void>
 }
 
 const skillLabels: Record<SkillId, string> = {
@@ -132,6 +137,10 @@ export default function GameShell({
   onStopWork,
   onEquip,
   onAllocateAttributes,
+  onDepositBankStack,
+  onWithdrawBankStack,
+  onDepositBankEquipment,
+  onWithdrawBankEquipment,
 }: GameShellProps) {
   const [destination, setDestination] = useState<PrimaryDestination>(save.dungeon.activeRun ? 'adventure' : 'character')
   const [characterTab, setCharacterTab] = useState<CharacterTab>('overview')
@@ -246,6 +255,10 @@ export default function GameShell({
             onView={setCityView}
             onOpenAdventure={() => openAdventure('dungeon')}
             onPersist={onPersist}
+            onDepositBankStack={onDepositBankStack}
+            onWithdrawBankStack={onWithdrawBankStack}
+            onDepositBankEquipment={onDepositBankEquipment}
+            onWithdrawBankEquipment={onWithdrawBankEquipment}
           />
         ) : null}
       </main>
@@ -463,23 +476,42 @@ function CityViewComponent({
   onView,
   onOpenAdventure,
   onPersist,
+  onDepositBankStack,
+  onWithdrawBankStack,
+  onDepositBankEquipment,
+  onWithdrawBankEquipment,
 }: {
   save: OfflineGameSave
   view: CityView
   onView: (view: CityView) => void
   onOpenAdventure: () => void
   onPersist: (save: OfflineGameSave, message?: string) => void | Promise<void>
+  onDepositBankStack: (definitionId: string, quantity: number) => Promise<void>
+  onWithdrawBankStack: (definitionId: string, quantity: number) => Promise<void>
+  onDepositBankEquipment: (instanceId: string) => Promise<void>
+  onWithdrawBankEquipment: (instanceId: string) => Promise<void>
 }) {
   if (view === 'market') return <MarketWorkbench save={save} onSaveChange={onPersist} />
+  if (view === 'bank') {
+    return (
+      <BankPanel
+        save={save}
+        onDepositStack={onDepositBankStack}
+        onWithdrawStack={onWithdrawBankStack}
+        onDepositEquipment={onDepositBankEquipment}
+        onWithdrawEquipment={onWithdrawBankEquipment}
+        onBack={() => onView('overview')}
+      />
+    )
+  }
 
   if (view === 'tavern') {
     return <section className="feature-view"><div className="view-heading"><div><p className="section-kicker">Cidade · Taverna</p><h1 className="display-title">Taverna</h1><p className="muted">Conversas e contratos.</p></div><button className="ghost-button" type="button" onClick={() => onView('overview')}>Voltar à Cidade</button></div><div className="city-context-layout"><div className="context-art context-art--city" aria-hidden="true"><span>ARTE 16:9 · TAVERNA</span></div><article className="panel npc-card"><div className="portrait-placeholder portrait-placeholder--npc" aria-hidden="true"><span>NPC 4:5</span></div><div><p className="section-kicker">Brann</p><h2>{save.combat.wolfDefeated ? 'A estrada confirmou os rumores.' : 'Há trabalho fora dos portões.'}</h2><p className="muted">{save.combat.wolfDefeated ? 'Dún Liath agora é um objetivo conhecido.' : 'Conclua o Serviço — Estrada Baixa para avançar o primeiro arco.'}</p>{save.combat.wolfDefeated ? <button className="primary-button compact" type="button" onClick={onOpenAdventure}>Ver contrato de Dún Liath</button> : null}</div></article></div></section>
   }
 
   if (view !== 'overview') {
-    const copy: Record<Exclude<CityView, 'overview' | 'tavern' | 'market'>, { title: string; body: string }> = {
+    const copy: Record<Exclude<CityView, 'overview' | 'tavern' | 'market' | 'bank'>, { title: string; body: string }> = {
       smith: { title: 'Ferreiro', body: 'Serviços de NPC pertencem à Cidade. A Skill Forja continua em Atividades. Nenhum novo serviço do Ferreiro está implementado nesta build.' },
-      bank: { title: 'Banco', body: 'O Banco é o destino de armazenamento seguro. A operação de depósito/retirada ainda não possui domínio implementado nesta build.' },
       reliquary: { title: 'Relicário', body: 'Relíquias descobertas serão apresentadas aqui. O sistema funcional de Relicário ainda não está implementado nesta build.' },
     }
     const current = copy[view]

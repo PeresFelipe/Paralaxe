@@ -105,7 +105,8 @@ describe('IndexedDB save repository', () => {
     const repositoryAfterReload = createIndexedDbSaveRepository()
     const loaded = await repositoryAfterReload.get(save.saveId)
 
-    expect(loaded?.saveSchemaVersion).toBe(6)
+    expect(loaded?.saveSchemaVersion).toBe(7)
+    expect(loaded?.character.bank).toEqual({ inventory: [], equipmentItems: [] })
     expect(loaded?.dungeon.contractAccepted).toBe(true)
     expect(loaded?.dungeon.activeRun?.seed).toBe(991337)
     expect(loaded?.dungeon.activeRun?.currentRoomId).toBe('room.courtyard')

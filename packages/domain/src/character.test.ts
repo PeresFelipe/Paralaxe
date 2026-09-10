@@ -44,7 +44,7 @@ describe('character creation', () => {
     })
 
     expect(save.saveMode).toBe('OFFLINE')
-    expect(save.saveSchemaVersion).toBe(6)
+    expect(save.saveSchemaVersion).toBe(7)
     expect(save.character.name).toBe('Ailith')
     expect(save.character.classId).toBe('wanderer')
     expect(save.character.giftId).toBe('coin-pouch')
@@ -56,6 +56,7 @@ describe('character creation', () => {
     expect(save.idle.activeActivity).toBeNull()
     expect(save.crafting.activeRecipe).toBeNull()
     expect(save.character.equipmentItems).toHaveLength(2)
+    expect(save.character.bank).toEqual({ inventory: [], equipmentItems: [] })
 
     const mainHandInstanceId = save.character.equipment.mainHand
     const mainHand = save.character.equipmentItems.find(

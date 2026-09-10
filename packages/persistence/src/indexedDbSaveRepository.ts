@@ -70,6 +70,11 @@ interface LegacyOfflineGameSaveV5
   dungeon: Omit<OfflineGameSave['dungeon'], 'contractAccepted'>
 }
 
+interface LegacyOfflineGameSaveV6 extends Omit<OfflineGameSave, 'saveSchemaVersion' | 'character'> {
+  saveSchemaVersion: 6
+  character: Omit<OfflineGameSave['character'], 'bank'>
+}
+
 function requestToPromise<T>(request: IDBRequest<T>) {
   return new Promise<T>((resolve, reject) => {
     request.addEventListener('success', () => resolve(request.result), { once: true })
@@ -130,11 +135,18 @@ function createDefaultDungeonState(): OfflineGameSave['dungeon'] {
   }
 }
 
+function withEmptyBank(
+  character: Omit<OfflineGameSave['character'], 'bank'>,
+): OfflineGameSave['character'] {
+  return { ...character, bank: { inventory: [], equipmentItems: [] } }
+}
+
 function migrateLegacyCharacter(character: LegacyCharacterState): OfflineGameSave['character'] {
   const startingEquipment = createStartingEquipmentState(character.equipment)
 
   return {
     ...character,
+    bank: { inventory: [], equipmentItems: [] },
     equipment: startingEquipment.equipped,
     equipmentItems: startingEquipment.equipmentItems,
     nextEquipmentSequence: startingEquipment.nextEquipmentSequence,
@@ -152,11 +164,21 @@ function migrateSave(rawSave: unknown): OfflineGameSave {
     return rawSave as OfflineGameSave
   }
 
+  if (candidate.saveSchemaVersion === 6) {
+    const legacy = rawSave as LegacyOfflineGameSaveV6
+    return {
+      ...legacy,
+      saveSchemaVersion: SAVE_SCHEMA_VERSION,
+      character: withEmptyBank(legacy.character),
+    }
+  }
+
   if (candidate.saveSchemaVersion === 5) {
     const legacy = rawSave as LegacyOfflineGameSaveV5
     return {
       ...legacy,
       saveSchemaVersion: SAVE_SCHEMA_VERSION,
+      character: withEmptyBank(legacy.character),
       combat: migrateCombatState(legacy.combat),
       dungeon: {
         ...legacy.dungeon,
@@ -171,6 +193,7 @@ function migrateSave(rawSave: unknown): OfflineGameSave {
     return {
       ...legacy,
       saveSchemaVersion: SAVE_SCHEMA_VERSION,
+      character: withEmptyBank(legacy.character),
       combat: migrateCombatState(legacy.combat),
       dungeon: createDefaultDungeonState(),
     }
@@ -181,6 +204,7 @@ function migrateSave(rawSave: unknown): OfflineGameSave {
     return {
       ...legacy,
       saveSchemaVersion: SAVE_SCHEMA_VERSION,
+      character: withEmptyBank(legacy.character),
       combat: createDefaultCombatState(),
       dungeon: createDefaultDungeonState(),
     }

@@ -80,6 +80,11 @@ export interface InventoryStack {
   quantity: number
 }
 
+export interface BankState {
+  inventory: InventoryStack[]
+  equipmentItems: EquipmentInstance[]
+}
+
 export interface CharacterState {
   name: string
   classId: CharacterClassId
@@ -90,6 +95,7 @@ export interface CharacterState {
   attributes: CharacterAttributes
   gold: number
   inventory: InventoryStack[]
+  bank: BankState
   equipment: EquippedItemIds
   equipmentItems: EquipmentInstance[]
   nextEquipmentSequence: number
@@ -98,7 +104,7 @@ export interface CharacterState {
   currentLocationId: string
 }
 
-export const SAVE_SCHEMA_VERSION = 6 as const
+export const SAVE_SCHEMA_VERSION = 7 as const
 
 export interface OfflineGameSave {
   saveId: string
@@ -204,6 +210,7 @@ export function createOfflineGameSave(input: CreateOfflineGameSaveInput): Offlin
       attributes: { ...input.characterClass.attributes },
       gold: giftState.gold,
       inventory: giftState.inventory,
+      bank: { inventory: [], equipmentItems: [] },
       equipment: startingEquipment.equipped,
       equipmentItems: startingEquipment.equipmentItems,
       nextEquipmentSequence: startingEquipment.nextEquipmentSequence,
