@@ -45,6 +45,13 @@ const abilities: CombatAbilityDefinition[] = [
     cooldownSeconds: 7,
     damage: { kind: 'weapon-multiplier', multiplier: 1.35, damageType: 'pierce', accuracyBonusPercentagePoints: 10 },
   },
+  {
+    id: 'ability.combat-breath',
+    name: 'Fôlego de Combate',
+    profile: 'defensive',
+    cooldownSeconds: 12,
+    restore: { stamina: 24 },
+  },
 ]
 
 const roadWolf: EnemyDefinition = {
@@ -137,6 +144,24 @@ describe('combat engine', () => {
 
     const persisted = applyCombatResult(save, roadWolf.id, result, '2026-09-09T12:01:00.000Z')
     expect(persisted.character.inventory).toEqual([])
+  })
+
+  it('skips a defensive restore ability when it would restore nothing', () => {
+    const base = createSave()
+    const save = {
+      ...base,
+      character: {
+        ...base.character,
+        knownAbilityIds: ['ability.combat-breath', 'ability.opening'],
+        activeAbilitySlots: ['ability.combat-breath', 'ability.opening', null, null] as [string | null, string | null, string | null, string | null],
+      },
+    }
+    const result = simulateCombat(save, catalog, postureDummy.id, 7, 2.2, {
+      health: 80, maxHealth: 160, mana: 80, maxMana: 80, stamina: 100, maxStamina: 100,
+    })
+
+    expect(result.log.some((entry) => entry.message.includes('Fôlego de Combate'))).toBe(false)
+    expect(result.log.some((entry) => entry.message.includes('Abertura'))).toBe(true)
   })
 
   it('procs buildup and exposes defensive posture events in the deterministic log', () => {

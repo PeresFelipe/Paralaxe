@@ -411,6 +411,13 @@ function chooseAbility(
       const ability = entry.definition
       if (ability.resource === 'mana' && resources.mana < (ability.resourceCost ?? 0)) return false
       if (ability.resource === 'stamina' && resources.stamina < (ability.resourceCost ?? 0)) return false
+      if (ability.restore) {
+        const canRestore =
+          ((ability.restore.health ?? 0) > 0 && resources.health < resources.maxHealth) ||
+          ((ability.restore.mana ?? 0) > 0 && resources.mana < resources.maxMana) ||
+          ((ability.restore.stamina ?? 0) > 0 && resources.stamina < resources.maxStamina)
+        if (!canRestore) return false
+      }
       if (ability.profile === 'defensive') return defensiveCondition(ability)
       return true
     })
