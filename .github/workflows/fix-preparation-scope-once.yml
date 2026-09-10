@@ -1,0 +1,52 @@
+name: Fix preparation scope once
+
+on: push
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fix preparation callback scope
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          path = Path('apps/game/src/GameShell.tsx')
+          text = path.read_text()
+
+          outer = """            onPersist={onPersist}\n            onRiskStateChange={onRiskStateChange}\n          />"""
+          outer_new = """            onPersist={onPersist}\n            onRiskStateChange={onRiskStateChange}\n            onPreparationStateChange={setPreparationActive}\n          />"""
+          if outer not in text:
+              raise SystemExit('Outer AdventureViewComponent marker not found')
+          text = text.replace(outer, outer_new, 1)
+
+          sig = """  onPersist,\n  onRiskStateChange,\n}: {\n  save: OfflineGameSave\n  view: AdventureView\n  onView: (view: AdventureView) => void\n  prepareRisk: () => Promise<OfflineGameSave>\n  onPersist: (save: OfflineGameSave, message?: string) => void | Promise<void>\n  onRiskStateChange: (active: boolean) => void\n}) {"""
+          sig_new = """  onPersist,\n  onRiskStateChange,\n  onPreparationStateChange,\n}: {\n  save: OfflineGameSave\n  view: AdventureView\n  onView: (view: AdventureView) => void\n  prepareRisk: () => Promise<OfflineGameSave>\n  onPersist: (save: OfflineGameSave, message?: string) => void | Promise<void>\n  onRiskStateChange: (active: boolean) => void\n  onPreparationStateChange: (active: boolean) => void\n}) {"""
+          if sig not in text:
+              raise SystemExit('AdventureViewComponent signature marker not found')
+          text = text.replace(sig, sig_new, 1)
+
+          old = "onPreparationStateChange={setPreparationActive}"
+          # First occurrence is the outer prop just inserted; the second is the incorrect inner use.
+          first = text.find(old)
+          second = text.find(old, first + 1)
+          if second < 0:
+              raise SystemExit('Inner setPreparationActive use not found')
+          text = text[:second] + "onPreparationStateChange={onPreparationStateChange}" + text[second + len(old):]
+
+          path.write_text(text)
+          PY
+      - name: Commit patch and remove workflow
+        shell: bash
+        run: |
+          rm .github/workflows/fix-preparation-scope-once.yml
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add apps/game/src/GameShell.tsx .github/workflows/fix-preparation-scope-once.yml
+          git commit -m 'fix(game): wire preparation state through adventure view'
+          git push
