@@ -1598,21 +1598,224 @@ Comportamento, hesitação e confusão observados são evidência. A solução s
 
 ---
 
-# 36. Decisões ainda em aberto
+# 36. Direção Visual 0.1
 
-A arquitetura de informação, os estados principais, a relação safe/risk, a organização de Personagem/Atividades/Aventura/Cidade/Jornada, o comportamento da continuidade Idle, a gramática de Preparação/Combate/Dungeon, a base responsiva e o sistema de mídia estão aprovados.
+A Direção Visual 0.1 é a baseline aprovada para prototipagem de alta fidelidade. Ela concretiza os princípios de UX sem transformar valores de protótipo em regras imutáveis.
 
-Permanecem deliberadamente em aberto para design visual, prototipagem e playtest:
+> **A estrutura permanece limpa e previsível; a atmosfera Dark Fantasy vem de arte, superfícies, tipografia de destaque, som e microinterações sem sacrificar legibilidade.**
 
-- paleta final;
-- famílias tipográficas concretas;
-- espaçamentos e dimensões finais de componentes;
-- estilo exato de ícones;
-- linguagem final de superfícies, bordas e ornamentação;
-- comportamento visual exato das artes reduzidas após familiaridade;
+## Paleta-base de protótipo
+
+Papéis semânticos iniciais:
+
+| Papel | Referência 0.1 | Uso principal |
+|---|---|---|
+| Fundo profundo | `#101315` | fundo geral |
+| Superfície | `#171C1F` | painéis e cards |
+| Superfície elevada | `#20262A` | seleção e overlays |
+| Borda | `#343B3F` | separação |
+| Texto principal | `#E5E1D8` | leitura principal |
+| Texto secundário | `#A9AAA5` | informação auxiliar |
+| Ferro claro | `#C4C7C5` | detalhe neutro |
+| Bronze envelhecido | `#A98555` | ação importante e destaque |
+| Azul frio | `#718C95` | Mana/contextos frios |
+| Verde dessaturado | `#788A72` | estado positivo |
+| Âmbar | `#B99255` | atenção |
+| Carmesim | `#9E5550` | perigo e dano |
+
+Esses valores são baseline de protótipo. Contraste, acessibilidade e playtest podem exigir ajuste sem reabrir a arquitetura visual.
+
+Bronze envelhecido funciona como acento principal de interface para evitar aparência tecnológica genérica. Raridade, perigo, sucesso e outros estados continuam usando texto, forma e/ou ícone além de cor.
+
+## Tipografia
+
+A interface separa duas funções:
+
+```text
+DISPLAY / MUNDO
+→ personalidade em nomes de lugares, Bosses e títulos especiais
+
+INTERFACE / DADOS
+→ máxima legibilidade em números, menus, requisitos e estados
+```
+
+Referências iniciais para protótipo:
+
+- **Spectral** para display/mundo;
+- **Inter** para interface/dados.
+
+Essas famílias são candidatas 0.1 e podem ser substituídas após avaliação visual, desde que a separação funcional permaneça.
+
+Fontes ornamentais ou góticas não devem comprometer leitura de dados operacionais.
+
+## Formas e superfícies
+
+A linguagem evita cards excessivamente arredondados de aplicativo moderno e também evita molduras medievais pesadas em todos os controles.
+
+Referência inicial:
+
+- cantos discretos, aproximadamente 4–8 px no protótipo;
+- superfícies escuras, frias e pouco saturadas;
+- bordas legíveis;
+- ornamentação concentrada em títulos, divisores, estados especiais e momentos narrativos;
+- textura sutil quando não interfere em texto ou affordance.
+
+Botões principais podem usar bronze escuro/envelhecido com contraste claro. Botões secundários usam superfície neutra e borda. Ações terciárias podem usar texto/ícone.
+
+A tela não deve virar uma coleção de botões preenchidos de igual peso.
+
+## Hierarquia tipográfica e de informação
+
+Quatro níveis devem ser reconhecíveis rapidamente:
+
+```text
+TÍTULO DO CONTEXTO
+DÚN LIATH
+
+SEÇÃO
+TÉCNICAS
+
+ELEMENTO
+Golpe Calculado
+
+METADADO
+Cooldown 4,0 s
+```
+
+A diferença pode combinar família tipográfica, tamanho, peso, espaçamento e posição, sem depender apenas de cor.
+
+## Espaçamento
+
+Escala inicial de protótipo:
+
+```text
+4 · 8 · 12 · 16 · 24 · 32 · 48 · 64
+```
+
+É uma régua de consistência, não contrato rígido de pixel.
+
+> **Denso quando necessário, nunca apertado.**
+
+Telas operacionais podem ter maior densidade interna, preservando separação clara entre grupos funcionais.
+
+## Ícones
+
+Ícones operacionais usam:
+
+- silhueta clara;
+- desenho simples;
+- peso visual consistente;
+- poucos detalhes internos;
+- significado reconhecível em tamanhos pequenos.
+
+Vida, Mana, Stamina e status devem possuir sinais próprios. Itens, recursos e Técnicas usam suas artes/thumbnails 1:1 e não dependem de ícones operacionais minúsculos para identidade.
+
+## Uso da arte na interface
+
+A arte é a principal fonte de atmosfera, mas dados importantes permanecem em superfícies legíveis da interface.
+
+Gradientes ou overlays podem melhorar contraste quando texto realmente precisar coexistir com a imagem, sem cobrir toda a arte com escurecimento pesado.
+
+A intensidade visual acompanha a frequência de uso:
+
+```text
+primeiro contato / momento narrativo
+→ arte pode dominar mais espaço
+
+uso recorrente / tela operacional
+→ arte pode reduzir presença
+```
+
+Essa redução preserva a identidade visual do contexto.
+
+## Assinatura visual por estado
+
+Estados principais devem ser perceptivelmente diferentes sem exigir uma nova linguagem a cada tela:
+
+```text
+SAFE
+→ estrutura estável e neutra
+
+PREPARAÇÃO
+→ foco crescente, contraste e acento de compromisso
+
+DUNGEON
+→ localização, estado e risco persistentes
+
+COMBATE
+→ molduras administrativas recuam; ação e ameaça dominam
+
+BOSS / MOMENTO NARRATIVO
+→ ruptura visual breve antes de retornar à gramática funcional
+```
+
+O jogador deve sentir visualmente a diferença entre navegar, preparar-se e assumir risco.
+
+## Telegraphs
+
+Telegraphs são uma assinatura visual importante de Greywake.
+
+Um telegraph perigoso combina, quando aplicável:
+
+- nome da ação;
+- tempo restante;
+- progresso temporal;
+- efeito/tipo conhecido;
+- forma/ícone relevante;
+- movimento ou pulso complementar.
+
+Reduzir movimento não pode reduzir a informação disponível.
+
+## Escala de feedback
+
+A apresentação acompanha a importância:
+
+```text
+loot/recurso comum
+→ feedback mínimo
+
+Skill / desbloqueio
+→ feedback contextual
+
+Relíquia / Boss / Dungeon concluída
+→ momento dedicado
+```
+
+Eventos repetitivos não competem com eventos raros.
+
+## Tela de referência para alta fidelidade
+
+A primeira tela recomendada para protótipo visual é **Atividades → Mineração**, porque combina:
+
+- shell seguro;
+- navegação principal;
+- arte contextual 16:9;
+- recurso/item 1:1;
+- nível e XP;
+- atividade Idle ativa;
+- seleção de recurso;
+- informação decisional e detalhes avançados;
+- acesso rápido a Inventário e Jornada.
+
+Validar essa tela primeiro permite derivar grande parte da linguagem visual de Atividades e dos estados seguros antes de avançar para telas especiais.
+
+---
+
+# 37. Decisões ainda em aberto
+
+A arquitetura de informação, os estados principais, a relação safe/risk, a organização de Personagem/Atividades/Aventura/Cidade/Jornada, a continuidade Idle, a gramática de Preparação/Combate/Dungeon, a base responsiva, o sistema de mídia e a Direção Visual 0.1 estão aprovados como fundação.
+
+Permanecem deliberadamente abertos para protótipo de alta fidelidade e playtest:
+
+- ajuste final da paleta a partir de contraste e leitura real;
+- confirmação ou substituição das famílias tipográficas de referência;
+- dimensões finais de componentes e espaçamentos específicos por viewport;
+- estilo final do set de ícones;
+- intensidade concreta de texturas, bordas e ornamentação;
+- comportamento exato das artes reduzidas após familiaridade;
 - animações concretas e suas durações finais;
 - paisagem sonora e efeitos concretos;
-- refinamentos de posição, densidade e hierarquia revelados por wireframes/playtest;
-- detalhes de acessibilidade que dependam do componente/tecnologia escolhidos sem alterar os princípios desta especificação.
+- refinamentos de posição, densidade e hierarquia revelados pelo protótipo/playtest;
+- detalhes de acessibilidade dependentes dos componentes e tecnologia escolhidos.
 
-Qualquer refinamento futuro pode mudar layout concreto sem violar a arquitetura e os princípios canônicos registrados aqui.
+Esses refinamentos podem alterar a aparência concreta sem reabrir os princípios e a arquitetura aprovados, salvo evidência de problema estrutural.
