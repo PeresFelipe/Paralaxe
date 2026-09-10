@@ -1,12 +1,7 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import App from './App'
-import CombatWorkbench from './CombatWorkbench'
-import DungeonWorkbench from './DungeonWorkbench'
-import MarketWorkbench from './MarketWorkbench'
 import './styles.css'
-import './combat.css'
-import './dungeon.css'
 
 const rootElement = document.getElementById('root')
 
@@ -17,8 +12,5 @@ if (!rootElement) {
 createRoot(rootElement).render(
   <StrictMode>
     <App />
-    <MarketWorkbench />
-    <CombatWorkbench />
-    <DungeonWorkbench />
   </StrictMode>,
 )
