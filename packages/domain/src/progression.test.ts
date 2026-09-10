@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { createOfflineGameSave } from './character'
-import { grantGeneralXp } from './progression'
+import { allocateAttributePoints, grantGeneralXp } from './progression'
 
 const characterClass = {
   id: 'wanderer' as const,
@@ -63,5 +63,27 @@ describe('progressão geral da Build 0.1', () => {
     const save = grantGeneralXp(advanced, 5, '2026-09-09T12:01:00.000Z')
     expect(save.character.level).toBe(5)
     expect(save.character.unspentAttributePoints).toBe(4)
+  })
+
+  it('confirma uma distribuição de atributos e consome apenas os pontos usados', () => {
+    const leveled = grantGeneralXp(createSave(), 475, '2026-09-09T12:01:00.000Z')
+    const save = allocateAttributePoints(
+      leveled,
+      { vitality: 1, strength: 1 },
+      '2026-09-09T12:02:00.000Z',
+    )
+
+    expect(save.character.attributes.vitality).toBe(6)
+    expect(save.character.attributes.strength).toBe(6)
+    expect(save.character.unspentAttributePoints).toBe(1)
+  })
+
+  it('rejeita uma distribuição acima dos pontos disponíveis', () => {
+    const leveled = grantGeneralXp(createSave(), 100, '2026-09-09T12:01:00.000Z')
+    expect(() => allocateAttributePoints(
+      leveled,
+      { vitality: 2 },
+      '2026-09-09T12:02:00.000Z',
+    )).toThrow('excede os pontos')
   })
 })
