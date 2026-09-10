@@ -18,6 +18,18 @@ jobs:
           node-version: 22
       - run: corepack enable
       - run: pnpm install --no-frozen-lockfile
+      - name: Fix exact optional typing in staged patch
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          path = Path('scripts/m6-integrity-final.py')
+          text = path.read_text()
+          text = text.replace(
+              "equipmentGrants.push({ definitionId: grant.definitionId, equipSlot: grant.equipSlot })",
+              "equipmentGrants.push(grant.equipSlot ? { definitionId: grant.definitionId, equipSlot: grant.equipSlot } : { definitionId: grant.definitionId })",
+          )
+          path.write_text(text)
+          PY
       - run: python scripts/m6-integrity-final.py
       - run: pnpm check
       - run: pnpm build
