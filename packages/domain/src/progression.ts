@@ -1,4 +1,4 @@
-import type { OfflineGameSave } from './character'
+import { ATTRIBUTE_KEYS, type AttributeKey, type OfflineGameSave } from './character'
 
 export const GENERAL_XP_TO_NEXT_LEVEL = [
   100,
@@ -13,6 +13,8 @@ export const GENERAL_XP_TO_NEXT_LEVEL = [
 ] as const
 
 export const BUILD_01_MAX_GENERAL_LEVEL = 10
+
+export type AttributeAllocation = Partial<Record<AttributeKey, number>>
 
 export function getGeneralLevelForXp(totalXp: number) {
   let level = 1
@@ -50,6 +52,42 @@ export function grantGeneralXp(
       xp,
       level,
       unspentAttributePoints: save.character.unspentAttributePoints + gainedLevels,
+    },
+  }
+}
+
+export function allocateAttributePoints(
+  save: OfflineGameSave,
+  allocation: AttributeAllocation,
+  now: string,
+): OfflineGameSave {
+  let spentPoints = 0
+  const attributes = { ...save.character.attributes }
+
+  for (const key of ATTRIBUTE_KEYS) {
+    const amount = allocation[key] ?? 0
+    if (!Number.isInteger(amount) || amount < 0) {
+      throw new Error('A distribuição de atributos precisa usar valores inteiros não negativos.')
+    }
+    spentPoints += amount
+    attributes[key] += amount
+  }
+
+  if (spentPoints <= 0) {
+    throw new Error('Distribua pelo menos um ponto de atributo antes de confirmar.')
+  }
+
+  if (spentPoints > save.character.unspentAttributePoints) {
+    throw new Error('A distribuição excede os pontos de atributo disponíveis.')
+  }
+
+  return {
+    ...save,
+    updatedAt: now,
+    character: {
+      ...save.character,
+      attributes,
+      unspentAttributePoints: save.character.unspentAttributePoints - spentPoints,
     },
   }
 }
