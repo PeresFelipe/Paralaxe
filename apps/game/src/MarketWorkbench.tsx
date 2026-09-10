@@ -1,41 +1,27 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useState } from 'react'
 import { INITIAL_NPC_MARKET_LISTINGS } from '@greywake/content'
 import { buyNpcMarketListing, type OfflineGameSave } from '@greywake/domain'
-import { createIndexedDbSaveRepository } from '@greywake/persistence'
 
-const saveRepository = createIndexedDbSaveRepository()
+type MarketViewProps = {
+  save: OfflineGameSave
+  onSaveChange: (save: OfflineGameSave, message?: string) => void | Promise<void>
+}
 
-export default function MarketWorkbench() {
-  const [saves, setSaves] = useState<OfflineGameSave[]>([])
-  const [selectedSaveId, setSelectedSaveId] = useState('')
+export default function MarketWorkbench({ save, onSaveChange }: MarketViewProps) {
   const [message, setMessage] = useState<string | null>(null)
   const [busy, setBusy] = useState(false)
 
-  const selectedSave = useMemo(
-    () => saves.find((save) => save.saveId === selectedSaveId) ?? null,
-    [saves, selectedSaveId],
-  )
-
-  useEffect(() => {
-    void saveRepository.list().then((stored) => {
-      setSaves(stored)
-      setSelectedSaveId((current) => current || stored[0]?.saveId || '')
-    })
-  }, [])
-
   async function buy(listingId: string) {
-    if (!selectedSave || busy) return
+    if (busy) return
     const listing = INITIAL_NPC_MARKET_LISTINGS.find((item) => item.id === listingId)
     if (!listing) return
 
     setBusy(true)
     try {
-      const latest = await saveRepository.get(selectedSave.saveId)
-      if (!latest) throw new Error('Save não encontrado.')
-      const updated = buyNpcMarketListing(latest, listing, new Date().toISOString())
-      await saveRepository.put(updated)
-      setSaves((current) => current.map((save) => (save.saveId === updated.saveId ? updated : save)))
-      setMessage(`${listing.name} comprado por ${listing.price} moedas.`)
+      const updated = buyNpcMarketListing(save, listing, new Date().toISOString())
+      const text = `${listing.name} comprado por ${listing.price} moedas.`
+      await onSaveChange(updated, text)
+      setMessage(text)
     } catch (error) {
       setMessage(error instanceof Error ? error.message : 'Não foi possível concluir a compra.')
     } finally {
@@ -43,55 +29,56 @@ export default function MarketWorkbench() {
     }
   }
 
-  if (saves.length === 0) return null
-
   return (
-    <section className="combat-workbench" aria-labelledby="market-title">
-      <div className="combat-workbench__header">
-        <div>
-          <p className="section-kicker">M6 · Cidade Livre</p>
-          <h2 id="market-title">Mercado NPC</h2>
-          <p className="muted">Itens básicos com preço fixo · compra local persistente</p>
-        </div>
-
-        <label className="combat-save-select">
-          <span>Personagem</span>
-          <select value={selectedSaveId} disabled={busy} onChange={(event) => { setSelectedSaveId(event.target.value); setMessage(null) }}>
-            {saves.map((save) => (
-              <option key={save.saveId} value={save.saveId}>
-                {save.character.name} · {save.character.gold} moedas
-              </option>
-            ))}
-          </select>
-        </label>
+    <section className="feature-view market-view" aria-labelledby="market-title">
+      <div className="context-art context-art--compact" aria-hidden="true">
+        <span>ARTE 16:9 · MERCADO</span>
       </div>
 
-      {message ? <p className="inline-message">{message}</p> : null}
-
-      {selectedSave ? (
-        <div className="choice-grid">
-          {INITIAL_NPC_MARKET_LISTINGS.map((listing) => (
-            <article className="panel" key={listing.id}>
-              <p className="section-kicker">Mercado</p>
-              <h3>{listing.name}</h3>
-              <p className="muted">
-                {listing.product.kind === 'equipment'
-                  ? `Equipamento · ${listing.product.slot}`
-                  : `${listing.product.quantity} unidade(s)`}
-              </p>
-              <div className="combat-stat-row"><span>Preço</span><strong>{listing.price} moedas</strong></div>
-              <button
-                className="primary-button compact"
-                type="button"
-                disabled={busy || selectedSave.character.gold < listing.price}
-                onClick={() => void buy(listing.id)}
-              >
-                Comprar
-              </button>
-            </article>
-          ))}
+      <div className="view-heading">
+        <div>
+          <p className="section-kicker">Cidade · Mercado</p>
+          <h2 id="market-title" className="display-title">Comprar</h2>
+          <p className="muted">Preços e consequências aparecem antes da compra.</p>
         </div>
-      ) : null}
+        <div className="currency-chip" aria-label={`${save.character.gold} moedas`}>
+          <span aria-hidden="true">◇</span>
+          <strong>{save.character.gold}</strong>
+          <small>moedas</small>
+        </div>
+      </div>
+
+      {message ? <p className="inline-message" role="status">{message}</p> : null}
+
+      <div className="market-grid">
+        {INITIAL_NPC_MARKET_LISTINGS.map((listing) => {
+          const canAfford = save.character.gold >= listing.price
+          return (
+            <article className="item-card" key={listing.id}>
+              <div className="item-thumb" aria-hidden="true">{listing.name.slice(0, 1)}</div>
+              <div className="item-card__body">
+                <p className="section-kicker">Mercado</p>
+                <h3>{listing.name}</h3>
+                <p className="muted">
+                  {listing.product.kind === 'equipment'
+                    ? `Equipamento · ${listing.product.slot}`
+                    : `${listing.product.quantity} unidade(s)`}
+                </p>
+                <div className="fact-row"><span>Preço</span><strong>{listing.price} moedas</strong></div>
+                {!canAfford ? <p className="fact-warning">Faltam {listing.price - save.character.gold} moedas.</p> : null}
+                <button
+                  className="primary-button compact"
+                  type="button"
+                  disabled={busy || !canAfford}
+                  onClick={() => void buy(listing.id)}
+                >
+                  Comprar
+                </button>
+              </div>
+            </article>
+          )
+        })}
+      </div>
     </section>
   )
 }
