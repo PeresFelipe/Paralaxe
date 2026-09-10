@@ -3,9 +3,11 @@ import {
   DUN_LIATH_EASY,
   getCombatAbilityDefinition,
   getCombatConsumableDefinition,
+  getCraftingRecipeDefinition,
   getDungeonDefinition,
   getEnemyDefinition,
   getEquipmentDefinition,
+  getIdleActivityDefinition,
   getPreDungeonAbilityLoadout,
 } from '@greywake/content'
 import {
@@ -14,15 +16,21 @@ import {
   decideProtector,
   extractDungeonRun,
   resolveDungeonRoom,
-  startDungeon,
+  resumeCurrentWorkAfterRisk,
+  startDungeonWithContinuity,
   teachAndEquipCombatAbilities,
   type CombatResult,
   type DungeonRoomDefinition,
   type OfflineGameSave,
 } from '@greywake/domain'
-import { createIndexedDbSaveRepository } from '@greywake/persistence'
 
-const saveRepository = createIndexedDbSaveRepository()
+type DungeonViewProps = {
+  save: OfflineGameSave
+  prepareRisk: () => Promise<OfflineGameSave>
+  onSaveChange: (save: OfflineGameSave, message?: string) => void | Promise<void>
+  onRiskStateChange?: (active: boolean) => void
+  onReturn?: () => void
+}
 
 const dungeonCatalog = {
   getEquipmentDefinition,
@@ -58,54 +66,66 @@ function roomLabel(room: DungeonRoomDefinition) {
   return `${room.name}${suffix}`
 }
 
-export default function DungeonWorkbench() {
-  const [saves, setSaves] = useState<OfflineGameSave[]>([])
-  const [selectedSaveId, setSelectedSaveId] = useState('')
+function itemLabel(definitionId: string) {
+  const labels: Record<string, string> = {
+    'item.treaty-fragment': 'Fragmento do Tratado',
+    'item.garrison-supply-register': 'Registro de Suprimentos',
+    'item.dun-liath.beam': 'Viga de Dún Liath',
+    'item.fairtheoir-fragment': 'Fragmento de Fairtheoir',
+    'item.consumable.field-preparation': 'Preparado de Campo',
+  }
+  return labels[definitionId] ?? definitionId
+}
+
+function activeWorkLabel(save: OfflineGameSave) {
+  if (save.idle.activeActivity) {
+    return getIdleActivityDefinition(save.idle.activeActivity.activityDefinitionId)?.name ?? 'Atividade de coleta'
+  }
+  if (save.crafting.activeRecipe) {
+    return getCraftingRecipeDefinition(save.crafting.activeRecipe.recipeDefinitionId)?.name ?? 'Produção'
+  }
+  return 'Nenhuma atividade Idle ativa'
+}
+
+export default function DungeonWorkbench({
+  save,
+  prepareRisk,
+  onSaveChange,
+  onRiskStateChange,
+  onReturn,
+}: DungeonViewProps) {
   const [message, setMessage] = useState<string | null>(null)
   const [combatResult, setCombatResult] = useState<CombatResult | null>(null)
   const [busy, setBusy] = useState(false)
+  const [preparing, setPreparing] = useState(false)
 
-  const selectedSave = useMemo(
-    () => saves.find((save) => save.saveId === selectedSaveId) ?? null,
-    [saves, selectedSaveId],
+  const run = save.dungeon.activeRun
+  const currentRoom = useMemo<DungeonRoomDefinition | null>(
+    () => run ? DUN_LIATH_EASY.rooms.find((room) => room.id === run.currentRoomId) ?? null : null,
+    [run],
   )
-
-  const run = selectedSave?.dungeon.activeRun ?? null
-  const currentRoom: DungeonRoomDefinition | null = run
-    ? DUN_LIATH_EASY.rooms.find((room) => room.id === run.currentRoomId) ?? null
-    : null
   const roomResolved = Boolean(currentRoom && run?.resolvedRoomIds.includes(currentRoom.id))
 
   useEffect(() => {
-    void saveRepository.list().then((stored) => {
-      setSaves(stored)
-      setSelectedSaveId((current) => current || stored[0]?.saveId || '')
-    })
-  }, [])
+    onRiskStateChange?.(Boolean(run))
+  }, [onRiskStateChange, run])
 
-  async function persist(save: OfflineGameSave) {
-    await saveRepository.put(save)
-    setSaves((current) => current.map((item) => (item.saveId === save.saveId ? save : item)))
+  useEffect(() => () => onRiskStateChange?.(false), [onRiskStateChange])
+
+  async function persist(next: OfflineGameSave, text?: string) {
+    await onSaveChange(next, text)
+    if (text) setMessage(text)
   }
 
   async function handleAcceptContract() {
-    if (!selectedSave || busy) return
+    if (busy) return
     setBusy(true)
     try {
-      const latest = await saveRepository.get(selectedSave.saveId)
-      if (!latest) throw new Error('Save não encontrado.')
-      if (!latest.combat.wolfDefeated) {
-        throw new Error('Conclua primeiro o Serviço — Estrada Baixa.')
-      }
+      if (!save.combat.wolfDefeated) throw new Error('Conclua primeiro o Serviço — Estrada Baixa.')
       const now = new Date().toISOString()
-      let save = teachAndEquipCombatAbilities(
-        latest,
-        getPreDungeonAbilityLoadout(latest.character.classId),
-        now,
-      )
-      save = acceptDunLiathContract(save, now)
-      await persist(save)
-      setMessage('Contrato aceito. Técnicas básicas preparadas e 2× Preparado de Campo entregues uma única vez.')
+      let next = teachAndEquipCombatAbilities(save, getPreDungeonAbilityLoadout(save.character.classId), now)
+      next = acceptDunLiathContract(next, now)
+      await persist(next, 'Contrato aceito. Técnicas básicas preparadas e 2× Preparado de Campo entregues uma única vez.')
     } catch (error) {
       setMessage(error instanceof Error ? error.message : 'Não foi possível aceitar o contrato.')
     } finally {
@@ -114,40 +134,44 @@ export default function DungeonWorkbench() {
   }
 
   async function handleStart() {
-    if (!selectedSave || busy) return
+    if (busy) return
     setBusy(true)
     try {
-      const latestSave = await saveRepository.get(selectedSave.saveId)
-      if (!latestSave) throw new Error('Save não encontrado.')
-      if (!latestSave.combat.wolfDefeated) throw new Error('Derrote primeiro o Lobo de Estrada.')
-
+      if (!save.combat.wolfDefeated) throw new Error('Derrote primeiro o Lobo de Estrada.')
+      const now = new Date().toISOString()
+      const riskSave = await prepareRisk()
       const seed = Date.now() >>> 0
-      const save = startDungeon(latestSave, DUN_LIATH_EASY, seed, new Date().toISOString())
-      await persist(save)
+      const next = startDungeonWithContinuity(riskSave, DUN_LIATH_EASY, seed, now)
+      await persist(next, `Dún Liath iniciada. ${activeWorkLabel(riskSave)} foi pausada e será retomada ao voltar à segurança.`)
       setCombatResult(null)
-      setMessage(`Dún Liath iniciada · seed ${seed}. A run permanecerá no save mesmo após fechar o jogo.`)
+      setPreparing(false)
+      onRiskStateChange?.(true)
     } catch (error) {
       setMessage(error instanceof Error ? error.message : 'Não foi possível iniciar Dún Liath.')
+      onRiskStateChange?.(false)
     } finally {
       setBusy(false)
     }
   }
 
   async function handleResolve() {
-    if (!selectedSave || !run || !currentRoom || busy) return
+    if (!run || !currentRoom || busy) return
     setBusy(true)
     try {
-      const result = resolveDungeonRoom(selectedSave, DUN_LIATH_EASY, dungeonCatalog, new Date().toISOString())
-      await persist(result.save)
+      const now = new Date().toISOString()
+      const result = resolveDungeonRoom(save, DUN_LIATH_EASY, dungeonCatalog, now)
       setCombatResult(result.combatResult ?? null)
+
       if (!result.save.dungeon.activeRun) {
-        setMessage('A expedição terminou em derrota. A Bolsa foi perdida e consumíveis usados continuam consumidos.')
+        const resumed = resumeCurrentWorkAfterRisk(result.save, now)
+        await persist(resumed, 'A expedição terminou em derrota. A Bolsa foi perdida. Sua atividade Idle anterior foi retomada.')
+        onRiskStateChange?.(false)
       } else if (currentRoom.id === 'room.fairtheoir' && result.combatResult?.outcome === 'victory') {
-        setMessage('Fairtheoir caiu. Retorne à Cidade Livre para assegurar o clear e o loot.')
+        await persist(result.save, 'Fairtheoir caiu. Retorne em segurança para assegurar o clear e o loot.')
       } else if (result.combatResult) {
-        setMessage(`${currentRoom.name} resolvida · ${result.combatResult.xpGranted} XP · recursos e consumíveis persistidos.`)
+        await persist(result.save, `${currentRoom.name} resolvida · ${result.combatResult.xpGranted} XP. Loot encontrado permanece em risco.`)
       } else {
-        setMessage(`${currentRoom.name} resolvida.`)
+        await persist(result.save, `${currentRoom.name} resolvida.`)
       }
     } catch (error) {
       setMessage(error instanceof Error ? error.message : 'Não foi possível resolver a sala.')
@@ -157,13 +181,12 @@ export default function DungeonWorkbench() {
   }
 
   async function handlePath(nextRoomId: string) {
-    if (!selectedSave || busy) return
+    if (busy) return
     setBusy(true)
     try {
-      const save = chooseDungeonPath(selectedSave, DUN_LIATH_EASY, nextRoomId, new Date().toISOString())
-      await persist(save)
+      const next = chooseDungeonPath(save, DUN_LIATH_EASY, nextRoomId, new Date().toISOString())
+      await persist(next, 'Caminho escolhido. A bifurcação anterior não pode ser refeita nesta expedição.')
       setCombatResult(null)
-      setMessage('Caminho escolhido. A bifurcação anterior não pode ser refeita nesta run.')
     } catch (error) {
       setMessage(error instanceof Error ? error.message : 'Não foi possível seguir por esse caminho.')
     } finally {
@@ -172,12 +195,11 @@ export default function DungeonWorkbench() {
   }
 
   async function handleProtector(decision: 'killed' | 'spared') {
-    if (!selectedSave || busy) return
+    if (busy) return
     setBusy(true)
     try {
-      const save = decideProtector(selectedSave, decision, new Date().toISOString())
-      await persist(save)
-      setMessage(decision === 'spared' ? 'Você poupa o protetor. Não há recompensa imediata.' : 'Você mata o protetor. O indivíduo protegido foge.')
+      const next = decideProtector(save, decision, new Date().toISOString())
+      await persist(next, decision === 'spared' ? 'Você poupa o protetor.' : 'Você mata o protetor. O indivíduo protegido foge.')
     } catch (error) {
       setMessage(error instanceof Error ? error.message : 'Não foi possível registrar essa decisão.')
     } finally {
@@ -186,18 +208,23 @@ export default function DungeonWorkbench() {
   }
 
   async function handleExtract() {
-    if (!selectedSave || busy) return
+    if (busy) return
     setBusy(true)
     try {
-      const wasComplete = Boolean(selectedSave.dungeon.activeRun?.completed)
-      const save = extractDungeonRun(selectedSave, new Date().toISOString())
-      await persist(save)
-      setCombatResult(null)
-      setMessage(
+      const now = new Date().toISOString()
+      const wasComplete = Boolean(save.dungeon.activeRun?.completed)
+      const extracted = extractDungeonRun(save, now)
+      const resumed = resumeCurrentWorkAfterRisk(extracted, now)
+      await persist(
+        resumed,
         wasComplete
-          ? 'Clear assegurado. Loot transferido, contrato processado e Guarda Instintiva registrada no primeiro clear.'
-          : 'Retirada segura concluída. A Bolsa foi transferida; o contrato permanece aberto até o clear.',
+          ? 'Clear assegurado. Bolsa transferida e atividade Idle anterior retomada.'
+          : 'Retirada segura concluída. Bolsa transferida e atividade Idle anterior retomada.',
       )
+      setCombatResult(null)
+      setPreparing(false)
+      onRiskStateChange?.(false)
+      onReturn?.()
     } catch (error) {
       setMessage(error instanceof Error ? error.message : 'Não foi possível retirar da Dungeon.')
     } finally {
@@ -205,109 +232,227 @@ export default function DungeonWorkbench() {
     }
   }
 
-  if (saves.length === 0) return null
+  if (!run && preparing) {
+    const emptyTechniques = save.character.activeAbilitySlots.filter((slot) => !slot).length
+    const emptyConsumables = save.combat.preferences.consumableSlots.filter((slot) => !slot.definitionId).length
+
+    return (
+      <section className="feature-view preparation-view" aria-labelledby="preparation-title">
+        <div className="view-heading">
+          <div>
+            <p className="section-kicker">Dún Liath · Preparação</p>
+            <h2 id="preparation-title" className="display-title">Antes da expedição</h2>
+            <p className="muted">A preparação ainda é um contexto seguro. Sua atividade Idle continua até a entrada ser confirmada.</p>
+          </div>
+          <button className="ghost-button" type="button" onClick={() => setPreparing(false)}>Voltar</button>
+        </div>
+
+        <div className="preparation-layout">
+          <div className="context-art context-art--risk" aria-hidden="true"><span>ARTE 16:9 · DÚN LIATH</span></div>
+          <aside className="panel preparation-summary">
+            <p className="section-kicker">Estado do personagem</p>
+            <h3>{save.character.name} · Nv. {save.character.level}</h3>
+            <div className="fact-row"><span>Estilo</span><strong>{save.combat.preferences.style}</strong></div>
+            <div className="fact-row"><span>Técnicas vazias</span><strong>{emptyTechniques}</strong></div>
+            <div className="fact-row"><span>Consumíveis vazios</span><strong>{emptyConsumables}</strong></div>
+            <div className="fact-row"><span>Atividade atual</span><strong>{activeWorkLabel(save)}</strong></div>
+          </aside>
+        </div>
+
+        <div className="preparation-cards section-gap">
+          <article className="panel"><p className="section-kicker">Equipamento</p><h3>10 slots do personagem</h3><p className="muted">O equipamento atual será usado na entrada.</p></article>
+          <article className="panel"><p className="section-kicker">Técnicas</p><h3>{4 - emptyTechniques}/4 configuradas</h3><p className="muted">A ordem visível corresponde à prioridade real do combate.</p></article>
+          <article className="panel"><p className="section-kicker">Consumíveis</p><h3>{2 - emptyConsumables}/2 preparados</h3><p className="muted">Consumir ocupa a ação atual.</p></article>
+          <article className="panel"><p className="section-kicker">Estilo</p><h3>{save.combat.preferences.style}</h3><p className="muted">Agressivo, Defensivo ou Misto.</p></article>
+        </div>
+
+        <div className="commit-panel section-gap">
+          <div>
+            <p className="section-kicker">Ao entrar</p>
+            <h3>Você assume o risco da expedição.</h3>
+            <ul>
+              <li>{activeWorkLabel(save)} será pausada.</li>
+              <li>Encontrados irão para a Bolsa de Expedição.</li>
+              <li>O conteúdo da Bolsa permanece em risco até uma saída segura.</li>
+            </ul>
+          </div>
+          <button className="primary-button compact" type="button" disabled={busy} onClick={() => void handleStart()}>
+            Entrar em Dún Liath
+          </button>
+        </div>
+        {message ? <p className="inline-message" role="status">{message}</p> : null}
+      </section>
+    )
+  }
+
+  if (!run) {
+    return (
+      <section className="feature-view dungeon-overview" aria-labelledby="dungeon-title">
+        <div className="view-heading">
+          <div>
+            <p className="section-kicker">Aventura · Dungeon</p>
+            <h2 id="dungeon-title" className="display-title">Dún Liath</h2>
+            <p className="muted">Fortificação militar abandonada · expedição prolongada · loot em risco.</p>
+          </div>
+          {onReturn ? <button className="ghost-button" type="button" onClick={onReturn}>Voltar a Aventura</button> : null}
+        </div>
+
+        <div className="context-art context-art--dungeon" aria-hidden="true"><span>ARTE 16:9 · DÚN LIATH</span></div>
+        {message ? <p className="inline-message" role="status">{message}</p> : null}
+
+        <div className="dungeon-entry-grid section-gap">
+          <article className="panel">
+            <p className="section-kicker">Objetivo conhecido</p>
+            <h3>Fortaleza Cinzenta</h3>
+            <p className="muted">Recupere o Registro de Suprimentos da Guarnição e atravesse a fortaleza.</p>
+            <div className="fact-row"><span>Serviço da Estrada</span><strong>{save.combat.wolfDefeated ? 'Concluído' : 'Pendente'}</strong></div>
+            <div className="fact-row"><span>Contrato</span><strong>{save.dungeon.contractAccepted || save.dungeon.contractCompleted ? 'Aceito' : 'Disponível na Taverna'}</strong></div>
+          </article>
+          <article className="panel risk-panel">
+            <p className="section-kicker">Riscos conhecidos</p>
+            <ul>
+              <li>Presença hostil confirmada.</li>
+              <li>A expedição mantém recursos entre salas.</li>
+              <li>Loot encontrado fica na Bolsa de Expedição até uma saída segura.</li>
+            </ul>
+            {!save.dungeon.contractAccepted && !save.dungeon.contractCompleted ? (
+              <button className="primary-button" type="button" disabled={busy || !save.combat.wolfDefeated} onClick={() => void handleAcceptContract()}>
+                Aceitar contrato
+              </button>
+            ) : (
+              <button className="primary-button" type="button" disabled={busy} onClick={() => setPreparing(true)}>
+                Preparar expedição
+              </button>
+            )}
+          </article>
+        </div>
+      </section>
+    )
+  }
+
+  if (!currentRoom) {
+    return <p className="inline-message">A sala atual da expedição não foi encontrada no conteúdo.</p>
+  }
+
+  const atBossGate = currentRoom.id === 'room.boss-gate'
+  const branchChoice = roomResolved && currentRoom.nextRoomIds.length > 1
 
   return (
-    <section className="dungeon-workbench" aria-labelledby="dungeon-title">
-      <div className="dungeon-workbench__header">
+    <section className="feature-view dungeon-run-view" aria-labelledby="dungeon-run-title">
+      <div className="dungeon-run-header">
         <div>
-          <p className="section-kicker">M6 · Dungeon integrada</p>
-          <h2 id="dungeon-title">Dún Liath — Fácil</h2>
-          <p className="muted">Run persistível · attrition real · consumíveis · retirada pré-Boss</p>
+          <p className="section-kicker">Dún Liath · Expedição ativa</p>
+          <h2 id="dungeon-run-title" className="display-title">{currentRoom.name}</h2>
         </div>
-
-        <label className="combat-save-select">
-          <span>Personagem</span>
-          <select value={selectedSaveId} disabled={busy} onChange={(event) => { setSelectedSaveId(event.target.value); setMessage(null); setCombatResult(null) }}>
-            {saves.map((save) => <option key={save.saveId} value={save.saveId}>{save.character.name} · Nv. {save.character.level}</option>)}
-          </select>
-        </label>
+        <div className="risk-chip">BOLSA · {run.expeditionBag.reduce((total, stack) => total + stack.quantity, 0) + run.expeditionEquipment.length} EM RISCO</div>
       </div>
 
-      {message ? <p className="inline-message">{message}</p> : null}
+      {message ? <p className="inline-message" role="status">{message}</p> : null}
 
-      {!run && selectedSave ? (
-        <div className="dungeon-start-card panel">
-          <div>
-            <p className="section-kicker">Contrato — Fortaleza Cinzenta</p>
-            <h3>{selectedSave.dungeon.dunLiathEasyCleared ? 'Retornar a Dún Liath' : selectedSave.dungeon.contractAccepted ? 'Contrato aceito' : 'Brann tem um contrato'}</h3>
-            <p className="muted">Recupere o Registro de Suprimentos, atravesse a fortaleza e decida se arrisca a Bolsa contra Fairtheoir.</p>
-          </div>
-          {!selectedSave.dungeon.contractAccepted && !selectedSave.dungeon.contractCompleted ? (
-            <button className="primary-button compact" type="button" disabled={busy} onClick={() => void handleAcceptContract()}>Aceitar contrato · preparar técnicas + 2 Preparados</button>
-          ) : (
-            <button className="primary-button compact" type="button" disabled={busy} onClick={() => void handleStart()}>Entrar em Dún Liath</button>
-          )}
-        </div>
-      ) : null}
-
-      {run && currentRoom ? (
-        <div className="dungeon-grid">
-          <article className="panel dungeon-route-panel">
-            <p className="section-kicker">Expedição</p>
-            <h3>{currentRoom.name}</h3>
+      <div className="dungeon-run-grid">
+        <div>
+          <div className="context-art context-art--dungeon" aria-hidden="true"><span>ARTE 16:9 · {currentRoom.name.toUpperCase()}</span></div>
+          <article className="panel room-panel">
+            <p className="section-kicker">Sala atual</p>
+            <h3>{roomLabel(currentRoom)}</h3>
             <p className="muted">{roomCopy[currentRoom.id]}</p>
 
             <div className="dungeon-resource-grid">
-              <div><span>Vida</span><strong>{Math.round(run.resources.health)}/{run.resources.maxHealth}</strong></div>
-              <div><span>Mana</span><strong>{Math.round(run.resources.mana)}/{run.resources.maxMana}</strong></div>
-              <div><span>Stamina</span><strong>{Math.round(run.resources.stamina)}/{run.resources.maxStamina}</strong></div>
-            </div>
-
-            <div className="dungeon-room-meta">
-              <span>{currentRoom.kind}</span><span>{run.visitedRoomIds.length} sala(s)</span><span>seed {run.seed}</span>
+              <div><span>VIDA</span><strong>{Math.round(run.resources.health)}/{run.resources.maxHealth}</strong></div>
+              <div><span>MANA</span><strong>{Math.round(run.resources.mana)}/{run.resources.maxMana}</strong></div>
+              <div><span>STAMINA</span><strong>{Math.round(run.resources.stamina)}/{run.resources.maxStamina}</strong></div>
             </div>
 
             {currentRoom.id === 'room.protector' && !run.protectorDecision ? (
-              <div className="protector-choice">
-                <button className="ghost-button" type="button" disabled={busy} onClick={() => void handleProtector('killed')}>Matar</button>
-                <button className="ghost-button" type="button" disabled={busy} onClick={() => void handleProtector('spared')}>Poupar</button>
+              <div className="narrative-choice">
+                <p>Uma criatura ferida protege outra menor. Nenhuma recompensa ou classificação moral é apresentada.</p>
+                <div className="button-row">
+                  <button className="ghost-button" type="button" disabled={busy} onClick={() => void handleProtector('killed')}>Matar</button>
+                  <button className="ghost-button" type="button" disabled={busy} onClick={() => void handleProtector('spared')}>Poupar</button>
+                </div>
               </div>
             ) : null}
 
             {!roomResolved ? (
               <button className="primary-button compact" type="button" disabled={busy || (currentRoom.id === 'room.protector' && !run.protectorDecision)} onClick={() => void handleResolve()}>
-                {currentRoom.enemyDefinitionId ? 'Resolver combate' : 'Resolver sala'}
-              </button>
-            ) : null}
-
-            {roomResolved && currentRoom.nextRoomIds.length > 0 ? (
-              <div className="dungeon-paths">
-                {currentRoom.nextRoomIds.map((roomId) => {
-                  const room: DungeonRoomDefinition | undefined = DUN_LIATH_EASY.rooms.find((candidate) => candidate.id === roomId)
-                  return room ? <button className="choice-card" type="button" key={roomId} disabled={busy} onClick={() => void handlePath(roomId)}><span className="choice-title">{roomLabel(room)}</span><span className="muted">Seguir adiante</span></button> : null
-                })}
-              </div>
-            ) : null}
-
-            {run.safeExtractionAvailable || run.completed ? (
-              <button className="ghost-button dungeon-extract" type="button" disabled={busy} onClick={() => void handleExtract()}>
-                {run.completed ? 'Retornar à Cidade Livre e assegurar clear' : 'Retirar em segurança com a Bolsa'}
+                {currentRoom.enemyDefinitionId ? 'Entrar em combate' : currentRoom.kind === 'recovery' ? 'Usar recuperação' : 'Resolver sala'}
               </button>
             ) : null}
           </article>
 
-          <aside className="panel dungeon-bag-panel">
-            <p className="section-kicker">Bolsa de Expedição · em risco</p>
-            <h3>Loot da run</h3>
-            {run.expeditionBag.length === 0 && run.expeditionEquipment.length === 0 ? <p className="muted">Nada assegurado nesta expedição ainda.</p> : null}
-            {run.expeditionBag.map((stack) => <div className="dungeon-loot-row" key={stack.definitionId}><span>{stack.definitionId}</span><strong>×{stack.quantity}</strong></div>)}
-            {run.expeditionEquipment.map((item, index) => <div className="dungeon-loot-row" key={`${item.definitionId}-${index}`}><span>{item.definitionId}</span><strong>{item.rarity} · {item.affixIds.length} afixo(s)</strong></div>)}
-            <div className="milestone-note"><span>Estados críticos</span><strong>Tratado {run.treatyFragmentRecovered ? '✓' : '—'} · Registro {run.supplyRegisterRecovered ? '✓' : '—'} · Protetor {run.protectorDecision ?? '—'}</strong></div>
-          </aside>
-        </div>
-      ) : null}
+          {combatResult ? (
+            <article className={`panel encounter-result ${combatResult.outcome}`}>
+              <p className="section-kicker">Último encontro</p>
+              <h3>{combatResult.outcome === 'victory' ? 'Vitória' : combatResult.outcome === 'defeat' ? 'Derrota' : 'Encerrado'}</h3>
+              <p className="muted">{combatResult.durationSeconds.toFixed(1)}s · {combatResult.xpGranted} XP · consumíveis usados permanecem consumidos.</p>
+            </article>
+          ) : null}
 
-      {combatResult ? (
-        <article className="panel dungeon-combat-result">
-          <p className="section-kicker">Último encontro</p>
-          <h3>{combatResult.outcome === 'victory' ? 'Vitória' : 'Expedição encerrada'}</h3>
-          <p className="muted">{combatResult.durationSeconds.toFixed(1)}s · +{combatResult.xpGranted} XP · {combatResult.consumedItems.reduce((sum, item) => sum + item.quantity, 0)} consumível(is) usado(s) · seed {combatResult.seed}</p>
-          <div className="combat-log compact-log">
-            {combatResult.log.slice(-10).map((entry, index) => <div className={`combat-log__entry ${entry.kind}`} key={`${entry.atSeconds}-${index}`}><time>{entry.atSeconds.toFixed(1)}s</time><span>{entry.message}</span></div>)}
-          </div>
-        </article>
-      ) : null}
+          {roomResolved && currentRoom.nextRoomIds.length > 0 && !atBossGate ? (
+            <div className={`dungeon-paths ${branchChoice ? 'dungeon-paths--branch' : ''}`}>
+              {currentRoom.nextRoomIds.map((roomId) => {
+                const room = DUN_LIATH_EASY.rooms.find((candidate) => candidate.id === roomId)
+                return room ? (
+                  <button className="route-card" type="button" key={roomId} disabled={busy} onClick={() => void handlePath(roomId)}>
+                    <span className="section-kicker">Próxima rota</span>
+                    <strong>{roomLabel(room)}</strong>
+                    <small>{branchChoice ? 'Escolher esta rota fecha a alternativa nesta expedição.' : 'Seguir adiante'}</small>
+                  </button>
+                ) : null
+              })}
+            </div>
+          ) : null}
+
+          {roomResolved && atBossGate ? (
+            <div className="boss-commit">
+              <p className="section-kicker">Portão do Bastião</p>
+              <h3>Além deste ponto está Fairtheoir.</h3>
+              <p className="muted">Retornar assegura a Bolsa. Continuar mantém tudo em risco.</p>
+              <div className="button-row">
+                {run.safeExtractionAvailable ? <button className="ghost-button" type="button" disabled={busy} onClick={() => void handleExtract()}>Retornar e assegurar Bolsa</button> : null}
+                {currentRoom.nextRoomIds.map((roomId) => (
+                  <button className="primary-button compact" type="button" key={roomId} disabled={busy} onClick={() => void handlePath(roomId)}>Abrir o portão</button>
+                ))}
+              </div>
+            </div>
+          ) : null}
+
+          {run.completed ? (
+            <div className="dungeon-complete-panel">
+              <p className="section-kicker">Dún Liath concluída</p>
+              <h3>Fairtheoir caiu.</h3>
+              <p className="muted">O clear e o conteúdo da Bolsa ainda precisam ser assegurados pelo retorno.</p>
+              <button className="primary-button compact" type="button" disabled={busy} onClick={() => void handleExtract()}>Retornar à Cidade Livre</button>
+            </div>
+          ) : null}
+        </div>
+
+        <aside className="dungeon-side">
+          <article className="panel expedition-bag">
+            <p className="section-kicker">Bolsa de Expedição</p>
+            <h3>Em risco</h3>
+            {run.expeditionBag.length === 0 && run.expeditionEquipment.length === 0 ? <p className="muted">Nada encontrado nesta expedição ainda.</p> : null}
+            {run.expeditionBag.map((stack) => <div className="loot-row" key={stack.definitionId}><span>{itemLabel(stack.definitionId)}</span><strong>×{stack.quantity}</strong></div>)}
+            {run.expeditionEquipment.map((item, index) => <div className="loot-row" key={`${item.definitionId}-${index}`}><span>{item.definitionId}</span><strong>{item.rarity}</strong></div>)}
+            <p className="risk-copy">Uma derrota perde esta Bolsa. O patrimônio que já estava seguro não está em risco.</p>
+          </article>
+
+          <article className="panel dungeon-map-card">
+            <p className="section-kicker">Rota descoberta</p>
+            <div className="route-trail">
+              {run.visitedRoomIds.map((roomId, index) => {
+                const room = DUN_LIATH_EASY.rooms.find((candidate) => candidate.id === roomId)
+                return <div key={roomId}><span>{index + 1}</span><strong>{room?.name ?? roomId}</strong></div>
+              })}
+            </div>
+            {currentRoom.nextRoomIds.length > 0 && !roomResolved ? <p className="muted small-copy">Novas conexões ficam disponíveis depois de resolver a sala atual.</p> : null}
+          </article>
+
+          {run.safeExtractionAvailable && !run.completed && !atBossGate ? (
+            <button className="ghost-button full-width" type="button" disabled={busy} onClick={() => void handleExtract()}>Retirar em segurança</button>
+          ) : null}
+        </aside>
+      </div>
     </section>
   )
 }
