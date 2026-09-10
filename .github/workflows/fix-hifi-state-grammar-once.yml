@@ -1,0 +1,66 @@
+name: One-shot hi-fi state grammar correction
+
+on:
+  push:
+    paths:
+      - .github/workflows/fix-hifi-state-grammar-once.yml
+
+permissions:
+  contents: write
+
+jobs:
+  patch-prototype:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Align prototype state grammar with approved UX
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          p = Path('docs/prototypes/greywake-hifi-flow-v0.1.html')
+          s = p.read_text(encoding='utf-8')
+
+          replacements = [
+            (
+              '.risk-shell .nav,.risk-shell .safe-bottom{display:none}.risk-shell main{padding-bottom:36px}.risk-top{display:none}.risk-shell .risk-top{display:flex;',
+              '.risk-shell .nav,.risk-shell .safe-bottom{display:none}.prep-shell .nav{opacity:.45}.prep-shell .safe-bottom{opacity:.72}.focus-shell .nav,.focus-shell .safe-bottom{display:none}.risk-shell main,.focus-shell main{padding-bottom:36px}.risk-top{display:none}.prep-shell .risk-top,.risk-shell .risk-top{display:flex;'
+            ),
+            ('.risk-shell .nav{display:none}main{', '.risk-shell .nav,.focus-shell .nav{display:none}main{'),
+            ('<section class="screen" id="preparation" data-risk="true">', '<section class="screen" id="preparation" data-mode="prep">'),
+            ('<section class="screen" id="combat" data-risk="true">', '<section class="screen" id="combat" data-mode="risk">'),
+            ('<section class="screen" id="dungeon" data-risk="true">', '<section class="screen" id="dungeon" data-mode="risk">'),
+            ('<section class="screen" id="offline">', '<section class="screen" id="offline" data-mode="focus">'),
+            (
+              "const risk=target.dataset.risk==='true';app.classList.toggle('risk-shell',risk);navButtons.forEach",
+              "const mode=target.dataset.mode||'safe';app.classList.toggle('prep-shell',mode==='prep');app.classList.toggle('risk-shell',mode==='risk');app.classList.toggle('focus-shell',mode==='focus');document.getElementById('riskContext').textContent=mode==='prep'?'Preparação · Idle continua':'Dún Liath · Idle pausado';navButtons.forEach"
+            ),
+          ]
+
+          for old, new in replacements:
+              if old not in s:
+                  raise SystemExit(f'Expected prototype fragment not found: {old[:90]}')
+              s = s.replace(old, new, 1)
+
+          p.write_text(s, encoding='utf-8')
+
+          readme = Path('docs/prototypes/README.md')
+          r = readme.read_text(encoding='utf-8')
+          old = '- recolhimento da navegação normal em Preparação/Combate/Dungeon;'
+          new = '- navegação global reduzida em Preparação e recolhida em Combate/Dungeon;'
+          if old not in r:
+              raise SystemExit('Expected README state grammar line not found')
+          readme.write_text(r.replace(old, new, 1), encoding='utf-8')
+          PY
+      - name: Commit correction and remove temporary workflow
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm .github/workflows/fix-hifi-state-grammar-once.yml
+          git add docs/prototypes/greywake-hifi-flow-v0.1.html docs/prototypes/README.md
+          git commit -m "docs: align hi-fi prototype with approved state grammar"
+          git push
