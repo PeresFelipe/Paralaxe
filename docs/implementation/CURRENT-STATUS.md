@@ -12,7 +12,7 @@
 
 **M5.5 — UX Foundation**.
 
-O M6 — Build 0.1 validável fica temporariamente pausado enquanto a experiência de navegação é redesenhada. A decisão veio de playtest manual: a Build já possui vários sistemas funcionais, mas a interface atual ainda se comporta como um conjunto de workbenches técnicos empilhados, não como um jogo com fluxo claro.
+O M6 — Build 0.1 validável permanece temporariamente pausado enquanto concluímos o M5.5. A arquitetura de UX já foi aprovada e a **Fase 3 está em implementação na build real**: o shell canônico substituiu a raiz de workbenches empilhados e os sistemas estão sendo migrados para um único fluxo de jogo.
 
 Documento de trabalho do marco:
 
@@ -45,7 +45,7 @@ M2 — Idle persiste e funciona offline     ✅
 M3 — Crafting e equipamento               ✅
 M4 — Primeiro combate completo            ✅
 M5 — Dún Liath completa                   ✅
-M5.5 — UX Foundation                      🟡 EM DEFINIÇÃO
+M5.5 — UX Foundation                      🟡 EM IMPLEMENTAÇÃO
 M6 — Build 0.1 validável                  ⏸ PAUSADO
 ```
 
@@ -90,56 +90,33 @@ M6 — Build 0.1 validável                  ⏸ PAUSADO
 - CI GitHub Actions com Node 22 + pnpm;
 - lint e typecheck estritos;
 - testes automatizados de domínio/content/persistence.
+- `GameShell` canônico integrado ao runtime;
+- navegação principal `Personagem / Atividades / Aventura / Cidade`;
+- Jornada e Inventário rápido como camadas globais de continuidade;
+- Mercado, Combate e Dungeon controlados pelo save ativo único;
+- continuidade Idle integrada a Combate/Dungeon sem parada manual;
+- criação de personagem em fluxo guiado;
+- retorno offline com reconciliação em estado próprio;
+- visual runtime alinhado à Direção Visual 0.1 e estratégia responsiva/mobile.
 
-## Problema de UX identificado
+## Migração de UX — Fase 3
 
-A aplicação normal ainda é conceitualmente composta por múltiplos componentes independentes:
+A raiz antiga com `App`, `MarketWorkbench`, `CombatWorkbench` e `DungeonWorkbench` empilhados foi removida. O runtime agora renderiza apenas `App`, que controla um único save ativo e apresenta o `GameShell`.
 
-```text
-<App />
-<MarketWorkbench />
-<CombatWorkbench />
-<DungeonWorkbench />
-```
-
-Isso foi útil para desenvolvimento incremental, mas não deve ser a arquitetura final da experiência.
-
-O M5.5 deve convergir para algo conceitualmente próximo de:
-
-```text
-<GameShell>
-  <Navigation />
-  <GameView />
-  <ActivityStatus />
-</GameShell>
-```
-
-com apenas uma `GameView` principal por vez.
-
-## Hipótese atual de arquitetura de informação
-
-Ainda não aprovada como decisão final:
+Arquitetura aprovada em implementação:
 
 ```text
-Personagem
-Cidade Livre
-  Taverna
-  Mercado
-  Ferreiro
-  Banco
-  Relicário
-Atividades
-  Coleta
-  Produção
-Combate
-Dungeon
+NAVEGAÇÃO PRINCIPAL
+Personagem | Atividades | Aventura | Cidade
+
+CONTINUIDADE GLOBAL
+Jornada + Inventário rápido + atividade Idle atual
+
+ESTADOS DE RISCO
+Preparação → Combate / Dungeon → retorno seguro
 ```
 
-A Cidade Livre deve funcionar como o contexto central fora de combate/Dungeon.
-
-Atividades Idle devem continuar em andamento enquanto o jogador navega e ter status persistente no shell.
-
-Combate e Dungeon devem reduzir distrações e assumir foco próprio.
+Mercado, Combate e Dungeon agora recebem o mesmo save ativo do shell. Combate e Dungeon deixam de operar como mini-apps com seleção própria de save. A atividade Idle continua em navegação segura, é congelada ao confirmar risco e é retomada automaticamente ao retornar à segurança.
 
 ## Estado técnico de M6 antes da pausa
 
