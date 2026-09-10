@@ -1,0 +1,30 @@
+name: m6-bank-once
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: corepack enable
+      - run: pnpm install --no-frozen-lockfile
+      - run: python scripts/m6-bank-phase.py
+      - run: pnpm check
+      - run: pnpm build
+      - run: |
+          rm scripts/m6-bank-phase.py .github/workflows/m6-bank-once.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add packages/domain/src/character.ts packages/domain/src/character.test.ts packages/domain/src/index.ts packages/domain/src/storage.ts packages/domain/src/storage.test.ts packages/persistence/src/indexedDbSaveRepository.ts packages/persistence/src/indexedDbSaveRepository.test.ts apps/game/src/App.tsx apps/game/src/GameShell.tsx apps/game/src/BankPanel.tsx apps/game/src/styles.css scripts/m6-bank-phase.py .github/workflows/m6-bank-once.yml
+          git commit -m "feat(game): implement Build 0.1 Bank"
+          git push
