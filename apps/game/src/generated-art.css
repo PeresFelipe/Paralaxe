@@ -1,6 +1,6 @@
 :root {
-  --generated-scene-sprite: url('/art/generated-scenes.webp');
-  --generated-portrait-sprite: url('/art/generated-portraits.webp');
+  --generated-scene-sprite: url('/art/generated-scenes.webp?v=3');
+  --generated-portrait-sprite: url('/art/generated-portraits.webp?v=3');
 }
 
 /* Generated Greywake art pass — intentionally isolated so authored art can replace it later. */
