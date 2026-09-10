@@ -83,11 +83,13 @@ describe('Build 0.1 bank', () => {
     if (!chestId) throw new Error('Peitoral inicial ausente.')
     expect(() => depositEquipmentToBank(base, chestId, '2026-09-10T10:01:00.000Z')).toThrow('Desequipe')
 
+    const equipment = { ...base.character.equipment }
+    delete equipment.chest
     const unequipped = {
       ...base,
       character: {
         ...base.character,
-        equipment: { ...base.character.equipment, chest: undefined },
+        equipment,
       },
     }
     const deposited = depositEquipmentToBank(unequipped, chestId, '2026-09-10T10:02:00.000Z')
