@@ -80,7 +80,7 @@ describe('risk continuity', () => {
       '2026-09-10T10:05:00.000Z',
     )
 
-    expect(started.dungeon.activeRun?.definitionId).toBe(dungeon.id)
+    expect(started.dungeon.activeRun?.dungeonDefinitionId).toBe(dungeon.id)
     expect(started.idle.activeActivity?.activityDefinitionId).toBe(activity.id)
     expect(started.idle.activeActivity?.lastProcessedAt).toBe('2026-09-10T10:05:00.000Z')
   })
