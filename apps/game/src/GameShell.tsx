@@ -10,12 +10,14 @@ import {
 import {
   derivePlayerCombatStats,
   getEquipmentPrimaryValue,
+  type AttributeAllocation,
   type OfflineGameSave,
   type SkillId,
 } from '@greywake/domain'
 import CombatWorkbench from './CombatWorkbench'
 import DungeonWorkbench from './DungeonWorkbench'
 import MarketWorkbench from './MarketWorkbench'
+import AttributePanel from './AttributePanel'
 
 type PrimaryDestination = 'character' | 'activities' | 'adventure' | 'city'
 type CharacterTab = 'overview' | 'attributes' | 'equipment' | 'techniques' | 'inventory'
@@ -35,6 +37,7 @@ type GameShellProps = {
   onStartRecipe: (recipeDefinitionId: string, targetEquipmentInstanceId?: string | null) => Promise<void>
   onStopWork: () => Promise<void>
   onEquip: (instanceId: string) => Promise<void>
+  onAllocateAttributes: (allocation: AttributeAllocation) => Promise<void>
 }
 
 const skillLabels: Record<SkillId, string> = {
@@ -66,16 +69,6 @@ const itemLabels: Record<string, string> = {
   'item.garrison-supply-register': 'Registro de Suprimentos',
   'item.treaty-fragment': 'Fragmento do Tratado',
   'item.fairtheoir-fragment': 'Fragmento de Fairtheoir',
-}
-
-const attributeLabels: Record<keyof OfflineGameSave['character']['attributes'], string> = {
-  vitality: 'Vitalidade',
-  mind: 'Mente',
-  vigor: 'Vigor',
-  strength: 'Força',
-  dexterity: 'Destreza',
-  intelligence: 'Inteligência',
-  faith: 'Fé',
 }
 
 const combatCatalog = {
@@ -138,6 +131,7 @@ export default function GameShell({
   onStartRecipe,
   onStopWork,
   onEquip,
+  onAllocateAttributes,
 }: GameShellProps) {
   const [destination, setDestination] = useState<PrimaryDestination>(save.dungeon.activeRun ? 'adventure' : 'character')
   const [characterTab, setCharacterTab] = useState<CharacterTab>('overview')
@@ -218,6 +212,7 @@ export default function GameShell({
             onTab={setCharacterTab}
             onEquip={onEquip}
             onStartRecipe={onStartRecipe}
+            onAllocateAttributes={onAllocateAttributes}
           />
         ) : null}
 
@@ -311,12 +306,14 @@ function CharacterView({
   onTab,
   onEquip,
   onStartRecipe,
+  onAllocateAttributes,
 }: {
   save: OfflineGameSave
   tab: CharacterTab
   onTab: (tab: CharacterTab) => void
   onEquip: (instanceId: string) => Promise<void>
   onStartRecipe: (recipeDefinitionId: string, targetEquipmentInstanceId?: string | null) => Promise<void>
+  onAllocateAttributes: (allocation: AttributeAllocation) => Promise<void>
 }) {
   const upgradeRecipe = INITIAL_CRAFTING_RECIPES.find((recipe) => recipe.output.kind === 'equipment-upgrade')
 
@@ -340,7 +337,7 @@ function CharacterView({
       ) : null}
 
       {tab === 'attributes' ? (
-        <article className="panel dense-panel"><div className="panel-heading"><div><p className="section-kicker">Atributos</p><h2>Distribuição atual</h2></div><span className="status-chip">{save.character.unspentAttributePoints} ponto(s) disponível(is)</span></div><div className="attribute-list">{Object.entries(save.character.attributes).map(([key, value]) => <div key={key}><span>{attributeLabels[key as keyof typeof attributeLabels]}</span><strong>{value}</strong></div>)}</div>{save.character.unspentAttributePoints > 0 ? <p className="fact-warning">A distribuição de pontos ainda não possui ação de domínio ligada nesta build. A UI não simula uma alteração que não possa persistir.</p> : null}</article>
+        <AttributePanel save={save} onAllocateAttributes={onAllocateAttributes} />
       ) : null}
 
       {tab === 'equipment' ? (

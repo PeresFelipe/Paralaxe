@@ -9,6 +9,7 @@ import {
 } from '@greywake/content'
 import {
   BUILD_SAVE_MODE,
+  allocateAttributePoints,
   createOfflineGameSave,
   equipEquipment,
   pauseCurrentWorkForRisk,
@@ -18,6 +19,7 @@ import {
   startIdleActivity,
   stopCraftingRecipe,
   stopIdleActivity,
+  type AttributeAllocation,
   type CharacterClassId,
   type GiftId,
   type OfflineGameSave,
@@ -292,6 +294,18 @@ function App() {
     }
   }
 
+  async function handleAllocateAttributes(allocation: AttributeAllocation) {
+    if (!activeSave) return
+
+    try {
+      const save = allocateAttributePoints(activeSave, allocation, new Date().toISOString())
+      await persistActive(save, 'Distribuição de atributos confirmada.')
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : 'Não foi possível distribuir os pontos de atributo.')
+      throw error
+    }
+  }
+
   function startNewSave() {
     setCharacterName('')
     setSelectedClassId(null)
@@ -347,6 +361,7 @@ function App() {
         onStartRecipe={handleStartRecipe}
         onStopWork={handleStopWork}
         onEquip={handleEquip}
+        onAllocateAttributes={handleAllocateAttributes}
       />
     )
   }
