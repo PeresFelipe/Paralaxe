@@ -1,0 +1,31 @@
+name: m6-integrity-final-once
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  validate-and-commit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: corepack enable
+      - run: pnpm install --no-frozen-lockfile
+      - run: python scripts/m6-integrity-final.py
+      - run: pnpm check
+      - run: pnpm build
+      - name: Commit validated fixes and cleanup
+        run: |
+          rm scripts/m6-integrity-final.py .github/workflows/m6-integrity-final-once.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add packages/domain/src/character.ts packages/domain/src/equipment.ts packages/domain/src/combat.ts packages/domain/src/combat.test.ts packages/domain/src/dungeon.ts packages/domain/src/dungeon.test.ts packages/domain/src/continuity.ts packages/domain/src/onboarding.test.ts packages/content/src/characterCreation.ts packages/content/src/characterCreation.test.ts packages/content/src/equipment.ts packages/persistence/src/indexedDbSaveRepository.ts packages/persistence/src/indexedDbSaveRepository.test.ts apps/game/src/DungeonWorkbench.tsx apps/game/src/CombatWorkbench.tsx scripts/m6-integrity-final.py .github/workflows/m6-integrity-final-once.yml
+          git commit -m "fix(game): close remaining M6 combat integrity gaps"
+          git push
