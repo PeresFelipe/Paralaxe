@@ -19,6 +19,7 @@ import DungeonWorkbench from './DungeonWorkbench'
 import MarketWorkbench from './MarketWorkbench'
 import AttributePanel from './AttributePanel'
 import BankPanel from './BankPanel'
+import IdleProgressIndicator from './IdleProgressIndicator'
 
 type PrimaryDestination = 'character' | 'activities' | 'adventure' | 'city'
 type CharacterTab = 'overview' | 'attributes' | 'equipment' | 'techniques' | 'inventory'
@@ -275,8 +276,7 @@ export default function GameShell({
             }}
           >
             <span aria-hidden="true">⌁</span>
-            <span><small>Atividade atual</small><strong>{work?.title ?? 'Nenhuma atividade'}</strong></span>
-            <em>{work?.detail ?? 'Escolha uma atividade em Atividades'}</em>
+            <IdleProgressIndicator save={save} compact />
           </button>
           <div className="continuity-actions">
             <button type="button" onClick={() => setQuickPanel('inventory')}>Inventário</button>
@@ -406,7 +406,7 @@ function ActivitiesView({
     <section className="feature-view">
       <div className="view-heading"><div><p className="section-kicker">Atividades</p><h1 className="display-title">{skillLabels[selectedSkill]}</h1><p className="muted">Uma atividade Idle por vez. Navegar por áreas seguras não a interrompe.</p></div>{work ? <button className="ghost-button" type="button" onClick={() => void onStopWork()}>Parar atividade</button> : null}</div>
 
-      <div className="activity-current-card"><span className="section-kicker">Atividade atual</span><strong>{work?.title ?? 'Nenhuma atividade em andamento'}</strong><small>{work?.detail ?? 'Escolha uma coleta ou produção abaixo.'}</small></div>
+      <div className="activity-current-card"><IdleProgressIndicator save={save} /></div>
 
       <h2 className="section-title-runtime">Coleta</h2>
       <div className="skill-card-grid">{gatheringSkills.map((skillId) => <button className={`skill-card ${selectedSkill === skillId ? 'active' : ''}`} type="button" key={skillId} onClick={() => onSelectSkill(skillId)}><span>{skillLabels[skillId]}</span><strong>Nv. {save.skills[skillId].level}</strong></button>)}</div>
