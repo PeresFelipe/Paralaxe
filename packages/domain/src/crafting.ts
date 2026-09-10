@@ -1,5 +1,6 @@
 import type { InventoryStack, OfflineGameSave } from './character'
 import { applySkillXp, getOfflineLimitSeconds, type SkillId } from './idle'
+import { getInventoryEquipmentRoom, getInventoryStackRoom } from './storage'
 
 export interface RecipeIngredient {
   definitionId: string
@@ -58,6 +59,7 @@ export interface CraftingProgressResult {
   processedSeconds: number
   cappedSeconds: number
   stoppedForMaterials: boolean
+  stoppedForCapacity: boolean
 }
 
 function getInventoryQuantity(inventory: InventoryStack[], definitionId: string) {
@@ -198,15 +200,13 @@ export function processCraftingProgress(
     processedSeconds: 0,
     cappedSeconds: 0,
     stoppedForMaterials: false,
+    stoppedForCapacity: false,
   })
 
-  if (!active || active.recipeDefinitionId !== recipe.id) {
-    return emptyResult(save)
-  }
+  if (!active || active.recipeDefinitionId !== recipe.id) return emptyResult(save)
 
   const lastProcessedMs = Date.parse(active.lastProcessedAt)
   const nowMs = Date.parse(now)
-
   if (!Number.isFinite(lastProcessedMs) || !Number.isFinite(nowMs) || nowMs <= lastProcessedMs) {
     return emptyResult(save)
   }
@@ -217,75 +217,97 @@ export function processCraftingProgress(
   const cappedSeconds = Math.max(0, elapsedSeconds - processedSeconds)
   const totalSeconds = active.remainderSeconds + processedSeconds
   const timeCycles = Math.floor(totalSeconds / recipe.actionSeconds)
-  const materialCycles = getMaxCraftableCycles(save.character.inventory, recipe.ingredients)
-  const outputCycleLimit = recipe.output.kind === 'equipment-upgrade' ? 1 : Number.POSITIVE_INFINITY
-  const completedActions = Math.min(timeCycles, materialCycles, outputCycleLimit)
 
-  if (completedActions === 0 && timeCycles > 0 && materialCycles < 1) {
-    return {
-      ...emptyResult({
-        ...save,
-        updatedAt: now,
-        crafting: { activeRecipe: null },
-      }),
-      processedSeconds,
-      cappedSeconds,
-      stoppedForMaterials: true,
-    }
-  }
-
-  let inventory = consumeIngredients(save.character.inventory, recipe.ingredients, completedActions)
+  let inventory = save.character.inventory
   let equipmentItems = save.character.equipmentItems
   let nextEquipmentSequence = save.character.nextEquipmentSequence
+  let completedActions = 0
   let producedItems = 0
   let producedEquipment = 0
   let upgradedEquipment = 0
+  let stoppedForMaterials = false
+  let stoppedForCapacity = false
 
-  if (recipe.output.kind === 'item') {
-    producedItems = completedActions * recipe.output.quantity
-    inventory = addInventoryItem(inventory, recipe.output.definitionId, producedItems)
+  const prospectiveSave = (
+    nextInventory: OfflineGameSave['character']['inventory'],
+    nextEquipment: OfflineGameSave['character']['equipmentItems'],
+  ): OfflineGameSave => ({
+    ...save,
+    character: { ...save.character, inventory: nextInventory, equipmentItems: nextEquipment },
+  })
+
+  const canFitOutputAfterConsumption = (consumedInventory: InventoryStack[]) => {
+    const preview = prospectiveSave(consumedInventory, equipmentItems)
+    if (recipe.output.kind === 'item') {
+      return getInventoryStackRoom(preview, recipe.output.definitionId) >= recipe.output.quantity
+    }
+    if (recipe.output.kind === 'equipment') {
+      return getInventoryEquipmentRoom(preview) >= 1
+    }
+    return true
   }
 
-  if (recipe.output.kind === 'equipment' && completedActions > 0) {
-    const equipmentDefinitionId = recipe.output.definitionId
-    const created = Array.from({ length: completedActions }, () => {
-      const instanceId = `eq-${nextEquipmentSequence}`
-      nextEquipmentSequence += 1
-      return {
-        instanceId,
-        definitionId: equipmentDefinitionId,
-        upgradeLevel: 0 as const,
-      }
-    })
-
-    equipmentItems = [...equipmentItems, ...created]
-    producedEquipment = created.length
-  }
-
-  if (recipe.output.kind === 'equipment-upgrade' && completedActions > 0) {
-    const targetId = active.targetEquipmentInstanceId
-
-    if (!targetId) {
-      throw new Error('Produção de reforço perdeu a referência do equipamento alvo.')
+  for (let index = 0; index < timeCycles; index += 1) {
+    if (recipe.output.kind === 'equipment-upgrade' && completedActions >= 1) break
+    if (getMaxCraftableCycles(inventory, recipe.ingredients) < 1) {
+      stoppedForMaterials = true
+      break
     }
 
-    equipmentItems = equipmentItems.map((instance) =>
-      instance.instanceId === targetId && instance.upgradeLevel === 0
-        ? { ...instance, upgradeLevel: 1 as const }
-        : instance,
-    )
-    upgradedEquipment = 1
+    const consumedInventory = consumeIngredients(inventory, recipe.ingredients, 1)
+    if (!canFitOutputAfterConsumption(consumedInventory)) {
+      stoppedForCapacity = true
+      break
+    }
+
+    inventory = consumedInventory
+    completedActions += 1
+
+    if (recipe.output.kind === 'item') {
+      producedItems += recipe.output.quantity
+      inventory = addInventoryItem(inventory, recipe.output.definitionId, recipe.output.quantity)
+    } else if (recipe.output.kind === 'equipment') {
+      equipmentItems = [
+        ...equipmentItems,
+        {
+          instanceId: `eq-${nextEquipmentSequence}`,
+          definitionId: recipe.output.definitionId,
+          upgradeLevel: 0 as const,
+        },
+      ]
+      nextEquipmentSequence += 1
+      producedEquipment += 1
+    } else {
+      const targetId = active.targetEquipmentInstanceId
+      if (!targetId) throw new Error('Produção de reforço perdeu a referência do equipamento alvo.')
+      equipmentItems = equipmentItems.map((instance) =>
+        instance.instanceId === targetId && instance.upgradeLevel === 0
+          ? { ...instance, upgradeLevel: 1 as const }
+          : instance,
+      )
+      upgradedEquipment = 1
+      break
+    }
   }
+
+  let cannotRepeat = recipe.output.kind === 'equipment-upgrade' && completedActions > 0
+  if (!cannotRepeat && !stoppedForCapacity) {
+    if (getMaxCraftableCycles(inventory, recipe.ingredients) < 1) {
+      stoppedForMaterials = true
+      cannotRepeat = true
+    } else {
+      const nextConsumed = consumeIngredients(inventory, recipe.ingredients, 1)
+      if (!canFitOutputAfterConsumption(nextConsumed)) {
+        stoppedForCapacity = true
+        cannotRepeat = true
+      }
+    }
+  }
+  if (stoppedForCapacity || stoppedForMaterials) cannotRepeat = true
 
   const skillXp = completedActions * recipe.skillXpPerAction
   const skillResult = applySkillXp(save.skills[recipe.skillId], skillXp)
   const generalXp = skillResult.gainedLevels * 5
-  const remainingMaterialCycles = getMaxCraftableCycles(inventory, recipe.ingredients)
-  const cannotRepeat =
-    recipe.output.kind === 'equipment-upgrade' ||
-    (completedActions > 0 && remainingMaterialCycles < 1) ||
-    (timeCycles > completedActions && completedActions === materialCycles)
-  const stoppedForMaterials = recipe.output.kind !== 'equipment-upgrade' && cannotRepeat
   const remainderSeconds = cannotRepeat ? 0 : totalSeconds % recipe.actionSeconds
 
   const nextSave: OfflineGameSave = {
@@ -305,11 +327,7 @@ export function processCraftingProgress(
     crafting: {
       activeRecipe: cannotRepeat
         ? null
-        : {
-            ...active,
-            lastProcessedAt: now,
-            remainderSeconds,
-          },
+        : { ...active, lastProcessedAt: now, remainderSeconds },
     },
   }
 
@@ -325,5 +343,6 @@ export function processCraftingProgress(
     processedSeconds,
     cappedSeconds,
     stoppedForMaterials,
+    stoppedForCapacity,
   }
 }

@@ -1,4 +1,5 @@
 import type { InventoryStack, OfflineGameSave } from './character'
+import { getInventoryStackRoom } from './storage'
 
 export const SKILL_IDS = [
   'mining',
@@ -51,6 +52,7 @@ export interface IdleProgressResult {
   gainedSkillLevels: number
   processedSeconds: number
   cappedSeconds: number
+  stoppedForCapacity: boolean
 }
 
 const SKILL_XP_TO_NEXT_LEVEL = [40, 60, 80, 110, 140, 180, 220, 270, 320] as const
@@ -117,6 +119,9 @@ export function startIdleActivity(
   if (skill.level < activity.requiredSkillLevel) {
     throw new Error(`${activity.name} exige nível ${activity.requiredSkillLevel} de Skill.`)
   }
+  if (getInventoryStackRoom(save, activity.resultItemDefinitionId) <= 0) {
+    throw new Error('O Inventário não possui capacidade para o resultado dessa coleta.')
+  }
 
   return {
     ...save,
@@ -157,6 +162,7 @@ export function processIdleProgress(
       gainedSkillLevels: 0,
       processedSeconds: 0,
       cappedSeconds: 0,
+      stoppedForCapacity: false,
     }
   }
 
@@ -173,6 +179,7 @@ export function processIdleProgress(
       gainedSkillLevels: 0,
       processedSeconds: 0,
       cappedSeconds: 0,
+      stoppedForCapacity: false,
     }
   }
 
@@ -181,8 +188,13 @@ export function processIdleProgress(
   const processedSeconds = Math.min(elapsedSeconds, offlineLimit)
   const cappedSeconds = Math.max(0, elapsedSeconds - processedSeconds)
   const totalSeconds = active.remainderSeconds + processedSeconds
-  const completedActions = Math.floor(totalSeconds / activity.actionSeconds)
-  const remainderSeconds = totalSeconds % activity.actionSeconds
+  const timeActions = Math.floor(totalSeconds / activity.actionSeconds)
+  const inventoryRoom = getInventoryStackRoom(save, activity.resultItemDefinitionId)
+  const completedActions = Math.min(timeActions, inventoryRoom)
+  const stoppedForCapacity =
+    (inventoryRoom === 0 && timeActions > 0) ||
+    (inventoryRoom > 0 && completedActions === inventoryRoom)
+  const remainderSeconds = stoppedForCapacity ? 0 : totalSeconds % activity.actionSeconds
 
   const skillXp = completedActions * activity.skillXpPerAction
   const currentSkill = save.skills[activity.skillId]
@@ -205,11 +217,13 @@ export function processIdleProgress(
       [activity.skillId]: skillResult.progress,
     },
     idle: {
-      activeActivity: {
-        ...active,
-        lastProcessedAt: now,
-        remainderSeconds,
-      },
+      activeActivity: stoppedForCapacity
+        ? null
+        : {
+            ...active,
+            lastProcessedAt: now,
+            remainderSeconds,
+          },
     },
   }
 
@@ -222,5 +236,6 @@ export function processIdleProgress(
     gainedSkillLevels: skillResult.gainedLevels,
     processedSeconds,
     cappedSeconds,
+    stoppedForCapacity,
   }
 }

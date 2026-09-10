@@ -1,5 +1,6 @@
 import type { OfflineGameSave } from './character'
 import type { EquipmentSlot } from './equipment'
+import { assertInventoryCanReceiveEquipment, assertInventoryCanReceiveStack } from './storage'
 
 export type NpcMarketProduct =
   | {
@@ -47,6 +48,7 @@ export function buyNpcMarketListing(
   }
 
   if (listing.product.kind === 'item') {
+    assertInventoryCanReceiveStack(save, listing.product.definitionId, listing.product.quantity)
     return {
       ...save,
       updatedAt: now,
@@ -62,6 +64,7 @@ export function buyNpcMarketListing(
     }
   }
 
+  assertInventoryCanReceiveEquipment(save)
   const instanceId = `eq-${save.character.nextEquipmentSequence}`
   return {
     ...save,

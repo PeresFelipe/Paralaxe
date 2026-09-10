@@ -2,6 +2,7 @@ import type { CombatContentCatalog, CombatLogEntry, CombatResult, CombatResource
 import { applyCombatResult, simulateCombat } from './combat'
 import type { EquipmentInstance, EquipmentRarity } from './equipment'
 import type { OfflineGameSave } from './character'
+import { assertInventoryCanReceiveEquipment, assertInventoryCanReceiveStack } from './storage'
 
 export type DungeonRoomKind =
   | 'entrance'
@@ -252,6 +253,7 @@ function rollEquipment(
 export function acceptDunLiathContract(save: OfflineGameSave, now: string): OfflineGameSave {
   if (save.dungeon.contractAccepted) return save
   if (save.dungeon.contractCompleted) return save
+  assertInventoryCanReceiveStack(save, 'item.consumable.field-preparation', 2)
 
   return {
     ...save,
@@ -614,9 +616,21 @@ export function extractDungeonRun(save: OfflineGameSave, now: string): OfflineGa
 
   let inventory = save.character.inventory
   for (const stack of run.expeditionBag) {
+    const preview: OfflineGameSave = {
+      ...save,
+      character: { ...save.character, inventory },
+    }
+    assertInventoryCanReceiveStack(preview, stack.definitionId, stack.quantity)
     inventory = addInventoryStack(inventory, stack.definitionId, stack.quantity)
   }
 
+  const equipmentPreview: OfflineGameSave = {
+    ...save,
+    character: { ...save.character, inventory },
+  }
+  if (run.expeditionEquipment.length > 0) {
+    assertInventoryCanReceiveEquipment(equipmentPreview, run.expeditionEquipment.length)
+  }
   const equipment = materializeExpeditionEquipment(save, run.expeditionEquipment)
   const firstClear = run.completed && !save.dungeon.dunLiathEasyCleared
   const alreadyHasRegister = inventory.some(

@@ -69,11 +69,14 @@ function processCurrentWork(save: OfflineGameSave, now: string) {
       const result = processIdleProgress(save, activity, now)
       const levelText = result.gainedSkillLevels > 0 ? ` · +${result.gainedSkillLevels} nível(is) de Skill` : ''
       const cappedText = result.cappedSeconds > 0 ? ' · limite offline atingido' : ''
+      const capacityText = result.stoppedForCapacity ? ' · Inventário sem capacidade; coleta interrompida' : ''
       return {
         save: result.save,
         text: result.completedActions > 0
-          ? `+${result.completedActions} ${activity.resultName} · +${result.grantedSkillXp} XP de Skill${levelText}${cappedText}`
-          : null,
+          ? `+${result.completedActions} ${activity.resultName} · +${result.grantedSkillXp} XP de Skill${levelText}${cappedText}${capacityText}`
+          : result.stoppedForCapacity
+            ? `${activity.name} foi interrompida: Inventário sem capacidade.`
+            : null,
       }
     }
   }
@@ -85,13 +88,16 @@ function processCurrentWork(save: OfflineGameSave, now: string) {
       const result = processCraftingProgress(save, recipe, now)
       const totalOutput = result.producedItems + result.producedEquipment + result.upgradedEquipment
       const stoppedText = result.stoppedForMaterials ? ' · produção interrompida por materiais insuficientes' : ''
+      const capacityText = result.stoppedForCapacity ? ' · produção interrompida por Inventário sem capacidade' : ''
       return {
         save: result.save,
         text: result.completedActions > 0
-          ? `${recipe.name}: ${totalOutput || result.completedActions} concluído(s) · +${result.grantedSkillXp} XP de Skill${stoppedText}`
+          ? `${recipe.name}: ${totalOutput || result.completedActions} concluído(s) · +${result.grantedSkillXp} XP de Skill${stoppedText}${capacityText}`
           : result.stoppedForMaterials
             ? `${recipe.name} foi interrompida por materiais insuficientes.`
-            : null,
+            : result.stoppedForCapacity
+              ? `${recipe.name} foi interrompida: Inventário sem capacidade.`
+              : null,
       }
     }
   }
