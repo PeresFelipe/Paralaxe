@@ -240,6 +240,7 @@ export default function GameShell({
             prepareRisk={prepareRisk}
             onPersist={onPersist}
             onRiskStateChange={onRiskStateChange}
+            onPreparationStateChange={setPreparationActive}
           />
         ) : null}
 
@@ -430,6 +431,7 @@ function AdventureViewComponent({
   prepareRisk,
   onPersist,
   onRiskStateChange,
+  onPreparationStateChange,
 }: {
   save: OfflineGameSave
   view: AdventureView
@@ -437,12 +439,13 @@ function AdventureViewComponent({
   prepareRisk: () => Promise<OfflineGameSave>
   onPersist: (save: OfflineGameSave, message?: string) => void | Promise<void>
   onRiskStateChange: (active: boolean) => void
+  onPreparationStateChange: (active: boolean) => void
 }) {
   if (view === 'service') {
     return <CombatWorkbench save={save} prepareRisk={prepareRisk} onSaveChange={onPersist} onRiskStateChange={onRiskStateChange} onReturn={() => onView('overview')} />
   }
   if (view === 'dungeon') {
-    return <DungeonWorkbench save={save} prepareRisk={prepareRisk} onSaveChange={onPersist} onRiskStateChange={onRiskStateChange} onPreparationStateChange={setPreparationActive} onReturn={() => onView('overview')} />
+    return <DungeonWorkbench save={save} prepareRisk={prepareRisk} onSaveChange={onPersist} onRiskStateChange={onRiskStateChange} onPreparationStateChange={onPreparationStateChange} onReturn={() => onView('overview')} />
   }
 
   return (
