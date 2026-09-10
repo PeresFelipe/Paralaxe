@@ -7,6 +7,7 @@ import {
   type CharacterClassDefinition,
   type DungeonDefinition,
   type GiftDefinition,
+  type OfflineGameSave,
 } from '@greywake/domain'
 import { createIndexedDbSaveRepository } from './indexedDbSaveRepository'
 
@@ -105,7 +106,7 @@ describe('IndexedDB save repository', () => {
     const repositoryAfterReload = createIndexedDbSaveRepository()
     const loaded = await repositoryAfterReload.get(save.saveId)
 
-    expect(loaded?.saveSchemaVersion).toBe(7)
+    expect(loaded?.saveSchemaVersion).toBe(8)
     expect(loaded?.character.bank).toEqual({ inventory: [], equipmentItems: [] })
     expect(loaded?.dungeon.contractAccepted).toBe(true)
     expect(loaded?.dungeon.activeRun?.seed).toBe(991337)
@@ -118,4 +119,34 @@ describe('IndexedDB save repository', () => {
     expect(loaded?.dungeon.activeRun?.resources.health).toBe(run.resources.maxHealth - 37)
     expect(loaded?.dungeon.activeRun?.resources.stamina).toBe(41)
   })
+
+  it('migrates a v7 Traveller Ring stack into an equipped ring instance', async () => {
+    const current = createOfflineGameSave({
+      saveId: 'legacy-ring',
+      createdAt: '2026-09-09T12:00:00.000Z',
+      contentVersion: '0.1.0-dev',
+      characterName: 'Ailith',
+      characterClass,
+      gift,
+    })
+    const legacy = {
+      ...current,
+      saveSchemaVersion: 7 as const,
+      character: {
+        ...current.character,
+        giftId: 'traveller-ring' as const,
+        inventory: [{ definitionId: 'item.equipment.traveller-ring', quantity: 1 }],
+      },
+    }
+    const repository = createIndexedDbSaveRepository()
+    await repository.put(legacy as unknown as OfflineGameSave)
+    const loaded = await repository.get('legacy-ring')
+    const ringId = loaded?.character.equipment.ring1
+    const ring = loaded?.character.equipmentItems.find((item) => item.instanceId === ringId)
+
+    expect(loaded?.saveSchemaVersion).toBe(8)
+    expect(ring?.definitionId).toBe('item.equipment.traveller-ring')
+    expect(loaded?.character.inventory.some((stack) => stack.definitionId === 'item.equipment.traveller-ring')).toBe(false)
+  })
+
 })

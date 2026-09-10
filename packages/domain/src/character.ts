@@ -5,6 +5,7 @@ import {
   createStartingEquipmentState,
   type EquippedItemIds,
   type EquipmentInstance,
+  type EquipmentSlot,
   type StartingEquipmentLoadout,
 } from './equipment'
 import { createInitialSkillProgress, type IdleState, type SkillProgressById } from './idle'
@@ -67,6 +68,11 @@ export type StartingGrant =
       definitionId: string
       quantity: number
     }
+  | {
+      kind: 'equipment'
+      definitionId: string
+      equipSlot?: EquipmentSlot
+    }
 
 export interface GiftDefinition {
   id: GiftId
@@ -104,7 +110,7 @@ export interface CharacterState {
   currentLocationId: string
 }
 
-export const SAVE_SCHEMA_VERSION = 7 as const
+export const SAVE_SCHEMA_VERSION = 8 as const
 
 export interface OfflineGameSave {
   saveId: string
@@ -151,6 +157,7 @@ function validateCharacterClass(definition: CharacterClassDefinition) {
 
 function buildGiftState(gift: GiftDefinition) {
   const inventoryByDefinition = new Map<string, number>()
+  const equipmentGrants: Array<{ definitionId: string; equipSlot?: EquipmentSlot }> = []
   let gold = 0
 
   for (const grant of gift.grants) {
@@ -158,8 +165,15 @@ function buildGiftState(gift: GiftDefinition) {
       if (!Number.isInteger(grant.amount) || grant.amount < 0) {
         throw new Error(`Quantidade de moedas inválida no presente ${gift.id}.`)
       }
-
       gold += grant.amount
+      continue
+    }
+
+    if (grant.kind === 'equipment') {
+      if (!grant.definitionId.trim()) {
+        throw new Error(`Equipamento inválido no presente ${gift.id}.`)
+      }
+      equipmentGrants.push(grant.equipSlot ? { definitionId: grant.definitionId, equipSlot: grant.equipSlot } : { definitionId: grant.definitionId })
       continue
     }
 
@@ -176,7 +190,7 @@ function buildGiftState(gift: GiftDefinition) {
     quantity,
   }))
 
-  return { gold, inventory }
+  return { gold, inventory, equipmentGrants }
 }
 
 export function createOfflineGameSave(input: CreateOfflineGameSaveInput): OfflineGameSave {
@@ -191,6 +205,18 @@ export function createOfflineGameSave(input: CreateOfflineGameSaveInput): Offlin
   const giftState = buildGiftState(input.gift)
   const startingAbilityId = input.characterClass.startingAbilityId
   const startingEquipment = createStartingEquipmentState(input.characterClass.startingEquipment)
+  const giftEquipmentItems: EquipmentInstance[] = giftState.equipmentGrants.map((grant, index) => ({
+    instanceId: `eq-${startingEquipment.nextEquipmentSequence + index}`,
+    definitionId: grant.definitionId,
+    upgradeLevel: 0,
+  }))
+  const equipped = { ...startingEquipment.equipped }
+  giftState.equipmentGrants.forEach((grant, index) => {
+    const instance = giftEquipmentItems[index]
+    if (grant.equipSlot && instance && !equipped[grant.equipSlot]) {
+      equipped[grant.equipSlot] = instance.instanceId
+    }
+  })
 
   return {
     saveId: input.saveId,
@@ -211,9 +237,9 @@ export function createOfflineGameSave(input: CreateOfflineGameSaveInput): Offlin
       gold: giftState.gold,
       inventory: giftState.inventory,
       bank: { inventory: [], equipmentItems: [] },
-      equipment: startingEquipment.equipped,
-      equipmentItems: startingEquipment.equipmentItems,
-      nextEquipmentSequence: startingEquipment.nextEquipmentSequence,
+      equipment: equipped,
+      equipmentItems: [...startingEquipment.equipmentItems, ...giftEquipmentItems],
+      nextEquipmentSequence: startingEquipment.nextEquipmentSequence + giftEquipmentItems.length,
       knownAbilityIds: [startingAbilityId],
       activeAbilitySlots: [startingAbilityId, null, null, null],
       currentLocationId: 'free-city.tavern',

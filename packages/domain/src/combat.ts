@@ -182,6 +182,7 @@ const EPSILON = 0.000001
 const STATUS_THRESHOLD = 100
 
 interface DerivedPlayerCombatStats {
+  attributes: CharacterAttributes
   maxHealth: number
   maxMana: number
   maxStamina: number
@@ -326,8 +327,35 @@ export function derivePlayerCombatStats(
   save: OfflineGameSave,
   catalog: CombatEquipmentCatalog,
 ): DerivedPlayerCombatStats {
-  const { attributes } = save.character
   const equipped = getEquippedDefinitions(save, catalog)
+  const attributes: CharacterAttributes = { ...save.character.attributes }
+  let flatDefenseBonus = 0
+  let flatAccuracyBonus = 0
+  let maxHealthBonus = 0
+  let maxManaBonus = 0
+  let maxStaminaBonus = 0
+  const attributeAffixes: Partial<Record<string, keyof CharacterAttributes>> = {
+    'affix.vitality-1': 'vitality',
+    'affix.mind-1': 'mind',
+    'affix.vigor-1': 'vigor',
+    'affix.strength-1': 'strength',
+    'affix.dexterity-1': 'dexterity',
+    'affix.intelligence-1': 'intelligence',
+    'affix.faith-1': 'faith',
+  }
+
+  for (const entry of equipped) {
+    for (const affixId of entry.instance.affixIds ?? []) {
+      const attribute = attributeAffixes[affixId]
+      if (attribute) attributes[attribute] += 1
+      if (affixId === 'affix.accuracy-4') flatAccuracyBonus += 4
+      if (affixId === 'affix.defense-2') flatDefenseBonus += 2
+    }
+    maxHealthBonus += entry.definition.resourceBonuses?.maxHealth ?? 0
+    maxManaBonus += entry.definition.resourceBonuses?.maxMana ?? 0
+    maxStaminaBonus += entry.definition.resourceBonuses?.maxStamina ?? 0
+  }
+
   const mainHandId = save.character.equipment.mainHand
   const mainHand = equipped.find((entry) => entry.instance.instanceId === mainHandId)
   if (!mainHand?.definition.weaponCombat) {
@@ -337,7 +365,7 @@ export function derivePlayerCombatStats(
   const defense = equipped.reduce((total, entry) => {
     if (entry.definition.primaryStat?.kind !== 'defense') return total
     return total + (getEquipmentPrimaryValue(entry.definition, entry.instance.upgradeLevel) ?? 0)
-  }, 0)
+  }, flatDefenseBonus)
   const weaponPower =
     mainHand.definition.primaryStat?.kind === 'attack'
       ? getEquipmentPrimaryValue(mainHand.definition, mainHand.instance.upgradeLevel) ?? 0
@@ -345,14 +373,15 @@ export function derivePlayerCombatStats(
   const speedBonus = Math.min(0.25, attributes.dexterity * 0.004)
 
   return {
-    maxHealth: 100 + attributes.vitality * 12,
-    maxMana: 30 + attributes.mind * 10,
-    maxStamina: 60 + attributes.vigor * 8,
+    attributes,
+    maxHealth: 100 + attributes.vitality * 12 + maxHealthBonus,
+    maxMana: 30 + attributes.mind * 10 + maxManaBonus,
+    maxStamina: 60 + attributes.vigor * 8 + maxStaminaBonus,
     manaRegenPerSecond: 1.5 + attributes.mind * 0.35,
     staminaRegenPerSecond: 5 + attributes.vigor * 0.6,
     defense,
     evasion: 100,
-    accuracy: 100 + attributes.dexterity * 2,
+    accuracy: 100 + attributes.dexterity * 2 + flatAccuracyBonus,
     criticalChance: 0.05 + attributes.dexterity * 0.0025,
     basicAttackPower: weaponPower,
     basicDamageType: mainHand.definition.weaponCombat.damageType,
@@ -793,7 +822,7 @@ export function simulateCombat(
           applyPlayerAbilityEffects(ability)
 
           if (ability.heal) {
-            const heal = Math.round(ability.heal.basePower + scalingContribution(save.character.attributes, ability.heal.scaling))
+            const heal = Math.round(ability.heal.basePower + scalingContribution(stats.attributes, ability.heal.scaling))
             const recovered = Math.min(heal, resources.maxHealth - resources.health)
             resources.health += recovered
             log.push({ atSeconds: now, actor: 'player', kind: 'ability', message: `${ability.name} recupera ${recovered} de Vida.` })
@@ -801,8 +830,8 @@ export function simulateCombat(
             if (random() < hitChance(stats.accuracy, enemy.evasion, ability.damage.accuracyBonusPercentagePoints ?? 0)) {
               const raw =
                 ability.damage.kind === 'weapon-multiplier'
-                  ? (stats.basicAttackPower + scalingContribution(save.character.attributes, stats.weaponScaling)) * (ability.damage.multiplier ?? 1)
-                  : (ability.damage.basePower ?? 0) + scalingContribution(save.character.attributes, ability.damage.scaling ?? {})
+                  ? (stats.basicAttackPower + scalingContribution(stats.attributes, stats.weaponScaling)) * (ability.damage.multiplier ?? 1)
+                  : (ability.damage.basePower ?? 0) + scalingContribution(stats.attributes, ability.damage.scaling ?? {})
               const rolled = rollDamage(
                 raw,
                 enemy.defense,
@@ -819,7 +848,7 @@ export function simulateCombat(
           }
         } else {
           if (random() < hitChance(stats.accuracy, enemy.evasion)) {
-            const raw = stats.basicAttackPower + scalingContribution(save.character.attributes, stats.weaponScaling)
+            const raw = stats.basicAttackPower + scalingContribution(stats.attributes, stats.weaponScaling)
             const rolled = rollDamage(raw, enemy.defense, save.character.level, stats.criticalChance, random, enemyDamageMultiplier(stats.basicDamageType))
             enemyHealth = Math.max(0, enemyHealth - rolled.damage)
             log.push({ atSeconds: now, actor: 'player', kind: 'basic', message: `Ataque básico causa ${rolled.damage} de dano${rolled.critical ? ' crítico' : ''}.` })
@@ -906,6 +935,10 @@ export function applyCombatResult(
   now: string,
 ): OfflineGameSave {
   const consumedState = consumeAcrossSafeAndExpedition(save, result.consumedItems)
+  const goldLoss =
+    result.outcome === 'defeat' && !save.dungeon.activeRun
+      ? Math.ceil(Math.min(save.character.gold * 0.1, 10 * save.character.level))
+      : 0
 
   return {
     ...save,
@@ -913,6 +946,7 @@ export function applyCombatResult(
     character: {
       ...consumedState.character,
       xp: save.character.xp + result.xpGranted,
+      gold: Math.max(0, consumedState.character.gold - goldLoss),
       currentLocationId: 'free-city.tavern',
     },
     dungeon: consumedState.dungeon,

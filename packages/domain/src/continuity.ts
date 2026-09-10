@@ -1,3 +1,4 @@
+import type { CombatResources } from './combat'
 import type { OfflineGameSave } from './character'
 import { startDungeon, type DungeonDefinition } from './dungeon'
 
@@ -34,6 +35,7 @@ export function startDungeonWithContinuity(
   dungeon: DungeonDefinition,
   seed: number,
   now: string,
+  startingResources?: CombatResources,
 ): OfflineGameSave {
   const paused = pauseCurrentWorkForRisk(save, now)
   const detached: OfflineGameSave = {
@@ -41,7 +43,7 @@ export function startDungeonWithContinuity(
     idle: { activeActivity: null },
     crafting: { activeRecipe: null },
   }
-  const started = startDungeon(detached, dungeon, seed, now)
+  const started = startDungeon(detached, dungeon, seed, now, startingResources)
 
   return {
     ...started,

@@ -1,11 +1,12 @@
 import { describe, expect, it } from 'vitest'
-import { createOfflineGameSave, type CharacterClassDefinition, type GiftDefinition } from './character'
+import { createOfflineGameSave, type CharacterClassDefinition, type GiftDefinition, type OfflineGameSave } from './character'
 import {
   applyCombatResult,
   configureCombatConsumableSlot,
   derivePlayerCombatStats,
   simulateCombat,
   type CombatAbilityDefinition,
+  type CombatResult,
   type EnemyDefinition,
 } from './combat'
 import type { EquipmentDefinition } from './equipment'
@@ -183,4 +184,45 @@ describe('combat engine', () => {
     expect(persisted.combat.wolfDefeated).toBe(true)
     expect(persisted.combat.lastRun?.seed).toBe(42)
   })
+  it('applies equipped affixes to effective attributes, Accuracy and Defense', () => {
+    const base = createSave()
+    const chestId = base.character.equipment.chest
+    const mainHandId = base.character.equipment.mainHand
+    const save = {
+      ...base,
+      character: {
+        ...base.character,
+        equipmentItems: base.character.equipmentItems.map((item) => {
+          if (item.instanceId === chestId) return { ...item, affixIds: ['affix.vitality-1', 'affix.strength-1', 'affix.accuracy-4'] }
+          if (item.instanceId === mainHandId) return { ...item, affixIds: ['affix.defense-2'] }
+          return item
+        }),
+      },
+    }
+    const stats = derivePlayerCombatStats(save, catalog)
+    expect(stats.attributes.vitality).toBe(6)
+    expect(stats.attributes.strength).toBe(6)
+    expect(stats.maxHealth).toBe(172)
+    expect(stats.accuracy).toBe(114)
+    expect(stats.defense).toBe(14)
+  })
+
+  it('loses the approved coin amount on defeat outside Dungeon and no extra coins inside Dungeon', () => {
+    const base = createSave()
+    const rich = { ...base, character: { ...base.character, level: 3, gold: 95 } }
+    const defeat: CombatResult = {
+      outcome: 'defeat', durationSeconds: 1, enemyHealth: 10, xpGranted: 0, consumedItems: [], log: [], seed: 1,
+      player: { health: 0, maxHealth: 160, mana: 80, maxMana: 80, stamina: 100, maxStamina: 100 },
+    }
+    const outside = applyCombatResult(rich, roadWolf.id, defeat, '2026-09-10T12:01:00.000Z')
+    expect(outside.character.gold).toBe(85)
+
+    const inDungeon: OfflineGameSave = {
+      ...rich,
+      dungeon: { ...rich.dungeon, activeRun: { expeditionBag: [] } as unknown as NonNullable<OfflineGameSave['dungeon']['activeRun']> },
+    }
+    const inside = applyCombatResult(inDungeon, roadWolf.id, defeat, '2026-09-10T12:01:00.000Z')
+    expect(inside.character.gold).toBe(95)
+  })
+
 })

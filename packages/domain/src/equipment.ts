@@ -41,6 +41,11 @@ export interface EquipmentDefinition {
   slot: EquipmentSlot
   primaryStat?: EquipmentPrimaryStat
   weaponCombat?: WeaponCombatProfile
+  resourceBonuses?: {
+    maxHealth?: number
+    maxMana?: number
+    maxStamina?: number
+  }
 }
 
 export interface EquipmentInstance {

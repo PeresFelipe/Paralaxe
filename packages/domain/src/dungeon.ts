@@ -273,6 +273,7 @@ export function createDungeonRun(
   dungeon: DungeonDefinition,
   seed: number,
   now: string,
+  startingResources?: CombatResources,
 ): DungeonRun {
   return {
     dungeonDefinitionId: dungeon.id,
@@ -284,7 +285,7 @@ export function createDungeonRun(
     chosenBranches: {},
     expeditionBag: [],
     expeditionEquipment: [],
-    resources: initialResources(save),
+    resources: startingResources ?? initialResources(save),
     protectorDecision: save.dungeon.dunLiathProtector,
     supplyRegisterRecovered: false,
     treatyFragmentRecovered: false,
@@ -300,6 +301,7 @@ export function startDungeon(
   dungeon: DungeonDefinition,
   seed: number,
   now: string,
+  startingResources?: CombatResources,
 ): OfflineGameSave {
   if (save.idle.activeActivity || save.crafting.activeRecipe) {
     throw new Error('Interrompa a atividade Idle antes de iniciar uma Dungeon.')
@@ -315,7 +317,7 @@ export function startDungeon(
     character: { ...save.character, currentLocationId: dungeon.id },
     dungeon: {
       ...save.dungeon,
-      activeRun: createDungeonRun(save, dungeon, seed, now),
+      activeRun: createDungeonRun(save, dungeon, seed, now, startingResources),
     },
   }
 }

@@ -14,6 +14,7 @@ import {
   acceptDunLiathContract,
   chooseDungeonPath,
   decideProtector,
+  derivePlayerCombatStats,
   extractDungeonRun,
   resolveDungeonRoom,
   resumeCurrentWorkAfterRisk,
@@ -149,7 +150,16 @@ export default function DungeonWorkbench({
       const now = new Date().toISOString()
       const riskSave = await prepareRisk()
       const seed = Date.now() >>> 0
-      const next = startDungeonWithContinuity(riskSave, DUN_LIATH_EASY, seed, now)
+      const stats = derivePlayerCombatStats(riskSave, dungeonCatalog)
+      const startingResources = {
+        health: stats.maxHealth,
+        maxHealth: stats.maxHealth,
+        mana: stats.maxMana,
+        maxMana: stats.maxMana,
+        stamina: stats.maxStamina,
+        maxStamina: stats.maxStamina,
+      }
+      const next = startDungeonWithContinuity(riskSave, DUN_LIATH_EASY, seed, now, startingResources)
       await persist(next, `Dún Liath iniciada. ${activeWorkLabel(riskSave)} foi pausada e será retomada ao voltar à segurança.`)
       setCombatResult(null)
       setPreparing(false)

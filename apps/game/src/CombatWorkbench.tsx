@@ -90,11 +90,12 @@ export default function CombatWorkbench({
     const firstServiceClear = result.outcome === 'victory' && !combatBaseSave.combat.wolfDefeated
     const applied = applyRoadServiceCombatResult(combatBaseSave, result, now)
     const updated = resumeCurrentWorkAfterRisk(applied, now)
+    const lostCoins = Math.max(0, combatBaseSave.character.gold - applied.character.gold)
     const text = result.outcome === 'victory'
       ? firstServiceClear
         ? `Serviço concluído: +${result.xpGranted + 25} XP geral e +40 moedas. Atividade Idle retomada.`
         : `Vitória persistida: +${result.xpGranted} XP geral. Atividade Idle retomada.`
-      : 'Resultado persistido. O personagem retornou à Cidade Livre e a atividade Idle foi retomada.'
+      : `Derrota persistida: ${lostCoins} moeda(s) perdida(s). O personagem retornou à Cidade Livre e a atividade Idle foi retomada.`
 
     void Promise.resolve(onSaveChange(updated, text)).then(() => {
       setMessage(text)

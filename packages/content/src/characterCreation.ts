@@ -142,7 +142,7 @@ export const INITIAL_GIFTS = [
     id: 'traveller-ring',
     name: 'Anel do Viajante',
     summary: 'Pequeno bônus versátil enquanto estiver equipado.',
-    grants: [{ kind: 'item', definitionId: 'item.equipment.traveller-ring', quantity: 1 }],
+    grants: [{ kind: 'equipment', definitionId: 'item.equipment.traveller-ring', equipSlot: 'ring1' }],
   },
   {
     id: 'nameless-stone',

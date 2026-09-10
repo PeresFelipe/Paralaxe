@@ -125,4 +125,10 @@ describe('DungeonRun', () => {
     expect(extracted.character.knownAbilityIds).toContain('ability.instinctive-guard')
     expect(extracted.dungeon.dunLiathProtector).toBe('killed')
   })
+  it('starts with explicitly derived resource maxima when provided by the runtime', () => {
+    const resources = { health: 168, maxHealth: 168, mana: 85, maxMana: 85, stamina: 108, maxStamina: 108 }
+    const started = startDungeon(createAcceptedSave(), dungeon, 5, '2026-09-09T12:00:00.000Z', resources)
+    expect(started.dungeon.activeRun?.resources).toEqual(resources)
+  })
+
 })

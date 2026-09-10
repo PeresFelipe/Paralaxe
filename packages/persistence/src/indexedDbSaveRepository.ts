@@ -75,6 +75,10 @@ interface LegacyOfflineGameSaveV6 extends Omit<OfflineGameSave, 'saveSchemaVersi
   character: Omit<OfflineGameSave['character'], 'bank'>
 }
 
+interface LegacyOfflineGameSaveV7 extends Omit<OfflineGameSave, 'saveSchemaVersion'> {
+  saveSchemaVersion: 7
+}
+
 function requestToPromise<T>(request: IDBRequest<T>) {
   return new Promise<T>((resolve, reject) => {
     request.addEventListener('success', () => resolve(request.result), { once: true })
@@ -135,22 +139,64 @@ function createDefaultDungeonState(): OfflineGameSave['dungeon'] {
   }
 }
 
+function normalizeTravellerRingGift(
+  character: OfflineGameSave['character'],
+): OfflineGameSave['character'] {
+  if (character.giftId !== 'traveller-ring') return character
+
+  const existingRing = character.equipmentItems.find(
+    (item) => item.definitionId === 'item.equipment.traveller-ring',
+  )
+  if (existingRing) {
+    return character.equipment.ring1
+      ? character
+      : { ...character, equipment: { ...character.equipment, ring1: existingRing.instanceId } }
+  }
+
+  const ringStack = character.inventory.find(
+    (stack) => stack.definitionId === 'item.equipment.traveller-ring',
+  )
+  if (!ringStack || ringStack.quantity <= 0) return character
+
+  const instanceId = `eq-${character.nextEquipmentSequence}`
+  const inventory = character.inventory
+    .map((stack) =>
+      stack.definitionId === 'item.equipment.traveller-ring'
+        ? { ...stack, quantity: stack.quantity - 1 }
+        : stack,
+    )
+    .filter((stack) => stack.quantity > 0)
+
+  return {
+    ...character,
+    inventory,
+    equipmentItems: [
+      ...character.equipmentItems,
+      { instanceId, definitionId: 'item.equipment.traveller-ring', upgradeLevel: 0 },
+    ],
+    nextEquipmentSequence: character.nextEquipmentSequence + 1,
+    equipment: character.equipment.ring1
+      ? character.equipment
+      : { ...character.equipment, ring1: instanceId },
+  }
+}
+
 function withEmptyBank(
   character: Omit<OfflineGameSave['character'], 'bank'>,
 ): OfflineGameSave['character'] {
-  return { ...character, bank: { inventory: [], equipmentItems: [] } }
+  return normalizeTravellerRingGift({ ...character, bank: { inventory: [], equipmentItems: [] } })
 }
 
 function migrateLegacyCharacter(character: LegacyCharacterState): OfflineGameSave['character'] {
   const startingEquipment = createStartingEquipmentState(character.equipment)
 
-  return {
+  return normalizeTravellerRingGift({
     ...character,
     bank: { inventory: [], equipmentItems: [] },
     equipment: startingEquipment.equipped,
     equipmentItems: startingEquipment.equipmentItems,
     nextEquipmentSequence: startingEquipment.nextEquipmentSequence,
-  }
+  })
 }
 
 function migrateSave(rawSave: unknown): OfflineGameSave {
@@ -162,6 +208,15 @@ function migrateSave(rawSave: unknown): OfflineGameSave {
 
   if (candidate.saveSchemaVersion === SAVE_SCHEMA_VERSION) {
     return rawSave as OfflineGameSave
+  }
+
+  if (candidate.saveSchemaVersion === 7) {
+    const legacy = rawSave as LegacyOfflineGameSaveV7
+    return {
+      ...legacy,
+      saveSchemaVersion: SAVE_SCHEMA_VERSION,
+      character: normalizeTravellerRingGift(legacy.character),
+    }
   }
 
   if (candidate.saveSchemaVersion === 6) {

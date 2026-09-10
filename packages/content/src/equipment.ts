@@ -18,7 +18,7 @@ export const EQUIPMENT_DEFINITIONS = [
   { id: 'armor.simple-gloves', name: 'Luvas Simples', slot: 'gloves', primaryStat: { kind: 'defense', value: 4 } },
   { id: 'armor.simple-boots', name: 'Botas Simples', slot: 'boots', primaryStat: { kind: 'defense', value: 4 } },
   { id: 'armor.giuis-bracers', name: 'Braçadeiras de Giúis', slot: 'gloves', primaryStat: { kind: 'defense', value: 6 } },
-  { id: 'item.equipment.traveller-ring', name: 'Anel do Viajante', slot: 'ring1' },
+  { id: 'item.equipment.traveller-ring', name: 'Anel do Viajante', slot: 'ring1', resourceBonuses: { maxHealth: 8, maxMana: 5, maxStamina: 8 } },
 
   { id: 'armor.garrison-helmet', name: 'Capacete da Guarnição', slot: 'head', primaryStat: { kind: 'defense', value: 7 } },
   { id: 'armor.garrison-gloves', name: 'Luvas da Guarnição', slot: 'gloves', primaryStat: { kind: 'defense', value: 7 } },
