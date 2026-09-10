@@ -60,7 +60,7 @@ O fluxo também exercita:
 - navegação segura sem interromper a atividade Idle;
 - Jornada como painel global;
 - transição visual de Safe para estados de risco;
-- recolhimento da navegação normal em Preparação/Combate/Dungeon;
+- navegação global reduzida em Preparação e recolhida em Combate/Dungeon;
 - informação objetiva de preparação incompleta;
 - combate automático explicável;
 - telegraph com sinais redundantes;
