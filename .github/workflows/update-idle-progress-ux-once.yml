@@ -1,0 +1,31 @@
+name: update-idle-progress-ux-once
+on:
+  push:
+    paths:
+      - '.github/workflows/update-idle-progress-ux-once.yml'
+permissions:
+  contents: write
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify canonical inputs
+        run: |
+          test "$(git hash-object docs/GDD.md)" = "e56091f169d35ae5b638b76293ae893ac1de2cda"
+          test "$(git hash-object docs/UX-GDD.md)" = "a76d89cfb4eb7a6166d590554b680132f591e065"
+      - name: Apply approved UX decision
+        run: python scripts/update-idle-progress-ux.py
+      - name: Verify additions
+        run: |
+          grep -q "Toda atividade Idle ativa deve comunicar progresso temporal" docs/GDD.md
+          grep -q "## Feedback de ciclo Idle" docs/UX-GDD.md
+          grep -q "pausada durante risco" docs/UX-GDD.md
+      - name: Commit canonical docs and cleanup
+        run: |
+          rm scripts/update-idle-progress-ux.py .github/workflows/update-idle-progress-ux-once.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/GDD.md docs/UX-GDD.md scripts/update-idle-progress-ux.py .github/workflows/update-idle-progress-ux-once.yml
+          git commit -m "docs: canonize Idle activity progress feedback"
+          git push
