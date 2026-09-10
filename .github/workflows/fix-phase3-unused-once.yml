@@ -1,8 +1,6 @@
-name: One-shot Phase 3 unused cleanup
+name: Phase 3 cleanup once
 
-on:
-  push:
-    branches: [main]
+on: push
 
 permissions:
   contents: write
@@ -10,16 +8,13 @@ permissions:
 jobs:
   cleanup:
     runs-on: ubuntu-latest
-    if: github.event.head_commit.message == 'chore: add one-shot Phase 3 unused cleanup'
     steps:
       - uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-      - name: Remove stale unused symbols
+      - name: Patch unused symbols
+        shell: bash
         run: |
-          python - <<'PY'
+          python3 - <<'PY'
           from pathlib import Path
-
           app = Path('apps/game/src/App.tsx')
           text = app.read_text()
           text = text.replace('  INITIAL_CRAFTING_RECIPES,\n', '')
@@ -32,11 +27,12 @@ jobs:
               raise SystemExit('openCity block not found')
           shell.write_text(text.replace(block, ''))
           PY
-      - name: Commit cleanup and remove temporary workflow
+      - name: Commit and remove this workflow
+        shell: bash
         run: |
           rm .github/workflows/fix-phase3-unused-once.yml
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
           git add apps/game/src/App.tsx apps/game/src/GameShell.tsx .github/workflows/fix-phase3-unused-once.yml
-          git commit -m "fix(game): clean Phase 3 typecheck warnings"
+          git commit -m 'fix(game): clean Phase 3 typecheck warnings'
           git push
