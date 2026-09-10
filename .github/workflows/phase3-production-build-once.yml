@@ -1,0 +1,31 @@
+name: Phase 3 production build once
+
+on: push
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Enable Corepack
+        run: corepack enable
+      - name: Install dependencies
+        run: pnpm install --no-frozen-lockfile
+      - name: Production build
+        run: pnpm build
+      - name: Remove one-shot workflow
+        if: always()
+        shell: bash
+        run: |
+          rm .github/workflows/phase3-production-build-once.yml
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add .github/workflows/phase3-production-build-once.yml
+          git commit -m 'chore: remove Phase 3 production build workflow'
+          git push
