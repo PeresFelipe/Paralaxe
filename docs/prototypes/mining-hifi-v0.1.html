@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Greywake — Atividades › Mineração — Hi-Fi v0.1</title>
+<style>
+:root{
+  --bg:#101315;
+  --surface:#171c1f;
+  --surface-2:#20262a;
+  --line:#343b3f;
+  --text:#e5e1d8;
+  --muted:#a9aaa5;
+  --iron:#c4c7c5;
+  --bronze:#a98555;
+  --bronze-dark:#725a3c;
+  --mana:#718c95;
+  --positive:#788a72;
+  --warning:#b99255;
+  --danger:#9e5550;
+  --r-sm:5px;
+  --r-md:8px;
+  --shadow:0 18px 48px rgba(0,0,0,.24);
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--bg);color:var(--text)}
+body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.01em}
+button{font:inherit}
+button:focus-visible,.resource-card:focus-visible{outline:2px solid var(--iron);outline-offset:3px}
+.app{min-height:100vh;background:
+  radial-gradient(circle at 82% -10%,rgba(169,133,85,.07),transparent 32rem),
+  linear-gradient(180deg,#121719 0%,var(--bg) 38%)}
+.topbar{height:74px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 32px;background:rgba(16,19,21,.94)}
+.identity,.resources{display:flex;align-items:center;gap:14px}
+.avatar{width:42px;height:42px;border:1px solid #64533f;border-radius:50%;background:linear-gradient(145deg,#444a4d,#1a1f22);box-shadow:inset 0 0 0 3px #171c1f;display:grid;place-items:center;color:var(--muted);font-size:12px}
+.character-name{font-family:Spectral,Georgia,serif;font-weight:600;font-size:18px;letter-spacing:.06em;text-transform:uppercase}.level{font-size:12px;color:var(--muted);margin-top:2px}
+.resource-pill{display:flex;align-items:center;gap:7px;color:var(--muted);font-size:13px;white-space:nowrap}.resource-pill b{color:var(--text);font-weight:600}.sigil{width:9px;height:9px;border:1px solid currentColor;transform:rotate(45deg);display:inline-block}.health{color:#a76661}.mana{color:var(--mana)}.stamina{color:#9a9979}.coin{color:var(--bronze)}
+.icon-button{width:36px;height:36px;border:1px solid var(--line);background:var(--surface);color:var(--muted);border-radius:var(--r-sm);cursor:pointer}.icon-button:hover{background:var(--surface-2);color:var(--text)}
+.nav{height:56px;border-bottom:1px solid var(--line);padding:0 32px;display:flex;align-items:stretch;background:#121719}.nav button{position:relative;padding:0 24px;border:0;background:transparent;color:var(--muted);text-transform:uppercase;font-size:12px;letter-spacing:.14em;cursor:pointer}.nav button:hover{color:var(--text)}.nav .active{color:var(--text)}.nav .active:after{content:"";position:absolute;left:24px;right:24px;bottom:0;height:2px;background:var(--bronze)}
+.content{width:min(1280px,calc(100% - 64px));margin:0 auto;padding:32px 0 104px}
+.eyebrow{font-size:11px;text-transform:uppercase;letter-spacing:.18em;color:var(--bronze);margin-bottom:8px}.title-row{display:flex;align-items:end;justify-content:space-between;margin-bottom:24px}.title-row h1{font-family:Spectral,Georgia,serif;font-size:34px;letter-spacing:.05em;margin:0;font-weight:600}.subtle{color:var(--muted);font-size:13px}
+.hero{display:grid;grid-template-columns:minmax(0,1.65fr) minmax(300px,.85fr);gap:20px;margin-bottom:30px}.art{aspect-ratio:16/9;position:relative;overflow:hidden;border:1px solid #394044;border-radius:var(--r-md);box-shadow:var(--shadow);background:
+  linear-gradient(180deg,transparent 40%,rgba(10,12,13,.74)),
+  radial-gradient(circle at 68% 34%,rgba(113,140,149,.24),transparent 25%),
+  linear-gradient(140deg,#384348 0%,#1e282c 38%,#182023 72%,#0f1416 100%)}
+.art:before{content:"";position:absolute;left:-4%;right:-4%;bottom:18%;height:30%;background:linear-gradient(164deg,transparent 0 28%,rgba(118,127,127,.23) 29% 31%,transparent 32% 48%,rgba(89,99,100,.22) 49% 52%,transparent 53%);transform:skewY(-5deg)}
+.art:after{content:"PLACEHOLDER · ARTE DE MINERAÇÃO 16:9";position:absolute;left:20px;bottom:18px;color:#ddd9cf;font-family:Spectral,Georgia,serif;font-size:13px;letter-spacing:.12em}.art-badge{position:absolute;top:16px;left:16px;padding:7px 10px;border:1px solid rgba(229,225,216,.23);background:rgba(15,19,21,.72);font-size:10px;text-transform:uppercase;letter-spacing:.14em;color:var(--muted);border-radius:var(--r-sm)}
+.skill-panel{border:1px solid var(--line);background:linear-gradient(180deg,#1a2023,#151a1d);border-radius:var(--r-md);padding:24px;display:flex;flex-direction:column;justify-content:space-between}.skill-panel h2{font-family:Spectral,Georgia,serif;letter-spacing:.06em;font-size:21px;margin:0 0 18px}.level-line{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:8px}.level-line strong{font-size:22px;font-weight:600}.progress{height:7px;border:1px solid #333b3f;background:#101416;border-radius:999px;overflow:hidden}.progress span{display:block;height:100%;width:63%;background:linear-gradient(90deg,var(--bronze-dark),var(--bronze))}.xp{display:flex;justify-content:space-between;color:var(--muted);font-size:11px;margin-top:7px}.divider{height:1px;background:var(--line);margin:20px 0}.meta-label{font-size:10px;text-transform:uppercase;letter-spacing:.15em;color:var(--muted);margin-bottom:8px}.tool{display:flex;justify-content:space-between;gap:16px;font-size:14px}.tool span:last-child{color:var(--iron)}
+.section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}.section-head h2{font-family:Spectral,Georgia,serif;font-size:18px;letter-spacing:.05em;margin:0}.section-head span{font-size:12px;color:var(--muted)}
+.resource-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px}.resource-card{appearance:none;text-align:left;border:1px solid var(--line);background:var(--surface);border-radius:var(--r-md);padding:12px;color:var(--text);cursor:pointer;transition:.14s ease}.resource-card:hover{border-color:#565e62;background:#1a2023;transform:translateY(-1px)}.resource-card.active{border-color:var(--bronze);box-shadow:inset 0 0 0 1px rgba(169,133,85,.18)}.thumb{aspect-ratio:1/1;border:1px solid #3b4347;background:radial-gradient(circle at 35% 35%,#596164,#272d30 42%,#171c1f 72%);border-radius:var(--r-sm);margin-bottom:12px;display:grid;place-items:center;color:#a8aca9;font-family:Spectral,Georgia,serif;font-size:24px}.resource-card:nth-child(2) .thumb{background:radial-gradient(circle at 36% 33%,#66726e,#2f3837 42%,#171c1f 72%)}.resource-card:nth-child(3) .thumb,.resource-card:nth-child(4) .thumb{filter:saturate(.45);opacity:.72}.card-top{display:flex;justify-content:space-between;gap:8px;align-items:center}.card-name{font-weight:650;font-size:14px}.state{font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--bronze)}.locked{color:#838784}.card-meta{margin-top:6px;color:var(--muted);font-size:11px}
+.detail{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(280px,.65fr);gap:20px;border-top:1px solid var(--line);padding-top:24px}.detail-main{display:grid;grid-template-columns:94px 1fr;gap:18px}.detail-thumb{aspect-ratio:1/1;border:1px solid #485054;border-radius:var(--r-md);background:radial-gradient(circle at 36% 33%,#626a6d,#2b3235 45%,#171c1f 74%);display:grid;place-items:center;font-family:Spectral,Georgia,serif;font-size:30px;color:var(--iron)}.detail h3{font-family:Spectral,Georgia,serif;font-size:25px;margin:1px 0 5px;letter-spacing:.04em}.description{color:var(--muted);font-size:13px;line-height:1.6;margin:0 0 18px}.stat-row{display:flex;gap:28px;flex-wrap:wrap}.stat{min-width:84px}.stat b{display:block;font-size:15px;margin-top:4px}.uses{margin-top:22px;padding-top:16px;border-top:1px solid var(--line)}.link-button{border:0;background:transparent;color:var(--bronze);padding:0;cursor:pointer;font-size:12px}.link-button:hover{text-decoration:underline}
+.activity-box{border:1px solid #5f513f;background:linear-gradient(180deg,rgba(169,133,85,.08),rgba(169,133,85,.035));border-radius:var(--r-md);padding:20px}.activity-box .meta-label{color:#bca07c}.activity-title{font-family:Spectral,Georgia,serif;font-size:20px;letter-spacing:.04em;margin-bottom:4px}.cycle{display:flex;align-items:center;gap:12px;margin:16px 0 12px}.cycle-bar{flex:1;height:8px;border-radius:999px;background:#101416;border:1px solid #3a3731;overflow:hidden}.cycle-bar span{display:block;width:68%;height:100%;background:linear-gradient(90deg,var(--bronze-dark),var(--bronze))}.cycle-time{font-variant-numeric:tabular-nums;color:var(--iron);font-size:12px}.action-row{display:flex;gap:8px;margin-top:14px}.btn{min-height:38px;border-radius:var(--r-sm);padding:0 14px;border:1px solid var(--line);cursor:pointer}.btn-secondary{background:var(--surface-2);color:var(--text)}.btn-secondary:hover{background:#272e32}.btn-tertiary{background:transparent;color:var(--muted)}.btn-tertiary:hover{color:var(--text)}
+.bottom{position:fixed;left:0;right:0;bottom:0;height:68px;border-top:1px solid #3a403f;background:rgba(14,18,20,.96);backdrop-filter:blur(10px);display:flex;justify-content:center}.bottom-inner{width:min(1280px,calc(100% - 64px));display:flex;align-items:center;justify-content:space-between;gap:20px}.idle{display:flex;align-items:center;gap:12px;font-size:13px}.idle-mark{width:31px;height:31px;border:1px solid #67573f;background:#1a1f21;border-radius:var(--r-sm);display:grid;place-items:center;color:var(--bronze)}.idle small{display:block;color:var(--muted);margin-top:2px}.quick{display:flex;gap:8px}.quick button{height:36px;padding:0 14px;border:1px solid var(--line);background:var(--surface);color:var(--muted);border-radius:var(--r-sm);cursor:pointer}.quick button:hover{color:var(--text);background:var(--surface-2)}
+.prototype-note{position:fixed;right:12px;top:142px;writing-mode:vertical-rl;color:#676d6d;font-size:9px;letter-spacing:.16em;text-transform:uppercase}
+@media(max-width:900px){
+  .topbar{height:auto;min-height:64px;padding:10px 16px}.character-name{font-size:15px}.resources{gap:8px}.resource-pill span.label{display:none}.nav{position:fixed;left:0;right:0;bottom:0;z-index:20;height:62px;padding:0;justify-content:space-around;border-top:1px solid var(--line);border-bottom:0}.nav button{padding:0 10px;font-size:9px;flex:1}.nav .active:after{left:18px;right:18px;top:0;bottom:auto}.content{width:calc(100% - 28px);padding:22px 0 152px}.hero,.detail{grid-template-columns:1fr}.skill-panel{padding:18px}.resource-grid{grid-template-columns:repeat(2,1fr)}.bottom{bottom:62px;height:58px}.bottom-inner{width:calc(100% - 28px)}.quick button{padding:0 10px;font-size:11px}.prototype-note{display:none}.title-row h1{font-size:28px}}
+@media(max-width:520px){.resource-pill:nth-child(2),.resource-pill:nth-child(3),.resource-pill:nth-child(4){display:none}.title-row{align-items:start;gap:14px;flex-direction:column}.detail-main{grid-template-columns:72px 1fr}.stat-row{gap:14px}.quick button:first-child{display:none}.art:after{font-size:10px;left:12px;bottom:12px}.topbar{padding-right:10px}}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <div class="identity">
+      <div class="avatar">4:5</div>
+      <div><div class="character-name">Kael</div><div class="level">Nível 12 · Errante</div></div>
+    </div>
+    <div class="resources" aria-label="Recursos globais">
+      <div class="resource-pill"><span class="sigil health"></span><span class="label">Vida</span><b>244/244</b></div>
+      <div class="resource-pill"><span class="sigil mana"></span><span class="label">Mana</span><b>70/70</b></div>
+      <div class="resource-pill"><span class="sigil stamina"></span><span class="label">Stamina</span><b>148/148</b></div>
+      <div class="resource-pill"><span class="sigil coin"></span><b>1.284</b></div>
+      <button class="icon-button" aria-label="Configurações">⚙</button>
+    </div>
+  </header>
+
+  <nav class="nav" aria-label="Navegação principal">
+    <button>Personagem</button>
+    <button class="active" aria-current="page">Atividades</button>
+    <button>Aventura</button>
+    <button>Cidade</button>
+  </nav>
+
+  <main class="content">
+    <div class="eyebrow">Atividades · Coleta</div>
+    <div class="title-row">
+      <h1>Mineração</h1>
+      <div class="subtle">Escolha um recurso para iniciar ou alterar a atividade.</div>
+    </div>
+
+    <section class="hero" aria-label="Visão da Skill">
+      <div class="art" role="img" aria-label="Placeholder 16 por 9 para arte autoral de Mineração">
+        <div class="art-badge">Arte contextual · 16:9</div>
+      </div>
+      <aside class="skill-panel">
+        <div>
+          <div class="meta-label">Progresso da Skill</div>
+          <h2>Mineração</h2>
+          <div class="level-line"><span>Nível</span><strong>10</strong></div>
+          <div class="progress" aria-label="63% para o próximo nível"><span></span></div>
+          <div class="xp"><span>6.320 XP</span><span>10.000 XP</span></div>
+        </div>
+        <div>
+          <div class="divider"></div>
+          <div class="meta-label">Ferramenta</div>
+          <div class="tool"><span>Picareta de Iarann</span><span>Equipada</span></div>
+        </div>
+      </aside>
+    </section>
+
+    <section aria-labelledby="recursos">
+      <div class="section-head"><h2 id="recursos">Recursos</h2><span>4 conhecidos</span></div>
+      <div class="resource-grid">
+        <button class="resource-card active" aria-pressed="true">
+          <div class="thumb">C</div>
+          <div class="card-top"><span class="card-name">Cloch</span><span class="state">Ativo</span></div>
+          <div class="card-meta">Disponível · Nv.1</div>
+        </button>
+        <button class="resource-card">
+          <div class="thumb">S</div>
+          <div class="card-top"><span class="card-name">Stán</span><span class="state">Novo</span></div>
+          <div class="card-meta">Disponível · Nv.10</div>
+        </button>
+        <button class="resource-card">
+          <div class="thumb">C</div>
+          <div class="card-top"><span class="card-name">Copar</span><span class="state locked">Bloqueado</span></div>
+          <div class="card-meta">Requer Mineração Nv.20</div>
+        </button>
+        <button class="resource-card">
+          <div class="thumb">I</div>
+          <div class="card-top"><span class="card-name">Iarann</span><span class="state locked">Bloqueado</span></div>
+          <div class="card-meta">Requer Mineração Nv.30</div>
+        </button>
+      </div>
+    </section>
+
+    <section class="detail" aria-label="Detalhes do recurso selecionado">
+      <div class="detail-main">
+        <div class="detail-thumb">C</div>
+        <div>
+          <div class="meta-label">Recurso selecionado</div>
+          <h3>Cloch</h3>
+          <p class="description">Pedra comum extraída em veios superficiais. É uma matéria-prima básica de produção e reforço.</p>
+          <div class="stat-row">
+            <div class="stat"><span class="meta-label">Tempo</span><b>2,1 s</b></div>
+            <div class="stat"><span class="meta-label">Resultado</span><b>1 Cloch</b></div>
+            <div class="stat"><span class="meta-label">XP</span><b>+4</b></div>
+            <div class="stat"><span class="meta-label">Possuído</span><b>284</b></div>
+          </div>
+          <div class="uses">
+            <div class="meta-label">Usos conhecidos</div>
+            <div>Cloch Tratada · Metalurgia</div>
+            <div style="margin-top:7px"><button class="link-button">Ver usos conhecidos</button></div>
+          </div>
+        </div>
+      </div>
+
+      <aside class="activity-box">
+        <div class="meta-label">Atividade atual</div>
+        <div class="activity-title">Mineração · Cloch</div>
+        <div class="subtle">Continua enquanto você navega em áreas seguras.</div>
+        <div class="cycle"><div class="cycle-bar"><span></span></div><div class="cycle-time">1,3 s</div></div>
+        <div class="subtle">Próximo ciclo · +1 Cloch · +4 XP</div>
+        <div class="action-row">
+          <button class="btn btn-secondary">Detalhes</button>
+          <button class="btn btn-tertiary">Parar</button>
+        </div>
+      </aside>
+    </section>
+  </main>
+
+  <div class="prototype-note">Protótipo isolado · não é implementação de produção</div>
+
+  <footer class="bottom">
+    <div class="bottom-inner">
+      <div class="idle"><div class="idle-mark">⛏</div><div><b>Mineração · Cloch</b><small>próximo ciclo em 1,3 s</small></div></div>
+      <div class="quick"><button>Inventário</button><button>Jornada · Fortaleza Cinzenta</button></div>
+    </div>
+  </footer>
+</div>
+</body>
+</html>
