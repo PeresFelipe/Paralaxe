@@ -52,13 +52,11 @@ version_new = """  if (candidate.saveSchemaVersion === SAVE_SCHEMA_VERSION) {\n 
 if version_anchor not in t:
     raise SystemExit('version dispatch anchor not found')
 t = t.replace(version_anchor, version_new)
-# v5/v4/v3 modern character migrations need empty bank
 t = t.replace(
 """      saveSchemaVersion: SAVE_SCHEMA_VERSION,\n      combat: migrateCombatState(legacy.combat),\n      dungeon: {\n        ...legacy.dungeon,""",
 """      saveSchemaVersion: SAVE_SCHEMA_VERSION,\n      character: withEmptyBank(legacy.character),\n      combat: migrateCombatState(legacy.combat),\n      dungeon: {\n        ...legacy.dungeon,""",
 1,
 )
-# next two occurrences v4, v3 with dungeon default
 t = t.replace(
 """      saveSchemaVersion: SAVE_SCHEMA_VERSION,\n      combat: migrateCombatState(legacy.combat),\n      dungeon: createDefaultDungeonState(),""",
 """      saveSchemaVersion: SAVE_SCHEMA_VERSION,\n      character: withEmptyBank(legacy.character),\n      combat: migrateCombatState(legacy.combat),\n      dungeon: createDefaultDungeonState(),""",
@@ -109,6 +107,7 @@ t = t.replace("import AttributePanel from './AttributePanel'", "import Attribute
 t = t.replace(
 """  onAllocateAttributes: (allocation: AttributeAllocation) => Promise<void>\n}""",
 """  onAllocateAttributes: (allocation: AttributeAllocation) => Promise<void>\n  onDepositBankStack: (definitionId: string, quantity: number) => Promise<void>\n  onWithdrawBankStack: (definitionId: string, quantity: number) => Promise<void>\n  onDepositBankEquipment: (instanceId: string) => Promise<void>\n  onWithdrawBankEquipment: (instanceId: string) => Promise<void>\n}""",
+1,
 )
 t = t.replace(
 """  onEquip,\n  onAllocateAttributes,\n}: GameShellProps) {""",
