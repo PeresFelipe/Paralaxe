@@ -15,12 +15,12 @@ A Build 0.1 não possui backend, conta Online, Cloud Save ou Mercado entre jogad
 ### Marco atual
 
 ```text
-M5.5 — UX Foundation
+M6 — Build 0.1 validável
 ```
 
-O M6 — Build 0.1 validável está temporariamente pausado após um playtest manual revelar um problema de arquitetura de experiência: os sistemas foram implementados e validados incrementalmente através de workbenches técnicos, mas ainda não existe uma navegação de jogo coerente.
+O **M5.5 — UX Foundation foi concluído**. A build real agora usa o `GameShell` canônico, uma única view principal por vez, continuidade Idle, estados focados de risco e a arquitetura `Personagem / Atividades / Aventura / Cidade`.
 
-O M5.5 entra formalmente entre M5 e M6:
+O M5.5 permanece formalmente entre M5 e M6:
 
 ```text
 M0 — Projeto abre                         ✅
@@ -29,11 +29,11 @@ M2 — Idle persiste e funciona offline     ✅
 M3 — Crafting e equipamento               ✅
 M4 — Primeiro combate completo            ✅
 M5 — Dún Liath completa                   ✅
-M5.5 — UX Foundation                      🟡
-M6 — Build 0.1 validável                  ⏸
+M5.5 — UX Foundation                      ✅
+M6 — Build 0.1 validável                  🟡
 ```
 
-O objetivo do M5.5 é transformar os sistemas existentes em uma experiência navegável: `GameShell`, menu, Cidade Livre como contexto central, atividade Idle persistente durante navegação, telas focadas de combate/Dungeon e estratégia explícita para desktop/mobile.
+O M5.5 consolidou os sistemas existentes em uma experiência navegável: `GameShell`, navegação canônica, continuidade Idle durante áreas seguras/Preparação, estados focados de Combate/Dungeon e estratégia explícita para desktop/mobile. O M6 retoma a validação da Build 0.1 com o caso conhecido `Mago × Mineração → Cosantóir` ainda em 23/24.
 
 Documento de trabalho:
 

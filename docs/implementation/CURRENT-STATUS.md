@@ -10,9 +10,9 @@
 
 ## Marco atual
 
-**M5.5 — UX Foundation**.
+**M6 — Build 0.1 validável**.
 
-O M6 — Build 0.1 validável permanece temporariamente pausado enquanto concluímos o M5.5. A arquitetura de UX já foi aprovada e a **Fase 3 está em implementação na build real**: o shell canônico substituiu a raiz de workbenches empilhados e os sistemas estão sendo migrados para um único fluxo de jogo.
+O **M5.5 — UX Foundation está fechado**. A navegação canônica, o `GameShell`, os estados de risco, a continuidade Idle, o retorno offline, o visual runtime e a estratégia responsiva foram integrados à build real. O M6 é retomado com o balanceamento/validação 23/24 como bloqueio conhecido.
 
 Documento de trabalho do marco:
 
@@ -26,15 +26,11 @@ Transformar os sistemas já implementados em uma experiência navegável e coere
 
 Prioridades:
 
-1. definir arquitetura de informação e menu;
-2. definir `GameShell`;
-3. usar a Cidade Livre como contexto/hub principal;
-4. separar navegação de atividade Idle;
-5. dar foco próprio a combate e Dungeon;
-6. migrar os workbenches atuais para views normais ou ferramentas internas;
-7. encaixar o onboarding completo na navegação;
-8. definir estratégia desktop e mobile;
-9. validar o fluxo novo save → Dún Liath sem depender de ferramentas técnicas.
+1. resolver o caso `Mago × Mineração → Cosantóir` sem mascarar o balanceamento;
+2. restaurar a matriz automatizada 6 classes × 4 rotas para 24/24;
+3. validar o fluxo real novo save → Dún Liath sobre o `GameShell` integrado;
+4. corrigir regressões funcionais encontradas na validação da Build 0.1;
+5. manter Banco, Ferreiro e Relicário como destinos da Cidade sem inventar regras de domínio ainda não aprovadas.
 
 ## Ladder atual
 
@@ -45,8 +41,8 @@ M2 — Idle persiste e funciona offline     ✅
 M3 — Crafting e equipamento               ✅
 M4 — Primeiro combate completo            ✅
 M5 — Dún Liath completa                   ✅
-M5.5 — UX Foundation                      🟡 EM IMPLEMENTAÇÃO
-M6 — Build 0.1 validável                  ⏸ PAUSADO
+M5.5 — UX Foundation                      ✅
+M6 — Build 0.1 validável                  🟡 EM VALIDAÇÃO
 ```
 
 ## Implementado até aqui
@@ -99,9 +95,9 @@ M6 — Build 0.1 validável                  ⏸ PAUSADO
 - retorno offline com reconciliação em estado próprio;
 - visual runtime alinhado à Direção Visual 0.1 e estratégia responsiva/mobile.
 
-## Migração de UX — Fase 3
+## Migração de UX — Fase 3 ✅
 
-A raiz antiga com `App`, `MarketWorkbench`, `CombatWorkbench` e `DungeonWorkbench` empilhados foi removida. O runtime agora renderiza apenas `App`, que controla um único save ativo e apresenta o `GameShell`.
+A Fase 3 do M5.5 está concluída. A raiz antiga com `App`, `MarketWorkbench`, `CombatWorkbench` e `DungeonWorkbench` empilhados foi removida. O runtime agora renderiza apenas `App`, que controla um único save ativo e apresenta o `GameShell`.
 
 Arquitetura aprovada em implementação:
 
@@ -128,7 +124,7 @@ A matriz automatizada 6 classes × 4 rotas chegou a **23/24** combinações estr
 Mago × Mineração → Cosantóir
 ```
 
-Esse balanceamento não será mascarado durante o M5.5. A investigação volta depois que a experiência estiver navegável e o fluxo real de preparação puder ser testado corretamente.
+Esse balanceamento não foi mascarado durante o M5.5 e agora volta a ser o bloqueio principal do **M6**. A validação final do M5.5 confirmou lint e typecheck sem erros, 34/34 testes de domínio passando, persistência passando e build de produção concluída com sucesso; o CI normal permanece vermelho exclusivamente porque a matriz ainda está em 23/24.
 
 ## Schema atual
 
