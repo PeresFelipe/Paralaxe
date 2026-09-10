@@ -41,7 +41,7 @@ jobs:
           p = Path('packages/domain/src/combat.test.ts')
           t = p.read_text().replace(
               "activeRun: {} as NonNullable<OfflineGameSave['dungeon']['activeRun']>",
-              "activeRun: { expeditionBag: [] } as NonNullable<OfflineGameSave['dungeon']['activeRun']>",
+              "activeRun: { expeditionBag: [] } as unknown as NonNullable<OfflineGameSave['dungeon']['activeRun']>",
           )
           p.write_text(t)
           PY
