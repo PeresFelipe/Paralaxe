@@ -1,0 +1,80 @@
+name: Wire attribute allocation once
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    if: github.event.head_commit.message == 'chore: wire attribute allocation once'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Wire persistent attribute allocation
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          app = Path('apps/game/src/App.tsx')
+          text = app.read_text()
+          text = text.replace(
+            "  BUILD_SAVE_MODE,\n  createOfflineGameSave,",
+            "  BUILD_SAVE_MODE,\n  allocateAttributePoints,\n  createOfflineGameSave,",
+          )
+          text = text.replace(
+            "  type CharacterClassId,\n  type GiftId,",
+            "  type AttributeAllocation,\n  type CharacterClassId,\n  type GiftId,",
+          )
+          anchor = """  async function handleEquip(instanceId: string) {\n    if (!activeSave) return\n    const instance = activeSave.character.equipmentItems.find((item) => item.instanceId === instanceId)\n    if (!instance) return\n    const definition = getEquipmentDefinition(instance.definitionId)\n    if (!definition) return\n\n    try {\n      const save = equipEquipment(activeSave, instanceId, definition, new Date().toISOString())\n      await persistActive(save, `${definition.name} equipado.`)\n    } catch (error) {\n      setMessage(error instanceof Error ? error.message : 'Não foi possível equipar o item.')\n    }\n  }\n\n"""
+          addition = anchor + """  async function handleAllocateAttributes(allocation: AttributeAllocation) {\n    if (!activeSave) return\n\n    try {\n      const save = allocateAttributePoints(activeSave, allocation, new Date().toISOString())\n      await persistActive(save, 'Distribuição de atributos confirmada.')\n    } catch (error) {\n      setMessage(error instanceof Error ? error.message : 'Não foi possível distribuir os pontos de atributo.')\n      throw error\n    }\n  }\n\n"""
+          if anchor not in text:
+              raise SystemExit('App handleEquip anchor not found')
+          text = text.replace(anchor, addition)
+          text = text.replace(
+            "        onEquip={handleEquip}\n      />",
+            "        onEquip={handleEquip}\n        onAllocateAttributes={handleAllocateAttributes}\n      />",
+          )
+          app.write_text(text)
+
+          shell = Path('apps/game/src/GameShell.tsx')
+          text = shell.read_text()
+          text = text.replace(
+            "  getEquipmentPrimaryValue,\n  type OfflineGameSave,",
+            "  getEquipmentPrimaryValue,\n  type AttributeAllocation,\n  type OfflineGameSave,",
+          )
+          text = text.replace(
+            "  onEquip: (instanceId: string) => Promise<void>\n}",
+            "  onEquip: (instanceId: string) => Promise<void>\n  onAllocateAttributes: (allocation: AttributeAllocation) => Promise<void>\n}",
+          )
+          text = text.replace(
+            "  onStopWork,\n  onEquip,\n}: GameShellProps)",
+            "  onStopWork,\n  onEquip,\n  onAllocateAttributes,\n}: GameShellProps)",
+          )
+          text = text.replace(
+            "            onEquip={onEquip}\n            onStartRecipe={onStartRecipe}",
+            "            onEquip={onEquip}\n            onStartRecipe={onStartRecipe}\n            onAllocateAttributes={onAllocateAttributes}",
+          )
+          text = text.replace(
+            "  onEquip,\n  onStartRecipe,\n}: {\n  save: OfflineGameSave\n  tab: CharacterTab\n  onTab: (tab: CharacterTab) => void\n  onEquip: (instanceId: string) => Promise<void>\n  onStartRecipe: (recipeDefinitionId: string, targetEquipmentInstanceId?: string | null) => Promise<void>\n}) {\n  const upgradeRecipe = INITIAL_CRAFTING_RECIPES.find((recipe) => recipe.output.kind === 'equipment-upgrade')\n",
+            "  onEquip,\n  onStartRecipe,\n  onAllocateAttributes,\n}: {\n  save: OfflineGameSave\n  tab: CharacterTab\n  onTab: (tab: CharacterTab) => void\n  onEquip: (instanceId: string) => Promise<void>\n  onStartRecipe: (recipeDefinitionId: string, targetEquipmentInstanceId?: string | null) => Promise<void>\n  onAllocateAttributes: (allocation: AttributeAllocation) => Promise<void>\n}) {\n  const upgradeRecipe = INITIAL_CRAFTING_RECIPES.find((recipe) => recipe.output.kind === 'equipment-upgrade')\n  const [attributeDraft, setAttributeDraft] = useState<AttributeAllocation>({})\n  const pendingPoints = Object.values(attributeDraft).reduce((total, value) => total + (value ?? 0), 0)\n  const remainingPoints = Math.max(0, save.character.unspentAttributePoints - pendingPoints)\n  const previewAttributes = { ...save.character.attributes }\n  for (const [key, value] of Object.entries(attributeDraft)) {\n    previewAttributes[key as keyof typeof previewAttributes] += value ?? 0\n  }\n  const currentStats = derivePlayerCombatStats(save, combatCatalog)\n  const previewStats = derivePlayerCombatStats(\n    { ...save, character: { ...save.character, attributes: previewAttributes } },\n    combatCatalog,\n  )\n\n  function changeAttribute(key: keyof typeof save.character.attributes, delta: number) {\n    const current = attributeDraft[key] ?? 0\n    const next = Math.max(0, current + delta)\n    if (delta > 0 && remainingPoints <= 0) return\n    setAttributeDraft((draft) => ({ ...draft, [key]: next }))\n  }\n\n  async function confirmAttributes() {\n    if (pendingPoints <= 0) return\n    await onAllocateAttributes(attributeDraft)\n    setAttributeDraft({})\n  }\n",
+          )
+          old_attributes = """      {tab === 'attributes' ? (\n        <article className=\"panel dense-panel\"><div className=\"panel-heading\"><div><p className=\"section-kicker\">Atributos</p><h2>Distribuição atual</h2></div><span className=\"status-chip\">{save.character.unspentAttributePoints} ponto(s) disponível(is)</span></div><div className=\"attribute-list\">{Object.entries(save.character.attributes).map(([key, value]) => <div key={key}><span>{attributeLabels[key as keyof typeof attributeLabels]}</span><strong>{value}</strong></div>)}</div>{save.character.unspentAttributePoints > 0 ? <p className=\"fact-warning\">A distribuição de pontos ainda não possui ação de domínio ligada nesta build. A UI não simula uma alteração que não possa persistir.</p> : null}</article>\n      ) : null}\n"""
+          new_attributes = """      {tab === 'attributes' ? (\n        <article className=\"panel dense-panel\">\n          <div className=\"panel-heading\"><div><p className=\"section-kicker\">Atributos</p><h2>Distribuição</h2></div><span className=\"status-chip\">{remainingPoints} ponto(s) restante(s)</span></div>\n          <div className=\"attribute-list\">\n            {Object.entries(save.character.attributes).map(([key, value]) => {\n              const attributeKey = key as keyof typeof save.character.attributes\n              const pending = attributeDraft[attributeKey] ?? 0\n              const preview = value + pending\n              const resourcePreview = attributeKey === 'vitality'\n                ? `Vida máxima ${currentStats.maxHealth} → ${previewStats.maxHealth}`\n                : attributeKey === 'mind'\n                  ? `Mana máxima ${currentStats.maxMana} → ${previewStats.maxMana}`\n                  : attributeKey === 'vigor'\n                    ? `Stamina máxima ${currentStats.maxStamina} → ${previewStats.maxStamina}`\n                    : null\n              return (\n                <div key={key}>\n                  <span>{attributeLabels[attributeKey]}{resourcePreview ? <small>{resourcePreview}</small> : null}</span>\n                  <div className=\"attribute-controls\">\n                    <button className=\"ghost-button compact\" type=\"button\" disabled={pending <= 0} onClick={() => changeAttribute(attributeKey, -1)} aria-label={`Remover ponto temporário de ${attributeLabels[attributeKey]}`}>−</button>\n                    <strong>{pending > 0 ? `${value} → ${preview}` : value}</strong>\n                    <button className=\"ghost-button compact\" type=\"button\" disabled={remainingPoints <= 0} onClick={() => changeAttribute(attributeKey, 1)} aria-label={`Adicionar ponto a ${attributeLabels[attributeKey]}`}>+</button>\n                  </div>\n                </div>\n              )\n            })}\n          </div>\n          {pendingPoints > 0 ? <div className=\"button-row\"><button className=\"ghost-button\" type=\"button\" onClick={() => setAttributeDraft({})}>Desfazer</button><button className=\"primary-button compact\" type=\"button\" onClick={() => void confirmAttributes()}>Confirmar distribuição · {pendingPoints}</button></div> : null}\n          {save.character.unspentAttributePoints === 0 ? <p className=\"muted\">Nenhum ponto de atributo disponível no momento.</p> : null}\n        </article>\n      ) : null}\n"""
+          if old_attributes not in text:
+              raise SystemExit('Attribute UI anchor not found')
+          text = text.replace(old_attributes, new_attributes)
+          shell.write_text(text)
+          PY
+      - name: Commit runtime wiring and remove workflow
+        run: |
+          rm .github/workflows/wire-attributes-once.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add apps/game/src/App.tsx apps/game/src/GameShell.tsx .github/workflows/wire-attributes-once.yml
+          git commit -m "feat(game): enable persistent attribute distribution"
+          git push
