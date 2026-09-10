@@ -166,12 +166,6 @@ export default function GameShell({
     setQuickPanel(null)
   }
 
-  function openCity(view: CityView) {
-    setDestination('city')
-    setCityView(view)
-    setQuickPanel(null)
-  }
-
   function openFullInventory() {
     setDestination('character')
     setCharacterTab('inventory')

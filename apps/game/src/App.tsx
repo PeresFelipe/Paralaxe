@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react'
 import {
   CHARACTER_CLASSES,
   CONTENT_VERSION,
-  INITIAL_CRAFTING_RECIPES,
   INITIAL_GIFTS,
   getCraftingRecipeDefinition,
   getEquipmentDefinition,
