@@ -40,7 +40,11 @@ O personagem pode realizar Prestígios, formar Party com parceiros encontrados d
 - **Dark Souls 1:** atmosfera, início por classe e presente, liberdade de build e mundo decadente.
 - **Tolkien:** construção de mundo, povos, eras, conflitos e história antiga.
 - **World of Warcraft:** identidade própria de cada Dungeon e Boss.
-- **Apple:** simplicidade, consistência, organização visual e experiência de uso.
+- **Apple:** arquitetura de informação, clareza, hierarquia, consistência, previsibilidade e progressive disclosure.
+- **Nintendo:** aprender jogando, feedback imediato, experimentação segura e qualidade de microinterações.
+- **Hideo Kojima — Metal Gear Solid 4 / Death Stranding:** informação contextual orientada ao estado, preparação como gameplay, planejamento, risco e transições de contexto.
+
+As referências de UX representam princípios de experiência; não implicam copiar identidade visual, componentes, assets ou linguagem de marca.
 
 ## Plataformas e apresentação
 
@@ -2632,19 +2636,33 @@ Classe
 ↓
 Presente
 ↓
+Confirmar criação
+↓
+introdução narrativa curta
+↓
 Cidade Livre
 ↓
 Taverna
 ↓
 primeira coleta escolhida
 ↓
-primeira produção/preparação
+primeiro recurso
+↓
+primeira produção relacionada
+↓
+primeiro Serviço
+↓
+Preparação simplificada
 ↓
 primeiro combate
 ↓
-técnicas básicas
+Técnicas e Estilo
 ↓
-primeiro contrato
+Consumíveis
+↓
+contrato de Dún Liath
+↓
+Preparação completa
 ↓
 Dún Liath
 ```
@@ -2653,28 +2671,36 @@ A escolha Offline/Online ocorre **antes** de nome, classe e presente e é imutá
 
 ## Criação
 
+A criação é apresentada como fluxo em etapas dentro de uma mesma experiência, evitando a sensação de formulário burocrático único.
+
 Depois da escolha do modo de Save, a criação mostra principalmente:
 
 - identidade;
 - atributos destacados;
 - equipamento inicial;
-- habilidade inicial.
+- habilidade/Técnica inicial.
 
 Mensagem explícita:
 
 > **A classe define apenas o início. Todas as formas de combate poderão ser aprendidas posteriormente.**
 
+Presentes comunicam sua utilidade conhecida sem revelar antecipadamente segredos, destinos específicos ou consequências narrativas futuras.
+
 ## Cidade Livre
 
-Introdução curta e visual. Pode mostrar humanos e monstros sob trégua, comércio e tensão.
+A entrada possui introdução narrativa curta e visual. Pode mostrar humanos e monstros sob trégua, comércio e tensão.
 
 Sem lore dump.
+
+A Taverna recebe indicação clara como primeiro destino, mas o jogador mantém controle para aprender a navegação.
 
 ## Taverna
 
 Primeira conversa obrigatória curta.
 
 Respostas podem envolver trabalho, dinheiro, fugir do passado ou sobreviver, caracterizando o personagem sem fixar origem canônica.
+
+A primeira necessidade é apresentada de forma contextual e conduz o jogador a compreender Atividades sem escolher automaticamente uma Skill por ele.
 
 ## Primeira atividade Idle
 
@@ -2685,48 +2711,82 @@ Escolha livre entre:
 3. Pesca;
 4. Herbologia.
 
+As sete Skills podem estar visíveis em Atividades, com Coleta recebendo foco contextual inicial e Produção permanecendo reconhecível sem competir pela atenção.
+
+O jogador escolhe a Skill, escolhe o recurso e confirma o início.
+
 Ensina:
 
 `escolher → iniciar → aguardar → recurso + XP → automático`
 
-## Produção
+O primeiro feedback deixa claro que a atividade continua enquanto o jogador navega por contextos seguros.
 
-Primeira preparação útil demonstra o ciclo correspondente à coleta escolhida.
+## Primeira produção
+
+Após obter o primeiro recurso, a produção relacionada recebe destaque contextual sem esconder as outras possibilidades.
+
+Receitas mostram requisitos e quantidades possuídas. Quando faltar material e sua fonte já for conhecida, a interface pode oferecer atalho para a Skill correspondente sem iniciar automaticamente a atividade.
+
+Iniciar uma nova atividade de Produção substitui a atividade Idle anterior e essa consequência é comunicada antes da ação.
+
+O primeiro produto concluído explica brevemente sua utilidade conhecida.
 
 Metalurgia, Forja e Culinária são ensinadas no primeiro uso relevante.
 
-## Primeiro combate
+## Primeiro Serviço e combate
 
-Deve ser um encontro simples que ensina:
+A Taverna/Jornada apresenta um Serviço que cria contexto para a entrada em Aventura.
+
+Antes do primeiro combate, o jogador passa por uma versão simplificada da Preparação, mostrando somente sistemas que já possuem significado naquele momento.
+
+O primeiro combate deve ser um encontro simples que ensina progressivamente:
 
 - ataque automático;
 - Vida/Mana/Stamina;
 - habilidade ativa;
-- consumível;
-- estilos;
-- primeiro telegraph simples.
+- leitura de ação atual;
+- primeiro telegraph simples;
+- causa e efeito do resultado.
+
+Consumíveis automáticos e configuração completa não precisam competir com esse primeiro encontro; são aprofundados antes da primeira Dungeon.
+
+Instruções surgem contextualmente. O jogo pode interromper ou desacelerar brevemente apenas quando um evento realmente novo e importante exigir compreensão, como o primeiro telegraph perigoso.
 
 O primeiro inimigo deve preferencialmente ser uma ameaça selvagem ou neutra ao conflito político, para não antecipar a revelação narrativa sobre a inteligência dos monstros.
 
-## Técnicas básicas
+## Técnicas básicas e Estilo
 
 Habilidades gerais podem ser aprendidas por contexto e uso dos sistemas, não por uma árvore de habilidades precoce obrigatória.
 
+Após o primeiro combate, o jogador é apresentado à configuração de Técnicas e à relação entre os quatro slots e sua prioridade real.
+
+Estilo de combate é introduzido nessa mesma etapa de forma simples.
+
 Antes do primeiro contrato de Dungeon, o personagem deve ter opções suficientes para que os quatro slots ativos sejam um sistema real, ainda que não seja obrigatório preenchê-los todos.
 
+Consumíveis automáticos são aprofundados depois que o combate já forneceu contexto e antes da primeira Dungeon.
+
 ## Contrato de Dún Liath
+
+A Taverna apresenta o contrato narrativamente. Depois de aceito, ele permanece recuperável por Aventura/Jornada.
+
+Aceitar o contrato não inicia a expedição automaticamente; o jogador retorna ao controle normal com Jornada atualizada e decide quando se preparar.
 
 Antes de entrar, o jogador deve ter oportunidade clara de:
 
 - revisar equipamento;
-- revisar habilidades;
-- selecionar estilo;
+- revisar Técnicas e sua prioridade;
+- selecionar Estilo;
 - configurar consumíveis;
-- entender o risco da Bolsa de Expedição.
+- observar seu estado atual;
+- entender o risco da Bolsa de Expedição;
+- compreender que a atividade Idle será pausada ao assumir o risco da expedição.
 
 ## Regra de diálogo obrigatório
 
 Conversas obrigatórias do onboarding devem devolver controle ao jogador rapidamente; referência de 3–5 falas antes de nova ação do jogador.
+
+> **A explicação deve aparecer perto da primeira decisão que exige aquele conhecimento.**
 
 > **O jogador aprende jogando.**
 
@@ -2739,87 +2799,407 @@ Conversas obrigatórias do onboarding devem devolver controle ao jogador rapidam
 - Web-first;
 - 2D;
 - UI-heavy;
-- minimalista;
-- elegante;
-- padronizada;
-- moderna;
-- inspiração Apple em clareza, hierarquia e consistência;
-- feedback lúdico, imediato e suave inspirado na qualidade de interação de bons jogos da Nintendo;
+- system-first em acesso e navegação, sem ser dashboard-first em apresentação;
+- estrutura limpa, previsível e legível;
+- superfícies e identidade Dark Fantasy;
+- elegante e padronizada;
+- informação hierarquizada;
+- inspiração Apple em arquitetura de informação, clareza, consistência e progressive disclosure;
+- inspiração Nintendo em aprender fazendo, feedback imediato e experimentação segura;
+- inspiração em Metal Gear Solid 4 e Death Stranding para informação contextual, preparação como gameplay, comunicação de estado, planejamento e risco;
 - claramente Game UI, não aplicativo genérico.
 
-A referência a Apple e Nintendo representa princípios de experiência, movimento, consistência e feedback; não implica copiar identidade visual, componentes, assets ou linguagem de marca.
+As referências representam princípios de experiência e não implicam copiar identidade visual, componentes, assets ou linguagem de marca.
+
+> **A complexidade deve vir da profundidade das decisões, não da dificuldade de encontrar, lembrar ou compreender as informações necessárias para tomá-las.**
+
+> **A interface esclarece fatos, estados e consequências conhecidas; ela não escolhe a estratégia pelo jogador.**
+
+> **O jogo deve respeitar tanto o jogador presente quanto o jogador que retorna depois de horas ou dias.**
 
 > **Clareza primeiro; prazer de interação em cada resposta da interface.**
 
-Animações devem ser suaves, curtas, consistentes e informativas. Movimento não deve atrasar decisões nem esconder estado relevante.
+## Fricção e contexto
 
-## Regras de UX
+Dificuldade, risco, escassez, rotas irreversíveis e decisões ambíguas podem gerar fricção intencional.
 
-> **A informação necessária para decidir deve aparecer antes da decisão.**
+A interface deve reduzir fricção acidental como:
 
-> **Combate automático deve ser explicável visualmente.**
+- não saber onde executar uma ação;
+- não entender por que algo está indisponível;
+- depender de memorização evitável;
+- perder contexto por navegação desnecessária;
+- descobrir uma consequência importante apenas depois de confirmar.
 
-> **Nenhuma ação manual concede uma ação adicional.**
+> **O desafio deve estar no jogo, não em operar a interface.**
 
-> **Itens em risco devem ser visualmente distintos dos itens seguros.**
+> **Informação e interação devem existir, sempre que possível, no contexto em que possuem significado.**
 
-> **Telegraph perigoso deve ser legível antes de ser punitivo.**
+## Modelo mental e arquitetura de informação
 
-> **Valores podem mudar sem exigir reconstrução da hierarquia das telas.**
+No estado seguro, existem quatro destinos principais:
 
-> **A mesma ação deve produzir resposta visual consistente em toda a interface.**
+```text
+GREYWAKE
+
+NAVEGAÇÃO PRINCIPAL
+├── Personagem
+├── Atividades
+├── Aventura
+└── Cidade
+
+CAMADA GLOBAL DE CONTINUIDADE
+└── Jornada
+```
+
+Jornada não é um quinto destino equivalente. É uma camada global para recuperar atividade, objetivo/contexto, descobertas e acontecimentos recentes sem destruir a tela atual.
+
+Combate não é destino permanente. É um estado contextual iniciado por Serviço, Dungeon ou outro conteúdo apropriado.
+
+### Personagem
+
+```text
+PERSONAGEM
+├── Visão Geral
+├── Atributos
+├── Equipamento
+├── Técnicas
+└── Inventário
+```
+
+Visão Geral abre primeiro e resume identidade, recursos, atributos, equipamento e progressão sem substituir as telas detalhadas.
+
+Inventário pertence conceitualmente a Personagem, mas possui acesso rápido global para consultas e ações comuns. Ambos acessam o mesmo estado de Inventory.
+
+### Atividades
+
+```text
+ATIVIDADES
+
+COLETA
+├── Mineração
+├── Lenhador
+├── Pesca
+└── Herbologia
+
+PRODUÇÃO
+├── Metalurgia
+├── Forja
+└── Culinária
+```
+
+As sete Skills permanecem reconhecíveis e cada uma possui tela dedicada.
+
+Atalhos contextuais podem levar a uma Skill ou receita relacionada, mas não iniciam automaticamente a atividade.
+
+### Aventura
+
+```text
+AVENTURA
+├── Serviços
+└── Dungeons
+```
+
+Aventura é a porta de entrada para conteúdo ativo e de risco.
+
+### Cidade
+
+A Cidade Livre possui hub geral e cinco estabelecimentos:
+
+```text
+Taverna
+Mercado
+Ferreiro
+Banco
+Relicário
+```
+
+A Cidade fornece contexto narrativo e serviços, mas não funciona como navegação world-first obrigatória para acessar Skills.
+
+**Forja** é Skill do jogador em Atividades; **Ferreiro** é serviço/NPC da Cidade.
+
+## Shell seguro
+
+O shell seguro mantém disponíveis:
+
+- avatar, nome e nível;
+- Vida, Mana e Stamina;
+- moeda principal de forma secundária;
+- navegação principal;
+- indicador pequeno e expansível da atividade Idle atual;
+- acesso rápido a Inventário;
+- Jornada com objetivo/contexto atual;
+- configurações.
+
+> **Global não significa permanentemente chamativo.**
+
+Vida, Mana e Stamina permanecem visíveis no shell seguro, mas sem disputar atenção desnecessariamente com o conteúdo principal.
+
+Ao navegar entre contextos seguros, a atividade Idle continua normalmente.
+
+## Progressive disclosure e recognition over recall
+
+A informação deve ser organizada em três níveis quando apropriado:
+
+```text
+DECISÃO
+informação necessária para agir agora
+
+COMPREENSÃO
+requisitos, custos, tempo, XP, quantidade, usos e causas
+
+OTIMIZAÇÃO
+bônus, Prestígio, eficiência e detalhes avançados
+```
+
+Materiais podem mostrar usos conhecidos; receitas mostram quantidade possuída; Técnicas mostram custos/condições; estados de risco mostram consequências; fontes conhecidas podem ser recuperadas.
+
+A interface encurta caminhos sem escolher pelo jogador.
+
+## Continuidade Idle e estados de risco
+
+A fronteira canônica é:
+
+```text
+SAFE
+↓ abrir Preparação
+PREPARAÇÃO
+↓ confirmar entrada
+RISK ACTIVE — COMBATE / DUNGEON
+↓ concluir / retirar / morrer
+SAFE
+```
+
+Comportamento da atividade Idle:
+
+```text
+SAFE                continua
+PREPARAÇÃO          continua
+COMBATE             pausa
+DUNGEON              pausa
+RETORNO AO SAFE      retoma automaticamente
+```
+
+Combates de Serviço também pausam Idle.
+
+Concluir Serviço, retirar-se de Dungeon, concluir Dungeon ou morrer faz a atividade anterior retomar automaticamente ao voltar à segurança.
+
+O jogador recebe feedback dessa mudança, mas não precisa reiniciar manualmente a atividade.
+
+Fechar o jogo durante uma Dungeon ativa não cancela a run. A Dungeon permanece ativa e o Idle permanece pausado. Ao reabrir, a experiência prioriza reconstruir e retomar o contexto da expedição.
+
+A estratégia técnica para fechar exatamente no meio de uma ação de combate permanece definida separadamente nas regras de persistência e pode continuar A definir sem alterar esta regra de experiência.
+
+## Preparação
+
+Preparação é gameplay quando build e recursos alteram significativamente o resultado.
+
+Ela assume estado próprio, mantendo a navegação global disponível de forma visualmente reduzida. Cancelar retorna ao contexto de origem.
+
+A preparação deve permitir compreender:
+
+- desafio e objetivo conhecidos;
+- estado do personagem;
+- equipamento;
+- Técnicas e prioridade;
+- consumíveis;
+- Estilo;
+- risco conhecido;
+- fatos objetivos de configuração incompleta;
+- consequência da decisão de entrar.
+
+Alertas informam fatos como slots vazios ou Vida atual; não classificam a build como boa/ruim e não recomendam automaticamente a estratégia ótima.
+
+Ajustes de Equipamento, Técnicas e Consumíveis devem preservar o contexto de Preparação sempre que possível.
+
+A mesma gramática possui profundidade proporcional ao conteúdo: preparação leve, padrão e de expedição.
+
+Riscos conhecidos ficam próximos da ação final. O botão de entrada representa o compromisso; a atividade Idle só pausa depois dessa confirmação.
 
 ## Combate
 
-A interface deve permitir observar:
+Combate assume estado dedicado e recolhe quase totalmente a navegação global, preservando de forma discreta o contexto de origem.
 
-- Vida e recursos;
+A interface deve permitir observar, quando relevante:
+
+- personagem e inimigo;
+- Vida, Mana e Stamina;
 - ação atual;
-- cooldowns;
+- habilidade escolhida;
+- cooldown;
 - condição inválida;
 - falta de recurso;
-- habilidade escolhida pela automação;
-- telegraphs;
-- buildup de status;
+- telegraph do próximo evento relevante;
+- buildup/status;
+- consumíveis preparados;
+- alvo;
+- resultado da ação;
 - log recolhível.
 
-O jogador deve conseguir entender por que uma ação foi escolhida.
+Os quatro slots de Técnicas aparecem em ordem de prioridade real.
 
-## Habilidades
+A interface deve permitir entender não apenas qual ação foi usada, mas também por que uma Técnica configurada não foi usada quando isso for relevante.
 
-Os quatro slots aparecem em ordem de prioridade real.
+Telegraphs usam sinais redundantes como nome, tempo e indicação visual; informação crítica não depende apenas de cor ou áudio.
 
-A interface mostra:
+Durante combate, o jogador acessa apenas recursos preparados e operações permitidas pelo sistema. Isso não cria permissão para trocar equipamento fora das condições definidas para Dungeons.
 
-- categoria;
-- perfil;
-- custo;
-- cooldown;
-- requisito;
-- condição defensiva quando houver.
-
-## Consumíveis
-
-Slots mostram item, condição automática e estado de cooldown.
-
-A interface informa explicitamente que consumir ocupa a ação atual.
+Resultados de vitória e derrota apresentam causa e efeito suficientes para que o jogador possa formar nova hipótese estratégica sem a interface declarar qual seria a melhor solução.
 
 ## Dungeon
+
+Dungeon é estado próprio. Entre combates, a **sala atual** é a unidade principal da experiência.
+
+A interface deve responder, quando relevante:
+
+```text
+Onde estou?
+Como estou?
+O que há aqui?
+O que está em risco?
+Para onde posso ir?
+```
 
 A navegação mostra:
 
 - sala atual;
 - conexões disponíveis;
 - rota percorrida;
+- conhecimento descoberto;
 - bifurcações irreversíveis;
 - Bolsa de Expedição;
-- itens seguros vs encontrados.
+- diferença entre propriedade segura e loot em risco.
 
-Uma decisão irreversível deve ser comunicada antes da confirmação.
+O mapa usa nós/conexões legíveis com ambientação, revelando apenas o conhecimento adquirido. Não mostra automaticamente tesouro, Elite, melhor rota ou estrutura completa.
+
+Ações de sala são contextuais.
+
+Loot comunica imediatamente sua entrada na Bolsa de Expedição e condição de risco.
+
+Combate acontece dentro do contexto da sala e retorna a ele depois da resolução.
+
+Sala de recuperação comunica claramente quando Equipamento, Técnicas, Consumíveis e Estilo podem ser reorganizados.
+
+Bifurcações irreversíveis recebem confirmação contextual proporcional à consequência. Não é necessário um modal genérico adicional quando a própria tela já comunica claramente a irreversibilidade.
+
+Eventos narrativos importantes podem reduzir elementos operacionais para dar foco à cena e à decisão.
+
+Antes do Boss, a decisão entre retornar à Cidade e assegurar loot ou continuar mantendo o loot em risco deve ser explicitamente apresentada.
+
+Bosses importantes podem receber apresentação narrativa/visual dedicada antes de entrar na mesma gramática funcional de combate.
 
 ## Matar/Poupar
 
-A interface não usa cores, ícones ou linguagem que classifiquem uma opção como moralmente correta.
+A interface não usa cores, ícones, linguagem moral, alinhamento ou preview de recompensa para classificar uma opção como correta.
+
+## Experiência de retorno
+
+Ao retornar depois de ausência em contexto seguro, Greywake reconcilia o estado anterior com o atual.
+
+O resumo pode comunicar, proporcionalmente:
+
+- duração processada;
+- atividade realizada;
+- recursos obtidos;
+- XP;
+- níveis ganhos;
+- desbloqueios;
+- causa de eventual interrupção;
+- fatos importantes aguardando decisão.
+
+Ausências triviais não recebem a mesma cerimônia que mudanças importantes.
+
+Quando existe Dungeon ativa, a prioridade é reconstruir a expedição e o risco atual; o Idle continua pausado.
+
+## Feedback, erro e confirmação
+
+Feedback confirma ação, resultado, causa quando necessária e mudança de estado.
+
+Sua intensidade acompanha a importância:
+
+```text
+micro
+recurso, botão, seleção, item movido
+
+contextual
+receita, Skill, reforço, Serviço
+
+momento
+Dungeon, Boss, derrota significativa, Relíquia, marco narrativo
+```
+
+Ações triviais não devem interromper o jogador. Ações irreversíveis ou destrutivas comunicam consequência antes da confirmação.
+
+Erros informam o que não ocorreu, causa conhecida e se recursos/estado foram preservados. Códigos técnicos não substituem mensagens de gameplay compreensíveis.
+
+Salvamento e loading devem transmitir estado real sem espera artificial ou falsa confirmação.
+
+## Gramática de superfícies
+
+```text
+PÁGINA
+→ destino principal
+
+PAINEL / SHEET
+→ consulta ou ajuste sem perder contexto
+
+EXPANSÃO INLINE
+→ detalhe local
+
+FEEDBACK TRANSITÓRIO
+→ confirmação breve
+
+ESTADO DEDICADO
+→ Preparação, Combate, Dungeon, decisão crítica
+
+MODAL
+→ exceção para interrupção realmente necessária ou consequência destrutiva
+```
+
+## Responsividade e acessibilidade
+
+A arquitetura mental é preservada em desktop e mobile; posicionamento pode mudar por ergonomia.
+
+No mobile, os quatro destinos principais podem migrar para navegação inferior. Painéis laterais podem virar sheets/superfícies adaptadas. Combate e mapa de Dungeon devem reorganizar hierarquia em vez de apenas comprimir layouts desktop.
+
+Nenhuma ação essencial depende exclusivamente de hover, drag-and-drop, cor, áudio ou movimento.
+
+A fundação deve considerar:
+
+- escala de texto/interface;
+- contraste;
+- foco visível e navegação por teclado quando aplicável;
+- sinais redundantes;
+- redução de movimento;
+- alvos de toque adequados;
+- tooltips acessíveis por foco, clique ou toque.
+
+## Sistema visual e mídia
+
+A linguagem visual combina estrutura limpa com superfícies Dark Fantasy, arte autoral forte, tipografia de personalidade nos títulos e alta legibilidade em dados.
+
+> **Quanto mais narrativa a tela, mais espaço para arte; quanto mais operacional, mais espaço para informação; quanto mais crítico o estado, mais a interface assume um modo próprio.**
+
+Em áreas muito frequentes, artes contextuais podem reduzir presença depois que o jogador já reconhece o local, preservando identidade sem prejudicar eficiência.
+
+Padrões de mídia aprovados:
+
+- **16:9** — ambientes, estabelecimentos, Skills, Dungeons e imagens contextuais principais;
+- **4:5** — personagem, NPCs e retratos importantes;
+- **1:1** — itens, equipamentos, recursos, Técnicas e Relíquias;
+- **ícones pequenos** — estados e informação operacional.
+
+Para artes 16:9, **1920×1080** é arquivo mestre recomendado de produção, não dimensão fixa da interface.
+
+Artes devem prever safe area para adaptação/crop responsivo. Informações essenciais não podem depender de texto incorporado diretamente à imagem.
+
+Animações são suaves, curtas, consistentes e informativas. Movimento não deve atrasar decisão nem esconder estado relevante.
+
+Áudio pode reforçar importância e risco, mas nenhuma informação necessária depende exclusivamente dele.
+
+## Documento detalhado de UX
+
+A arquitetura operacional, os fluxos aprovados, padrões de mídia, comportamento responsivo, estados vazios, playtests e demais detalhes de experiência são aprofundados em `docs/UX-GDD.md`, subordinado às regras deste GDD e sem substituir suas regras de negócio.
 
 ---
 
@@ -3043,16 +3423,37 @@ Não reproduzir literalmente países reais.
 
 - Web-first;
 - 2D e UI-heavy;
-- minimalista;
-- elegante;
-- padronizada;
-- moderna;
+- estrutura limpa, previsível e legível;
+- superfícies Dark Fantasy;
+- elegante e padronizada;
 - informação hierarquizada;
-- inspiração Apple em experiência de uso;
-- feedback e transições suaves com qualidade lúdica comparável a boas interfaces de jogos Nintendo;
-- Game UI reconhecível.
+- inspiração Apple em experiência de uso e progressive disclosure;
+- feedback e aprendizado contextual inspirados na qualidade de interação de bons jogos Nintendo;
+- informação contextual, preparação e comunicação de risco inspiradas em princípios observados em Metal Gear Solid 4 e Death Stranding;
+- Game UI reconhecível, não aplicativo genérico.
 
 A interface pode utilizar camadas 2D, sprites, ilustrações, partículas e superfícies gráficas quando agregarem legibilidade ou atmosfera, sem transformar um motor 3D em requisito da experiência.
+
+> **Quanto mais narrativa a tela, mais espaço para arte; quanto mais operacional, mais espaço para informação; quanto mais crítico o estado, mais a interface assume um modo próprio.**
+
+## Padrões de mídia
+
+Slots de mídia devem ser considerados desde a arquitetura das telas:
+
+- **16:9** para ambientes, estabelecimentos, Skills, Dungeons e imagens contextuais principais;
+- **4:5** para personagem, NPCs e retratos importantes;
+- **1:1** para itens, equipamentos, recursos, Técnicas e Relíquias;
+- ícones pequenos para estados e informação operacional.
+
+Para artes contextuais 16:9, **1920×1080** é o arquivo mestre recomendado de produção, não uma dimensão fixa de renderização.
+
+As artes devem prever área segura para adaptação responsiva e pequenos crops sem cortar o assunto principal.
+
+Informações essenciais, valores e requisitos não dependem de texto incorporado ao arquivo da arte.
+
+Em telas de uso frequente, a presença da arte pode reduzir conforme a familiaridade do jogador com o contexto, sem abandonar a identidade visual do local ou sistema.
+
+Animações devem ser suaves, curtas, consistentes e informativas. Movimento não deve atrasar decisões nem esconder estado relevante.
 
 ---
 
@@ -4181,7 +4582,11 @@ As seguintes decisões formam a baseline arquitetural atual:
 38. Mercado entre jogadores é server-side e nunca usa save local como prova de propriedade;
 39. listagem, compra, venda e transferência de Relíquia precisam ser atômicas e idempotentes;
 40. o mecanismo de saldo aceito pelo Mercado deve ser certificado pelo servidor; o modelo concreto permanece A definir;
-41. a apresentação do jogo é Web-first, 2D e UI-heavy, com interface suave, consistente e fortemente orientada a feedback.
+41. a apresentação do jogo é Web-first, 2D e UI-heavy, com interface suave, consistente e fortemente orientada a feedback;
+42. no estado seguro, a arquitetura de informação principal é Personagem, Atividades, Aventura e Cidade, com Jornada como camada global de continuidade;
+43. atividade Idle continua em contextos seguros e durante Preparação, pausa em Combate/Dungeon e retoma automaticamente no retorno à segurança;
+44. Preparação, Combate e Dungeon são estados contextuais próprios e não destinos permanentes da navegação principal;
+45. o sistema visual reserva mídia por função: 16:9 contextual, 4:5 retratos, 1:1 itens/recursos/Técnicas/Relíquias.
 
 Essas decisões podem ser reabertas quando surgir evidência concreta de problema estrutural, mas não devem ser rediscutidas sem motivo a cada etapa.
 
