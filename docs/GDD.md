@@ -332,6 +332,29 @@ Técnicas internas não criam novas Skills. Forja, por exemplo, pode incluir Fer
 
 > **Atividades Idle não geram drops secundários aleatórios. Cada atividade entrega apenas seu recurso ou produto definido, além de XP e possíveis unidades adicionais desse mesmo resultado.**
 
+## Comunicação de progresso Idle
+
+> **Toda atividade Idle ativa deve comunicar progresso temporal de forma contínua e inequívoca. A interface mostra o avanço da ação atual, o resultado esperado da próxima conclusão e feedback quando o ciclo termina. Uma atividade que não avança deve explicar objetivamente o motivo.**
+
+O jogador deve conseguir perceber três escalas de progresso quando pertinentes:
+
+```text
+AGORA
+progresso da ação atual e tempo até a próxima conclusão
+
+SESSÃO
+resultado acumulado desde o início da atividade ou recorte atual
+
+LONGO PRAZO
+nível e progresso da Skill
+```
+
+Em Coleta, a conclusão de um ciclo comunica o recurso e XP recebidos. Em Produção, a conclusão comunica de forma compreensível a transformação de materiais em produto e XP.
+
+Quando uma Produção não puder continuar por falta de materiais, requisito ou outra causa conhecida, o estado deve ser explicitamente comunicado; uma barra parada nunca deve ser a única indicação.
+
+> **O progresso da atividade atual permanece perceptível enquanto o jogador navega por outras áreas seguras.**
+
 Coleta:
 
 ```text

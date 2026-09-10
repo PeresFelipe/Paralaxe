@@ -280,7 +280,9 @@ Inventário
 → o que estou carregando
 ```
 
-A atividade atual aparece como indicador pequeno e expansível. Jornada e Inventário abrem sem destruir o contexto corrente.
+A atividade atual aparece como indicador pequeno e expansível. Quando houver uma ação Idle em andamento, esse indicador também comunica de forma compacta o avanço do ciclo atual e o tempo até a próxima conclusão, para que o jogador perceba que a atividade continua viva enquanto navega por áreas seguras. Jornada e Inventário abrem sem destruir o contexto corrente.
+
+Se a atividade estiver pausada ou interrompida, o indicador não deve parecer simplesmente congelado: ele informa o estado e, quando conhecido, o motivo.
 
 ---
 
@@ -457,6 +459,49 @@ ferramentas, bônus, Prestígio, eficiência e detalhes avançados
 ```
 
 Informação avançada pode ser expandida quando necessária.
+
+## Feedback de ciclo Idle
+
+Toda atividade de Coleta ou Produção ativa possui uma leitura temporal clara do ciclo em andamento.
+
+A gramática conceitual usa três escalas complementares:
+
+```text
+AGORA
+barra/indicador da ação atual
+tempo restante
+resultado esperado na próxima conclusão
+
+SESSÃO
+recursos/produtos obtidos
+XP obtido no recorte atual
+
+LONGO PRAZO
+nível da Skill
+progresso para o próximo nível
+```
+
+A escala **Agora** é a mais importante para comunicar que o jogo não está parado. O indicador avança continuamente durante a ação e reinicia quando um novo ciclo começa.
+
+Ao concluir um ciclo, a interface oferece microfeedback proporcional, por exemplo `+1 Cloch` e `+4 XP`, sem modal ou interrupção desnecessária.
+
+Em Produção, o feedback deve tornar legível a relação entre entrada e saída quando pertinente, por exemplo:
+
+```text
+5 Cloch → 1 Cloch Tratada
+```
+
+Se a produção parar, a interface substitui a ambiguidade por um estado explícito, como:
+
+```text
+PRODUÇÃO INTERROMPIDA
+Cloch 3 / 5
+Faltam 2
+```
+
+Atalhos para a fonte conhecida do material podem ser oferecidos, mantendo a regra de navegar sem iniciar automaticamente outra atividade.
+
+Movimento pode reforçar visualmente que o ciclo está avançando, mas informação necessária nunca depende apenas da animação. Com redução de movimento, tempo, estado e progresso continuam legíveis por meios estáticos/numerais.
 
 ## Relações entre materiais e usos
 
@@ -670,7 +715,7 @@ Combates de Serviço também pausam a atividade Idle.
 
 Ao concluir Serviço, retirar-se de Dungeon, concluir Dungeon ou morrer, a atividade anterior retoma automaticamente quando o personagem retorna a um contexto seguro.
 
-O jogo deve comunicar essa retomada sem exigir confirmação manual.
+O jogo deve comunicar essa retomada sem exigir confirmação manual. A leitura compacta do ciclo pode mudar explicitamente entre `ativa`, `pausada durante risco` e `retomada`, preservando a atividade escolhida e eliminando a impressão de travamento.
 
 > **O jogador não precisa administrar manualmente a continuidade do Idle ao entrar e sair de conteúdo de risco.**
 
