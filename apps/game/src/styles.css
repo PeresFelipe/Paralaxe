@@ -120,6 +120,11 @@ button:disabled { cursor: not-allowed; opacity: .46; }
 .primary-nav button:hover, .primary-nav button.active { color: var(--text); }
 .primary-nav button.active::after { content: ""; height: 2px; position: absolute; left: 22px; right: 22px; bottom: 0; background: var(--bronze); }
 .risk-state-strip { height: 48px; display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 0 28px; border-bottom: 1px solid #4d3937; background: #111517; font-size: .68rem; }
+.preparation-state-strip { height: 44px; display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 0 28px; border-bottom: 1px solid #514838; background: #131719; font-size: .68rem; }
+.preparation-state-strip span { color: #c4a377; letter-spacing: .14em; }
+.preparation-state-strip strong { color: var(--muted); }
+.game-shell--preparation .primary-nav { opacity: .48; }
+.game-shell--preparation .continuity-bar { opacity: .78; }
 .risk-state-strip span { color: var(--danger-text); letter-spacing: .14em; }
 .risk-state-strip strong { color: var(--muted); }
 .game-shell--risk .primary-nav, .game-shell--risk .continuity-bar { display: none; }

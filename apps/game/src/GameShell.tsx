@@ -145,6 +145,7 @@ export default function GameShell({
   const [adventureView, setAdventureView] = useState<AdventureView>(save.dungeon.activeRun ? 'dungeon' : 'overview')
   const [cityView, setCityView] = useState<CityView>('overview')
   const [quickPanel, setQuickPanel] = useState<QuickPanel>(null)
+  const [preparationActive, setPreparationActive] = useState(false)
 
   const stats = useMemo(() => derivePlayerCombatStats(save, combatCatalog), [save])
   const work = activeWork(save)
@@ -172,7 +173,7 @@ export default function GameShell({
     setQuickPanel(null)
   }
 
-  const mainClass = `game-shell ${focusedRisk ? 'game-shell--risk' : ''}`
+  const mainClass = `game-shell ${focusedRisk ? 'game-shell--risk' : ''} ${preparationActive && !focusedRisk ? 'game-shell--preparation' : ''}`
 
   return (
     <div className={mainClass}>
@@ -204,6 +205,7 @@ export default function GameShell({
         ))}
       </nav>
 
+      {preparationActive && !focusedRisk ? <div className="preparation-state-strip"><span>PREPARAÇÃO</span><strong>Dún Liath · Idle continua</strong></div> : null}
       {focusedRisk ? <div className="risk-state-strip"><span>ESTADO DE RISCO</span><strong>{dungeonActive ? 'Dún Liath · Idle pausado' : 'Combate · Idle pausado'}</strong></div> : null}
 
       <main className="game-content">
@@ -440,7 +442,7 @@ function AdventureViewComponent({
     return <CombatWorkbench save={save} prepareRisk={prepareRisk} onSaveChange={onPersist} onRiskStateChange={onRiskStateChange} onReturn={() => onView('overview')} />
   }
   if (view === 'dungeon') {
-    return <DungeonWorkbench save={save} prepareRisk={prepareRisk} onSaveChange={onPersist} onRiskStateChange={onRiskStateChange} onReturn={() => onView('overview')} />
+    return <DungeonWorkbench save={save} prepareRisk={prepareRisk} onSaveChange={onPersist} onRiskStateChange={onRiskStateChange} onPreparationStateChange={setPreparationActive} onReturn={() => onView('overview')} />
   }
 
   return (

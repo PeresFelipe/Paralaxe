@@ -29,6 +29,7 @@ type DungeonViewProps = {
   prepareRisk: () => Promise<OfflineGameSave>
   onSaveChange: (save: OfflineGameSave, message?: string) => void | Promise<void>
   onRiskStateChange?: (active: boolean) => void
+  onPreparationStateChange?: (active: boolean) => void
   onReturn?: () => void
 }
 
@@ -92,6 +93,7 @@ export default function DungeonWorkbench({
   prepareRisk,
   onSaveChange,
   onRiskStateChange,
+  onPreparationStateChange,
   onReturn,
 }: DungeonViewProps) {
   const [message, setMessage] = useState<string | null>(null)
@@ -111,6 +113,12 @@ export default function DungeonWorkbench({
   }, [onRiskStateChange, run])
 
   useEffect(() => () => onRiskStateChange?.(false), [onRiskStateChange])
+
+  useEffect(() => {
+    onPreparationStateChange?.(preparing)
+  }, [onPreparationStateChange, preparing])
+
+  useEffect(() => () => onPreparationStateChange?.(false), [onPreparationStateChange])
 
   async function persist(next: OfflineGameSave, text?: string) {
     await onSaveChange(next, text)
