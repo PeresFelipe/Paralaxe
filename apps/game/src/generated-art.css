@@ -24,66 +24,24 @@
   display: none;
 }
 
-/* Coleta: Mineração, Lenhador, Pesca, Herbologia. */
-.feature-view:has(.skill-card-grid:not(.production-cards) .skill-card:nth-child(1).active) .skill-detail-layout .context-art {
-  background-position: 0 0;
-}
+.feature-view:has(.skill-card-grid:not(.production-cards) .skill-card:nth-child(1).active) .skill-detail-layout .context-art { background-position: 0 0; }
+.feature-view:has(.skill-card-grid:not(.production-cards) .skill-card:nth-child(2).active) .skill-detail-layout .context-art { background-position: 66.6667% 0; }
+.feature-view:has(.skill-card-grid:not(.production-cards) .skill-card:nth-child(3).active) .skill-detail-layout .context-art { background-position: 33.3333% 0; }
+.feature-view:has(.skill-card-grid:not(.production-cards) .skill-card:nth-child(4).active) .skill-detail-layout .context-art { background-position: 66.6667% 0; }
+.feature-view:has(.production-cards .skill-card.active) .skill-detail-layout .context-art { background-position: 100% 0; }
+.context-art--city { background-position: 0 100%; }
+.market-view .context-art, .market-view .context-art--compact { background-position: 33.3333% 100%; }
+.context-art--adventure, .combat-view .context-art--risk, .combat-view .context-art--combat { background-position: 66.6667% 100%; }
+.context-art--dungeon, .preparation-view .context-art--risk { background-position: 100% 100%; }
 
-.feature-view:has(.skill-card-grid:not(.production-cards) .skill-card:nth-child(2).active) .skill-detail-layout .context-art {
-  background-position: 66.6667% 0;
-}
-
-.feature-view:has(.skill-card-grid:not(.production-cards) .skill-card:nth-child(3).active) .skill-detail-layout .context-art {
-  background-position: 33.3333% 0;
-}
-
-.feature-view:has(.skill-card-grid:not(.production-cards) .skill-card:nth-child(4).active) .skill-detail-layout .context-art {
-  background-position: 66.6667% 0;
-}
-
-/* Produção: Metalurgia, Forja e Culinária compartilham a primeira arte funcional desta passagem. */
-.feature-view:has(.production-cards .skill-card.active) .skill-detail-layout .context-art {
-  background-position: 100% 0;
-}
-
-/* Cidade e mercado. */
-.context-art--city {
-  background-position: 0 100%;
-}
-
-.market-view .context-art,
-.market-view .context-art--compact {
-  background-position: 33.3333% 100%;
-}
-
-/* Aventura, Serviço e combate. */
-.context-art--adventure,
-.combat-view .context-art--risk,
-.combat-view .context-art--combat {
-  background-position: 66.6667% 100%;
-}
-
-/* Dún Liath, preparação e salas da expedição. */
-.context-art--dungeon,
-.preparation-view .context-art--risk {
-  background-position: 100% 100%;
-}
-
-/* Retratos 4:5 gerados para preencher os campos vazios do runtime. */
 .portrait-placeholder {
   background-image: var(--generated-portrait-sprite) !important;
   background-size: 200% 100% !important;
   background-repeat: no-repeat !important;
   background-position: 0 0 !important;
 }
-
-.portrait-placeholder--npc {
-  background-position: 100% 0 !important;
-}
+.portrait-placeholder--npc { background-position: 100% 0 !important; }
 
 @media (prefers-reduced-motion: reduce) {
-  .context-art,
-  .portrait-placeholder {
-    transition: none !important;
-  }
+  .context-art, .portrait-placeholder { transition: none !important; }
 }
