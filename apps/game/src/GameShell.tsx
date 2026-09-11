@@ -406,36 +406,46 @@ function ActivitiesView({
     <section className="feature-view">
       <div className="view-heading"><div><p className="section-kicker">Atividades</p><h1 className="display-title">{skillLabels[selectedSkill]}</h1><p className="muted">Uma atividade Idle por vez. Navegar por áreas seguras não a interrompe.</p></div>{work ? <button className="ghost-button" type="button" onClick={() => void onStopWork()}>Parar atividade</button> : null}</div>
 
-      <div className="activity-current-card"><IdleProgressIndicator save={save} /></div>
+      <div className="activities-layout">
+        <aside className="activities-skill-rail" aria-label="Skills de atividades">
+          <div className="activity-skill-group">
+            <h2 className="section-title-runtime">Coleta</h2>
+            <div className="skill-card-grid">{gatheringSkills.map((skillId) => <button className={`skill-card ${selectedSkill === skillId ? 'active' : ''}`} type="button" key={skillId} onClick={() => onSelectSkill(skillId)}><span>{skillLabels[skillId]}</span><strong>Nv. {save.skills[skillId].level}</strong></button>)}</div>
+          </div>
+          <div className="activity-skill-group">
+            <h2 className="section-title-runtime">Produção</h2>
+            <div className="skill-card-grid production-cards">{productionSkills.map((skillId) => <button className={`skill-card ${selectedSkill === skillId ? 'active' : ''}`} type="button" key={skillId} onClick={() => onSelectSkill(skillId)}><span>{skillLabels[skillId]}</span><strong>Nv. {save.skills[skillId].level}</strong></button>)}</div>
+          </div>
+        </aside>
 
-      <h2 className="section-title-runtime">Coleta</h2>
-      <div className="skill-card-grid">{gatheringSkills.map((skillId) => <button className={`skill-card ${selectedSkill === skillId ? 'active' : ''}`} type="button" key={skillId} onClick={() => onSelectSkill(skillId)}><span>{skillLabels[skillId]}</span><strong>Nv. {save.skills[skillId].level}</strong></button>)}</div>
-      <h2 className="section-title-runtime">Produção</h2>
-      <div className="skill-card-grid production-cards">{productionSkills.map((skillId) => <button className={`skill-card ${selectedSkill === skillId ? 'active' : ''}`} type="button" key={skillId} onClick={() => onSelectSkill(skillId)}><span>{skillLabels[skillId]}</span><strong>Nv. {save.skills[skillId].level}</strong></button>)}</div>
+        <div className="activities-workspace">
+          <div className="activity-current-card"><IdleProgressIndicator save={save} /></div>
 
-      <div className="skill-detail-layout section-gap">
-        <div className={`context-art${selectedSkill === 'fishing' ? ' context-art--individual' : ''}`} aria-hidden="true">
-          {selectedSkill === 'fishing' ? (
-            <picture>
-              <source media="(prefers-reduced-motion: no-preference)" srcSet="/art/activities/fishing.gif?v=1" />
-              <img src="/art/activities/fishing-still.png?v=1" alt="" width={480} height={270} decoding="async" />
-            </picture>
-          ) : <span>ARTE 16:9 · {skillLabels[selectedSkill].toUpperCase()}</span>}
+          <div className="skill-detail-layout section-gap">
+            <div className={`context-art${selectedSkill === 'fishing' ? ' context-art--individual' : ''}`} aria-hidden="true">
+              {selectedSkill === 'fishing' ? (
+                <picture>
+                  <source media="(prefers-reduced-motion: no-preference)" srcSet="/art/activities/fishing.gif?v=1" />
+                  <img src="/art/activities/fishing-still.png?v=1" alt="" width={480} height={270} decoding="async" />
+                </picture>
+              ) : <span>ARTE 16:9 · {skillLabels[selectedSkill].toUpperCase()}</span>}
+            </div>
+            <aside className="panel skill-progress-panel"><p className="section-kicker">Progresso da Skill</p><h2>{skillLabels[selectedSkill]}</h2><div className="fact-row"><span>Nível</span><strong>{progress.level}</strong></div><div className="fact-row"><span>XP atual</span><strong>{progress.xp}</strong></div><div className="fact-row"><span>Prestígio</span><strong>{progress.prestige}</strong></div></aside>
+          </div>
+
+          <div className="activity-options section-gap">
+            {isGathering ? activities.map((activity) => {
+              const active = save.idle.activeActivity?.activityDefinitionId === activity.id
+              const unlocked = progress.level >= activity.requiredSkillLevel
+              return <article className={`activity-option panel ${active ? 'selected-card' : ''}`} key={activity.id}><div className="item-thumb" aria-hidden="true">{activity.resultName.slice(0, 1)}</div><div><p className="section-kicker">Recurso</p><h3>{activity.resultName}</h3><div className="facts-grid compact-facts"><div><span>Tempo</span><strong>{activity.actionSeconds}s</strong></div><div><span>XP</span><strong>+{activity.skillXpPerAction}</strong></div><div><span>Possuído</span><strong>{inventoryQuantity(save, activity.resultItemDefinitionId)}</strong></div><div><span>Requisito</span><strong>Nv. {activity.requiredSkillLevel}</strong></div></div>{active ? <span className="status-chip">ATIVIDADE ATUAL</span> : <button className="primary-button compact" type="button" disabled={!unlocked} onClick={() => void onStartActivity(activity.id)}>Iniciar {activity.resultName}</button>}</div></article>
+            }) : recipes.map((recipe) => {
+              const active = save.crafting.activeRecipe?.recipeDefinitionId === recipe.id
+              const enough = recipe.ingredients.every((ingredient) => inventoryQuantity(save, ingredient.definitionId) >= ingredient.quantity)
+              return <article className={`activity-option panel ${active ? 'selected-card' : ''}`} key={recipe.id}><div className="item-thumb" aria-hidden="true">{recipe.name.slice(0, 1)}</div><div><p className="section-kicker">Receita</p><h3>{recipe.name}</h3><div className="ingredient-list">{recipe.ingredients.map((ingredient) => { const owned = inventoryQuantity(save, ingredient.definitionId); return <div key={ingredient.definitionId}><span>{itemLabels[ingredient.definitionId] ?? ingredient.definitionId}</span><strong>{owned} / {ingredient.quantity}</strong></div> })}</div><div className="facts-grid compact-facts"><div><span>Tempo</span><strong>{recipe.actionSeconds}s</strong></div><div><span>XP</span><strong>+{recipe.skillXpPerAction}</strong></div></div>{!enough ? <p className="fact-warning">Materiais insuficientes para iniciar.</p> : null}{active ? <span className="status-chip">ATIVIDADE ATUAL</span> : <button className="primary-button compact" type="button" disabled={!enough} onClick={() => void onStartRecipe(recipe.id)}>Iniciar produção</button>}</div></article>
+            })}
+            {activities.length === 0 && recipes.length === 0 ? <p className="muted">Nenhuma opção de conteúdo implementada para esta Skill nesta build.</p> : null}
+          </div>
         </div>
-        <aside className="panel skill-progress-panel"><p className="section-kicker">Progresso da Skill</p><h2>{skillLabels[selectedSkill]}</h2><div className="fact-row"><span>Nível</span><strong>{progress.level}</strong></div><div className="fact-row"><span>XP atual</span><strong>{progress.xp}</strong></div><div className="fact-row"><span>Prestígio</span><strong>{progress.prestige}</strong></div></aside>
-      </div>
-
-      <div className="activity-options section-gap">
-        {isGathering ? activities.map((activity) => {
-          const active = save.idle.activeActivity?.activityDefinitionId === activity.id
-          const unlocked = progress.level >= activity.requiredSkillLevel
-          return <article className={`activity-option panel ${active ? 'selected-card' : ''}`} key={activity.id}><div className="item-thumb" aria-hidden="true">{activity.resultName.slice(0, 1)}</div><div><p className="section-kicker">Recurso</p><h3>{activity.resultName}</h3><div className="facts-grid compact-facts"><div><span>Tempo</span><strong>{activity.actionSeconds}s</strong></div><div><span>XP</span><strong>+{activity.skillXpPerAction}</strong></div><div><span>Possuído</span><strong>{inventoryQuantity(save, activity.resultItemDefinitionId)}</strong></div><div><span>Requisito</span><strong>Nv. {activity.requiredSkillLevel}</strong></div></div>{active ? <span className="status-chip">ATIVIDADE ATUAL</span> : <button className="primary-button compact" type="button" disabled={!unlocked} onClick={() => void onStartActivity(activity.id)}>Iniciar {activity.resultName}</button>}</div></article>
-        }) : recipes.map((recipe) => {
-          const active = save.crafting.activeRecipe?.recipeDefinitionId === recipe.id
-          const enough = recipe.ingredients.every((ingredient) => inventoryQuantity(save, ingredient.definitionId) >= ingredient.quantity)
-          return <article className={`activity-option panel ${active ? 'selected-card' : ''}`} key={recipe.id}><div className="item-thumb" aria-hidden="true">{recipe.name.slice(0, 1)}</div><div><p className="section-kicker">Receita</p><h3>{recipe.name}</h3><div className="ingredient-list">{recipe.ingredients.map((ingredient) => { const owned = inventoryQuantity(save, ingredient.definitionId); return <div key={ingredient.definitionId}><span>{itemLabels[ingredient.definitionId] ?? ingredient.definitionId}</span><strong>{owned} / {ingredient.quantity}</strong></div> })}</div><div className="facts-grid compact-facts"><div><span>Tempo</span><strong>{recipe.actionSeconds}s</strong></div><div><span>XP</span><strong>+{recipe.skillXpPerAction}</strong></div></div>{!enough ? <p className="fact-warning">Materiais insuficientes para iniciar.</p> : null}{active ? <span className="status-chip">ATIVIDADE ATUAL</span> : <button className="primary-button compact" type="button" disabled={!enough} onClick={() => void onStartRecipe(recipe.id)}>Iniciar produção</button>}</div></article>
-        })}
-        {activities.length === 0 && recipes.length === 0 ? <p className="muted">Nenhuma opção de conteúdo implementada para esta Skill nesta build.</p> : null}
       </div>
     </section>
   )

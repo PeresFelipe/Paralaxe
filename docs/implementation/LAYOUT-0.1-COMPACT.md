@@ -11,7 +11,7 @@ O experimento preserva a arquitetura do UX-GDD: os quatro destinos continuam sen
 - títulos, cabeçalho, navegação e rodapé de continuidade ocupam menos altura;
 - painéis operacionais usam padding e sombras menores, com leitura por grupos;
 - o progresso Idle fica em uma única superfície contínua, sem o cartão externo duplicar a moldura;
-- as sete Skills continuam agrupadas em Coleta e Produção, com seleção em linhas compactas;
+- as sete Skills continuam agrupadas em Coleta e Produção, agora numa rail vertical que libera altura para o trabalho atual;
 - a arte de Skill mantém 16:9, com largura limitada a 440 px para deixar a progressão e as ações próximas;
 - opções de coleta e receitas aparecem em duas colunas no desktop e uma no mobile;
 - arte de Cidade e Aventura mantém 16:9, mas deixa de funcionar como banner dominante;
@@ -40,5 +40,7 @@ No preview da Build 0.1 foram conferidos:
 - navegação segura até Aventura e Cidade;
 - camada rápida de Inventário;
 - ausência de overflow horizontal no viewport desktop de 1363 px.
+
+Na composição vertical da tela de Atividades, o viewport desktop de 1363 × 936 px apresentou 18 px de rolagem total para Pesca, com a arte 16:9, progresso de Skill e ação do recurso no mesmo fluxo visível.
 
 Também foram executados o build de produção e o lint do workspace.
