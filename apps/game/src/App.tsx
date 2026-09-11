@@ -48,6 +48,14 @@ function updateSaveInList(saves: OfflineGameSave[], save: OfflineGameSave) {
   return saves.map((current) => (current.saveId === save.saveId ? save : current))
 }
 
+function createSaveId() {
+  if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+    return crypto.randomUUID()
+  }
+
+  return `save-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`
+}
+
 function formatAbsence(milliseconds: number) {
   const seconds = Math.max(0, Math.floor(milliseconds / 1000))
   const hours = Math.floor(seconds / 3600)
@@ -188,7 +196,7 @@ function App() {
     try {
       const now = new Date().toISOString()
       const save = createOfflineGameSave({
-        saveId: crypto.randomUUID(),
+        saveId: createSaveId(),
         createdAt: now,
         contentVersion: CONTENT_VERSION,
         characterName,

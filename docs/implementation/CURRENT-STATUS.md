@@ -16,6 +16,8 @@ O M5.5 — UX Foundation e o M6 — Build 0.1 validável estão concluídos. A B
 
 O próximo marco de produto ainda deve ser definido explicitamente antes de iniciar novo escopo. Não adicionar sistemas Online ou novo conteúdo apenas para prolongar a Build 0.1.
 
+O layout compacto da Build 0.1 está registrado como experimento visual reversível em `docs/implementation/LAYOUT-0.1-COMPACT.md`. O layout anterior foi preservado em `backup/layout-0.1-740e1c5` antes da aplicação do passe.
+
 Documento de fechamento do M6:
 
 ```text

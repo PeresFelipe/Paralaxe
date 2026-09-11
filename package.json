@@ -8,7 +8,7 @@
     "node": "^20.19.0 || >=22.12.0"
   },
   "scripts": {
-    "dev": "pnpm --filter @greywake/game dev",
+    "dev": "node apps/game/node_modules/vite/bin/vite.js apps/game --config apps/game/vite.config.ts",
     "build": "pnpm --filter @greywake/game build",
     "lint": "pnpm -r --if-present run lint",
     "typecheck": "pnpm -r --if-present run typecheck",
