@@ -57,6 +57,7 @@ M6 — Build 0.1 validável                  ✅
 - arte individual de Pesca em pixel art dark fantasy: GIF 480 × 270 com quatro quadros, selecionado apenas sem preferência de redução de movimento; fallback PNG estático via `<picture>`;
 - arte individual de Mineração em pixel art dark fantasy: GIF 480 × 270 com seis quadros (golpe, impacto e retorno), selecionado apenas sem preferência de redução de movimento; fallback PNG estático via `<picture>`;
 - arte individual de Lenhador em pixel art dark fantasy: GIF 480 × 270 com seis quadros (machado acima, corte e retorno), selecionado apenas sem preferência de redução de movimento; fallback PNG estático via `<picture>`;
+- arte individual de Herbologia em pixel art dark fantasy: GIF 480 × 270 com seis quadros (coleta, colocação no cesto e retorno), selecionado apenas sem preferência de redução de movimento; fallback PNG estático via `<picture>`;
 - uma atividade Idle por vez;
 - quatro coletas iniciais com progresso offline;
 - produção Idle determinística;
