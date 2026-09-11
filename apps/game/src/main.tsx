@@ -5,6 +5,7 @@ import './styles.css'
 import './idle-progress.css'
 import './generated-art.css'
 import './compact-layout.css'
+import './typography.css'
 
 const rootElement = document.getElementById('root')
 

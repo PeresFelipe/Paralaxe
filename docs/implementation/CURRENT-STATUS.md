@@ -54,6 +54,7 @@ M6 — Build 0.1 validável                  ✅
 - seis classes e sete presentes iniciais;
 - persistência IndexedDB com schema versionado e migração automática;
 - sete Skills;
+- Antiquity Print, de SciGho, integrada aos títulos, nomes e navegação principal sob CC BY 4.0; créditos acessíveis na criação/seleção de personagem e no jogo; TTF original com fallback para acentos e cache offline;
 - arte individual de Pesca em pixel art dark fantasy: GIF 480 × 270 com quatro quadros, selecionado apenas sem preferência de redução de movimento; fallback PNG estático via `<picture>`;
 - arte individual de Mineração em pixel art dark fantasy: GIF 480 × 270 com seis quadros (golpe, impacto e retorno), selecionado apenas sem preferência de redução de movimento; fallback PNG estático via `<picture>`;
 - arte individual de Lenhador em pixel art dark fantasy: GIF 480 × 270 com seis quadros (machado acima, corte e retorno), selecionado apenas sem preferência de redução de movimento; fallback PNG estático via `<picture>`;

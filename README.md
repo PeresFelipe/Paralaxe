@@ -123,3 +123,9 @@ O mesmo fluxo é executado automaticamente em `.github/workflows/validate.yml`.
 ## Futuro Online
 
 O GDD já prevê saves **Offline** e **Online** separados e imutáveis. Fases futuras poderão adicionar Cloud Save, Risk/Trust, Certified Dungeons, Relic Registry e Mercado server-side. Essas capacidades não fazem parte da Build 0.1 e só devem entrar após um novo marco ser definido.
+
+## Créditos de assets
+
+- **[Antiquity Print](https://ninjikin.itch.io/font-antiquity-script)** por **[SciGho](https://ninjikin.itch.io/)** — Copyright SciGho 2021, [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). O TTF original é distribuído sem alterações. [Atribuição e proveniência da licença](apps/game/public/fonts/antiquity-print-LICENSE.txt).
+
+A fonte é usada nos títulos, nomes e navegação principal. O arquivo original não inclui letras acentuadas; o navegador usa as fontes de apoio nesses caracteres. Os créditos também podem ser consultados no próprio jogo. A fonte e seu aviso de atribuição são incluídos no cache offline.

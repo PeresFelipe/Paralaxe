@@ -27,7 +27,7 @@ export default defineConfig({
       ],
     },
     workbox: {
-      globPatterns: ['**/*.{js,css,html,svg,png,webp,gif}'],
+      globPatterns: ['**/*.{js,css,html,svg,png,webp,gif,ttf}', 'fonts/**/*.txt'],
       maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
       cleanupOutdatedCaches: true,
       ignoreURLParametersMatching: [/^v$/, /^utm_/, /^fbclid$/],

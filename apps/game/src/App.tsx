@@ -33,6 +33,7 @@ import {
 import { createIndexedDbSaveRepository } from '@greywake/persistence'
 import GameShell from './GameShell'
 import WebGameStatus from './WebGameStatus'
+import AssetCredits from './AssetCredits'
 
 const saveRepository = createIndexedDbSaveRepository()
 
@@ -490,6 +491,7 @@ function App() {
             </button>
           ))}
         </section>
+        <AssetCredits />
       </main>
     )
   }
@@ -522,6 +524,7 @@ function App() {
           <div className="creation-focus"><p className="section-kicker">Confirmar</p><h1 className="display-title">{characterName}</h1><div className="creation-summary-runtime"><div><span>Modo</span><strong>{BUILD_SAVE_MODE}</strong></div><div><span>Classe</span><strong>{selectedClassId ? getClassName(selectedClassId) : '—'}</strong></div><div><span>Presente</span><strong>{selectedGiftId ? getGiftName(selectedGiftId) : '—'}</strong></div></div>{message ? <p className="inline-message">{message}</p> : null}<div className="button-row"><button className="ghost-button" type="button" onClick={() => setCreationStep(3)}>Voltar</button><button className="primary-button compact" type="button" disabled={isSaving} onClick={() => void handleCreateSave()}>{isSaving ? 'Criando…' : 'Criar personagem'}</button></div></div>
         ) : null}
       </section>
+      <AssetCredits />
     </main>
   )
 }

@@ -1,0 +1,32 @@
+Antiquity Print
+Creator: SciGho
+Copyright SciGho 2021
+
+Source: https://ninjikin.itch.io/font-antiquity-script
+Creator: https://ninjikin.itch.io/
+License: Creative Commons Attribution 4.0 International (CC BY 4.0)
+License URL: https://creativecommons.org/licenses/by/4.0/
+Legal code: https://creativecommons.org/licenses/by/4.0/legalcode
+
+The supplied antiquity-print.ttf is distributed unmodified. No glyphs,
+metadata, or license notices have been changed. CSS font selection,
+line spacing, and fallback fonts are part of Greywake's presentation.
+
+License provenance (verified 2026-09-11):
+The creator's itch.io page explicitly labels this pack CC-BY 4.0 and
+lists antiquity-print.ttf as a download. The creator also confirms on
+that page that commercial use is permitted with credit.
+The TTF's name table still contains the string "FontStruct Non-Commercial
+License". This original metadata is preserved. The grant used for this
+distribution is the separate CC BY 4.0 grant on the creator's itch.io page.
+
+Other embedded notices retained in the original font:
+FontStruct is a trademark of FontStruct.com
+https://fontstruct.com
+https://fontstruct.com/fontstructions/show/1955619/antiquity-print
+https://fontstruct.com/fontstructors/show/1948971/scigho
+
+When redistributing this font, retain creator attribution, copyright and
+license notices, link to the source and CC BY 4.0, and identify any changes.
+Do not imply the creator endorses Greywake or impose additional restrictions
+that prevent recipients from exercising the rights granted by CC BY 4.0.

@@ -23,6 +23,7 @@ import IdleProgressIndicator from './IdleProgressIndicator'
 import ActivitiesView from './ActivitiesView'
 import PrestigePanel from './PrestigePanel'
 import QuickSheet from './QuickSheet'
+import AssetCredits from './AssetCredits'
 import { itemLabels, skillLabels } from './gameLabels'
 
 type PrimaryDestination = 'character' | 'activities' | 'adventure' | 'city'
@@ -242,6 +243,7 @@ export default function GameShell({
             onWithdrawBankEquipment={onWithdrawBankEquipment}
           />
         ) : null}
+        <AssetCredits />
       </main>
 
       {!focusedRisk ? (
