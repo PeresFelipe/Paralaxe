@@ -68,9 +68,10 @@ O resultado deve orientar novas mudanças de layout e tecnologia. Não há meta 
 
 ### Verificação desta entrega
 
-- `pnpm build` e `pnpm lint` concluídos sem erros.
-- Bundle principal de produção: 339,87 kB, ou 95,60 kB com gzip; CSS: 44,08 kB, ou 9,35 kB com gzip. São tamanhos de build, não medições de velocidade no aparelho do jogador.
-- Service worker gerado com 27 entradas de precache, aproximadamente 5,7 MiB (5.790,09 KiB). O cache inclui as cenas, retratos, Pesca, Mineração, Lenhador, Herbologia, Metalurgia, Forja e Culinária animados/estáticos e ícones; os parâmetros legados `?v=` das artes são considerados no casamento com o precache.
+- `pnpm check` (lint, typecheck e testes) e `pnpm build` concluídos sem erros. A suíte validou também os 32 nós, custos, pré-requisitos e migração da Árvore de Prestígio.
+- Bundle principal de produção: 351,96 kB, ou 99,22 kB com gzip; CSS: 47,48 kB, ou 9,95 kB com gzip. São tamanhos de build, não medições de velocidade no aparelho do jogador.
+- Service worker gerado com 27 entradas de precache, aproximadamente 5,7 MiB (5.805,21 KiB). O cache inclui as cenas, retratos, Pesca, Mineração, Lenhador, Herbologia, Metalurgia, Forja e Culinária animados/estáticos e ícones; os parâmetros legados `?v=` das artes são considerados no casamento com o precache.
+- A aba `Personagem → Prestígio` apresenta os quatro ramos puros e quatro caminhos híbridos em cartões compactos; os nós permanecem bloqueados até as sete Skills alcançarem Prestígio I, conforme o GDD.
 - Conferência no navegador: criação de personagem, coleta de Cloch, continuidade ao consultar Culinária, identificação de materiais faltantes, atalho para Pesca, substituição de trabalho, produção de Scadán Assado e resultado no Inventário.
 - Escape fechou o Inventário rápido e devolveu o foco ao botão Inventário. A janela desktop inspecionada não apresentou overflow horizontal.
 - O layout mobile foi implementado por CSS e seletor nativo; esta conferência não simula um aparelho físico. Instalação PWA e reabertura sem rede não foram executadas neste preview HTTP de desenvolvimento.
@@ -81,6 +82,7 @@ O resultado deve orientar novas mudanças de layout e tecnologia. Não há meta 
 - Limpar os dados do navegador pode remover o save e o cache. PWA não substitui backup/exportação de saves.
 - Cache offline completo e instalação precisam ser conferidos em um deploy HTTPS; o preview de desenvolvimento não equivale a essa validação.
 - O registro mostra a última conclusão; resumo acumulado por sessão e onboarding contextual mais amplo permanecem evoluções de UX.
+- A Build 0.1 ainda não oferece o ritual de Prestígio das Skills até nível 99; por isso a árvore começa visível, porém bloqueada, até o requisito de progressão ser alcançado.
 - Leitor de tela, aparelhos reais e avaliação humana de ritmo não foram validados por uma suíte técnica.
 
 ## Reversão

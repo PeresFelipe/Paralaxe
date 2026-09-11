@@ -21,6 +21,7 @@ import {
   startIdleActivity,
   stopCraftingRecipe,
   stopIdleActivity,
+  unlockCharacterPrestigeNode,
   withdrawEquipmentFromBank,
   withdrawInventoryStackFromBank,
   type AttributeAllocation,
@@ -332,6 +333,17 @@ function App() {
     }
   }
 
+  async function handleUnlockPrestigeNode(nodeId: string) {
+    if (!activeSave) return
+
+    try {
+      const save = unlockCharacterPrestigeNode(activeSave, nodeId, new Date().toISOString())
+      await persistActive(save, 'Nó de Prestígio desbloqueado.')
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : 'Não foi possível desbloquear o nó de Prestígio.')
+    }
+  }
+
   async function handleDepositBankStack(definitionId: string, quantity: number) {
     if (!activeSave) return
     try {
@@ -433,6 +445,7 @@ function App() {
         onStopWork={handleStopWork}
         onEquip={handleEquip}
         onAllocateAttributes={handleAllocateAttributes}
+        onUnlockPrestigeNode={handleUnlockPrestigeNode}
         onDepositBankStack={handleDepositBankStack}
         onWithdrawBankStack={handleWithdrawBankStack}
         onDepositBankEquipment={handleDepositBankEquipment}

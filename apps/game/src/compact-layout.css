@@ -77,6 +77,9 @@ button, select, a, summary { touch-action: manipulation; }
 .technique-row { grid-template-columns: 28px 1fr; gap: 8px; padding: 8px 0; }
 .priority-index { width: 28px; height: 28px; font-size: .8125rem; }
 .technique-row small { font-size: .8125rem; }
+.prestige-node { min-height: 44px; padding: 8px; }
+.prestige-node__copy strong { font-size: .8125rem; }
+.prestige-node__copy small, .prestige-node__meta { font-size: .75rem; }
 .inventory-grid-runtime { gap: 8px; }
 .inventory-tile { gap: 4px; }
 .inventory-tile strong, .inventory-tile span { font-size: .8125rem; }

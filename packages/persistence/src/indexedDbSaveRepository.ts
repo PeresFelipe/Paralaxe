@@ -1,6 +1,7 @@
 import {
   SAVE_SCHEMA_VERSION,
   createDefaultConsumableSlots,
+  createInitialCharacterPrestige,
   createInitialSkillProgress,
   createStartingEquipmentState,
   type CombatState,
@@ -75,8 +76,14 @@ interface LegacyOfflineGameSaveV6 extends Omit<OfflineGameSave, 'saveSchemaVersi
   character: Omit<OfflineGameSave['character'], 'bank'>
 }
 
-interface LegacyOfflineGameSaveV7 extends Omit<OfflineGameSave, 'saveSchemaVersion'> {
+interface LegacyOfflineGameSaveV7 extends Omit<OfflineGameSave, 'saveSchemaVersion' | 'character'> {
   saveSchemaVersion: 7
+  character: Omit<OfflineGameSave['character'], 'prestige'>
+}
+
+interface LegacyOfflineGameSaveV8 extends Omit<OfflineGameSave, 'saveSchemaVersion' | 'character'> {
+  saveSchemaVersion: 8
+  character: Omit<OfflineGameSave['character'], 'prestige'>
 }
 
 function requestToPromise<T>(request: IDBRequest<T>) {
@@ -181,10 +188,26 @@ function normalizeTravellerRingGift(
   }
 }
 
-function withEmptyBank(
-  character: Omit<OfflineGameSave['character'], 'bank'>,
+function withInitialCharacterPrestige(
+  character: Omit<OfflineGameSave['character'], 'prestige'> | OfflineGameSave['character'],
 ): OfflineGameSave['character'] {
-  return normalizeTravellerRingGift({ ...character, bank: { inventory: [], equipmentItems: [] } })
+  const existing = (character as Partial<OfflineGameSave['character']>).prestige
+
+  return {
+    ...character,
+    prestige: existing ?? createInitialCharacterPrestige(),
+  } as OfflineGameSave['character']
+}
+
+function withEmptyBank(
+  character:
+    | Omit<OfflineGameSave['character'], 'bank'>
+    | Omit<OfflineGameSave['character'], 'bank' | 'prestige'>,
+): OfflineGameSave['character'] {
+  return normalizeTravellerRingGift(withInitialCharacterPrestige({
+    ...character,
+    bank: { inventory: [], equipmentItems: [] },
+  }))
 }
 
 function migrateLegacyCharacter(character: LegacyCharacterState): OfflineGameSave['character'] {
@@ -196,6 +219,7 @@ function migrateLegacyCharacter(character: LegacyCharacterState): OfflineGameSav
     equipment: startingEquipment.equipped,
     equipmentItems: startingEquipment.equipmentItems,
     nextEquipmentSequence: startingEquipment.nextEquipmentSequence,
+    prestige: createInitialCharacterPrestige(),
   })
 }
 
@@ -210,12 +234,21 @@ function migrateSave(rawSave: unknown): OfflineGameSave {
     return rawSave as OfflineGameSave
   }
 
+  if (candidate.saveSchemaVersion === 8) {
+    const legacy = rawSave as LegacyOfflineGameSaveV8
+    return {
+      ...legacy,
+      saveSchemaVersion: SAVE_SCHEMA_VERSION,
+      character: normalizeTravellerRingGift(withInitialCharacterPrestige(legacy.character)),
+    }
+  }
+
   if (candidate.saveSchemaVersion === 7) {
     const legacy = rawSave as LegacyOfflineGameSaveV7
     return {
       ...legacy,
       saveSchemaVersion: SAVE_SCHEMA_VERSION,
-      character: normalizeTravellerRingGift(legacy.character),
+      character: normalizeTravellerRingGift(withInitialCharacterPrestige(legacy.character)),
     }
   }
 

@@ -185,6 +185,44 @@ button:disabled { cursor: not-allowed; opacity: .46; }
 .inventory-tile strong, .inventory-tile span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .inventory-tile strong { font-size: .72rem; }.inventory-tile span { color: var(--muted); font-size: .68rem; }
 
+.prestige-view { display: grid; gap: 14px; }
+.prestige-summary { display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; }
+.prestige-summary h2 { margin: 3px 0 7px; }
+.prestige-summary p:last-child { margin-bottom: 0; }
+.prestige-total { min-width: 176px; display: grid; gap: 2px; padding: 11px 13px; border: 1px solid #655239; border-radius: 5px; background: rgba(169,133,85,.06); text-align: right; }
+.prestige-total strong { color: #e1c28f; font: 600 1.65rem Georgia, serif; line-height: 1; }
+.prestige-total span { color: var(--text); font-size: .72rem; }
+.prestige-total small { color: var(--muted); font-size: .65rem; }
+.prestige-gate { display: flex; align-items: center; justify-content: space-between; gap: 18px; border-color: #5d4c37; background: rgba(169,133,85,.04); }
+.prestige-gate h3 { margin: 2px 0 5px; }
+.prestige-gate p:last-child { margin-bottom: 0; }
+.prestige-gate--ready { border-color: #657052; background: rgba(120,138,114,.06); }
+.prestige-readiness { flex-shrink: 0; color: #d1b47f; font-size: .78rem; }
+.prestige-branch-grid { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 10px; align-items: start; }
+.prestige-branch { display: grid; gap: 10px; min-width: 0; padding: 14px; }
+.prestige-branch-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; padding-bottom: 9px; border-bottom: 1px solid var(--line); }
+.prestige-branch-heading h3 { margin: 2px 0 0; }
+.prestige-branch-heading > span { color: #c4a377; font-size: .72rem; font-variant-numeric: tabular-nums; }
+.prestige-node-list { display: grid; gap: 6px; }
+.prestige-node { display: grid; grid-template-columns: 24px minmax(0,1fr); gap: 8px; align-items: start; min-width: 0; padding: 9px; border: 1px solid var(--line); border-radius: 4px; background: #14191c; color: var(--text); text-align: left; }
+button.prestige-node { cursor: pointer; }
+button.prestige-node:hover:not(:disabled) { border-color: #756244; background: #1d2325; }
+.prestige-node--available { border-color: #806a46; background: rgba(169,133,85,.06); }
+.prestige-node--unlocked { border-color: #63705b; background: rgba(120,138,114,.08); }
+.prestige-node__tier { width: 24px; height: 24px; display: grid; place-items: center; border: 1px solid #5b4d3a; border-radius: 50%; color: #c4a377; font-size: .65rem; font-weight: 700; }
+.prestige-node--unlocked .prestige-node__tier { border-color: #63705b; color: #b4c1a9; }
+.prestige-node__copy { display: grid; gap: 3px; min-width: 0; }
+.prestige-node__copy strong { overflow-wrap: anywhere; font-size: .76rem; }
+.prestige-node__copy small { color: var(--muted); font-size: .65rem; line-height: 1.35; }
+.prestige-node__meta { grid-column: 2; color: #bd9b67; font-size: .62rem; line-height: 1.35; }
+.prestige-node--locked .prestige-node__meta { color: #8f918c; }
+.prestige-node--unlocked .prestige-node__meta { color: #a9bf9c; }
+.prestige-hybrid-panel { display: grid; gap: 10px; }
+.prestige-hybrid-panel .panel-heading { margin-bottom: 0; }
+.prestige-hybrid-grid { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 10px; }
+.prestige-hybrid-path { display: grid; gap: 6px; min-width: 0; }
+.prestige-hybrid-path h4 { margin: 0 0 2px; color: #c4a377; font-size: .75rem; font-weight: 700; letter-spacing: .04em; }
+
 .activity-current-card { display: grid; grid-template-columns: auto 1fr auto; gap: 12px; align-items: center; padding: 13px 15px; border: 1px solid #5c4d39; border-radius: var(--radius); background: rgba(169,133,85,.05); }
 .activity-current-card strong { font-size: .82rem; }
 .activity-current-card small { color: var(--muted); }
@@ -328,4 +366,15 @@ button:disabled { cursor: not-allowed; opacity: .46; }
 @media (max-width: 760px) {
   .bank-columns, .bank-capacity-grid { grid-template-columns: 1fr; }
   .bank-row { align-items: flex-start; flex-direction: column; }
+}
+
+@media (max-width: 980px) {
+  .prestige-branch-grid, .prestige-hybrid-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+}
+
+@media (max-width: 720px) {
+  .prestige-summary, .prestige-gate { flex-direction: column; align-items: stretch; gap: 12px; }
+  .prestige-total { min-width: 0; text-align: left; }
+  .prestige-readiness { align-self: flex-start; }
+  .prestige-branch-grid, .prestige-hybrid-grid { grid-template-columns: 1fr; }
 }

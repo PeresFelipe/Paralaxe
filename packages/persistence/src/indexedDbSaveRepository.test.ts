@@ -106,7 +106,8 @@ describe('IndexedDB save repository', () => {
     const repositoryAfterReload = createIndexedDbSaveRepository()
     const loaded = await repositoryAfterReload.get(save.saveId)
 
-    expect(loaded?.saveSchemaVersion).toBe(8)
+    expect(loaded?.saveSchemaVersion).toBe(9)
+    expect(loaded?.character.prestige).toEqual({ level: 0, points: 0, unlockedNodeIds: [] })
     expect(loaded?.character.bank).toEqual({ inventory: [], equipmentItems: [] })
     expect(loaded?.dungeon.contractAccepted).toBe(true)
     expect(loaded?.dungeon.activeRun?.seed).toBe(991337)
@@ -144,9 +145,35 @@ describe('IndexedDB save repository', () => {
     const ringId = loaded?.character.equipment.ring1
     const ring = loaded?.character.equipmentItems.find((item) => item.instanceId === ringId)
 
-    expect(loaded?.saveSchemaVersion).toBe(8)
+    expect(loaded?.saveSchemaVersion).toBe(9)
+    expect(loaded?.character.prestige).toEqual({ level: 0, points: 0, unlockedNodeIds: [] })
     expect(ring?.definitionId).toBe('item.equipment.traveller-ring')
     expect(loaded?.character.inventory.some((stack) => stack.definitionId === 'item.equipment.traveller-ring')).toBe(false)
+  })
+
+  it('adds the empty character Prestige state when loading a v8 save', async () => {
+    const current = createOfflineGameSave({
+      saveId: 'legacy-prestige',
+      createdAt: '2026-09-09T12:00:00.000Z',
+      contentVersion: '0.1.0-dev',
+      characterName: 'Ailith',
+      characterClass,
+      gift,
+    })
+    const legacyCharacter = Object.fromEntries(
+      Object.entries(current.character).filter(([key]) => key !== 'prestige'),
+    )
+    const legacy = {
+      ...current,
+      saveSchemaVersion: 8 as const,
+      character: legacyCharacter,
+    }
+    const repository = createIndexedDbSaveRepository()
+    await repository.put(legacy as unknown as OfflineGameSave)
+    const loaded = await repository.get('legacy-prestige')
+
+    expect(loaded?.saveSchemaVersion).toBe(9)
+    expect(loaded?.character.prestige).toEqual({ level: 0, points: 0, unlockedNodeIds: [] })
   })
 
 })

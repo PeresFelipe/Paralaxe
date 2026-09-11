@@ -21,11 +21,12 @@ import AttributePanel from './AttributePanel'
 import BankPanel from './BankPanel'
 import IdleProgressIndicator from './IdleProgressIndicator'
 import ActivitiesView from './ActivitiesView'
+import PrestigePanel from './PrestigePanel'
 import QuickSheet from './QuickSheet'
 import { itemLabels, skillLabels } from './gameLabels'
 
 type PrimaryDestination = 'character' | 'activities' | 'adventure' | 'city'
-type CharacterTab = 'overview' | 'attributes' | 'equipment' | 'techniques' | 'inventory'
+type CharacterTab = 'overview' | 'attributes' | 'equipment' | 'techniques' | 'inventory' | 'prestige'
 type AdventureView = 'overview' | 'service' | 'dungeon'
 type CityView = 'overview' | 'tavern' | 'market' | 'smith' | 'bank' | 'reliquary'
 type QuickPanel = 'journey' | 'inventory' | null
@@ -45,6 +46,7 @@ type GameShellProps = {
   onStopWork: () => Promise<void>
   onEquip: (instanceId: string) => Promise<void>
   onAllocateAttributes: (allocation: AttributeAllocation) => Promise<void>
+  onUnlockPrestigeNode: (nodeId: string) => Promise<void>
   onDepositBankStack: (definitionId: string, quantity: number) => Promise<void>
   onWithdrawBankStack: (definitionId: string, quantity: number) => Promise<void>
   onDepositBankEquipment: (instanceId: string) => Promise<void>
@@ -110,6 +112,7 @@ export default function GameShell({
   onStopWork,
   onEquip,
   onAllocateAttributes,
+  onUnlockPrestigeNode,
   onDepositBankStack,
   onWithdrawBankStack,
   onDepositBankEquipment,
@@ -195,6 +198,7 @@ export default function GameShell({
             onEquip={onEquip}
             onStartRecipe={onStartRecipe}
             onAllocateAttributes={onAllocateAttributes}
+            onUnlockPrestigeNode={onUnlockPrestigeNode}
           />
         ) : null}
 
@@ -295,6 +299,7 @@ function CharacterView({
   onEquip,
   onStartRecipe,
   onAllocateAttributes,
+  onUnlockPrestigeNode,
 }: {
   save: OfflineGameSave
   tab: CharacterTab
@@ -302,6 +307,7 @@ function CharacterView({
   onEquip: (instanceId: string) => Promise<void>
   onStartRecipe: (recipeDefinitionId: string, targetEquipmentInstanceId?: string | null) => Promise<void>
   onAllocateAttributes: (allocation: AttributeAllocation) => Promise<void>
+  onUnlockPrestigeNode: (nodeId: string) => Promise<void>
 }) {
   const upgradeRecipe = INITIAL_CRAFTING_RECIPES.find((recipe) => recipe.output.kind === 'equipment-upgrade')
 
@@ -310,7 +316,7 @@ function CharacterView({
       <div className="view-heading"><div><p className="section-kicker">Personagem</p><h1 className="display-title">{save.character.name}</h1><p className="muted">Visão geral do personagem e de sua preparação.</p></div></div>
       <div className="subnav" aria-label="Personagem">
         {([
-          ['overview', 'Visão Geral'], ['attributes', 'Atributos'], ['equipment', 'Equipamento'], ['techniques', 'Técnicas'], ['inventory', 'Inventário'],
+          ['overview', 'Visão Geral'], ['attributes', 'Atributos'], ['equipment', 'Equipamento'], ['techniques', 'Técnicas'], ['inventory', 'Inventário'], ['prestige', 'Prestígio'],
         ] as const).map(([id, label]) => <button key={id} type="button" className={tab === id ? 'active' : ''} aria-pressed={tab === id} onClick={() => onTab(id)}>{label}</button>)}
       </div>
 
@@ -352,6 +358,8 @@ function CharacterView({
       {tab === 'inventory' ? (
         <article className="panel dense-panel"><div className="panel-heading"><div><p className="section-kicker">Inventário</p><h2>Patrimônio seguro</h2></div><span className="status-chip">{save.character.inventory.length} pilha(s)</span></div><div className="inventory-grid-runtime">{save.character.inventory.length === 0 ? <p className="muted">Ainda não há itens aqui.</p> : save.character.inventory.map((stack) => <div className="inventory-tile" key={stack.definitionId}><div className="item-thumb" aria-hidden="true">{(itemLabels[stack.definitionId] ?? stack.definitionId).slice(0, 1)}</div><strong>{itemLabels[stack.definitionId] ?? stack.definitionId}</strong><span>×{stack.quantity}</span></div>)}</div></article>
       ) : null}
+
+      {tab === 'prestige' ? <PrestigePanel save={save} onUnlockNode={onUnlockPrestigeNode} /> : null}
     </section>
   )
 }

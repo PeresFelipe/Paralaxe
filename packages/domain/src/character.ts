@@ -32,6 +32,20 @@ export interface CharacterAttributes {
   faith: number
 }
 
+export interface CharacterPrestigeState {
+  level: number
+  points: number
+  unlockedNodeIds: string[]
+}
+
+export function createInitialCharacterPrestige(): CharacterPrestigeState {
+  return {
+    level: 0,
+    points: 0,
+    unlockedNodeIds: [],
+  }
+}
+
 export type CharacterClassId =
   | 'warrior'
   | 'mage'
@@ -108,9 +122,10 @@ export interface CharacterState {
   knownAbilityIds: string[]
   activeAbilitySlots: [string | null, string | null, string | null, string | null]
   currentLocationId: string
+  prestige: CharacterPrestigeState
 }
 
-export const SAVE_SCHEMA_VERSION = 8 as const
+export const SAVE_SCHEMA_VERSION = 9 as const
 
 export interface OfflineGameSave {
   saveId: string
@@ -243,6 +258,7 @@ export function createOfflineGameSave(input: CreateOfflineGameSaveInput): Offlin
       knownAbilityIds: [startingAbilityId],
       activeAbilitySlots: [startingAbilityId, null, null, null],
       currentLocationId: 'free-city.tavern',
+      prestige: createInitialCharacterPrestige(),
     },
     skills: createInitialSkillProgress(),
     idle: { activeActivity: null },
