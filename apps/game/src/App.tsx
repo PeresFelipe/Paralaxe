@@ -30,6 +30,7 @@ import {
 } from '@greywake/domain'
 import { createIndexedDbSaveRepository } from '@greywake/persistence'
 import GameShell from './GameShell'
+import WebGameStatus from './WebGameStatus'
 
 const saveRepository = createIndexedDbSaveRepository()
 
@@ -122,6 +123,7 @@ function App() {
   const [selectedGiftId, setSelectedGiftId] = useState<GiftId | null>(null)
   const [creationStep, setCreationStep] = useState(0)
   const [message, setMessage] = useState<string | null>(null)
+  const [lastWorkResult, setLastWorkResult] = useState<string | null>(null)
   const [offlineSummary, setOfflineSummary] = useState<OfflineSummary | null>(null)
   const [isSaving, setIsSaving] = useState(false)
   const [riskActive, setRiskActive] = useState(false)
@@ -159,7 +161,12 @@ function App() {
       void saveRepository.put(result.save).then(() => {
         setActiveSave(result.save)
         setSaves((current) => updateSaveInList(current, result.save))
-        if (result.text) setMessage(result.text)
+        if (result.text) {
+          setLastWorkResult(result.text)
+          if (!result.save.idle.activeActivity && !result.save.crafting.activeRecipe) setMessage(result.text)
+        }
+      }).catch((error: unknown) => {
+        setMessage(error instanceof Error ? error.message : 'Não foi possível salvar o progresso da atividade.')
       })
     }, 5000)
 
@@ -219,6 +226,7 @@ function App() {
   async function handleLoadSave(saveId: string) {
     setMessage(null)
     setOfflineSummary(null)
+    setLastWorkResult(null)
     try {
       const stored = await saveRepository.get(saveId)
       if (!stored) {
@@ -377,6 +385,7 @@ function App() {
 
   function switchSave() {
     setActiveSave(null)
+    setLastWorkResult(null)
     setOfflineSummary(null)
     setRiskActive(false)
     setMessage(null)
@@ -407,9 +416,13 @@ function App() {
     }
 
     return (
+      <>
+      <WebGameStatus canUpdate={false} />
       <GameShell
         save={activeSave}
         message={message}
+        lastWorkResult={lastWorkResult}
+        onDismissMessage={() => setMessage(null)}
         riskActive={riskActive}
         onRiskStateChange={setRiskActive}
         onSwitchSave={switchSave}
@@ -425,12 +438,13 @@ function App() {
         onDepositBankEquipment={handleDepositBankEquipment}
         onWithdrawBankEquipment={handleWithdrawBankEquipment}
       />
+      </>
     )
   }
 
   if (screen === 'save-list') {
     return (
-      <main className="entry-shell">
+      <main className="entry-shell"><WebGameStatus canUpdate />
         <header className="entry-header"><div><p className="section-kicker">Greywake</p><strong className="entry-brand">Build 0.1 · Offline</strong></div><button className="primary-button compact" type="button" onClick={startNewSave}>Novo personagem</button></header>
         <section className="entry-intro"><p className="section-kicker">Continuar</p><h1 className="display-title">Escolha um personagem</h1><p className="muted">Saves locais, persistentes e separados de qualquer futuro modo Online.</p></section>
         {message ? <p className="inline-message">{message}</p> : null}
@@ -449,7 +463,7 @@ function App() {
   }
 
   return (
-    <main className="entry-shell">
+    <main className="entry-shell"><WebGameStatus canUpdate={creationStep === 0 && !isSaving} />
       <header className="entry-header"><div><p className="section-kicker">Novo jogo</p><strong className="entry-brand">Greywake</strong></div>{saves.length > 0 ? <button className="ghost-button" type="button" onClick={() => setScreen('save-list')}>Voltar aos saves</button> : null}</header>
       <section className="creation-stage">
         <div className="creation-progress" aria-label={`Etapa ${creationStep + 1} de 5`}>

@@ -1,27 +1,8 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { INITIAL_CRAFTING_RECIPES, INITIAL_IDLE_ACTIVITIES } from '@greywake/content'
 import type { OfflineGameSave, SkillId } from '@greywake/domain'
 
-const skillLabels: Record<SkillId, string> = {
-  mining: 'Mineração',
-  woodcutting: 'Lenhador',
-  fishing: 'Pesca',
-  herbology: 'Herbologia',
-  metallurgy: 'Metalurgia',
-  smithing: 'Forja',
-  cooking: 'Culinária',
-}
-
-const itemLabels: Record<string, string> = {
-  'material.cloch': 'Cloch',
-  'material.giuis': 'Giúis',
-  'material.scadan': 'Scadán',
-  'material.neantog': 'Neantóg',
-  'material.treated-cloch': 'Cloch Tratada',
-  'item.food.roasted-scadan': 'Scadán Assado',
-  'item.consumable.neantog-preparation': 'Preparado de Neantóg',
-  'item.consumable.field-preparation': 'Preparado de Campo',
-}
+import { itemLabels, skillLabels } from './gameLabels'
 
 type IdleProgressIndicatorProps = {
   save: OfflineGameSave
@@ -83,19 +64,60 @@ function getWorkProgress(save: OfflineGameSave): WorkProgress | null {
 export default function IdleProgressIndicator({ save, compact = false, paused = false }: IdleProgressIndicatorProps) {
   const work = useMemo(() => getWorkProgress(save), [save])
   const [nowMs, setNowMs] = useState(() => Date.now())
+  const fillRef = useRef<HTMLSpanElement>(null)
+  const actionSeconds = work?.actionSeconds ?? 1
+  const remainderSeconds = work?.remainderSeconds ?? 0
+  const lastProcessedAt = work?.lastProcessedAt
 
   useEffect(() => {
-    if (!work || paused) return
-    const timer = window.setInterval(() => setNowMs(Date.now()), 100)
-    return () => window.clearInterval(timer)
-  }, [work, paused])
+    if (!lastProcessedAt) return
+    const fill = fillRef.current
+    const motion = window.matchMedia('(prefers-reduced-motion: reduce)')
+    let timer: number | undefined
+    let animation: Animation | undefined
+    const sample = () => {
+      const now = Date.now()
+      setNowMs(now)
+      const elapsed = paused ? 0 : Math.max(0, (now - Date.parse(lastProcessedAt)) / 1000)
+      return ((remainderSeconds + elapsed) % actionSeconds) / actionSeconds
+    }
+    const stop = () => {
+      window.clearInterval(timer)
+      animation?.cancel()
+      animation = undefined
+    }
+    const sync = () => {
+      stop()
+      if (document.hidden) return
+      const fraction = sample()
+      if (fill) fill.style.transform = `scaleX(${fraction})`
+      if (!paused && !motion.matches && fill?.animate) {
+        animation = fill.animate([{ transform: 'scaleX(0)' }, { transform: 'scaleX(1)' }], {
+          duration: actionSeconds * 1000, iterations: Infinity, easing: 'linear',
+        })
+        animation.currentTime = fraction * actionSeconds * 1000
+      }
+      if (!paused) timer = window.setInterval(() => {
+        const position = sample()
+        if (!animation && fill) fill.style.transform = `scaleX(${position})`
+      }, 1000)
+    }
+    sync()
+    document.addEventListener('visibilitychange', sync)
+    motion.addEventListener('change', sync)
+    return () => {
+      stop()
+      document.removeEventListener('visibilitychange', sync)
+      motion.removeEventListener('change', sync)
+    }
+  }, [lastProcessedAt, actionSeconds, remainderSeconds, paused])
 
   if (!work) {
     return (
       <div className={`idle-progress ${compact ? 'idle-progress--compact' : ''} idle-progress--empty`}>
         <div className="idle-progress__heading">
           <span><small>Atividade atual</small><strong>Nenhuma atividade</strong></span>
-          <em>Escolha uma atividade em Atividades</em>
+          {!compact ? <em>Pronto para começar</em> : null}
         </div>
       </div>
     )
@@ -115,7 +137,7 @@ export default function IdleProgressIndicator({ save, compact = false, paused = 
     <div className={`idle-progress ${compact ? 'idle-progress--compact' : ''} ${paused ? 'idle-progress--paused' : ''}`}>
       <div className="idle-progress__heading">
         <span><small>Atividade atual</small><strong>{work.title}</strong></span>
-        <em>{paused ? 'Pausada durante risco' : `${remaining.toFixed(1)} s`}</em>
+        <em>{paused ? 'Pausada durante risco' : `${Math.ceil(remaining)} s`}</em>
       </div>
       <div
         className="idle-progress__track"
@@ -125,12 +147,12 @@ export default function IdleProgressIndicator({ save, compact = false, paused = 
         aria-valuemax={100}
         aria-valuenow={Math.round(progress)}
       >
-        <span className="idle-progress__fill" style={{ width: `${progress}%` }} />
+        <span ref={fillRef} className="idle-progress__fill" />
       </div>
       {!compact ? (
         <div className="idle-progress__details">
           <span><small>Próxima conclusão</small><strong>{paused ? 'Retoma ao voltar para um estado seguro' : work.nextResult}</strong></span>
-          <span><small>Longo prazo</small><strong>{skillLabels[work.skillId]} Nv. {skill.level} · {skill.xp} XP</strong></span>
+          <span><small>Habilidade em curso</small><strong>{skillLabels[work.skillId]} Nv. {skill.level} · {skill.xp} XP</strong></span>
         </div>
       ) : null}
     </div>

@@ -18,6 +18,8 @@ O próximo marco de produto ainda deve ser definido explicitamente antes de inic
 
 O layout compacto da Build 0.1 está registrado como experimento visual reversível em `docs/implementation/LAYOUT-0.1-COMPACT.md`. O layout anterior foi preservado em `backup/layout-0.1-740e1c5` antes da aplicação do passe.
 
+A evolução de usabilidade web foi aplicada sobre a Build 0.1, com pesquisa documentada em [WEB-GAME-USABILITY-2026-09.md](../research/WEB-GAME-USABILITY-2026-09.md). Ela adiciona PWA com cache de aplicação/artes, controles operacionais legíveis, Atividades com atalhos de materiais, progresso animado pelo navegador e painéis acessíveis por teclado. O estado anterior está preservado em `backup/web-usability-453dbba`. A instalação e o carregamento offline completo ainda precisam ser conferidos em um deploy HTTPS.
+
 Documento de fechamento do M6:
 
 ```text

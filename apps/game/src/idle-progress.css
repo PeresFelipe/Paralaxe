@@ -19,7 +19,7 @@
 .idle-progress__heading small,
 .idle-progress__details small {
   color: var(--muted);
-  font-size: .58rem;
+  font-size: .75rem;
   text-transform: uppercase;
   letter-spacing: .09em;
 }
@@ -34,7 +34,7 @@
 .idle-progress__heading em {
   flex: 0 0 auto;
   color: var(--iron);
-  font-size: .72rem;
+  font-size: .75rem;
   font-style: normal;
   font-variant-numeric: tabular-nums;
 }
@@ -52,7 +52,9 @@
   display: block;
   height: 100%;
   background: linear-gradient(90deg, var(--bronze-dark), var(--bronze));
-  transition: width 100ms linear;
+  width: 100%;
+  transform: scaleX(0);
+  transform-origin: left;
 }
 
 .idle-progress__fill::after {
@@ -78,12 +80,12 @@
 
 .idle-progress__details strong {
   color: var(--text);
-  font-size: .72rem;
+  font-size: .75rem;
   font-weight: 600;
 }
 
 .idle-progress--compact {
-  min-width: min(430px, 46vw);
+  min-width: 0;
   gap: 6px;
 }
 
@@ -108,7 +110,7 @@
 }
 
 .current-work .idle-progress {
-  width: min(430px, 46vw);
+  width: 100%;
 }
 
 @media (max-width: 760px) {

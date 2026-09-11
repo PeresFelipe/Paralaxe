@@ -20,6 +20,9 @@ import MarketWorkbench from './MarketWorkbench'
 import AttributePanel from './AttributePanel'
 import BankPanel from './BankPanel'
 import IdleProgressIndicator from './IdleProgressIndicator'
+import ActivitiesView from './ActivitiesView'
+import QuickSheet from './QuickSheet'
+import { itemLabels, skillLabels } from './gameLabels'
 
 type PrimaryDestination = 'character' | 'activities' | 'adventure' | 'city'
 type CharacterTab = 'overview' | 'attributes' | 'equipment' | 'techniques' | 'inventory'
@@ -30,6 +33,8 @@ type QuickPanel = 'journey' | 'inventory' | null
 type GameShellProps = {
   save: OfflineGameSave
   message: string | null
+  lastWorkResult: string | null
+  onDismissMessage: () => void
   riskActive: boolean
   onRiskStateChange: (active: boolean) => void
   onSwitchSave: () => void
@@ -46,46 +51,11 @@ type GameShellProps = {
   onWithdrawBankEquipment: (instanceId: string) => Promise<void>
 }
 
-const skillLabels: Record<SkillId, string> = {
-  mining: 'Mineração',
-  woodcutting: 'Lenhador',
-  fishing: 'Pesca',
-  herbology: 'Herbologia',
-  metallurgy: 'Metalurgia',
-  smithing: 'Forja',
-  cooking: 'Culinária',
-}
-
-const gatheringSkills: SkillId[] = ['mining', 'woodcutting', 'fishing', 'herbology']
-const productionSkills: SkillId[] = ['metallurgy', 'smithing', 'cooking']
-
-const itemLabels: Record<string, string> = {
-  'material.cloch': 'Cloch',
-  'material.giuis': 'Giúis',
-  'material.scadan': 'Scadán',
-  'material.neantog': 'Neantóg',
-  'material.treated-cloch': 'Cloch Tratada',
-  'item.food.roasted-scadan': 'Scadán Assado',
-  'item.consumable.neantog-preparation': 'Preparado de Neantóg',
-  'item.consumable.field-preparation': 'Preparado de Campo',
-  'item.consumable.crimson-flask': 'Frasco Carmesim',
-  'item.key.rusted': 'Chave Enferrujada',
-  'item.quest.nameless-stone': 'Pedra Sem Nome',
-  'item.equipment.traveller-ring': 'Anel do Viajante',
-  'item.garrison-supply-register': 'Registro de Suprimentos',
-  'item.treaty-fragment': 'Fragmento do Tratado',
-  'item.fairtheoir-fragment': 'Fragmento de Fairtheoir',
-}
-
 const combatCatalog = {
   getEquipmentDefinition,
   getAbilityDefinition: getCombatAbilityDefinition,
   getEnemyDefinition,
   getConsumableDefinition: getCombatConsumableDefinition,
-}
-
-function inventoryQuantity(save: OfflineGameSave, definitionId: string) {
-  return save.character.inventory.find((stack) => stack.definitionId === definitionId)?.quantity ?? 0
 }
 
 function activeWork(save: OfflineGameSave) {
@@ -128,6 +98,8 @@ function journeyCopy(save: OfflineGameSave) {
 export default function GameShell({
   save,
   message,
+  lastWorkResult,
+  onDismissMessage,
   riskActive,
   onRiskStateChange,
   onSwitchSave,
@@ -181,6 +153,7 @@ export default function GameShell({
 
   return (
     <div className={mainClass}>
+      <a className="skip-link" href="#game-content">Ir para o jogo</a>
       <header className="game-topbar">
         <div className="player-identity">
           <div className="avatar-placeholder" aria-hidden="true">{save.character.name.slice(0, 1).toUpperCase()}</div>
@@ -190,11 +163,11 @@ export default function GameShell({
           </div>
         </div>
         <div className="global-resources" aria-label="Estado global do personagem">
-          <div><span className="resource-sigil health-sigil">V</span><small>Vida</small><strong>{stats.maxHealth}</strong></div>
-          <div><span className="resource-sigil mana-sigil">M</span><small>Mana</small><strong>{stats.maxMana}</strong></div>
-          <div><span className="resource-sigil stamina-sigil">S</span><small>Stamina</small><strong>{stats.maxStamina}</strong></div>
+          <div><span className="resource-sigil health-sigil">V</span><small>Vida máx.</small><strong>{stats.maxHealth}</strong></div>
+          <div><span className="resource-sigil mana-sigil">M</span><small>Mana máx.</small><strong>{stats.maxMana}</strong></div>
+          <div><span className="resource-sigil stamina-sigil">S</span><small>Stamina máx.</small><strong>{stats.maxStamina}</strong></div>
           <div><span className="resource-sigil coin-sigil">◇</span><small>Moeda</small><strong>{save.character.gold}</strong></div>
-          <button className="icon-button" type="button" onClick={onSwitchSave} aria-label="Trocar save">⋯</button>
+          <button className="icon-button" type="button" onClick={onSwitchSave} disabled={focusedRisk} aria-label="Trocar personagem" title="Trocar personagem">⋯</button>
         </div>
       </header>
 
@@ -205,15 +178,14 @@ export default function GameShell({
           ['adventure', 'Aventura'],
           ['city', 'Cidade'],
         ] as const).map(([id, label]) => (
-          <button key={id} type="button" className={destination === id ? 'active' : ''} onClick={() => go(id)}>{label}</button>
+          <button key={id} type="button" className={destination === id ? 'active' : ''} aria-current={destination === id ? 'page' : undefined} onClick={() => go(id)}>{label}</button>
         ))}
       </nav>
 
       {preparationActive && !focusedRisk ? <div className="preparation-state-strip"><span>PREPARAÇÃO</span><strong>Dún Liath · Idle continua</strong></div> : null}
       {focusedRisk ? <div className="risk-state-strip"><span>ESTADO DE RISCO</span><strong>{dungeonActive ? 'Dún Liath · Idle pausado' : 'Combate · Idle pausado'}</strong></div> : null}
 
-      <main className="game-content">
-        {message ? <p className="global-message" role="status">{message}</p> : null}
+      <main className="game-content" id="game-content" tabIndex={-1}>
 
         {destination === 'character' ? (
           <CharacterView
@@ -229,6 +201,7 @@ export default function GameShell({
         {destination === 'activities' ? (
           <ActivitiesView
             save={save}
+            lastWorkResult={lastWorkResult}
             selectedSkill={selectedSkill}
             onSelectSkill={setSelectedSkill}
             onStartActivity={onStartActivity}
@@ -270,23 +243,25 @@ export default function GameShell({
             className="current-work"
             type="button"
             onClick={() => {
-              if (!work) return
               setDestination('activities')
-              setSelectedSkill(work.skillId)
+              setQuickPanel(null)
+              if (work) setSelectedSkill(work.skillId)
             }}
           >
             <span aria-hidden="true">⌁</span>
             <IdleProgressIndicator save={save} compact />
           </button>
           <div className="continuity-actions">
-            <button type="button" onClick={() => setQuickPanel('inventory')}>Inventário</button>
-            <button type="button" onClick={() => setQuickPanel('journey')}>Jornada · {journey.title}</button>
+            <button type="button" aria-haspopup="dialog" onClick={() => setQuickPanel('inventory')}>Inventário</button>
+            <button type="button" aria-haspopup="dialog" onClick={() => setQuickPanel('journey')}>Jornada</button>
           </div>
         </footer>
       ) : null}
 
+      {message ? <div className="game-notice"><p role="status">{message}</p><button type="button" onClick={onDismissMessage} aria-label="Dispensar mensagem">×</button></div> : null}
+
       {quickPanel === 'inventory' && !focusedRisk ? (
-        <aside className="side-sheet" aria-label="Inventário rápido">
+        <QuickSheet label="Inventário rápido" onClose={() => setQuickPanel(null)}>
           <button className="sheet-close" type="button" onClick={() => setQuickPanel(null)} aria-label="Fechar">×</button>
           <p className="section-kicker">Consulta rápida</p>
           <h2 className="display-title">Inventário</h2>
@@ -296,18 +271,18 @@ export default function GameShell({
             ))}
           </div>
           <button className="ghost-button full-width" type="button" onClick={openFullInventory}>Abrir Inventário completo</button>
-        </aside>
+        </QuickSheet>
       ) : null}
 
       {quickPanel === 'journey' && !focusedRisk ? (
-        <aside className="side-sheet" aria-label="Jornada">
+        <QuickSheet label="Jornada" onClose={() => setQuickPanel(null)}>
           <button className="sheet-close" type="button" onClick={() => setQuickPanel(null)} aria-label="Fechar">×</button>
           <p className="section-kicker">Continuidade</p>
           <h2 className="display-title">Jornada</h2>
           <div className="journey-section"><span>AGORA</span><strong>{work?.title ?? 'Sem atividade Idle'}</strong></div>
           <div className="journey-section"><span>EM ANDAMENTO</span><strong>{journey.title}</strong><p>{journey.body}</p></div>
           <button className="ghost-button full-width" type="button" onClick={() => openAdventure(save.dungeon.activeRun ? 'dungeon' : 'overview')}>Ver em Aventura</button>
-        </aside>
+        </QuickSheet>
       ) : null}
     </div>
   )
@@ -333,10 +308,10 @@ function CharacterView({
   return (
     <section className="feature-view">
       <div className="view-heading"><div><p className="section-kicker">Personagem</p><h1 className="display-title">{save.character.name}</h1><p className="muted">Visão geral do personagem e de sua preparação.</p></div></div>
-      <div className="subnav" role="tablist" aria-label="Personagem">
+      <div className="subnav" aria-label="Personagem">
         {([
           ['overview', 'Visão Geral'], ['attributes', 'Atributos'], ['equipment', 'Equipamento'], ['techniques', 'Técnicas'], ['inventory', 'Inventário'],
-        ] as const).map(([id, label]) => <button key={id} type="button" className={tab === id ? 'active' : ''} onClick={() => onTab(id)}>{label}</button>)}
+        ] as const).map(([id, label]) => <button key={id} type="button" className={tab === id ? 'active' : ''} aria-pressed={tab === id} onClick={() => onTab(id)}>{label}</button>)}
       </div>
 
       {tab === 'overview' ? (
@@ -377,76 +352,6 @@ function CharacterView({
       {tab === 'inventory' ? (
         <article className="panel dense-panel"><div className="panel-heading"><div><p className="section-kicker">Inventário</p><h2>Patrimônio seguro</h2></div><span className="status-chip">{save.character.inventory.length} pilha(s)</span></div><div className="inventory-grid-runtime">{save.character.inventory.length === 0 ? <p className="muted">Ainda não há itens aqui.</p> : save.character.inventory.map((stack) => <div className="inventory-tile" key={stack.definitionId}><div className="item-thumb" aria-hidden="true">{(itemLabels[stack.definitionId] ?? stack.definitionId).slice(0, 1)}</div><strong>{itemLabels[stack.definitionId] ?? stack.definitionId}</strong><span>×{stack.quantity}</span></div>)}</div></article>
       ) : null}
-    </section>
-  )
-}
-
-function ActivitiesView({
-  save,
-  selectedSkill,
-  onSelectSkill,
-  onStartActivity,
-  onStartRecipe,
-  onStopWork,
-}: {
-  save: OfflineGameSave
-  selectedSkill: SkillId
-  onSelectSkill: (skill: SkillId) => void
-  onStartActivity: (id: string) => Promise<void>
-  onStartRecipe: (id: string) => Promise<void>
-  onStopWork: () => Promise<void>
-}) {
-  const progress = save.skills[selectedSkill]
-  const activities = INITIAL_IDLE_ACTIVITIES.filter((activity) => activity.skillId === selectedSkill)
-  const recipes = INITIAL_CRAFTING_RECIPES.filter((recipe) => recipe.skillId === selectedSkill && recipe.output.kind !== 'equipment-upgrade')
-  const work = activeWork(save)
-  const isGathering = gatheringSkills.includes(selectedSkill)
-
-  return (
-    <section className="feature-view">
-      <div className="view-heading"><div><p className="section-kicker">Atividades</p><h1 className="display-title">{skillLabels[selectedSkill]}</h1><p className="muted">Uma atividade Idle por vez. Navegar por áreas seguras não a interrompe.</p></div>{work ? <button className="ghost-button" type="button" onClick={() => void onStopWork()}>Parar atividade</button> : null}</div>
-
-      <div className="activities-layout">
-        <aside className="activities-skill-rail" aria-label="Skills de atividades">
-          <div className="activity-skill-group">
-            <h2 className="section-title-runtime">Coleta</h2>
-            <div className="skill-card-grid">{gatheringSkills.map((skillId) => <button className={`skill-card ${selectedSkill === skillId ? 'active' : ''}`} type="button" key={skillId} onClick={() => onSelectSkill(skillId)}><span>{skillLabels[skillId]}</span><strong>Nv. {save.skills[skillId].level}</strong></button>)}</div>
-          </div>
-          <div className="activity-skill-group">
-            <h2 className="section-title-runtime">Produção</h2>
-            <div className="skill-card-grid production-cards">{productionSkills.map((skillId) => <button className={`skill-card ${selectedSkill === skillId ? 'active' : ''}`} type="button" key={skillId} onClick={() => onSelectSkill(skillId)}><span>{skillLabels[skillId]}</span><strong>Nv. {save.skills[skillId].level}</strong></button>)}</div>
-          </div>
-        </aside>
-
-        <div className="activities-workspace">
-          <div className="activity-current-card"><IdleProgressIndicator save={save} /></div>
-
-          <div className="skill-detail-layout section-gap">
-            <div className={`context-art${selectedSkill === 'fishing' ? ' context-art--individual' : ''}`} aria-hidden="true">
-              {selectedSkill === 'fishing' ? (
-                <picture>
-                  <source media="(prefers-reduced-motion: no-preference)" srcSet="/art/activities/fishing.gif?v=1" />
-                  <img src="/art/activities/fishing-still.png?v=1" alt="" width={480} height={270} decoding="async" />
-                </picture>
-              ) : <span>ARTE 16:9 · {skillLabels[selectedSkill].toUpperCase()}</span>}
-            </div>
-            <aside className="panel skill-progress-panel"><p className="section-kicker">Progresso da Skill</p><h2>{skillLabels[selectedSkill]}</h2><div className="fact-row"><span>Nível</span><strong>{progress.level}</strong></div><div className="fact-row"><span>XP atual</span><strong>{progress.xp}</strong></div><div className="fact-row"><span>Prestígio</span><strong>{progress.prestige}</strong></div></aside>
-          </div>
-
-          <div className="activity-options section-gap">
-            {isGathering ? activities.map((activity) => {
-              const active = save.idle.activeActivity?.activityDefinitionId === activity.id
-              const unlocked = progress.level >= activity.requiredSkillLevel
-              return <article className={`activity-option panel ${active ? 'selected-card' : ''}`} key={activity.id}><div className="item-thumb" aria-hidden="true">{activity.resultName.slice(0, 1)}</div><div><p className="section-kicker">Recurso</p><h3>{activity.resultName}</h3><div className="facts-grid compact-facts"><div><span>Tempo</span><strong>{activity.actionSeconds}s</strong></div><div><span>XP</span><strong>+{activity.skillXpPerAction}</strong></div><div><span>Possuído</span><strong>{inventoryQuantity(save, activity.resultItemDefinitionId)}</strong></div><div><span>Requisito</span><strong>Nv. {activity.requiredSkillLevel}</strong></div></div>{active ? <span className="status-chip">ATIVIDADE ATUAL</span> : <button className="primary-button compact" type="button" disabled={!unlocked} onClick={() => void onStartActivity(activity.id)}>Iniciar {activity.resultName}</button>}</div></article>
-            }) : recipes.map((recipe) => {
-              const active = save.crafting.activeRecipe?.recipeDefinitionId === recipe.id
-              const enough = recipe.ingredients.every((ingredient) => inventoryQuantity(save, ingredient.definitionId) >= ingredient.quantity)
-              return <article className={`activity-option panel ${active ? 'selected-card' : ''}`} key={recipe.id}><div className="item-thumb" aria-hidden="true">{recipe.name.slice(0, 1)}</div><div><p className="section-kicker">Receita</p><h3>{recipe.name}</h3><div className="ingredient-list">{recipe.ingredients.map((ingredient) => { const owned = inventoryQuantity(save, ingredient.definitionId); return <div key={ingredient.definitionId}><span>{itemLabels[ingredient.definitionId] ?? ingredient.definitionId}</span><strong>{owned} / {ingredient.quantity}</strong></div> })}</div><div className="facts-grid compact-facts"><div><span>Tempo</span><strong>{recipe.actionSeconds}s</strong></div><div><span>XP</span><strong>+{recipe.skillXpPerAction}</strong></div></div>{!enough ? <p className="fact-warning">Materiais insuficientes para iniciar.</p> : null}{active ? <span className="status-chip">ATIVIDADE ATUAL</span> : <button className="primary-button compact" type="button" disabled={!enough} onClick={() => void onStartRecipe(recipe.id)}>Iniciar produção</button>}</div></article>
-            })}
-            {activities.length === 0 && recipes.length === 0 ? <p className="muted">Nenhuma opção de conteúdo implementada para esta Skill nesta build.</p> : null}
-          </div>
-        </div>
-      </div>
     </section>
   )
 }

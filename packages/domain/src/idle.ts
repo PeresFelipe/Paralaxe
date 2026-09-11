@@ -59,6 +59,10 @@ const SKILL_XP_TO_NEXT_LEVEL = [40, 60, 80, 110, 140, 180, 220, 270, 320] as con
 const BASE_OFFLINE_LIMIT_SECONDS = 4 * 60 * 60
 const OFFLINE_BONUS_PER_TEN_LEVELS_SECONDS = 2 * 60 * 60
 
+export function getSkillXpForNextLevel(level: number): number | null {
+  return SKILL_XP_TO_NEXT_LEVEL[level - 1] ?? null
+}
+
 export function createInitialSkillProgress(): SkillProgressById {
   return Object.fromEntries(
     SKILL_IDS.map((skillId) => [skillId, { level: 1, xp: 0, prestige: 0 }]),

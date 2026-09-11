@@ -16,7 +16,8 @@
     "@greywake/persistence": "workspace:*",
     "@greywake/ui": "workspace:*",
     "react": "^19.2.8",
-    "react-dom": "^19.2.8"
+    "react-dom": "^19.2.8",
+    "workbox-window": "^7.4.1"
   },
   "devDependencies": {
     "@types/node": "^24.13.3",
@@ -25,6 +26,7 @@
     "@vitejs/plugin-react": "^6.1.1",
     "oxlint": "^1.81.0",
     "typescript": "~6.0.2",
-    "vite": "^8.2.2"
+    "vite": "^8.2.2",
+    "vite-plugin-pwa": "^1.3.0"
   }
 }
