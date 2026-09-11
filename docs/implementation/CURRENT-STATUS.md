@@ -62,6 +62,7 @@ M6 — Build 0.1 validável                  ✅
 - arte individual de Forja em pixel art dark fantasy: GIF 480 × 270 com quatro quadros (billet aquecido, martelo, impacto e lâmina concluída), selecionado apenas sem preferência de redução de movimento; fallback PNG estático via `<picture>`;
 - arte individual de Culinária em pixel art dark fantasy: GIF 480 × 270 com quatro quadros (ingredientes, mistura, tempero e panela pronta), selecionado apenas sem preferência de redução de movimento; fallback PNG estático via `<picture>`;
 - Árvore de Prestígio do personagem com 32 nós (quatro ramos puros e quatro caminhos híbridos), estado persistido, custos/pré-requisitos e desbloqueio condicionado às sete Skills em Prestígio I;
+- ritual de Prestígio do personagem integrado à aba Personagem, com confirmação antes do reinício de nível/atributos e bloqueio enquanto houver atividade Idle ou produção;
 - uma atividade Idle por vez;
 - quatro coletas iniciais com progresso offline;
 - produção Idle determinística;

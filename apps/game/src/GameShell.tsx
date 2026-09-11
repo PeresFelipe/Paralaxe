@@ -46,6 +46,7 @@ type GameShellProps = {
   onStopWork: () => Promise<void>
   onEquip: (instanceId: string) => Promise<void>
   onAllocateAttributes: (allocation: AttributeAllocation) => Promise<void>
+  onPerformCharacterPrestige: () => Promise<void>
   onUnlockPrestigeNode: (nodeId: string) => Promise<void>
   onDepositBankStack: (definitionId: string, quantity: number) => Promise<void>
   onWithdrawBankStack: (definitionId: string, quantity: number) => Promise<void>
@@ -112,6 +113,7 @@ export default function GameShell({
   onStopWork,
   onEquip,
   onAllocateAttributes,
+  onPerformCharacterPrestige,
   onUnlockPrestigeNode,
   onDepositBankStack,
   onWithdrawBankStack,
@@ -198,6 +200,7 @@ export default function GameShell({
             onEquip={onEquip}
             onStartRecipe={onStartRecipe}
             onAllocateAttributes={onAllocateAttributes}
+            onPerformCharacterPrestige={onPerformCharacterPrestige}
             onUnlockPrestigeNode={onUnlockPrestigeNode}
           />
         ) : null}
@@ -299,6 +302,7 @@ function CharacterView({
   onEquip,
   onStartRecipe,
   onAllocateAttributes,
+  onPerformCharacterPrestige,
   onUnlockPrestigeNode,
 }: {
   save: OfflineGameSave
@@ -307,6 +311,7 @@ function CharacterView({
   onEquip: (instanceId: string) => Promise<void>
   onStartRecipe: (recipeDefinitionId: string, targetEquipmentInstanceId?: string | null) => Promise<void>
   onAllocateAttributes: (allocation: AttributeAllocation) => Promise<void>
+  onPerformCharacterPrestige: () => Promise<void>
   onUnlockPrestigeNode: (nodeId: string) => Promise<void>
 }) {
   const upgradeRecipe = INITIAL_CRAFTING_RECIPES.find((recipe) => recipe.output.kind === 'equipment-upgrade')
@@ -359,7 +364,7 @@ function CharacterView({
         <article className="panel dense-panel"><div className="panel-heading"><div><p className="section-kicker">Inventário</p><h2>Patrimônio seguro</h2></div><span className="status-chip">{save.character.inventory.length} pilha(s)</span></div><div className="inventory-grid-runtime">{save.character.inventory.length === 0 ? <p className="muted">Ainda não há itens aqui.</p> : save.character.inventory.map((stack) => <div className="inventory-tile" key={stack.definitionId}><div className="item-thumb" aria-hidden="true">{(itemLabels[stack.definitionId] ?? stack.definitionId).slice(0, 1)}</div><strong>{itemLabels[stack.definitionId] ?? stack.definitionId}</strong><span>×{stack.quantity}</span></div>)}</div></article>
       ) : null}
 
-      {tab === 'prestige' ? <PrestigePanel save={save} onUnlockNode={onUnlockPrestigeNode} /> : null}
+      {tab === 'prestige' ? <PrestigePanel save={save} onPerformPrestige={onPerformCharacterPrestige} onUnlockNode={onUnlockPrestigeNode} /> : null}
     </section>
   )
 }

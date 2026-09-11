@@ -21,6 +21,7 @@ import {
   startIdleActivity,
   stopCraftingRecipe,
   stopIdleActivity,
+  performCharacterPrestige,
   unlockCharacterPrestigeNode,
   withdrawEquipmentFromBank,
   withdrawInventoryStackFromBank,
@@ -344,6 +345,23 @@ function App() {
     }
   }
 
+  async function handlePerformCharacterPrestige() {
+    if (!activeSave) return
+
+    const characterClass = CHARACTER_CLASSES.find((definition) => definition.id === activeSave.character.classId)
+    if (!characterClass) {
+      setMessage('A classe deste personagem não foi encontrada no catálogo atual.')
+      return
+    }
+
+    try {
+      const save = performCharacterPrestige(activeSave, characterClass.attributes, new Date().toISOString())
+      await persistActive(save, `Prestígio ${save.character.prestige.level} realizado. A nova jornada começa no nível 1.`)
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : 'Não foi possível realizar o Prestígio do personagem.')
+    }
+  }
+
   async function handleDepositBankStack(definitionId: string, quantity: number) {
     if (!activeSave) return
     try {
@@ -445,6 +463,7 @@ function App() {
         onStopWork={handleStopWork}
         onEquip={handleEquip}
         onAllocateAttributes={handleAllocateAttributes}
+        onPerformCharacterPrestige={handlePerformCharacterPrestige}
         onUnlockPrestigeNode={handleUnlockPrestigeNode}
         onDepositBankStack={handleDepositBankStack}
         onWithdrawBankStack={handleWithdrawBankStack}

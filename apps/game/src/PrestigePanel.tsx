@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import {
+  CHARACTER_PRESTIGE_MAX_LEVEL,
   CHARACTER_PRESTIGE_POINTS_PER_LEVEL,
   PRESTIGE_BRANCH_LABELS,
   PRESTIGE_HYBRID_LABELS,
@@ -14,17 +15,41 @@ import {
 
 type PrestigePanelProps = {
   save: OfflineGameSave
+  onPerformPrestige: () => Promise<void>
   onUnlockNode: (nodeId: string) => Promise<void>
 }
 
 const hybridPaths = ['body-arcane', 'body-spirit', 'technique-arcane', 'technique-spirit'] as const
+const prestigeLevelLabels = ['I', 'II', 'III'] as const
 
-export default function PrestigePanel({ save, onUnlockNode }: PrestigePanelProps) {
+export default function PrestigePanel({ save, onPerformPrestige, onUnlockNode }: PrestigePanelProps) {
   const [pendingNodeId, setPendingNodeId] = useState<string | null>(null)
+  const [confirmingPrestige, setConfirmingPrestige] = useState(false)
+  const [isPrestiging, setIsPrestiging] = useState(false)
   const readiness = getCharacterPrestigeReadiness(save)
   const prestige = save.character.prestige
   const earnedPoints = prestige.level * CHARACTER_PRESTIGE_POINTS_PER_LEVEL
   const spentPoints = Math.max(0, earnedPoints - prestige.points)
+  const hasActiveWork = Boolean(save.idle.activeActivity || save.crafting.activeRecipe)
+  const canPerformPrestige = readiness.ready && prestige.level < CHARACTER_PRESTIGE_MAX_LEVEL && !hasActiveWork
+  const nextPrestigeLabel = prestigeLevelLabels[prestige.level] ?? '—'
+
+  const gateTitle = !readiness.ready
+    ? 'Árvore bloqueada'
+    : prestige.level >= CHARACTER_PRESTIGE_MAX_LEVEL
+      ? 'Prestígio completo'
+      : prestige.level > 0
+        ? 'Árvore ativa'
+        : 'Prestígio I aguardando confirmação'
+  const gateCopy = !readiness.ready
+    ? 'O Prestígio do personagem só abre quando todas as Skills alcançam Prestígio I.'
+    : prestige.level >= CHARACTER_PRESTIGE_MAX_LEVEL
+      ? 'Os três ciclos do personagem foram realizados; os 15 pontos permanecem disponíveis para a build.'
+      : hasActiveWork
+        ? 'Interrompa a atividade Idle ou a produção antes de reiniciar a jornada do personagem.'
+        : prestige.level > 0
+          ? 'Nós disponíveis respeitam os caminhos e os custos definidos no GDD.'
+          : 'Todas as Skills já estão prontas. Confirme o primeiro Prestígio para receber 5 pontos.'
 
   async function unlock(nodeId: string) {
     if (pendingNodeId) return
@@ -33,6 +58,17 @@ export default function PrestigePanel({ save, onUnlockNode }: PrestigePanelProps
       await onUnlockNode(nodeId)
     } finally {
       setPendingNodeId(null)
+    }
+  }
+
+  async function performPrestige() {
+    if (!canPerformPrestige || isPrestiging) return
+    setIsPrestiging(true)
+    try {
+      await onPerformPrestige()
+      setConfirmingPrestige(false)
+    } finally {
+      setIsPrestiging(false)
     }
   }
 
@@ -52,16 +88,33 @@ export default function PrestigePanel({ save, onUnlockNode }: PrestigePanelProps
       </div>
 
       <div className={`prestige-gate panel${readiness.ready && prestige.level > 0 ? ' prestige-gate--ready' : ''}`}>
-        <div>
+        <div className="prestige-gate__main">
           <p className="section-kicker">Requisito da árvore</p>
-          <h3>{readiness.ready ? (prestige.level > 0 ? 'Árvore ativa' : 'Prestígio I aguardando confirmação') : 'Árvore bloqueada'}</h3>
-          <p className="muted">{readiness.ready
-            ? prestige.level > 0
-              ? 'Nós disponíveis respeitam os caminhos e os custos definidos no GDD.'
-              : 'Todas as Skills já estão prontas. Realize o primeiro Prestígio para receber 5 pontos.'
-            : 'O Prestígio do personagem só abre quando todas as Skills alcançam Prestígio I.'}</p>
+          <h3>{gateTitle}</h3>
+          <p className="muted">{gateCopy}</p>
         </div>
-        <strong className="prestige-readiness">{readiness.readySkills}/{readiness.totalSkills} Skills em Prestígio I</strong>
+        <div className="prestige-gate__actions">
+          <strong className="prestige-readiness">{readiness.readySkills}/{readiness.totalSkills} Skills em Prestígio I</strong>
+          {readiness.ready && prestige.level < CHARACTER_PRESTIGE_MAX_LEVEL ? (
+            <button
+              className="primary-button compact"
+              type="button"
+              disabled={!canPerformPrestige || confirmingPrestige || isPrestiging}
+              onClick={() => setConfirmingPrestige(true)}
+            >
+              Preparar Prestígio {nextPrestigeLabel}
+            </button>
+          ) : null}
+        </div>
+        {confirmingPrestige ? (
+          <div className="prestige-confirmation" role="group" aria-labelledby="prestige-confirmation-title">
+            <p id="prestige-confirmation-title"><strong>Reinício permanente da jornada.</strong> O nível e os atributos normais voltam ao início; Skills, equipamentos, inventário e nós já desbloqueados permanecem.</p>
+            <div className="button-row">
+              <button className="ghost-button compact" type="button" disabled={isPrestiging} onClick={() => setConfirmingPrestige(false)}>Cancelar</button>
+              <button className="primary-button compact" type="button" disabled={!canPerformPrestige || isPrestiging} onClick={() => void performPrestige()}>{isPrestiging ? 'Aplicando…' : `Confirmar Prestígio ${nextPrestigeLabel}`}</button>
+            </div>
+          </div>
+        ) : null}
       </div>
 
       <div className="prestige-branch-grid">

@@ -69,9 +69,9 @@ O resultado deve orientar novas mudanças de layout e tecnologia. Não há meta 
 ### Verificação desta entrega
 
 - `pnpm check` (lint, typecheck e testes) e `pnpm build` concluídos sem erros. A suíte validou também os 32 nós, custos, pré-requisitos e migração da Árvore de Prestígio.
-- Bundle principal de produção: 351,96 kB, ou 99,22 kB com gzip; CSS: 47,48 kB, ou 9,95 kB com gzip. São tamanhos de build, não medições de velocidade no aparelho do jogador.
-- Service worker gerado com 27 entradas de precache, aproximadamente 5,7 MiB (5.805,21 KiB). O cache inclui as cenas, retratos, Pesca, Mineração, Lenhador, Herbologia, Metalurgia, Forja e Culinária animados/estáticos e ícones; os parâmetros legados `?v=` das artes são considerados no casamento com o precache.
-- A aba `Personagem → Prestígio` apresenta os quatro ramos puros e quatro caminhos híbridos em cartões compactos; os nós permanecem bloqueados até as sete Skills alcançarem Prestígio I, conforme o GDD.
+- Bundle principal de produção: 354,62 kB, ou 99,85 kB com gzip; CSS: 48,06 kB, ou 10,06 kB com gzip. São tamanhos de build, não medições de velocidade no aparelho do jogador.
+- Service worker gerado com 27 entradas de precache, aproximadamente 5,7 MiB (5.808,37 KiB). O cache inclui as cenas, retratos, Pesca, Mineração, Lenhador, Herbologia, Metalurgia, Forja e Culinária animados/estáticos e ícones; os parâmetros legados `?v=` das artes são considerados no casamento com o precache.
+- A aba `Personagem → Prestígio` apresenta os quatro ramos puros e quatro caminhos híbridos em cartões compactos; os nós permanecem bloqueados até as sete Skills alcançarem Prestígio I, conforme o GDD. Quando o requisito é atendido, o ritual mostra confirmação explícita antes de reiniciar nível e atributos normais.
 - Conferência no navegador: criação de personagem, coleta de Cloch, continuidade ao consultar Culinária, identificação de materiais faltantes, atalho para Pesca, substituição de trabalho, produção de Scadán Assado e resultado no Inventário.
 - Escape fechou o Inventário rápido e devolveu o foco ao botão Inventário. A janela desktop inspecionada não apresentou overflow horizontal.
 - O layout mobile foi implementado por CSS e seletor nativo; esta conferência não simula um aparelho físico. Instalação PWA e reabertura sem rede não foram executadas neste preview HTTP de desenvolvimento.
