@@ -6,6 +6,8 @@ import {
   getInventorySlotUsage,
   type OfflineGameSave,
 } from '@greywake/domain'
+import GameIcon from './GameIcon'
+import { getEquipmentIcon, getItemIcon } from './assetIcons'
 
 type BankPanelProps = {
   save: OfflineGameSave
@@ -81,7 +83,7 @@ export default function BankPanel({
           <div className="sheet-list">
             {save.character.inventory.map((stack) => (
               <div className="bank-row" key={stack.definitionId}>
-                <div><strong>{itemName(stack.definitionId)}</strong><small>×{stack.quantity}</small></div>
+                <div><span className="bank-item-label"><GameIcon icon={getItemIcon(stack.definitionId)} size={24} /><strong>{itemName(stack.definitionId)}</strong></span><small>×{stack.quantity}</small></div>
                 <div className="button-row">
                   <button className="ghost-button compact" type="button" onClick={() => void onDepositStack(stack.definitionId, 1)}>Depositar 1</button>
                   {stack.quantity > 1 ? <button className="ghost-button compact" type="button" onClick={() => void onDepositStack(stack.definitionId, stack.quantity)}>Tudo</button> : null}
@@ -92,7 +94,7 @@ export default function BankPanel({
               const definition = getEquipmentDefinition(instance.definitionId)
               return (
                 <div className="bank-row" key={instance.instanceId}>
-                  <div><strong>{definition?.name ?? instance.definitionId}</strong><small>Equipamento · +{instance.upgradeLevel}</small></div>
+                  <div><span className="bank-item-label"><GameIcon icon={getEquipmentIcon(instance.definitionId)} size={24} /><strong>{definition?.name ?? instance.definitionId}</strong></span><small>Equipamento · +{instance.upgradeLevel}</small></div>
                   <button className="ghost-button compact" type="button" onClick={() => void onDepositEquipment(instance.instanceId)}>Depositar</button>
                 </div>
               )
@@ -106,7 +108,7 @@ export default function BankPanel({
           <div className="sheet-list">
             {save.character.bank.inventory.map((stack) => (
               <div className="bank-row" key={stack.definitionId}>
-                <div><strong>{itemName(stack.definitionId)}</strong><small>×{stack.quantity}</small></div>
+                <div><span className="bank-item-label"><GameIcon icon={getItemIcon(stack.definitionId)} size={24} /><strong>{itemName(stack.definitionId)}</strong></span><small>×{stack.quantity}</small></div>
                 <div className="button-row">
                   <button className="ghost-button compact" type="button" onClick={() => void onWithdrawStack(stack.definitionId, 1)}>Retirar 1</button>
                   {stack.quantity > 1 ? <button className="ghost-button compact" type="button" onClick={() => void onWithdrawStack(stack.definitionId, stack.quantity)}>Tudo</button> : null}
@@ -117,7 +119,7 @@ export default function BankPanel({
               const definition = getEquipmentDefinition(instance.definitionId)
               return (
                 <div className="bank-row" key={instance.instanceId}>
-                  <div><strong>{definition?.name ?? instance.definitionId}</strong><small>Equipamento · +{instance.upgradeLevel}</small></div>
+                  <div><span className="bank-item-label"><GameIcon icon={getEquipmentIcon(instance.definitionId)} size={24} /><strong>{definition?.name ?? instance.definitionId}</strong></span><small>Equipamento · +{instance.upgradeLevel}</small></div>
                   <button className="ghost-button compact" type="button" onClick={() => void onWithdrawEquipment(instance.instanceId)}>Retirar</button>
                 </div>
               )

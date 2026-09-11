@@ -1,8 +1,8 @@
 # Avaliação dos packs Shikashi e Mana Seed para Greywake
 
-Data: 11/09/2026. Base do código: `aa8e7f146938889525aa78048cac29d0e165dd04`.
+Data: 11/09/2026. Base do código antes da integração: `6351cb1b856dab4cd41cee79f3df1bb2a830edd1`.
 
-**Recomendação: começar pelos ícones transparentes do Shikashi v2. O Mana Seed não é compatível com o desenvolvimento atual do Greywake sob a licença fornecida.** Esta entrega é uma análise e um catálogo de candidatos; as artes ainda não foram integradas ao jogo.
+**Recomendação: usar os ícones transparentes do Shikashi v2. O Mana Seed não é compatível com o desenvolvimento atual do Greywake sob a licença fornecida.** A seleção inicial do Shikashi já foi integrada ao jogo; este documento mantém a análise completa e o catálogo que orienta essa integração.
 
 ## O que foi examinado
 
@@ -28,7 +28,7 @@ Ao integrar, incluir nome do pack, autores, origem, link da licença e registro 
 
 Há uma diferença de proveniência a preservar: os TXT antigos citam desenhos do game-icons.net sob CC BY 3.0, e o [próprio site](https://game-icons.net/about.html) ainda informa essa versão e pede os autores originais. A integração deve manter essa referência; para desenhos derivados identificados, registrar também o autor e a página de origem, sem afirmar que a licença subjacente desapareceu.
 
-Crédito do pack a incluir na futura integração: Shikashi's Fantasy Icons Pack, por Matt Firth (shikashipx), com desenhos base de game-icons.net; links das fontes, CC BY 4.0 e referência original CC BY 3.0. Acrescentar a descrição concreta dos recortes ou alterações realizados.
+Crédito do pack usado no jogo: Shikashi's Fantasy Icons Pack, por Matt Firth (shikashipx), com desenhos base de game-icons.net; links das fontes, CC BY 4.0 e referência original CC BY 3.0. Os arquivos integrados são recortes 32×32 da folha transparente v2, sem recoloração ou redesenho.
 
 ### Mana Seed
 
@@ -101,10 +101,10 @@ As peças ambientais precisam ser montadas em cenas coerentes. A aparência é d
 
 ## Sequência proposta para integração
 
-1. Integrar uma seleção de ícones do **Shikashi v2** em Inventário, Banco, Equipamento e materiais de Atividades, junto dos créditos e avisos de origem.
+1. **Concluído:** integrar uma seleção de ícones do **Shikashi v2** em Skills, indicadores globais, Inventário, Banco, Equipamento e materiais de Atividades, junto dos créditos e avisos de origem.
 2. Usar 32×32 em slots existentes, com nome e quantidade ao lado. Separar tamanho da imagem de área clicável; evitar aumentar todos os cartões. Em ampliações, preservar a grade de pixels.
 3. Centralizar o vínculo por `definitionId`/`SkillId`, com fallback para itens sem arte. Preservar o tamanho real da folha: ela tem 512×867 e espaço vazio inferior; não presumir uma grade quadrada ou deformá-la para 512×512.
 4. Incluir apenas os assets usados e respectivos créditos no cache offline. As 17 versões de fundo não precisam ir ao bundle.
 5. Completar as lacunas com arte própria ou material de licença compatível; depois tratar os ícones de combate e indicadores globais.
 
-Nesta análise foram adicionados somente documentos e metadados ao repositório. Não foram importados ZIPs, fontes ou imagens dos packs para os arquivos públicos do jogo.
+Nesta etapa foram adicionados 41 PNGs recortados da folha transparente v2, um aviso de atribuição e o vínculo de 49 IDs de Skills, indicadores, itens e equipamentos. Os ZIPs completos não foram importados para os arquivos públicos do jogo. Os quatro IDs sem equivalente continuam com o fallback textual até receberem arte própria ou outra fonte compatível.

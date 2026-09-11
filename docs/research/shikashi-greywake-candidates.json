@@ -1,7 +1,7 @@
 {
-  "status": "review_candidates_only_not_runtime_configuration",
+  "status": "runtime_integration_and_review_catalog",
   "reviewedAt": "2026-09-11",
-  "projectBaseCommit": "aa8e7f146938889525aa78048cac29d0e165dd04",
+  "projectBaseCommit": "6351cb1b856dab4cd41cee79f3df1bb2a830edd1",
   "source": {
     "archive": "Shikashi's Fantasy Icons Pack v2.zip",
     "archiveSha256": "eb3725a63ec7afa04c8942057717758cc0a9388ceb1d4348a7e8487dfbc0492e",
@@ -843,5 +843,20 @@
       },
       "note": ""
     }
-  ]
+  ],
+  "runtimeIntegration": {
+    "status": "integrated",
+    "assetDirectory": "apps/game/public/art/icons/shikashi",
+    "component": "apps/game/src/GameIcon.tsx",
+    "mapping": "apps/game/src/assetIcons.ts",
+    "sourceCropCount": 41,
+    "mappedDefinitionAndSkillIds": 49,
+    "missingIds": [
+      "item.treaty-fragment",
+      "item.fairtheoir-fragment",
+      "weapon.travel-spear",
+      "weapon.watch-spear"
+    ],
+    "note": "Mapped candidates marked adaptation are used as temporary visual approximations and remain documented in their candidate notes."
+  }
 }

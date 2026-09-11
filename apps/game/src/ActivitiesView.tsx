@@ -2,6 +2,8 @@ import { useState } from 'react'
 import { INITIAL_CRAFTING_RECIPES, INITIAL_IDLE_ACTIVITIES } from '@greywake/content'
 import { getSkillXpForNextLevel, type OfflineGameSave, type SkillId } from '@greywake/domain'
 import IdleProgressIndicator from './IdleProgressIndicator'
+import GameIcon from './GameIcon'
+import { getItemIcon, skillIconById } from './assetIcons'
 import { gatheringSkills, itemLabels, productionSkills, skillLabels } from './gameLabels'
 
 type ActivitiesViewProps = {
@@ -69,7 +71,7 @@ export default function ActivitiesView({ save, lastWorkResult, selectedSkill, on
               <h2 className="section-title-runtime">{label}</h2>
               <div className="skill-card-grid">
                 {skills.map((skill) => <button className={`skill-card ${selectedSkill === skill ? 'active' : ''}`} type="button" key={skill} aria-current={selectedSkill === skill ? 'true' : undefined} onClick={() => chooseSkill(skill)}>
-                  <span>{skillLabels[skill]}{activeSkill === skill ? <small className="skill-running">Em curso</small> : null}</span><strong>Nv. {save.skills[skill].level}</strong>
+                  <span className="skill-card__label"><GameIcon icon={skillIconById[skill]} size={24} /><span>{skillLabels[skill]}{activeSkill === skill ? <small className="skill-running">Em curso</small> : null}</span></span><strong>Nv. {save.skills[skill].level}</strong>
                 </button>)}
               </div>
             </div>
@@ -106,7 +108,7 @@ export default function ActivitiesView({ save, lastWorkResult, selectedSkill, on
               const active = idle?.id === activity.id
               const unlocked = progress.level >= activity.requiredSkillLevel
               return <article className={`activity-option panel ${active ? 'selected-card' : ''}`} key={activity.id}>
-                <div className="item-thumb" aria-hidden="true">{activity.resultName.slice(0, 1)}</div>
+                <div className="item-thumb" aria-hidden="true"><GameIcon icon={getItemIcon(activity.resultItemDefinitionId)} size={40} /></div>
                 <div className="activity-option-body">
                   <div className="activity-option-title"><h2>{activity.resultName}</h2><span>Possuído: <strong>{owned(activity.resultItemDefinitionId)}</strong></span></div>
                   <p className="activity-yield">+1 por ciclo · {activity.actionSeconds}s · +{activity.skillXpPerAction} XP</p>
@@ -121,7 +123,7 @@ export default function ActivitiesView({ save, lastWorkResult, selectedSkill, on
               const enough = recipe.ingredients.every((ingredient) => owned(ingredient.definitionId) >= ingredient.quantity)
               const unlocked = progress.level >= recipe.requiredSkillLevel
               return <article className={`activity-option panel ${active ? 'selected-card' : ''}`} key={recipe.id}>
-                <div className="item-thumb" aria-hidden="true">{recipe.name.slice(0, 1)}</div>
+                <div className="item-thumb" aria-hidden="true"><GameIcon icon={recipe.output.kind === 'item' ? getItemIcon(recipe.output.definitionId) : skillIconById[selectedSkill]} size={40} /></div>
                 <div className="activity-option-body">
                   <h2>{recipe.name}</h2>
                   <p className="activity-yield">{recipe.actionSeconds}s por ciclo · +{recipe.skillXpPerAction} XP</p>

@@ -24,6 +24,8 @@ import ActivitiesView from './ActivitiesView'
 import PrestigePanel from './PrestigePanel'
 import QuickSheet from './QuickSheet'
 import AssetCredits from './AssetCredits'
+import GameIcon from './GameIcon'
+import { getEquipmentIcon, getItemIcon, hudIconById, skillIconById } from './assetIcons'
 import { itemLabels, skillLabels } from './gameLabels'
 
 type PrimaryDestination = 'character' | 'activities' | 'adventure' | 'city'
@@ -169,10 +171,10 @@ export default function GameShell({
           </div>
         </div>
         <div className="global-resources" aria-label="Estado global do personagem">
-          <div><span className="resource-sigil health-sigil">V</span><small>Vida máx.</small><strong>{stats.maxHealth}</strong></div>
-          <div><span className="resource-sigil mana-sigil">M</span><small>Mana máx.</small><strong>{stats.maxMana}</strong></div>
-          <div><span className="resource-sigil stamina-sigil">S</span><small>Stamina máx.</small><strong>{stats.maxStamina}</strong></div>
-          <div><span className="resource-sigil coin-sigil">◇</span><small>Moeda</small><strong>{save.character.gold}</strong></div>
+          <div><span className="resource-sigil health-sigil"><GameIcon icon={hudIconById.maxHealth} size={19} /></span><small>Vida máx.</small><strong>{stats.maxHealth}</strong></div>
+          <div><span className="resource-sigil mana-sigil"><GameIcon icon={hudIconById.maxMana} size={19} /></span><small>Mana máx.</small><strong>{stats.maxMana}</strong></div>
+          <div><span className="resource-sigil stamina-sigil"><GameIcon icon={hudIconById.maxStamina} size={19} /></span><small>Stamina máx.</small><strong>{stats.maxStamina}</strong></div>
+          <div><span className="resource-sigil coin-sigil"><GameIcon icon={hudIconById.gold} size={19} /></span><small>Moeda</small><strong>{save.character.gold}</strong></div>
           <button className="icon-button" type="button" onClick={onSwitchSave} disabled={focusedRisk} aria-label="Trocar personagem" title="Trocar personagem">⋯</button>
         </div>
       </header>
@@ -276,7 +278,7 @@ export default function GameShell({
           <h2 className="display-title">Inventário</h2>
           <div className="sheet-list">
             {save.character.inventory.length === 0 ? <p className="muted">Ainda não há itens aqui.</p> : save.character.inventory.slice(0, 8).map((stack) => (
-              <div className="sheet-row" key={stack.definitionId}><span>{itemLabels[stack.definitionId] ?? stack.definitionId}</span><strong>×{stack.quantity}</strong></div>
+              <div className="sheet-row" key={stack.definitionId}><span className="sheet-item-label"><GameIcon icon={getItemIcon(stack.definitionId)} size={24} /><span>{itemLabels[stack.definitionId] ?? stack.definitionId}</span></span><strong>×{stack.quantity}</strong></div>
             ))}
           </div>
           <button className="ghost-button full-width" type="button" onClick={openFullInventory}>Abrir Inventário completo</button>
@@ -332,7 +334,7 @@ function CharacterView({
           <div className="portrait-placeholder" aria-hidden="true"><span>RETRATO 4:5</span></div>
           <div className="overview-stack">
             <article className="panel"><p className="section-kicker">Estado geral</p><h2>{save.character.name} · Nível {save.character.level}</h2><div className="facts-grid"><div><span>XP geral</span><strong>{save.character.xp}</strong></div><div><span>Pontos disponíveis</span><strong>{save.character.unspentAttributePoints}</strong></div><div><span>Equipamentos</span><strong>{save.character.equipmentItems.length}</strong></div><div><span>Técnicas conhecidas</span><strong>{save.character.knownAbilityIds.length}</strong></div></div></article>
-            <article className="panel"><p className="section-kicker">Progressão</p><div className="skill-summary-grid">{Object.entries(save.skills).map(([skillId, progress]) => <div key={skillId}><span>{skillLabels[skillId as SkillId]}</span><strong>Nv. {progress.level}</strong></div>)}</div></article>
+            <article className="panel"><p className="section-kicker">Progressão</p><div className="skill-summary-grid">{Object.entries(save.skills).map(([skillId, progress]) => <div key={skillId}><span className="skill-summary-label"><GameIcon icon={skillIconById[skillId as SkillId]} size={22} /><span>{skillLabels[skillId as SkillId]}</span></span><strong>Nv. {progress.level}</strong></div>)}</div></article>
           </div>
         </div>
       ) : null}
@@ -350,7 +352,7 @@ function CharacterView({
             const primary = getEquipmentPrimaryValue(definition, instance.upgradeLevel)
             return (
               <article className={`item-card ${equipped ? 'selected-card' : ''}`} key={instance.instanceId}>
-                <div className="item-thumb" aria-hidden="true">{definition.name.slice(0, 1)}</div>
+                <div className="item-thumb" aria-hidden="true"><GameIcon icon={getEquipmentIcon(instance.definitionId)} size={64} /></div>
                 <div className="item-card__body"><p className="section-kicker">{definition.slot}</p><h3>{definition.name} +{instance.upgradeLevel}</h3><p className="muted">{primary !== null ? `${definition.primaryStat?.kind === 'attack' ? 'Poder' : 'Defesa'} ${primary}` : 'Sem valor primário'}</p><div className="button-row"><button className="ghost-button" type="button" disabled={equipped} onClick={() => void onEquip(instance.instanceId)}>{equipped ? 'Equipado' : 'Equipar'}</button>{upgradeRecipe && instance.upgradeLevel === 0 && definition.primaryStat ? <button className="ghost-button" type="button" onClick={() => void onStartRecipe(upgradeRecipe.id, instance.instanceId)}>Reforçar +1</button> : null}</div></div>
               </article>
             )
@@ -363,7 +365,7 @@ function CharacterView({
       ) : null}
 
       {tab === 'inventory' ? (
-        <article className="panel dense-panel"><div className="panel-heading"><div><p className="section-kicker">Inventário</p><h2>Patrimônio seguro</h2></div><span className="status-chip">{save.character.inventory.length} pilha(s)</span></div><div className="inventory-grid-runtime">{save.character.inventory.length === 0 ? <p className="muted">Ainda não há itens aqui.</p> : save.character.inventory.map((stack) => <div className="inventory-tile" key={stack.definitionId}><div className="item-thumb" aria-hidden="true">{(itemLabels[stack.definitionId] ?? stack.definitionId).slice(0, 1)}</div><strong>{itemLabels[stack.definitionId] ?? stack.definitionId}</strong><span>×{stack.quantity}</span></div>)}</div></article>
+        <article className="panel dense-panel"><div className="panel-heading"><div><p className="section-kicker">Inventário</p><h2>Patrimônio seguro</h2></div><span className="status-chip">{save.character.inventory.length} pilha(s)</span></div><div className="inventory-grid-runtime">{save.character.inventory.length === 0 ? <p className="muted">Ainda não há itens aqui.</p> : save.character.inventory.map((stack) => <div className="inventory-tile" key={stack.definitionId}><div className="item-thumb" aria-hidden="true"><GameIcon icon={getItemIcon(stack.definitionId)} size={48} /></div><strong>{itemLabels[stack.definitionId] ?? stack.definitionId}</strong><span>×{stack.quantity}</span></div>)}</div></article>
       ) : null}
 
       {tab === 'prestige' ? <PrestigePanel save={save} onPerformPrestige={onPerformCharacterPrestige} onUnlockNode={onUnlockPrestigeNode} /> : null}

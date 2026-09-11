@@ -129,3 +129,7 @@ O GDD já prevê saves **Offline** e **Online** separados e imutáveis. Fases fu
 - **[Antiquity Print](https://ninjikin.itch.io/font-antiquity-script)** por **[SciGho](https://ninjikin.itch.io/)** — Copyright SciGho 2021, [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). O TTF original é distribuído sem alterações. [Atribuição e proveniência da licença](apps/game/public/fonts/antiquity-print-LICENSE.txt).
 
 A fonte é usada nos títulos, nomes e navegação principal. O arquivo original não inclui letras acentuadas; o navegador usa as fontes de apoio nesses caracteres. Os créditos também podem ser consultados no próprio jogo. A fonte e seu aviso de atribuição são incluídos no cache offline.
+
+- **[Shikashi&apos;s Fantasy Icons Pack (FREE)](https://shikashipx.itch.io/shikashis-fantasy-icons-pack)** por **[Matt Firth (shikashipx)](https://shikashipx.itch.io/)** — [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/), com designs derivados de **[game-icons.net](https://game-icons.net/)**. [Aviso de atribuição](apps/game/public/art/icons/shikashi/LICENSE.txt).
+
+O Greywake usa recortes 32×32 da folha transparente v2 em Skills, indicadores globais, materiais, Inventário, Banco e Equipamento. Os recortes não foram recoloridos ou redesenhados; a licença e a proveniência ficam junto dos arquivos públicos e os créditos aparecem no jogo.

@@ -114,6 +114,8 @@ button:disabled { cursor: not-allowed; opacity: .46; }
 .global-resources small { grid-area: label; color: var(--muted); font-size: .58rem; text-transform: uppercase; }
 .global-resources strong { grid-area: value; font-size: .76rem; }
 .resource-sigil { grid-area: sig; min-width: 19px; height: 19px; padding: 0 4px; display: grid; place-items: center; border: 1px solid currentColor; border-radius: 4px; font-size: .58rem; font-weight: 800; }
+.game-icon { display: block; flex-shrink: 0; object-fit: contain; image-rendering: pixelated; }
+.resource-sigil .game-icon { width: 19px; height: 19px; }
 .health-sigil { color: #b57a75; }.mana-sigil { color: var(--mana); }.stamina-sigil { color: #a8a77a; }.coin-sigil { color: var(--bronze); }
 .primary-nav { height: 54px; position: sticky; top: 72px; z-index: 29; display: flex; padding: 0 28px; border-bottom: 1px solid var(--line); background: #121719; }
 .primary-nav button { position: relative; border: 0; background: transparent; color: var(--muted); padding: 0 22px; cursor: pointer; text-transform: uppercase; letter-spacing: .14em; font-size: .68rem; }
@@ -148,6 +150,7 @@ button:disabled { cursor: not-allowed; opacity: .46; }
 .sheet-close { float: right; width: 34px; height: 34px; border: 1px solid var(--line); background: var(--surface-2); }
 .sheet-list { margin: 14px 0 22px; }
 .sheet-row { display: flex; justify-content: space-between; gap: 16px; padding: 11px 0; border-bottom: 1px solid var(--line); font-size: .78rem; }
+.sheet-item-label, .bank-item-label, .skill-summary-label { display: inline-flex; align-items: center; gap: 8px; min-width: 0; }
 .journey-section { display: grid; gap: 7px; padding: 16px 0; border-top: 1px solid var(--line); }
 .journey-section > span { color: var(--muted); font-size: .62rem; letter-spacing: .12em; }
 .journey-section p { margin: 0; color: var(--muted); font-size: .78rem; }
@@ -165,13 +168,14 @@ button:disabled { cursor: not-allowed; opacity: .46; }
 .facts-grid strong { font-size: .84rem; }
 .compact-facts { grid-template-columns: repeat(2,minmax(0,1fr)); }
 .skill-summary-grid { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 8px; }
-.skill-summary-grid > div { display: flex; justify-content: space-between; gap: 12px; padding: 9px 10px; border-bottom: 1px solid var(--line); font-size: .74rem; }
+.skill-summary-grid > div { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 9px 10px; border-bottom: 1px solid var(--line); font-size: .74rem; }
 .skill-summary-grid span { color: var(--muted); }
 .attribute-list { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 7px; }
 .attribute-list > div { display: flex; justify-content: space-between; padding: 11px 12px; border: 1px solid var(--line); background: #14191c; }
 .equipment-grid-runtime { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 10px; }
 .item-card { display: grid; grid-template-columns: 82px 1fr; gap: 13px; padding: 13px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); }
 .item-thumb { aspect-ratio: 1/1; display: grid; place-items: center; border: 1px solid #40494c; border-radius: 5px; background: radial-gradient(circle at 36% 34%, #626a6d, #293034 44%, #171c1f 74%); color: var(--iron); font: 1.5rem Georgia, serif; }
+.item-thumb .game-icon { width: 72%; height: 72%; }
 .item-card__body h3 { margin: 2px 0 7px; }
 .item-card__body p { margin: 0 0 11px; font-size: .76rem; }
 .selected-card { border-color: var(--bronze); box-shadow: inset 0 0 0 1px rgba(169,133,85,.12); }
@@ -235,6 +239,8 @@ button.prestige-node:hover:not(:disabled) { border-color: #756244; background: #
 .skill-card-grid { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 8px; }
 .production-cards { grid-template-columns: repeat(3,minmax(0,1fr)); }
 .skill-card { display: flex; justify-content: space-between; gap: 10px; min-height: 66px; padding: 12px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); cursor: pointer; text-align: left; }
+.skill-card__label { display: inline-flex; align-items: center; gap: 8px; min-width: 0; }
+.skill-card__label > span:last-child { min-width: 0; }
 .skill-card span { color: var(--muted); }.skill-card strong { font-size: .78rem; }.skill-card.active { border-color: var(--bronze); background: rgba(169,133,85,.07); }
 .skill-detail-layout { display: grid; grid-template-columns: 1.45fr .65fr; gap: 16px; }
 .context-art { position: relative; aspect-ratio: 16/9; overflow: hidden; border: 1px solid #3a4246; border-radius: var(--radius); background: linear-gradient(180deg,transparent 35%,rgba(7,10,11,.67)), radial-gradient(circle at 70% 32%,rgba(113,140,149,.24),transparent 24%), linear-gradient(140deg,#39464a,#202b2f 42%,#141b1e 100%); box-shadow: 0 18px 48px rgba(0,0,0,.23); }
@@ -367,6 +373,8 @@ button.prestige-node:hover:not(:disabled) { border-color: #756244; background: #
 .bank-row:last-child { border-bottom: 0; }
 .bank-row > div:first-child { display: grid; min-width: 0; }
 .bank-row small { color: var(--muted); font-size: .68rem; }
+.bank-item-label { overflow: hidden; }
+.bank-item-label strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .bank-row .button-row { justify-content: flex-end; }
 @media (max-width: 760px) {
   .bank-columns, .bank-capacity-grid { grid-template-columns: 1fr; }
