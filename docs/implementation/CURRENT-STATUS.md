@@ -60,6 +60,7 @@ M6 — Build 0.1 validável                  ✅
 - arte individual de Herbologia em pixel art dark fantasy: GIF 480 × 270 com seis quadros (coleta, colocação no cesto e retorno), selecionado apenas sem preferência de redução de movimento; fallback PNG estático via `<picture>`;
 - arte individual de Metalurgia em pixel art dark fantasy: GIF 480 × 270 com seis quadros (crisol, vazamento e retorno), selecionado apenas sem preferência de redução de movimento; fallback PNG estático via `<picture>`;
 - arte individual de Forja em pixel art dark fantasy: GIF 480 × 270 com quatro quadros (billet aquecido, martelo, impacto e lâmina concluída), selecionado apenas sem preferência de redução de movimento; fallback PNG estático via `<picture>`;
+- arte individual de Culinária em pixel art dark fantasy: GIF 480 × 270 com quatro quadros (ingredientes, mistura, tempero e panela pronta), selecionado apenas sem preferência de redução de movimento; fallback PNG estático via `<picture>`;
 - uma atividade Idle por vez;
 - quatro coletas iniciais com progresso offline;
 - produção Idle determinística;

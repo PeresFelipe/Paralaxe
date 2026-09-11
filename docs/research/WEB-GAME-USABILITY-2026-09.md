@@ -69,8 +69,8 @@ O resultado deve orientar novas mudanças de layout e tecnologia. Não há meta 
 ### Verificação desta entrega
 
 - `pnpm build` e `pnpm lint` concluídos sem erros.
-- Bundle principal de produção: 339,77 kB, ou 95,59 kB com gzip; CSS: 44,08 kB, ou 9,35 kB com gzip. São tamanhos de build, não medições de velocidade no aparelho do jogador.
-- Service worker gerado com 25 entradas de precache, aproximadamente 5,0 MiB (5.112,19 KiB). O cache inclui as cenas, retratos, Pesca, Mineração, Lenhador, Herbologia, Metalurgia e Forja animados/estáticos e ícones; os parâmetros legados `?v=` das artes são considerados no casamento com o precache.
+- Bundle principal de produção: 339,87 kB, ou 95,60 kB com gzip; CSS: 44,08 kB, ou 9,35 kB com gzip. São tamanhos de build, não medições de velocidade no aparelho do jogador.
+- Service worker gerado com 27 entradas de precache, aproximadamente 5,7 MiB (5.790,09 KiB). O cache inclui as cenas, retratos, Pesca, Mineração, Lenhador, Herbologia, Metalurgia, Forja e Culinária animados/estáticos e ícones; os parâmetros legados `?v=` das artes são considerados no casamento com o precache.
 - Conferência no navegador: criação de personagem, coleta de Cloch, continuidade ao consultar Culinária, identificação de materiais faltantes, atalho para Pesca, substituição de trabalho, produção de Scadán Assado e resultado no Inventário.
 - Escape fechou o Inventário rápido e devolveu o foco ao botão Inventário. A janela desktop inspecionada não apresentou overflow horizontal.
 - O layout mobile foi implementado por CSS e seletor nativo; esta conferência não simula um aparelho físico. Instalação PWA e reabertura sem rede não foram executadas neste preview HTTP de desenvolvimento.
