@@ -1,0 +1,847 @@
+{
+  "status": "review_candidates_only_not_runtime_configuration",
+  "reviewedAt": "2026-09-11",
+  "projectBaseCommit": "aa8e7f146938889525aa78048cac29d0e165dd04",
+  "source": {
+    "archive": "Shikashi's Fantasy Icons Pack v2.zip",
+    "archiveSha256": "eb3725a63ec7afa04c8942057717758cc0a9388ceb1d4348a7e8487dfbc0492e",
+    "sheet": "Shikashi's Fantasy Icons Pack v2/#1 - Transparent Icons.png",
+    "sheetSha256": "e5dced4f6e04f7f79101f189f95124a0dba93546e464d76af8af6b72f1d670e8",
+    "width": 512,
+    "height": 867,
+    "cellSize": 32,
+    "coordinateOrigin": "top-left; zero-based column and row",
+    "creator": "Matt Firth (shikashipx)",
+    "url": "https://shikashipx.itch.io/shikashis-fantasy-icons-pack",
+    "license": "CC BY 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+    "underlyingDesignCredit": "game-icons.net; retain original CC BY 3.0 notices and identify source authors for known derivatives"
+  },
+  "statusMeaning": {
+    "usable": "A silhueta representa o tipo de objeto; avaliar a leitura na integração.",
+    "adaptation": "O candidato exige ajuste ou diferenciação antes da aplicação definitiva.",
+    "missing": "Não foi identificado equivalente adequado; requer outra arte."
+  },
+  "candidates": [
+    {
+      "kind": "skill",
+      "id": "mining",
+      "label": "Mineração",
+      "candidateIcon": "pickaxe",
+      "status": "usable",
+      "cell": {
+        "column": 2,
+        "row": 10,
+        "x": 64,
+        "y": 320,
+        "width": 32,
+        "height": 32
+      },
+      "note": ""
+    },
+    {
+      "kind": "skill",
+      "id": "woodcutting",
+      "label": "Lenhador",
+      "candidateIcon": "axe",
+      "status": "usable",
+      "cell": {
+        "column": 1,
+        "row": 10,
+        "x": 32,
+        "y": 320,
+        "width": 32,
+        "height": 32
+      },
+      "note": ""
+    },
+    {
+      "kind": "skill",
+      "id": "fishing",
+      "label": "Pesca",
+      "candidateIcon": "fishing rod",
+      "status": "usable",
+      "cell": {
+        "column": 0,
+        "row": 16,
+        "x": 0,
+        "y": 512,
+        "width": 32,
+        "height": 32
+      },
+      "note": ""
+    },
+    {
+      "kind": "skill",
+      "id": "herbology",
+      "label": "Herbologia",
+      "candidateIcon": "herb",
+      "status": "usable",
+      "cell": {
+        "column": 13,
+        "row": 11,
+        "x": 416,
+        "y": 352,
+        "width": 32,
+        "height": 32
+      },
+      "note": ""
+    },
+    {
+      "kind": "skill",
+      "id": "metallurgy",
+      "label": "Metalurgia",
+      "candidateIcon": "gold ingot",
+      "status": "adaptation",
+      "cell": {
+        "column": 3,
+        "row": 17,
+        "x": 96,
+        "y": 544,
+        "width": 32,
+        "height": 32
+      },
+      "note": "Adaptar a barra dourada para metal neutro e evitar confusão com moeda/ouro."
+    },
+    {
+      "kind": "skill",
+      "id": "smithing",
+      "label": "Forja",
+      "candidateIcon": "blacksmith/anvil",
+      "status": "usable",
+      "cell": {
+        "column": 4,
+        "row": 4,
+        "x": 128,
+        "y": 128,
+        "width": 32,
+        "height": 32
+      },
+      "note": ""
+    },
+    {
+      "kind": "skill",
+      "id": "cooking",
+      "label": "Culinária",
+      "candidateIcon": "cauldron on fire",
+      "status": "usable",
+      "cell": {
+        "column": 8,
+        "row": 19,
+        "x": 256,
+        "y": 608,
+        "width": 32,
+        "height": 32
+      },
+      "note": ""
+    },
+    {
+      "kind": "hud",
+      "id": "maxHealth",
+      "label": "Vida máxima",
+      "candidateIcon": "heart",
+      "status": "usable",
+      "cell": {
+        "column": 0,
+        "row": 1,
+        "x": 0,
+        "y": 32,
+        "width": 32,
+        "height": 32
+      },
+      "note": ""
+    },
+    {
+      "kind": "hud",
+      "id": "maxMana",
+      "label": "Mana máxima",
+      "candidateIcon": "blue orb",
+      "status": "adaptation",
+      "cell": {
+        "column": 1,
+        "row": 18,
+        "x": 32,
+        "y": 576,
+        "width": 32,
+        "height": 32
+      },
+      "note": "Testar distinção de Mana; não depender somente da cor."
+    },
+    {
+      "kind": "hud",
+      "id": "maxStamina",
+      "label": "Stamina máxima",
+      "candidateIcon": "lungs",
+      "status": "usable",
+      "cell": {
+        "column": 1,
+        "row": 1,
+        "x": 32,
+        "y": 32,
+        "width": 32,
+        "height": 32
+      },
+      "note": ""
+    },
+    {
+      "kind": "hud",
+      "id": "gold",
+      "label": "Moeda",
+      "candidateIcon": "crown coin",
+      "status": "usable",
+      "cell": {
+        "column": 7,
+        "row": 12,
+        "x": 224,
+        "y": 384,
+        "width": 32,
+        "height": 32
+      },
+      "note": ""
+    },
+    {
+      "kind": "item",
+      "id": "material.cloch",
+      "label": "Cloch",
+      "candidateIcon": "stone",
+      "status": "usable",
+      "cell": {
+        "column": 1,
+        "row": 17,
+        "x": 32,
+        "y": 544,
+        "width": 32,
+        "height": 32
+      },
+      "note": ""
+    },
+    {
+      "kind": "item",
+      "id": "material.giuis",
+      "label": "Giúis",
+      "candidateIcon": "wood",
+      "status": "usable",
+      "cell": {
+        "column": 0,
+        "row": 17,
+        "x": 0,
+        "y": 544,
+        "width": 32,
+        "height": 32
+      },
+      "note": ""
+    },
+    {
+      "kind": "item",
+      "id": "material.scadan",
+      "label": "Scadán",
+      "candidateIcon": "lake trout",
+      "status": "usable",
+      "cell": {
+        "column": 3,
+        "row": 16,
+        "x": 96,
+        "y": 512,
+        "width": 32,
+        "height": 32
+      },
+      "note": "Peixe genérico; não representa uma identificação biológica da espécie fictícia."
+    },
+    {
+      "kind": "item",
+      "id": "material.neantog",
+      "label": "Neantóg",
+      "candidateIcon": "herb",
+      "status": "usable",
+      "cell": {
+        "column": 13,
+        "row": 11,
+        "x": 416,
+        "y": 352,
+        "width": 32,
+        "height": 32
+      },
+      "note": "Erva genérica; manter o nome e a identidade do material no rótulo."
+    },
+    {
+      "kind": "item",
+      "id": "material.treated-cloch",
+      "label": "Cloch Tratada",
+      "candidateIcon": "gold ingot",
+      "status": "adaptation",
+      "cell": {
+        "column": 3,
+        "row": 17,
+        "x": 96,
+        "y": 544,
+        "width": 32,
+        "height": 32
+      },
+      "note": "Recolorir para metal neutro; a folha oferece uma barra dourada."
+    },
+    {
+      "kind": "item",
+      "id": "item.food.roasted-scadan",
+      "label": "Scadán Assado",
+      "candidateIcon": "cooked fish",
+      "status": "usable",
+      "cell": {
+        "column": 4,
+        "row": 15,
+        "x": 128,
+        "y": 480,
+        "width": 32,
+        "height": 32
+      },
+      "note": ""
+    },
+    {
+      "kind": "item",
+      "id": "item.consumable.neantog-preparation",
+      "label": "Preparado de Neantóg",
+      "candidateIcon": "green potion",
+      "status": "usable",
+      "cell": {
+        "column": 2,
+        "row": 9,
+        "x": 64,
+        "y": 288,
+        "width": 32,
+        "height": 32
+      },
+      "note": ""
+    },
+    {
+      "kind": "item",
+      "id": "item.consumable.field-preparation",
+      "label": "Preparado de Campo",
+      "candidateIcon": "red potion",
+      "status": "usable",
+      "cell": {
+        "column": 0,
+        "row": 9,
+        "x": 0,
+        "y": 288,
+        "width": 32,
+        "height": 32
+      },
+      "note": ""
+    },
+    {
+      "kind": "item",
+      "id": "item.consumable.crimson-flask",
+      "label": "Frasco Carmesim",
+      "candidateIcon": "rare red potion",
+      "status": "usable",
+      "cell": {
+        "column": 8,
+        "row": 9,
+        "x": 256,
+        "y": 288,
+        "width": 32,
+        "height": 32
+      },
+      "note": ""
+    },
+    {
+      "kind": "item",
+      "id": "item.key.rusted",
+      "label": "Chave Enferrujada",
+      "candidateIcon": "brass key",
+      "status": "adaptation",
+      "cell": {
+        "column": 9,
+        "row": 11,
+        "x": 288,
+        "y": 352,
+        "width": 32,
+        "height": 32
+      },
+      "note": "A chave da folha é de metal amarelo; adaptar para aspecto enferrujado."
+    },
+    {
+      "kind": "item",
+      "id": "item.quest.nameless-stone",
+      "label": "Pedra Sem Nome",
+      "candidateIcon": "runestone",
+      "status": "adaptation",
+      "cell": {
+        "column": 0,
+        "row": 11,
+        "x": 0,
+        "y": 352,
+        "width": 32,
+        "height": 32
+      },
+      "note": "Somente candidato provisório. A pedra narrativa precisa de identidade própria."
+    },
+    {
+      "kind": "item",
+      "id": "item.garrison-supply-register",
+      "label": "Registro de Suprimentos",
+      "candidateIcon": "open book",
+      "status": "usable",
+      "cell": {
+        "column": 8,
+        "row": 13,
+        "x": 256,
+        "y": 416,
+        "width": 32,
+        "height": 32
+      },
+      "note": ""
+    },
+    {
+      "kind": "item",
+      "id": "item.treaty-fragment",
+      "label": "Fragmento do Tratado",
+      "candidateIcon": null,
+      "status": "missing",
+      "cell": null,
+      "note": "Há pergaminhos, mas não um fragmento com identidade própria. Não usar um documento intacto como arte definitiva."
+    },
+    {
+      "kind": "item",
+      "id": "item.fairtheoir-fragment",
+      "label": "Fragmento de Fairtheoir",
+      "candidateIcon": null,
+      "status": "missing",
+      "cell": null,
+      "note": "Relíquia narrativa sem equivalente no pack."
+    },
+    {
+      "kind": "equipment",
+      "id": "weapon.militia-sword",
+      "label": "Espada de Milícia",
+      "candidateIcon": "longsword",
+      "status": "usable",
+      "cell": {
+        "column": 1,
+        "row": 5,
+        "x": 32,
+        "y": 160,
+        "width": 32,
+        "height": 32
+      },
+      "note": ""
+    },
+    {
+      "kind": "equipment",
+      "id": "shield.militia-shield",
+      "label": "Escudo de Milícia",
+      "candidateIcon": "wooden shield",
+      "status": "usable",
+      "cell": {
+        "column": 1,
+        "row": 6,
+        "x": 32,
+        "y": 192,
+        "width": 32,
+        "height": 32
+      },
+      "note": ""
+    },
+    {
+      "kind": "equipment",
+      "id": "armor.militia-chest",
+      "label": "Peitoral de Milícia",
+      "candidateIcon": "iron armour",
+      "status": "usable",
+      "cell": {
+        "column": 4,
+        "row": 7,
+        "x": 128,
+        "y": 224,
+        "width": 32,
+        "height": 32
+      },
+      "note": ""
+    },
+    {
+      "kind": "equipment",
+      "id": "weapon.simple-staff",
+      "label": "Cajado Simples",
+      "candidateIcon": "wizard staff",
+      "status": "usable",
+      "cell": {
+        "column": 7,
+        "row": 6,
+        "x": 224,
+        "y": 192,
+        "width": 32,
+        "height": 32
+      },
+      "note": ""
+    },
+    {
+      "kind": "equipment",
+      "id": "armor.simple-robes",
+      "label": "Vestes Simples",
+      "candidateIcon": "cloak",
+      "status": "adaptation",
+      "cell": {
+        "column": 14,
+        "row": 7,
+        "x": 448,
+        "y": 224,
+        "width": 32,
+        "height": 32
+      },
+      "note": "Capa é apenas uma aproximação; é preciso representar vestes longas."
+    },
+    {
+      "kind": "equipment",
+      "id": "weapon.short-bow",
+      "label": "Arco Curto",
+      "candidateIcon": "bow and arrow",
+      "status": "usable",
+      "cell": {
+        "column": 3,
+        "row": 6,
+        "x": 96,
+        "y": 192,
+        "width": 32,
+        "height": 32
+      },
+      "note": ""
+    },
+    {
+      "kind": "equipment",
+      "id": "armor.hunting-jerkin",
+      "label": "Gibão de Caça",
+      "candidateIcon": "leather armour",
+      "status": "usable",
+      "cell": {
+        "column": 6,
+        "row": 7,
+        "x": 192,
+        "y": 224,
+        "width": 32,
+        "height": 32
+      },
+      "note": ""
+    },
+    {
+      "kind": "equipment",
+      "id": "weapon.simple-mace",
+      "label": "Maça Simples",
+      "candidateIcon": "spiked club",
+      "status": "adaptation",
+      "cell": {
+        "column": 13,
+        "row": 5,
+        "x": 416,
+        "y": 160,
+        "width": 32,
+        "height": 32
+      },
+      "note": "Porrete com espinhos é apenas aproximação da maça."
+    },
+    {
+      "kind": "equipment",
+      "id": "catalyst.simple",
+      "label": "Catalisador Simples",
+      "candidateIcon": "blue orb",
+      "status": "adaptation",
+      "cell": {
+        "column": 1,
+        "row": 18,
+        "x": 32,
+        "y": 576,
+        "width": 32,
+        "height": 32
+      },
+      "note": "Forma final do catalisador ainda precisa ser definida; distinguir do indicador de Mana."
+    },
+    {
+      "kind": "equipment",
+      "id": "armor.acolyte-robes",
+      "label": "Vestes do Acólito",
+      "candidateIcon": "cloak",
+      "status": "adaptation",
+      "cell": {
+        "column": 14,
+        "row": 7,
+        "x": 448,
+        "y": 224,
+        "width": 32,
+        "height": 32
+      },
+      "note": "Criar silhueta de veste e identidade do Acólito; não confundir com capa."
+    },
+    {
+      "kind": "equipment",
+      "id": "weapon.hunting-dagger",
+      "label": "Adaga de Caça",
+      "candidateIcon": "dagger",
+      "status": "usable",
+      "cell": {
+        "column": 6,
+        "row": 5,
+        "x": 192,
+        "y": 160,
+        "width": 32,
+        "height": 32
+      },
+      "note": ""
+    },
+    {
+      "kind": "equipment",
+      "id": "armor.light-outfit",
+      "label": "Traje Leve",
+      "candidateIcon": "green tunic",
+      "status": "usable",
+      "cell": {
+        "column": 9,
+        "row": 7,
+        "x": 288,
+        "y": 224,
+        "width": 32,
+        "height": 32
+      },
+      "note": ""
+    },
+    {
+      "kind": "equipment",
+      "id": "weapon.travel-spear",
+      "label": "Lança de Viagem",
+      "candidateIcon": null,
+      "status": "missing",
+      "cell": null,
+      "note": "Nenhuma lança no pack."
+    },
+    {
+      "kind": "equipment",
+      "id": "armor.travel-protection",
+      "label": "Proteção de Viagem",
+      "candidateIcon": "layered plate armour",
+      "status": "adaptation",
+      "cell": {
+        "column": 7,
+        "row": 7,
+        "x": 224,
+        "y": 224,
+        "width": 32,
+        "height": 32
+      },
+      "note": "Revisar peso visual e material da proteção de viagem antes de aplicar."
+    },
+    {
+      "kind": "equipment",
+      "id": "armor.simple-gloves",
+      "label": "Luvas Simples",
+      "candidateIcon": "leather gauntlet",
+      "status": "usable",
+      "cell": {
+        "column": 0,
+        "row": 8,
+        "x": 0,
+        "y": 256,
+        "width": 32,
+        "height": 32
+      },
+      "note": ""
+    },
+    {
+      "kind": "equipment",
+      "id": "armor.simple-boots",
+      "label": "Botas Simples",
+      "candidateIcon": "leather boots",
+      "status": "usable",
+      "cell": {
+        "column": 2,
+        "row": 8,
+        "x": 64,
+        "y": 256,
+        "width": 32,
+        "height": 32
+      },
+      "note": ""
+    },
+    {
+      "kind": "equipment",
+      "id": "armor.giuis-bracers",
+      "label": "Braçadeiras de Giúis",
+      "candidateIcon": "leather gauntlet",
+      "status": "adaptation",
+      "cell": {
+        "column": 0,
+        "row": 8,
+        "x": 0,
+        "y": 256,
+        "width": 32,
+        "height": 32
+      },
+      "note": "Transformar a luva em braçadeiras e representar o material Giúis."
+    },
+    {
+      "kind": "equipment",
+      "id": "item.equipment.traveller-ring",
+      "label": "Anel do Viajante",
+      "candidateIcon": "ring",
+      "status": "usable",
+      "cell": {
+        "column": 4,
+        "row": 8,
+        "x": 128,
+        "y": 256,
+        "width": 32,
+        "height": 32
+      },
+      "note": ""
+    },
+    {
+      "kind": "equipment",
+      "id": "armor.garrison-helmet",
+      "label": "Capacete da Guarnição",
+      "candidateIcon": "barbute helm",
+      "status": "usable",
+      "cell": {
+        "column": 1,
+        "row": 7,
+        "x": 32,
+        "y": 224,
+        "width": 32,
+        "height": 32
+      },
+      "note": ""
+    },
+    {
+      "kind": "equipment",
+      "id": "armor.garrison-gloves",
+      "label": "Luvas da Guarnição",
+      "candidateIcon": "metal gauntlet",
+      "status": "usable",
+      "cell": {
+        "column": 1,
+        "row": 8,
+        "x": 32,
+        "y": 256,
+        "width": 32,
+        "height": 32
+      },
+      "note": ""
+    },
+    {
+      "kind": "equipment",
+      "id": "armor.garrison-legs",
+      "label": "Perneiras da Guarnição",
+      "candidateIcon": "trousers",
+      "status": "adaptation",
+      "cell": {
+        "column": 10,
+        "row": 7,
+        "x": 320,
+        "y": 224,
+        "width": 32,
+        "height": 32
+      },
+      "note": "Calças de tecido não representam perneiras de armadura; requer adaptação."
+    },
+    {
+      "kind": "equipment",
+      "id": "armor.garrison-boots",
+      "label": "Botas da Guarnição",
+      "candidateIcon": "steeltoe boots",
+      "status": "usable",
+      "cell": {
+        "column": 3,
+        "row": 8,
+        "x": 96,
+        "y": 256,
+        "width": 32,
+        "height": 32
+      },
+      "note": ""
+    },
+    {
+      "kind": "equipment",
+      "id": "weapon.garrison-sword",
+      "label": "Espada da Guarnição",
+      "candidateIcon": "gladius",
+      "status": "usable",
+      "cell": {
+        "column": 4,
+        "row": 5,
+        "x": 128,
+        "y": 160,
+        "width": 32,
+        "height": 32
+      },
+      "note": ""
+    },
+    {
+      "kind": "equipment",
+      "id": "weapon.bastion-mace",
+      "label": "Maça do Bastião",
+      "candidateIcon": "spiked club",
+      "status": "adaptation",
+      "cell": {
+        "column": 13,
+        "row": 5,
+        "x": 416,
+        "y": 160,
+        "width": 32,
+        "height": 32
+      },
+      "note": "Criar maça e diferenciá-la da Maça Simples."
+    },
+    {
+      "kind": "equipment",
+      "id": "weapon.watch-spear",
+      "label": "Lança do Vigia",
+      "candidateIcon": null,
+      "status": "missing",
+      "cell": null,
+      "note": "Nenhuma lança no pack."
+    },
+    {
+      "kind": "equipment",
+      "id": "weapon.patrol-bow",
+      "label": "Arco de Patrulha",
+      "candidateIcon": "bow and arrow",
+      "status": "adaptation",
+      "cell": {
+        "column": 3,
+        "row": 6,
+        "x": 96,
+        "y": 192,
+        "width": 32,
+        "height": 32
+      },
+      "note": "Reutiliza a silhueta do Arco Curto; diferenciar a arte sem esconder o rótulo."
+    },
+    {
+      "kind": "equipment",
+      "id": "weapon.campaign-staff",
+      "label": "Cajado de Campanha",
+      "candidateIcon": "green gem staff",
+      "status": "usable",
+      "cell": {
+        "column": 8,
+        "row": 6,
+        "x": 256,
+        "y": 192,
+        "width": 32,
+        "height": 32
+      },
+      "note": ""
+    },
+    {
+      "kind": "equipment",
+      "id": "shield.watch-shield",
+      "label": "Escudo do Vigia",
+      "candidateIcon": "checkered shield",
+      "status": "usable",
+      "cell": {
+        "column": 2,
+        "row": 6,
+        "x": 64,
+        "y": 192,
+        "width": 32,
+        "height": 32
+      },
+      "note": ""
+    }
+  ]
+}
