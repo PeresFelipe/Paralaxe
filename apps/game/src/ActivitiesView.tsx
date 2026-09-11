@@ -25,6 +25,11 @@ export default function ActivitiesView({ save, lastWorkResult, selectedSkill, on
   const craft = INITIAL_CRAFTING_RECIPES.find((recipe) => recipe.id === save.crafting.activeRecipe?.recipeDefinitionId)
   const work = idle?.resultName ?? craft?.name
   const activeSkill = idle?.skillId ?? craft?.skillId
+  const animatedArt = selectedSkill === 'fishing'
+    ? { motion: '/art/activities/fishing.gif?v=1', still: '/art/activities/fishing-still.png?v=1' }
+    : selectedSkill === 'mining'
+      ? { motion: '/art/activities/mining.gif?v=1', still: '/art/activities/mining-still.png?v=1' }
+      : null
   const owned = (id: string) => save.character.inventory.find((stack) => stack.definitionId === id)?.quantity ?? 0
 
   async function act(action: () => Promise<void>) {
@@ -67,10 +72,10 @@ export default function ActivitiesView({ save, lastWorkResult, selectedSkill, on
         </label>
         <div className="activities-workspace" aria-busy={pending}>
           <div className="activity-stage">
-            <div className={`context-art activity-scene${selectedSkill === 'fishing' ? ' context-art--individual' : ''}`} data-skill={selectedSkill} aria-hidden="true">
-              {selectedSkill === 'fishing' ? <picture>
-                <source media="(prefers-reduced-motion: no-preference)" srcSet="/art/activities/fishing.gif?v=1" />
-                <img src="/art/activities/fishing-still.png?v=1" alt="" width={480} height={270} decoding="async" />
+            <div className={`context-art activity-scene${animatedArt ? ' context-art--individual' : ''}`} data-skill={selectedSkill} aria-hidden="true">
+              {animatedArt ? <picture>
+                <source media="(prefers-reduced-motion: no-preference)" srcSet={animatedArt.motion} />
+                <img src={animatedArt.still} alt="" width={480} height={270} decoding="async" />
               </picture> : null}
             </div>
             <div className="activity-live panel">
