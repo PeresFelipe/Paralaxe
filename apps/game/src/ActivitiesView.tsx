@@ -29,6 +29,8 @@ export default function ActivitiesView({ save, lastWorkResult, selectedSkill, on
     ? { motion: '/art/activities/fishing.gif?v=1', still: '/art/activities/fishing-still.png?v=1' }
     : selectedSkill === 'mining'
       ? { motion: '/art/activities/mining.gif?v=1', still: '/art/activities/mining-still.png?v=1' }
+      : selectedSkill === 'woodcutting'
+        ? { motion: '/art/activities/woodcutting.gif?v=1', still: '/art/activities/woodcutting-still.png?v=1' }
       : null
   const owned = (id: string) => save.character.inventory.find((stack) => stack.definitionId === id)?.quantity ?? 0
 
