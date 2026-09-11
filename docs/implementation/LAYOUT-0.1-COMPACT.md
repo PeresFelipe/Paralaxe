@@ -15,9 +15,12 @@ O experimento preserva a arquitetura do UX-GDD: os quatro destinos continuam sen
 - a arte de Skill mantém 16:9, com largura limitada a 440 px para deixar a progressão e as ações próximas;
 - opções de coleta e receitas aparecem em duas colunas no desktop e uma no mobile;
 - arte de Cidade e Aventura mantém 16:9, mas deixa de funcionar como banner dominante;
+- Cidade e Aventura passam a colocar a cena ao lado das opções, reduzindo a altura total dos hubs;
 - retratos e cartões de equipamento reduzem escala sem retirar contexto, valores ou ações;
 - o modo mobile reorganiza as colunas e mantém alvos de toque e navegação inferior;
 - a criação de save usa um identificador alternativo quando o navegador não expõe `crypto.randomUUID`, permitindo validar a build em ambientes web mais antigos.
+
+A compactação é seletiva: superfícies frequentes e operacionais ficam densas, enquanto Taverna, cenas de risco e estados narrativos continuam com espaço suficiente para leitura e atmosfera.
 
 ## Reversão
 

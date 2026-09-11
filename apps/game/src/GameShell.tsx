@@ -478,10 +478,12 @@ function AdventureViewComponent({
   return (
     <section className="feature-view">
       <div className="view-heading"><div><p className="section-kicker">Aventura</p><h1 className="display-title">Além da segurança</h1><p className="muted">Serviços são encontros menores; Dungeons são expedições prolongadas com risco acumulado.</p></div></div>
-      <div className="context-art context-art--adventure" aria-hidden="true"><span>ARTE 16:9 · AVENTURA</span></div>
-      <div className="adventure-grid section-gap">
-        <article className="adventure-card panel"><p className="section-kicker">Serviço</p><h2>Estrada Baixa</h2><p className="muted">Presença hostil confirmada. Encontro de curta duração.</p><div className="fact-row"><span>Estado</span><strong>{save.combat.wolfDefeated ? 'Concluído anteriormente' : 'Disponível'}</strong></div><button className="ghost-button" type="button" onClick={() => onView('service')}>Preparar serviço</button></article>
-        <article className="adventure-card panel risk-panel"><p className="section-kicker">Dungeon</p><h2>Dún Liath</h2><p className="muted">Fortaleza Cinzenta · expedição prolongada · Bolsa de Expedição.</p><div className="fact-row"><span>Contrato</span><strong>{save.dungeon.contractAccepted || save.dungeon.contractCompleted ? 'Conhecido' : 'Ainda não aceito'}</strong></div><button className="primary-button compact" type="button" onClick={() => onView('dungeon')}>{save.dungeon.activeRun ? 'Retomar expedição' : 'Ver Dún Liath'}</button></article>
+      <div className="adventure-overview-layout section-gap">
+        <div className="context-art context-art--adventure" aria-hidden="true"><span>ARTE 16:9 · AVENTURA</span></div>
+        <div className="adventure-grid">
+          <article className="adventure-card panel"><p className="section-kicker">Serviço</p><h2>Estrada Baixa</h2><p className="muted">Presença hostil confirmada. Encontro de curta duração.</p><div className="fact-row"><span>Estado</span><strong>{save.combat.wolfDefeated ? 'Concluído anteriormente' : 'Disponível'}</strong></div><button className="ghost-button" type="button" onClick={() => onView('service')}>Preparar serviço</button></article>
+          <article className="adventure-card panel risk-panel"><p className="section-kicker">Dungeon</p><h2>Dún Liath</h2><p className="muted">Fortaleza Cinzenta · expedição prolongada · Bolsa de Expedição.</p><div className="fact-row"><span>Contrato</span><strong>{save.dungeon.contractAccepted || save.dungeon.contractCompleted ? 'Conhecido' : 'Ainda não aceito'}</strong></div><button className="primary-button compact" type="button" onClick={() => onView('dungeon')}>{save.dungeon.activeRun ? 'Retomar expedição' : 'Ver Dún Liath'}</button></article>
+        </div>
       </div>
     </section>
   )
@@ -538,13 +540,15 @@ function CityViewComponent({
   return (
     <section className="feature-view">
       <div className="view-heading"><div><p className="section-kicker">Cidade</p><h1 className="display-title">Cidade Livre</h1><p className="muted">Trégua, necessidade e comércio sustentam este território neutro.</p></div></div>
-      <div className="context-art context-art--city" aria-hidden="true"><span>ARTE 16:9 · CIDADE LIVRE</span></div>
-      <div className="city-place-grid section-gap">
-        <button type="button" onClick={() => onView('tavern')}><strong>Taverna</strong><span>Contratos e conversas</span></button>
-        <button type="button" onClick={() => onView('market')}><strong>Mercado</strong><span>Compra e venda</span></button>
-        <button type="button" onClick={() => onView('smith')}><strong>Ferreiro</strong><span>Serviços de equipamento</span></button>
-        <button type="button" onClick={() => onView('bank')}><strong>Banco</strong><span>Armazenamento seguro</span></button>
-        <button type="button" onClick={() => onView('reliquary')}><strong>Relicário</strong><span>Relíquias e memória</span></button>
+      <div className="city-overview-layout section-gap">
+        <div className="context-art context-art--city" aria-hidden="true"><span>ARTE 16:9 · CIDADE LIVRE</span></div>
+        <div className="city-place-grid">
+          <button type="button" onClick={() => onView('tavern')}><strong>Taverna</strong><span>Contratos e conversas</span></button>
+          <button type="button" onClick={() => onView('market')}><strong>Mercado</strong><span>Compra e venda</span></button>
+          <button type="button" onClick={() => onView('smith')}><strong>Ferreiro</strong><span>Serviços de equipamento</span></button>
+          <button type="button" onClick={() => onView('bank')}><strong>Banco</strong><span>Armazenamento seguro</span></button>
+          <button type="button" onClick={() => onView('reliquary')}><strong>Relicário</strong><span>Relíquias e memória</span></button>
+        </div>
       </div>
     </section>
   )
