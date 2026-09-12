@@ -28,19 +28,19 @@ export default function ActivitiesView({ save, lastWorkResult, selectedSkill, on
   const work = idle?.resultName ?? craft?.name
   const activeSkill = idle?.skillId ?? craft?.skillId
   const animatedArt = selectedSkill === 'fishing'
-    ? { motion: '/art/activities/fishing.gif?v=2', still: '/art/activities/fishing-still.png?v=2' }
+    ? { motion: '/art/activities/fishing.gif?v=3', still: '/art/activities/fishing-still.png?v=2' }
     : selectedSkill === 'mining'
-      ? { motion: '/art/activities/mining.gif?v=2', still: '/art/activities/mining-still.png?v=2' }
+      ? { motion: '/art/activities/mining.gif?v=3', still: '/art/activities/mining-still.png?v=2' }
       : selectedSkill === 'woodcutting'
-        ? { motion: '/art/activities/woodcutting.gif?v=2', still: '/art/activities/woodcutting-still.png?v=2' }
+        ? { motion: '/art/activities/woodcutting.gif?v=3', still: '/art/activities/woodcutting-still.png?v=2' }
         : selectedSkill === 'herbology'
-          ? { motion: '/art/activities/herbology.gif?v=2', still: '/art/activities/herbology-still.png?v=2' }
+          ? { motion: '/art/activities/herbology.gif?v=3', still: '/art/activities/herbology-still.png?v=2' }
         : selectedSkill === 'metallurgy'
-          ? { motion: '/art/activities/metallurgy.gif?v=2', still: '/art/activities/metallurgy-still.png?v=2' }
+          ? { motion: '/art/activities/metallurgy.gif?v=3', still: '/art/activities/metallurgy-still.png?v=2' }
         : selectedSkill === 'smithing'
-          ? { motion: '/art/activities/smithing.gif?v=2', still: '/art/activities/smithing-still.png?v=2' }
+          ? { motion: '/art/activities/smithing.gif?v=3', still: '/art/activities/smithing-still.png?v=2' }
         : selectedSkill === 'cooking'
-          ? { motion: '/art/activities/cooking.gif?v=2', still: '/art/activities/cooking-still.png?v=2' }
+          ? { motion: '/art/activities/cooking.gif?v=3', still: '/art/activities/cooking-still.png?v=2' }
       : null
   const owned = (id: string) => save.character.inventory.find((stack) => stack.definitionId === id)?.quantity ?? 0
 

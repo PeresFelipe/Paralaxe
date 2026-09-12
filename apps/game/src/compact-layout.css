@@ -96,9 +96,9 @@ button, select, a, summary { touch-action: manipulation; }
 .skill-card.active span { color: var(--text); }
 .skill-running { display: block; font-size: .75rem; color: #cfb783; }
 .mobile-skill-picker { display: none; }
-.activities-workspace { min-width: 0; }
-.activity-stage { display: grid; grid-template-columns: minmax(0, 300px) minmax(0, 1fr); gap: 12px; align-items: stretch; }
-.activity-scene { width: 100%; align-self: start; }
+.activities-workspace { --activity-scene-width: 224px; min-width: 0; }
+.activity-stage { display: grid; grid-template-columns: minmax(0, var(--activity-scene-width)) minmax(0, 1fr); gap: 12px; align-items: stretch; }
+.activity-scene { width: 100%; max-width: var(--activity-scene-width); min-width: 0; aspect-ratio: 16 / 9; align-self: start; }
 .activity-scene[data-skill="woodcutting"], .activity-scene[data-skill="herbology"] { background-position: 66.6667% 0; }
 .activity-scene[data-skill="metallurgy"], .activity-scene[data-skill="smithing"], .activity-scene[data-skill="cooking"] { background-position: 100% 0; }
 .activity-live { display: flex; flex-direction: column; justify-content: space-between; gap: 12px; border-color: #574b39; background: #1c2223; }
@@ -173,7 +173,7 @@ progress::-moz-progress-bar { background: var(--bronze); }
   .global-resources { gap: 8px; }
   .game-content { width: calc(100% - 32px); }
   .activities-layout { grid-template-columns: 166px minmax(0, 1fr); gap: 12px; }
-  .activity-stage { grid-template-columns: minmax(0, .7fr) minmax(0, 1.3fr); }
+  .activities-workspace { --activity-scene-width: 192px; }
   .character-layout { grid-template-columns: 150px minmax(0, 1fr); }
   .character-layout > .portrait-placeholder { width: 150px; }
   .preparation-layout, .city-context-layout { grid-template-columns: 1fr; }
@@ -200,7 +200,8 @@ progress::-moz-progress-bar { background: var(--bronze); }
   .activities-skill-rail { display: none; }
   .mobile-skill-picker { display: flex; align-items: center; gap: 12px; font-size: .875rem; color: var(--muted); }
   .mobile-skill-picker select { min-width: 0; flex: 1; min-height: 44px; padding: 8px; color: var(--text); background: var(--surface); border: 1px solid var(--line); border-radius: 5px; font-size: 1rem; }
-  .activity-stage { grid-template-columns: 1fr 1.5fr; gap: 10px; }
+  .activities-workspace { --activity-scene-width: 160px; }
+  .activity-stage { gap: 10px; }
   .activity-live { padding: 10px; }
   .activity-live .idle-progress__heading { flex-wrap: wrap; gap: 3px; }
   .activity-live .idle-progress__heading em { display: block; }
@@ -226,7 +227,7 @@ progress::-moz-progress-bar { background: var(--bronze); }
   .avatar-placeholder { width: 28px; height: 28px; }
   .global-resources { width: 100%; justify-content: space-between; }
   .activity-stage { grid-template-columns: 1fr; }
-  .activity-scene { width: 50%; max-width: 170px; }
+  .activities-workspace { --activity-scene-width: 128px; }
   .activity-live { gap: 8px; }
   .activity-live .idle-progress__heading { flex-wrap: nowrap; }
   .activity-live .idle-progress__details { grid-template-columns: 1fr; }

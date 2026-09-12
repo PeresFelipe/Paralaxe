@@ -63,6 +63,7 @@ M6 — Build 0.1 validável                  ✅
 - arte individual de Metalurgia em pixel art dark fantasy: GIF 480 × 270 com seis quadros (crisol, vazamento e retorno), selecionado apenas sem preferência de redução de movimento; fallback PNG estático via `<picture>`;
 - arte individual de Forja em pixel art dark fantasy: GIF 480 × 270 com quatro quadros (billet aquecido, martelo, impacto e lâmina concluída), selecionado apenas sem preferência de redução de movimento; fallback PNG estático via `<picture>`;
 - arte individual de Culinária em pixel art dark fantasy: GIF 480 × 270 com quatro quadros (ingredientes, mistura, tempero e panela pronta), selecionado apenas sem preferência de redução de movimento; fallback PNG estático via `<picture>`;
+- revisão visual de 12/09/2026: sete GIFs com 400 ms por quadro (antes 600 ms), loops de 1,6 s ou 2,4 s; somente os atrasos dos quadros foram alterados, preservando os pixels e os PNGs estáticos. Cenas 16:9 limitadas a 224 px no desktop, 192 px até 980 px, 160 px até 720 px e 128 px até 420 px de viewport, com `object-fit: contain` e URLs dos GIFs em `v=3`;
 - Árvore de Prestígio do personagem com 32 nós (quatro ramos puros e quatro caminhos híbridos), estado persistido, custos/pré-requisitos e desbloqueio condicionado às sete Skills em Prestígio I;
 - ritual de Prestígio do personagem integrado à aba Personagem, com confirmação antes do reinício de nível/atributos e bloqueio enquanto houver atividade Idle ou produção;
 - uma atividade Idle por vez;
