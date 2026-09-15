@@ -18,6 +18,8 @@ O próximo marco de produto ainda deve ser definido explicitamente antes de inic
 
 O layout compacto da Build 0.1 está registrado como experimento visual reversível em `docs/implementation/LAYOUT-0.1-COMPACT.md`. O layout anterior foi preservado em `backup/layout-0.1-740e1c5` antes da aplicação do passe.
 
+A proposta de UI de jogo de 15/09/2026 aplica navegação persistente com sprites, molduras Dark Ages UI licenciadas, inventário de 24 slots e distinção entre profissão consultada e tarefa em execução. Pesquisa, licenças e verificação estão em [GAME-UI-2026-09-15.md](../research/GAME-UI-2026-09-15.md). Os 78 testes e o build passaram; a revisão visual em navegador real permanece pendente por bloqueio de prévia neste ambiente. A proposta preserva conteúdo, schema e regras da Build 0.1.
+
 A evolução de usabilidade web foi aplicada sobre a Build 0.1, com pesquisa documentada em [WEB-GAME-USABILITY-2026-09.md](../research/WEB-GAME-USABILITY-2026-09.md). Ela adiciona PWA com cache de aplicação/artes, controles operacionais legíveis, Atividades com atalhos de materiais, progresso animado pelo navegador e painéis acessíveis por teclado. O estado anterior está preservado em `backup/web-usability-453dbba`. A instalação e o carregamento offline completo ainda precisam ser conferidos em um deploy HTTPS.
 
 Documento de fechamento do M6:
@@ -54,7 +56,7 @@ M6 — Build 0.1 validável                  ✅
 - seis classes e sete presentes iniciais;
 - persistência IndexedDB com schema versionado e migração automática;
 - sete Skills;
-- Antiquity Print, de SciGho, integrada aos títulos, nomes e navegação principal sob CC BY 4.0; créditos acessíveis na criação/seleção de personagem e no jogo; TTF original com fallback para acentos e cache offline;
+- Antiquity Print, de SciGho, integrada à marca sob CC BY 4.0; no tema de jogo, títulos e navegação operacional em Georgia para consistência de acentos; créditos acessíveis na criação/seleção de personagem e no jogo; TTF original preservado com cache offline;
 - Ícones Shikashi v2, de Matt Firth (shikashipx), integrados por definitionId/SkillId em Atividades, indicadores globais, Inventário, Banco e Equipamento; créditos CC BY 4.0 e proveniência game-icons.net registrados junto aos recortes;
 - arte individual de Pesca em pixel art dark fantasy: GIF 480 × 270 com quatro quadros, selecionado apenas sem preferência de redução de movimento; fallback PNG estático via `<picture>`;
 - arte individual de Mineração em pixel art dark fantasy: GIF 480 × 270 com seis quadros (golpe, impacto e retorno), selecionado apenas sem preferência de redução de movimento; fallback PNG estático via `<picture>`;

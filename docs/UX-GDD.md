@@ -1389,6 +1389,12 @@ contido e informativo
 
 A interface deve parecer um jogo, não um painel SaaS genérico, sem transformar cada controle em ornamento medieval pesado.
 
+### Proposta de apresentação de 15/09/2026
+
+O passe solicitado de UI de jogo usa superfícies de ferro/musgo, molduras pontuais, sprites de itens e uma bolsa em slots com capacidade real. A profissão consultada é distinguida da tarefa em execução: consultar outra profissão preserva a tarefa atual, e a animação acompanha apenas a profissão ativa, respeitando redução de movimento. A barra de continuidade permanece identificável durante risco, com estado pausado e atalhos indisponíveis, preservando o fluxo focado.
+
+Essa proposta mantém os quatro destinos e as regras de continuidade desta especificação. A revisão visual em navegador real ainda está pendente. Pesquisa, licenças e detalhes concretos permanecem em [GAME-UI-2026-09-15.md](research/GAME-UI-2026-09-15.md), fora das regras canônicas de gameplay.
+
 ## Intensidade visual por função
 
 > **Quanto mais narrativa a tela, mais espaço para arte; quanto mais operacional, mais espaço para informação; quanto mais crítico o estado, mais a interface assume um modo próprio.**
