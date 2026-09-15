@@ -1,80 +1,95 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useState } from "react";
 import {
   getCombatAbilityDefinition,
   getCombatConsumableDefinition,
   getEnemyDefinition,
   getEquipmentDefinition,
-} from '@greywake/content'
+} from "@greywake/content";
 import {
   ATTRIBUTE_KEYS,
   derivePlayerCombatStats,
   type AttributeAllocation,
   type AttributeKey,
   type OfflineGameSave,
-} from '@greywake/domain'
+} from "@greywake/domain";
 
 const attributeLabels: Record<AttributeKey, string> = {
-  vitality: 'Vitalidade',
-  mind: 'Mente',
-  vigor: 'Vigor',
-  strength: 'Força',
-  dexterity: 'Destreza',
-  intelligence: 'Inteligência',
-  faith: 'Fé',
-}
+  vitality: "Vitalidade",
+  mind: "Mente",
+  vigor: "Vigor",
+  strength: "Força",
+  dexterity: "Destreza",
+  intelligence: "Inteligência",
+  faith: "Fé",
+};
 
 const combatCatalog = {
   getEquipmentDefinition,
   getAbilityDefinition: getCombatAbilityDefinition,
   getEnemyDefinition,
   getConsumableDefinition: getCombatConsumableDefinition,
-}
+};
 
 type AttributePanelProps = {
-  save: OfflineGameSave
-  onAllocateAttributes: (allocation: AttributeAllocation) => Promise<void>
-}
+  save: OfflineGameSave;
+  onAllocateAttributes: (allocation: AttributeAllocation) => Promise<void>;
+};
 
-export default function AttributePanel({ save, onAllocateAttributes }: AttributePanelProps) {
-  const [draft, setDraft] = useState<AttributeAllocation>({})
-  const [isSaving, setIsSaving] = useState(false)
+export default function AttributePanel({
+  save,
+  onAllocateAttributes,
+}: AttributePanelProps) {
+  const [draft, setDraft] = useState<AttributeAllocation>({});
+  const [isSaving, setIsSaving] = useState(false);
 
-  const pendingPoints = ATTRIBUTE_KEYS.reduce((total, key) => total + (draft[key] ?? 0), 0)
-  const remainingPoints = Math.max(0, save.character.unspentAttributePoints - pendingPoints)
+  const pendingPoints = ATTRIBUTE_KEYS.reduce(
+    (total, key) => total + (draft[key] ?? 0),
+    0,
+  );
+  const remainingPoints = Math.max(
+    0,
+    save.character.unspentAttributePoints - pendingPoints,
+  );
 
-  const currentStats = useMemo(() => derivePlayerCombatStats(save, combatCatalog), [save])
+  const currentStats = useMemo(
+    () => derivePlayerCombatStats(save, combatCatalog),
+    [save],
+  );
   const previewStats = useMemo(() => {
-    const attributes = { ...save.character.attributes }
-    for (const key of ATTRIBUTE_KEYS) attributes[key] += draft[key] ?? 0
+    const attributes = { ...save.character.attributes };
+    for (const key of ATTRIBUTE_KEYS) attributes[key] += draft[key] ?? 0;
     return derivePlayerCombatStats(
       { ...save, character: { ...save.character, attributes } },
       combatCatalog,
-    )
-  }, [draft, save])
+    );
+  }, [draft, save]);
 
   function changeAttribute(key: AttributeKey, delta: number) {
-    const current = draft[key] ?? 0
-    if (delta > 0 && remainingPoints <= 0) return
-    const next = Math.max(0, current + delta)
-    setDraft((currentDraft) => ({ ...currentDraft, [key]: next }))
+    const current = draft[key] ?? 0;
+    if (delta > 0 && remainingPoints <= 0) return;
+    const next = Math.max(0, current + delta);
+    setDraft((currentDraft) => ({ ...currentDraft, [key]: next }));
   }
 
   async function confirm() {
-    if (pendingPoints <= 0 || isSaving) return
-    setIsSaving(true)
+    if (pendingPoints <= 0 || isSaving) return;
+    setIsSaving(true);
     try {
-      await onAllocateAttributes(draft)
-      setDraft({})
+      await onAllocateAttributes(draft);
+      setDraft({});
     } finally {
-      setIsSaving(false)
+      setIsSaving(false);
     }
   }
 
   function resourcePreview(key: AttributeKey) {
-    if (key === 'vitality') return `Vida máxima ${currentStats.maxHealth} → ${previewStats.maxHealth}`
-    if (key === 'mind') return `Mana máxima ${currentStats.maxMana} → ${previewStats.maxMana}`
-    if (key === 'vigor') return `Stamina máxima ${currentStats.maxStamina} → ${previewStats.maxStamina}`
-    return null
+    if (key === "vitality")
+      return `Vida máxima ${currentStats.maxHealth} → ${previewStats.maxHealth}`;
+    if (key === "mind")
+      return `Mana máxima ${currentStats.maxMana} → ${previewStats.maxMana}`;
+    if (key === "vigor")
+      return `Stamina máxima ${currentStats.maxStamina} → ${previewStats.maxStamina}`;
+    return null;
   }
 
   return (
@@ -84,15 +99,17 @@ export default function AttributePanel({ save, onAllocateAttributes }: Attribute
           <p className="section-kicker">Atributos</p>
           <h2>Distribuição</h2>
         </div>
-        <span className="status-chip">{remainingPoints} ponto(s) restante(s)</span>
+        <span className="status-chip">
+          {remainingPoints} ponto(s) restante(s)
+        </span>
       </div>
 
       <div className="attribute-list">
         {ATTRIBUTE_KEYS.map((key) => {
-          const baseValue = save.character.attributes[key]
-          const pending = draft[key] ?? 0
-          const previewValue = baseValue + pending
-          const preview = resourcePreview(key)
+          const baseValue = save.character.attributes[key];
+          const pending = draft[key] ?? 0;
+          const previewValue = baseValue + pending;
+          const preview = resourcePreview(key);
 
           return (
             <div key={key}>
@@ -110,7 +127,9 @@ export default function AttributePanel({ save, onAllocateAttributes }: Attribute
                 >
                   −
                 </button>
-                <strong>{pending > 0 ? `${baseValue} → ${previewValue}` : baseValue}</strong>
+                <strong>
+                  {pending > 0 ? `${baseValue} → ${previewValue}` : baseValue}
+                </strong>
                 <button
                   className="ghost-button compact"
                   type="button"
@@ -122,15 +141,29 @@ export default function AttributePanel({ save, onAllocateAttributes }: Attribute
                 </button>
               </div>
             </div>
-          )
+          );
         })}
       </div>
 
       {pendingPoints > 0 ? (
         <div className="button-row">
-          <button className="ghost-button" type="button" disabled={isSaving} onClick={() => setDraft({})}>Desfazer</button>
-          <button className="primary-button compact" type="button" disabled={isSaving} onClick={() => void confirm()}>
-            {isSaving ? 'Salvando…' : `Confirmar distribuição · ${pendingPoints}`}
+          <button
+            className="ghost-button"
+            type="button"
+            disabled={isSaving}
+            onClick={() => setDraft({})}
+          >
+            Desfazer
+          </button>
+          <button
+            className="primary-button compact"
+            type="button"
+            disabled={isSaving}
+            onClick={() => void confirm()}
+          >
+            {isSaving
+              ? "Salvando…"
+              : `Confirmar distribuição · ${pendingPoints}`}
           </button>
         </div>
       ) : null}
@@ -139,5 +172,5 @@ export default function AttributePanel({ save, onAllocateAttributes }: Attribute
         <p className="muted">Nenhum ponto de atributo disponível no momento.</p>
       ) : null}
     </article>
-  )
+  );
 }

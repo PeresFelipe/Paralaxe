@@ -1,4 +1,3 @@
-import { useEffect, useRef, useState } from 'react'
 import {
   CHARACTER_CLASSES,
   CONTENT_VERSION,
@@ -8,23 +7,23 @@ import {
   getIdleActivityDefinition,
   getJourneyCraftFeedback,
   getJourneyReturnSummary,
-} from '@greywake/content'
+} from "@greywake/content";
 import {
   BUILD_SAVE_MODE,
   allocateAttributePoints,
-  createOfflineGameSave,
   chooseJourneyGoal,
+  createOfflineGameSave,
   depositEquipmentToBank,
   depositInventoryStackToBank,
   equipEquipment,
   pauseCurrentWorkForRisk,
+  performCharacterPrestige,
   processCraftingProgress,
   processIdleProgress,
   startCraftingRecipe,
   startIdleActivity,
   stopCraftingRecipe,
   stopIdleActivity,
-  performCharacterPrestige,
   unlockCharacterPrestigeNode,
   withdrawEquipmentFromBank,
   withdrawInventoryStackFromBank,
@@ -32,119 +31,161 @@ import {
   type CharacterClassId,
   type GiftId,
   type OfflineGameSave,
-} from '@greywake/domain'
-import { createIndexedDbSaveRepository } from '@greywake/persistence'
-import GameShell from './GameShell'
-import WebGameStatus from './WebGameStatus'
-import AssetCredits from './AssetCredits'
-import GameIcon from './GameIcon'
+} from "@greywake/domain";
+import { createIndexedDbSaveRepository } from "@greywake/persistence";
+import { useEffect, useRef, useState } from "react";
+import AssetCredits from "./AssetCredits";
+import GameIcon from "./GameIcon";
+import GameShell from "./GameShell";
+import WebGameStatus from "./WebGameStatus";
 
-const saveRepository = createIndexedDbSaveRepository()
+const CLASS_GIFS: Partial<Record<CharacterClassId, string>> = {
+  warrior: "/art/classes/guerreiro/MattzArt/guerreiro.gif",
+  mage: "/art/classes/mago/LuizMelo/mago.gif",
+};
 
-type Screen = 'loading' | 'save-list' | 'create' | 'game' | 'error'
-type OfflineSummary = { duration: string; result: string; goal: string | null; milestone: string | null }
+const saveRepository = createIndexedDbSaveRepository();
+
+type Screen = "loading" | "save-list" | "create" | "game" | "error";
+type OfflineSummary = {
+  duration: string;
+  result: string;
+  goal: string | null;
+  milestone: string | null;
+};
 
 function getClassName(classId: CharacterClassId) {
-  return CHARACTER_CLASSES.find((definition) => definition.id === classId)?.name ?? classId
+  return (
+    CHARACTER_CLASSES.find((definition) => definition.id === classId)?.name ??
+    classId
+  );
 }
 
 function getGiftName(giftId: GiftId) {
-  return INITIAL_GIFTS.find((definition) => definition.id === giftId)?.name ?? giftId
+  return (
+    INITIAL_GIFTS.find((definition) => definition.id === giftId)?.name ?? giftId
+  );
 }
 
 function updateSaveInList(saves: OfflineGameSave[], save: OfflineGameSave) {
-  return saves.map((current) => (current.saveId === save.saveId ? save : current))
+  return saves.map((current) =>
+    current.saveId === save.saveId ? save : current,
+  );
 }
 
 function createSaveId() {
-  if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
-    return crypto.randomUUID()
+  if (
+    typeof crypto !== "undefined" &&
+    typeof crypto.randomUUID === "function"
+  ) {
+    return crypto.randomUUID();
   }
 
-  return `save-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`
+  return `save-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
 }
 
 function formatAbsence(milliseconds: number) {
-  const seconds = Math.max(0, Math.floor(milliseconds / 1000))
-  const hours = Math.floor(seconds / 3600)
-  const minutes = Math.floor((seconds % 3600) / 60)
-  if (hours > 0) return `${hours}h ${minutes}min`
-  if (minutes > 0) return `${minutes}min`
-  return `${seconds}s`
+  const seconds = Math.max(0, Math.floor(milliseconds / 1000));
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+  if (hours > 0) return `${hours}h ${minutes}min`;
+  if (minutes > 0) return `${minutes}min`;
+  return `${seconds}s`;
 }
 
 function processCurrentWork(save: OfflineGameSave, now: string) {
   // An active Dungeon is a persisted risk state. Its selected Idle work remains
   // attached only as continuity and must not accrue time while the run is active.
-  if (save.dungeon.activeRun) return { save, text: null }
+  if (save.dungeon.activeRun) return { save, text: null };
 
-  const activeIdleId = save.idle.activeActivity?.activityDefinitionId
+  const activeIdleId = save.idle.activeActivity?.activityDefinitionId;
   if (activeIdleId) {
-    const activity = getIdleActivityDefinition(activeIdleId)
+    const activity = getIdleActivityDefinition(activeIdleId);
     if (activity) {
-      const result = processIdleProgress(save, activity, now)
-      const levelText = result.gainedSkillLevels > 0 ? ` · +${result.gainedSkillLevels} nível(is) de Skill` : ''
-      const cappedText = result.cappedSeconds > 0 ? ' · limite offline atingido' : ''
-      const capacityText = result.stoppedForCapacity ? ' · Inventário sem capacidade; coleta interrompida' : ''
+      const result = processIdleProgress(save, activity, now);
+      const levelText =
+        result.gainedSkillLevels > 0
+          ? ` · +${result.gainedSkillLevels} nível(is) de Skill`
+          : "";
+      const cappedText =
+        result.cappedSeconds > 0 ? " · limite offline atingido" : "";
+      const capacityText = result.stoppedForCapacity
+        ? " · Inventário sem capacidade; coleta interrompida"
+        : "";
       return {
         save: result.save,
-        text: result.completedActions > 0
-          ? `+${result.completedActions} ${activity.resultName} · +${result.grantedSkillXp} XP de Skill${levelText}${cappedText}${capacityText}`
-          : result.stoppedForCapacity
-            ? `${activity.name} foi interrompida: Inventário sem capacidade.`
-            : null,
-      }
-    }
-  }
-
-  const activeRecipeId = save.crafting.activeRecipe?.recipeDefinitionId
-  if (activeRecipeId) {
-    const recipe = getCraftingRecipeDefinition(activeRecipeId)
-    if (recipe) {
-      const result = processCraftingProgress(save, recipe, now)
-      const totalOutput = result.producedItems + result.producedEquipment + result.upgradedEquipment
-      const stoppedText = result.stoppedForMaterials ? ' · produção interrompida por materiais insuficientes' : ''
-      const capacityText = result.stoppedForCapacity ? ' · produção interrompida por Inventário sem capacidade' : ''
-      return {
-        save: result.save,
-        text: result.completedActions > 0
-          ? `${recipe.name}: ${totalOutput || result.completedActions} concluído(s) · +${result.grantedSkillXp} XP de Skill${stoppedText}${capacityText}`
-          : result.stoppedForMaterials
-            ? `${recipe.name} foi interrompida por materiais insuficientes.`
+        text:
+          result.completedActions > 0
+            ? `+${result.completedActions} ${activity.resultName} · +${result.grantedSkillXp} XP de Skill${levelText}${cappedText}${capacityText}`
             : result.stoppedForCapacity
-              ? `${recipe.name} foi interrompida: Inventário sem capacidade.`
+              ? `${activity.name} foi interrompida: Inventário sem capacidade.`
               : null,
-      }
+      };
     }
   }
 
-  return { save, text: null }
+  const activeRecipeId = save.crafting.activeRecipe?.recipeDefinitionId;
+  if (activeRecipeId) {
+    const recipe = getCraftingRecipeDefinition(activeRecipeId);
+    if (recipe) {
+      const result = processCraftingProgress(save, recipe, now);
+      const totalOutput =
+        result.producedItems +
+        result.producedEquipment +
+        result.upgradedEquipment;
+      const stoppedText = result.stoppedForMaterials
+        ? " · produção interrompida por materiais insuficientes"
+        : "";
+      const capacityText = result.stoppedForCapacity
+        ? " · produção interrompida por Inventário sem capacidade"
+        : "";
+      return {
+        save: result.save,
+        text:
+          result.completedActions > 0
+            ? `${recipe.name}: ${totalOutput || result.completedActions} concluído(s) · +${result.grantedSkillXp} XP de Skill${stoppedText}${capacityText}`
+            : result.stoppedForMaterials
+              ? `${recipe.name} foi interrompida por materiais insuficientes.`
+              : result.stoppedForCapacity
+                ? `${recipe.name} foi interrompida: Inventário sem capacidade.`
+                : null,
+      };
+    }
+  }
+
+  return { save, text: null };
 }
 
 function App() {
-  const [screen, setScreen] = useState<Screen>('loading')
-  const [saves, setSaves] = useState<OfflineGameSave[]>([])
-  const [activeSave, setActiveSave] = useState<OfflineGameSave | null>(null)
-  const [characterName, setCharacterName] = useState('')
-  const [selectedClassId, setSelectedClassId] = useState<CharacterClassId | null>(null)
-  const [selectedGiftId, setSelectedGiftId] = useState<GiftId | null>(null)
-  const [creationStep, setCreationStep] = useState(0)
-  const [notice, setNotice] = useState<{ text: string; kind: 'info' | 'achievement' } | null>(null)
-  const message = notice?.text ?? null
-  const [lastWorkResult, setLastWorkResult] = useState<string | null>(null)
-  const [offlineSummary, setOfflineSummary] = useState<OfflineSummary | null>(null)
-  const [isSaving, setIsSaving] = useState(false)
-  const [riskActive, setRiskActive] = useState(false)
-  const activeSaveRef = useRef<OfflineGameSave | null>(null)
-  const writeQueue = useRef<Promise<void>>(Promise.resolve())
+  const [screen, setScreen] = useState<Screen>("loading");
+  const [saves, setSaves] = useState<OfflineGameSave[]>([]);
+  const [activeSave, setActiveSave] = useState<OfflineGameSave | null>(null);
+  const [characterName, setCharacterName] = useState("");
+  const [selectedClassId, setSelectedClassId] =
+    useState<CharacterClassId | null>(null);
+  const [selectedGiftId, setSelectedGiftId] = useState<GiftId | null>(null);
+  const [creationStep, setCreationStep] = useState(0);
+  const [notice, setNotice] = useState<{
+    text: string;
+    kind: "info" | "achievement";
+  } | null>(null);
+  const message = notice?.text ?? null;
+  const [lastWorkResult, setLastWorkResult] = useState<string | null>(null);
+  const [offlineSummary, setOfflineSummary] = useState<OfflineSummary | null>(
+    null,
+  );
+  const [isSaving, setIsSaving] = useState(false);
+  const [riskActive, setRiskActive] = useState(false);
+  const activeSaveRef = useRef<OfflineGameSave | null>(null);
+  const writeQueue = useRef<Promise<void>>(Promise.resolve());
 
   function setMessage(text: string | null) {
-    setNotice(text ? { text, kind: 'info' } : null)
+    setNotice(text ? { text, kind: "info" } : null);
   }
 
   function selectActiveSave(save: OfflineGameSave | null) {
-    activeSaveRef.current = save
-    setActiveSave(save)
+    activeSaveRef.current = save;
+    setActiveSave(save);
   }
 
   // Work ticks and player actions derive from the latest saved state in order.
@@ -153,93 +194,129 @@ function App() {
     update: (current: OfflineGameSave) => OfflineGameSave,
     text?: string | (() => string | undefined),
   ): Promise<OfflineGameSave> {
-    const saveId = activeSaveRef.current?.saveId
+    const saveId = activeSaveRef.current?.saveId;
     const task = writeQueue.current.then(async () => {
-      const current = activeSaveRef.current
-      if (!current || current.saveId !== saveId) throw new Error('O personagem ativo mudou. Tente novamente.')
-      const next = update(current)
-      if (next === current) return current
-      await saveRepository.put(next)
+      const current = activeSaveRef.current;
+      if (!current || current.saveId !== saveId)
+        throw new Error("O personagem ativo mudou. Tente novamente.");
+      const next = update(current);
+      if (next === current) return current;
+      await saveRepository.put(next);
       if (activeSaveRef.current?.saveId === saveId) {
-        selectActiveSave(next)
-        setSaves((previous) => updateSaveInList(previous, next))
-        const milestone = getJourneyCraftFeedback(current, next)
-        const info = typeof text === 'function' ? text() : text
-        if (milestone) setNotice({ text: milestone, kind: 'achievement' })
-        else if (info) setMessage(info)
+        selectActiveSave(next);
+        setSaves((previous) => updateSaveInList(previous, next));
+        const milestone = getJourneyCraftFeedback(current, next);
+        const info = typeof text === "function" ? text() : text;
+        if (milestone) setNotice({ text: milestone, kind: "achievement" });
+        else if (info) setMessage(info);
       }
-      return next
-    })
-    writeQueue.current = task.then(() => undefined, () => undefined)
-    return task
+      return next;
+    });
+    writeQueue.current = task.then(
+      () => undefined,
+      () => undefined,
+    );
+    return task;
   }
 
   useEffect(() => {
-    let cancelled = false
+    let cancelled = false;
 
     saveRepository
       .list()
       .then((storedSaves) => {
-        if (cancelled) return
-        setSaves(storedSaves)
-        setScreen(storedSaves.length > 0 ? 'save-list' : 'create')
+        if (cancelled) return;
+        setSaves(storedSaves);
+        setScreen(storedSaves.length > 0 ? "save-list" : "create");
       })
       .catch((error: unknown) => {
-        if (cancelled) return
-        setMessage(error instanceof Error ? error.message : 'Não foi possível carregar os saves locais.')
-        setScreen('error')
-      })
+        if (cancelled) return;
+        setMessage(
+          error instanceof Error
+            ? error.message
+            : "Não foi possível carregar os saves locais.",
+        );
+        setScreen("error");
+      });
 
     return () => {
-      cancelled = true
-    }
-  }, [])
+      cancelled = true;
+    };
+  }, []);
 
   useEffect(() => {
-    if (screen !== 'game' || !activeSave) return
-    if (riskActive || activeSave.dungeon.activeRun) return
-    if (!activeSave.idle.activeActivity && !activeSave.crafting.activeRecipe) return
+    if (screen !== "game" || !activeSave) return;
+    if (riskActive || activeSave.dungeon.activeRun) return;
+    if (!activeSave.idle.activeActivity && !activeSave.crafting.activeRecipe)
+      return;
 
     const timer = window.setInterval(() => {
-      let result: ReturnType<typeof processCurrentWork> | null = null
-      void applyActiveChange((current) => {
-        result = processCurrentWork(current, new Date().toISOString())
-        return result.save
-      }, () => result && !result.save.idle.activeActivity && !result.save.crafting.activeRecipe ? result.text ?? undefined : undefined).then(() => {
-        if (result?.text) setLastWorkResult(result.text)
-      }).catch((error: unknown) => {
-        setMessage(error instanceof Error ? error.message : 'Não foi possível salvar o progresso da atividade.')
-      })
-    }, 5000)
+      let result: ReturnType<typeof processCurrentWork> | null = null;
+      void applyActiveChange(
+        (current) => {
+          result = processCurrentWork(current, new Date().toISOString());
+          return result.save;
+        },
+        () =>
+          result &&
+          !result.save.idle.activeActivity &&
+          !result.save.crafting.activeRecipe
+            ? (result.text ?? undefined)
+            : undefined,
+      )
+        .then(() => {
+          if (result?.text) setLastWorkResult(result.text);
+        })
+        .catch((error: unknown) => {
+          setMessage(
+            error instanceof Error
+              ? error.message
+              : "Não foi possível salvar o progresso da atividade.",
+          );
+        });
+    }, 5000);
 
-    return () => window.clearInterval(timer)
-  }, [screen, activeSave, riskActive])
+    return () => window.clearInterval(timer);
+  }, [screen, activeSave, riskActive]);
 
   async function persistActive(save: OfflineGameSave, text?: string) {
-    await applyActiveChange((current) => ({ ...save, journey: current.journey }), text)
+    await applyActiveChange(
+      (current) => ({ ...save, journey: current.journey }),
+      text,
+    );
   }
 
   async function prepareRisk() {
-    if (!activeSave) throw new Error('Nenhum personagem ativo.')
-    setRiskActive(true)
+    if (!activeSave) throw new Error("Nenhum personagem ativo.");
+    setRiskActive(true);
     try {
       return await applyActiveChange((current) => {
-        const now = new Date().toISOString()
-        return pauseCurrentWorkForRisk(processCurrentWork(current, now).save, now)
-      })
-    } catch (error) { setRiskActive(false); throw error }
+        const now = new Date().toISOString();
+        return pauseCurrentWorkForRisk(
+          processCurrentWork(current, now).save,
+          now,
+        );
+      });
+    } catch (error) {
+      setRiskActive(false);
+      throw error;
+    }
   }
 
   async function handleCreateSave() {
-    const characterClass = CHARACTER_CLASSES.find((definition) => definition.id === selectedClassId)
-    const gift = INITIAL_GIFTS.find((definition) => definition.id === selectedGiftId)
-    if (!characterClass || !gift || !characterName.trim()) return
+    const characterClass = CHARACTER_CLASSES.find(
+      (definition) => definition.id === selectedClassId,
+    );
+    const gift = INITIAL_GIFTS.find(
+      (definition) => definition.id === selectedGiftId,
+    );
+    if (!characterClass || !gift || !characterName.trim()) return;
 
-    setIsSaving(true)
-    setMessage(null)
+    setIsSaving(true);
+    setMessage(null);
 
     try {
-      const now = new Date().toISOString()
+      const now = new Date().toISOString();
       const save = createOfflineGameSave({
         saveId: createSaveId(),
         createdAt: now,
@@ -247,333 +324,718 @@ function App() {
         characterName,
         characterClass,
         gift,
-      })
-      await saveRepository.put(save)
-      setSaves((current) => [save, ...current])
-      selectActiveSave(save)
-      setRiskActive(false)
-      setOfflineSummary(null)
-      setScreen('game')
+      });
+      await saveRepository.put(save);
+      setSaves((current) => [save, ...current]);
+      selectActiveSave(save);
+      setRiskActive(false);
+      setOfflineSummary(null);
+      setScreen("game");
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : 'Não foi possível criar o save.')
+      setMessage(
+        error instanceof Error
+          ? error.message
+          : "Não foi possível criar o save.",
+      );
     } finally {
-      setIsSaving(false)
+      setIsSaving(false);
     }
   }
 
   async function handleLoadSave(saveId: string) {
-    setMessage(null)
-    setOfflineSummary(null)
-    setLastWorkResult(null)
+    setMessage(null);
+    setOfflineSummary(null);
+    setLastWorkResult(null);
     try {
-      await writeQueue.current
-      const stored = await saveRepository.get(saveId)
+      await writeQueue.current;
+      const stored = await saveRepository.get(saveId);
       if (!stored) {
-        setMessage('Esse save não foi encontrado no armazenamento local.')
-        return
+        setMessage("Esse save não foi encontrado no armazenamento local.");
+        return;
       }
 
       if (stored.dungeon.activeRun) {
-        selectActiveSave(stored)
-        setSaves((current) => updateSaveInList(current, stored))
-        setRiskActive(true)
-        setMessage('Expedição em Dún Liath em andamento. Retome do ponto em que parou.')
-        setScreen('game')
-        return
+        selectActiveSave(stored);
+        setSaves((current) => updateSaveInList(current, stored));
+        setRiskActive(true);
+        setMessage(
+          "Expedição em Dún Liath em andamento. Retome do ponto em que parou.",
+        );
+        setScreen("game");
+        return;
       }
 
-      const now = new Date().toISOString()
-      const absence = Date.parse(now) - Date.parse(stored.updatedAt)
-      const result = processCurrentWork(stored, now)
-      await saveRepository.put(result.save)
-      setSaves((current) => updateSaveInList(current, result.save))
-      selectActiveSave(result.save)
-      setRiskActive(false)
-      setScreen('game')
+      const now = new Date().toISOString();
+      const absence = Date.parse(now) - Date.parse(stored.updatedAt);
+      const result = processCurrentWork(stored, now);
+      await saveRepository.put(result.save);
+      setSaves((current) => updateSaveInList(current, result.save));
+      selectActiveSave(result.save);
+      setRiskActive(false);
+      setScreen("game");
 
       if (result.text && absence >= 60_000) {
-        setOfflineSummary({ duration: formatAbsence(absence), result: result.text, goal: getJourneyReturnSummary(stored, result.save), milestone: getJourneyCraftFeedback(stored, result.save) })
+        setOfflineSummary({
+          duration: formatAbsence(absence),
+          result: result.text,
+          goal: getJourneyReturnSummary(stored, result.save),
+          milestone: getJourneyCraftFeedback(stored, result.save),
+        });
       } else if (result.text) {
-        const milestone = getJourneyCraftFeedback(stored, result.save)
-        setNotice({ text: milestone ?? result.text, kind: milestone ? 'achievement' : 'info' })
+        const milestone = getJourneyCraftFeedback(stored, result.save);
+        setNotice({
+          text: milestone ?? result.text,
+          kind: milestone ? "achievement" : "info",
+        });
       }
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : 'Não foi possível carregar o save.')
+      setMessage(
+        error instanceof Error
+          ? error.message
+          : "Não foi possível carregar o save.",
+      );
     }
   }
 
   async function handleStartActivity(activityDefinitionId: string) {
-    if (!activeSave) return
-    const activity = getIdleActivityDefinition(activityDefinitionId)
-    if (!activity) return
+    if (!activeSave) return;
+    const activity = getIdleActivityDefinition(activityDefinitionId);
+    if (!activity) return;
 
     try {
       await applyActiveChange((current) => {
-        const now = new Date().toISOString()
-        let save = processCurrentWork(current, now).save
-        if (save.crafting.activeRecipe) save = stopCraftingRecipe(save, now)
-        if (save.idle.activeActivity) save = stopIdleActivity(save, now)
-        return startIdleActivity(save, activity, now)
-      }, `${activity.resultName} agora é sua atividade Idle.`)
+        const now = new Date().toISOString();
+        let save = processCurrentWork(current, now).save;
+        if (save.crafting.activeRecipe) save = stopCraftingRecipe(save, now);
+        if (save.idle.activeActivity) save = stopIdleActivity(save, now);
+        return startIdleActivity(save, activity, now);
+      }, `${activity.resultName} agora é sua atividade Idle.`);
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : 'Não foi possível iniciar a atividade.')
+      setMessage(
+        error instanceof Error
+          ? error.message
+          : "Não foi possível iniciar a atividade.",
+      );
     }
   }
 
-  async function handleStartRecipe(recipeDefinitionId: string, targetEquipmentInstanceId: string | null = null) {
-    if (!activeSave) return
-    const recipe = getCraftingRecipeDefinition(recipeDefinitionId)
-    if (!recipe) return
+  async function handleStartRecipe(
+    recipeDefinitionId: string,
+    targetEquipmentInstanceId: string | null = null,
+  ) {
+    if (!activeSave) return;
+    const recipe = getCraftingRecipeDefinition(recipeDefinitionId);
+    if (!recipe) return;
 
     try {
       await applyActiveChange((current) => {
-        const now = new Date().toISOString()
-        let save = processCurrentWork(current, now).save
-        if (save.idle.activeActivity) save = stopIdleActivity(save, now)
-        if (save.crafting.activeRecipe) save = stopCraftingRecipe(save, now)
-        return startCraftingRecipe(save, recipe, now, targetEquipmentInstanceId)
-      }, `${recipe.name} iniciado. A atividade anterior foi substituída.`)
+        const now = new Date().toISOString();
+        let save = processCurrentWork(current, now).save;
+        if (save.idle.activeActivity) save = stopIdleActivity(save, now);
+        if (save.crafting.activeRecipe) save = stopCraftingRecipe(save, now);
+        return startCraftingRecipe(
+          save,
+          recipe,
+          now,
+          targetEquipmentInstanceId,
+        );
+      }, `${recipe.name} iniciado. A atividade anterior foi substituída.`);
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : 'Não foi possível iniciar a produção.')
+      setMessage(
+        error instanceof Error
+          ? error.message
+          : "Não foi possível iniciar a produção.",
+      );
     }
   }
 
   async function handleStopWork() {
-    if (!activeSave) return
+    if (!activeSave) return;
     await applyActiveChange((current) => {
-      const now = new Date().toISOString()
-      let save = processCurrentWork(current, now).save
-      if (save.idle.activeActivity) save = stopIdleActivity(save, now)
-      if (save.crafting.activeRecipe) save = stopCraftingRecipe(save, now)
-      return save
-    }, 'Atividade interrompida.')
+      const now = new Date().toISOString();
+      let save = processCurrentWork(current, now).save;
+      if (save.idle.activeActivity) save = stopIdleActivity(save, now);
+      if (save.crafting.activeRecipe) save = stopCraftingRecipe(save, now);
+      return save;
+    }, "Atividade interrompida.");
   }
 
   async function handleChooseJourneyGoal(recipeId: string | null) {
-    if (riskActive) throw new Error('Escolha sua meta após retornar a um lugar seguro.')
-    const recipe = recipeId ? getCraftingRecipeDefinition(recipeId) : null
-    if (recipeId && !recipe) throw new Error('Receita não encontrada.')
+    if (riskActive)
+      throw new Error("Escolha sua meta após retornar a um lugar seguro.");
+    const recipe = recipeId ? getCraftingRecipeDefinition(recipeId) : null;
+    if (recipeId && !recipe) throw new Error("Receita não encontrada.");
     await applyActiveChange((current) => {
-      const now = new Date().toISOString()
-      return chooseJourneyGoal(processCurrentWork(current, now).save, recipe, now)
-    })
+      const now = new Date().toISOString();
+      return chooseJourneyGoal(
+        processCurrentWork(current, now).save,
+        recipe,
+        now,
+      );
+    });
   }
 
   async function handleEquip(instanceId: string) {
-    if (!activeSave) return
-    const instance = activeSave.character.equipmentItems.find((item) => item.instanceId === instanceId)
-    if (!instance) return
-    const definition = getEquipmentDefinition(instance.definitionId)
-    if (!definition) return
+    if (!activeSave) return;
+    const instance = activeSave.character.equipmentItems.find(
+      (item) => item.instanceId === instanceId,
+    );
+    if (!instance) return;
+    const definition = getEquipmentDefinition(instance.definitionId);
+    if (!definition) return;
 
     try {
-      await applyActiveChange((current) => equipEquipment(current, instanceId, definition, new Date().toISOString()), `${definition.name} equipado.`)
+      await applyActiveChange(
+        (current) =>
+          equipEquipment(
+            current,
+            instanceId,
+            definition,
+            new Date().toISOString(),
+          ),
+        `${definition.name} equipado.`,
+      );
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : 'Não foi possível equipar o item.')
+      setMessage(
+        error instanceof Error
+          ? error.message
+          : "Não foi possível equipar o item.",
+      );
     }
   }
 
   async function handleAllocateAttributes(allocation: AttributeAllocation) {
-    if (!activeSave) return
+    if (!activeSave) return;
 
     try {
-      await applyActiveChange((current) => allocateAttributePoints(current, allocation, new Date().toISOString()), 'Distribuição de atributos confirmada.')
+      await applyActiveChange(
+        (current) =>
+          allocateAttributePoints(
+            current,
+            allocation,
+            new Date().toISOString(),
+          ),
+        "Distribuição de atributos confirmada.",
+      );
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : 'Não foi possível distribuir os pontos de atributo.')
-      throw error
+      setMessage(
+        error instanceof Error
+          ? error.message
+          : "Não foi possível distribuir os pontos de atributo.",
+      );
+      throw error;
     }
   }
 
   async function handleUnlockPrestigeNode(nodeId: string) {
-    if (!activeSave) return
+    if (!activeSave) return;
 
     try {
-      await applyActiveChange((current) => unlockCharacterPrestigeNode(current, nodeId, new Date().toISOString()), 'Nó de Prestígio desbloqueado.')
+      await applyActiveChange(
+        (current) =>
+          unlockCharacterPrestigeNode(
+            current,
+            nodeId,
+            new Date().toISOString(),
+          ),
+        "Nó de Prestígio desbloqueado.",
+      );
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : 'Não foi possível desbloquear o nó de Prestígio.')
+      setMessage(
+        error instanceof Error
+          ? error.message
+          : "Não foi possível desbloquear o nó de Prestígio.",
+      );
     }
   }
 
   async function handlePerformCharacterPrestige() {
-    if (!activeSave) return
+    if (!activeSave) return;
 
-    const characterClass = CHARACTER_CLASSES.find((definition) => definition.id === activeSave.character.classId)
+    const characterClass = CHARACTER_CLASSES.find(
+      (definition) => definition.id === activeSave.character.classId,
+    );
     if (!characterClass) {
-      setMessage('A classe deste personagem não foi encontrada no catálogo atual.')
-      return
+      setMessage(
+        "A classe deste personagem não foi encontrada no catálogo atual.",
+      );
+      return;
     }
 
     try {
-      await applyActiveChange((current) => performCharacterPrestige(current, characterClass.attributes, new Date().toISOString()), 'Prestígio realizado. A nova jornada começa no nível 1.')
+      await applyActiveChange(
+        (current) =>
+          performCharacterPrestige(
+            current,
+            characterClass.attributes,
+            new Date().toISOString(),
+          ),
+        "Prestígio realizado. A nova jornada começa no nível 1.",
+      );
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : 'Não foi possível realizar o Prestígio do personagem.')
+      setMessage(
+        error instanceof Error
+          ? error.message
+          : "Não foi possível realizar o Prestígio do personagem.",
+      );
     }
   }
 
-  async function handleDepositBankStack(definitionId: string, quantity: number) {
-    if (!activeSave) return
+  async function handleDepositBankStack(
+    definitionId: string,
+    quantity: number,
+  ) {
+    if (!activeSave) return;
     try {
-      await applyActiveChange((current) => depositInventoryStackToBank(current, definitionId, quantity, new Date().toISOString()), `Depósito realizado: ${quantity} item(ns).`)
+      await applyActiveChange(
+        (current) =>
+          depositInventoryStackToBank(
+            current,
+            definitionId,
+            quantity,
+            new Date().toISOString(),
+          ),
+        `Depósito realizado: ${quantity} item(ns).`,
+      );
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : 'Não foi possível depositar no Banco.')
+      setMessage(
+        error instanceof Error
+          ? error.message
+          : "Não foi possível depositar no Banco.",
+      );
     }
   }
 
-  async function handleWithdrawBankStack(definitionId: string, quantity: number) {
-    if (!activeSave) return
+  async function handleWithdrawBankStack(
+    definitionId: string,
+    quantity: number,
+  ) {
+    if (!activeSave) return;
     try {
-      await applyActiveChange((current) => withdrawInventoryStackFromBank(current, definitionId, quantity, new Date().toISOString()), `Retirada realizada: ${quantity} item(ns).`)
+      await applyActiveChange(
+        (current) =>
+          withdrawInventoryStackFromBank(
+            current,
+            definitionId,
+            quantity,
+            new Date().toISOString(),
+          ),
+        `Retirada realizada: ${quantity} item(ns).`,
+      );
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : 'Não foi possível retirar do Banco.')
+      setMessage(
+        error instanceof Error
+          ? error.message
+          : "Não foi possível retirar do Banco.",
+      );
     }
   }
 
   async function handleDepositBankEquipment(instanceId: string) {
-    if (!activeSave) return
+    if (!activeSave) return;
     try {
-      await applyActiveChange((current) => depositEquipmentToBank(current, instanceId, new Date().toISOString()), 'Equipamento depositado no Banco.')
+      await applyActiveChange(
+        (current) =>
+          depositEquipmentToBank(current, instanceId, new Date().toISOString()),
+        "Equipamento depositado no Banco.",
+      );
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : 'Não foi possível depositar o equipamento.')
+      setMessage(
+        error instanceof Error
+          ? error.message
+          : "Não foi possível depositar o equipamento.",
+      );
     }
   }
 
   async function handleWithdrawBankEquipment(instanceId: string) {
-    if (!activeSave) return
+    if (!activeSave) return;
     try {
-      await applyActiveChange((current) => withdrawEquipmentFromBank(current, instanceId, new Date().toISOString()), 'Equipamento retirado do Banco.')
+      await applyActiveChange(
+        (current) =>
+          withdrawEquipmentFromBank(
+            current,
+            instanceId,
+            new Date().toISOString(),
+          ),
+        "Equipamento retirado do Banco.",
+      );
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : 'Não foi possível retirar o equipamento.')
+      setMessage(
+        error instanceof Error
+          ? error.message
+          : "Não foi possível retirar o equipamento.",
+      );
     }
   }
 
   function startNewSave() {
-    setCharacterName('')
-    setSelectedClassId(null)
-    setSelectedGiftId(null)
-    setCreationStep(0)
-    setMessage(null)
-    setOfflineSummary(null)
-    setRiskActive(false)
-    setScreen('create')
+    setCharacterName("");
+    setSelectedClassId(null);
+    setSelectedGiftId(null);
+    setCreationStep(0);
+    setMessage(null);
+    setOfflineSummary(null);
+    setRiskActive(false);
+    setScreen("create");
   }
 
   function switchSave() {
-    selectActiveSave(null)
-    setLastWorkResult(null)
-    setOfflineSummary(null)
-    setRiskActive(false)
-    setMessage(null)
-    setScreen('save-list')
+    selectActiveSave(null);
+    setLastWorkResult(null);
+    setOfflineSummary(null);
+    setRiskActive(false);
+    setMessage(null);
+    setScreen("save-list");
   }
 
-  if (screen === 'loading') {
-    return <main className="entry-shell entry-centered"><div className="loading-mark" /><p className="muted">Carregando saves locais…</p></main>
+  if (screen === "loading") {
+    return (
+      <main className="entry-shell entry-centered">
+        <div className="loading-mark" />
+        <p className="muted">Carregando saves locais…</p>
+      </main>
+    );
   }
 
-  if (screen === 'error') {
-    return <main className="entry-shell entry-centered"><p className="section-kicker">Greywake</p><h1 className="display-title">Não foi possível abrir o armazenamento local.</h1><p className="muted">{message}</p></main>
+  if (screen === "error") {
+    return (
+      <main className="entry-shell entry-centered">
+        <p className="section-kicker">Greywake</p>
+        <h1 className="display-title">
+          Não foi possível abrir o armazenamento local.
+        </h1>
+        <p className="muted">{message}</p>
+      </main>
+    );
   }
 
-  if (screen === 'game' && activeSave) {
+  if (screen === "game" && activeSave) {
     if (offlineSummary) {
       return (
         <main className="offline-return-screen">
           <section className="offline-return-card">
             <p className="section-kicker">Bem-vindo de volta</p>
             <h1 className="display-title">{activeSave.character.name}</h1>
-            <p className="offline-duration">Ausente por <strong>{offlineSummary.duration}</strong></p>
-            <div className="offline-result"><span>Durante sua ausência</span><strong>{offlineSummary.result}</strong></div>
-            {offlineSummary.goal ? <div className="offline-goal-result"><GameIcon icon="book-open" size={32} /><p>{offlineSummary.goal}</p></div> : null}
-            {offlineSummary.milestone ? <p className="offline-milestone">{offlineSummary.milestone}</p> : null}
-            <button className="primary-button compact" type="button" onClick={() => setOfflineSummary(null)}>Continuar</button>
+            <p className="offline-duration">
+              Ausente por <strong>{offlineSummary.duration}</strong>
+            </p>
+            <div className="offline-result">
+              <span>Durante sua ausência</span>
+              <strong>{offlineSummary.result}</strong>
+            </div>
+            {offlineSummary.goal ? (
+              <div className="offline-goal-result">
+                <GameIcon icon="book-open" size={32} />
+                <p>{offlineSummary.goal}</p>
+              </div>
+            ) : null}
+            {offlineSummary.milestone ? (
+              <p className="offline-milestone">{offlineSummary.milestone}</p>
+            ) : null}
+            <button
+              className="primary-button compact"
+              type="button"
+              onClick={() => setOfflineSummary(null)}
+            >
+              Continuar
+            </button>
           </section>
         </main>
-      )
+      );
     }
 
     return (
       <>
-      <WebGameStatus canUpdate={false} />
-      <GameShell
-        save={activeSave}
-        message={message}
-        messageKind={notice?.kind ?? 'info'}
-        lastWorkResult={lastWorkResult}
-        onDismissMessage={() => setMessage(null)}
-        riskActive={riskActive}
-        onRiskStateChange={setRiskActive}
-        onSwitchSave={switchSave}
-        onPersist={persistActive}
-        prepareRisk={prepareRisk}
-        onStartActivity={handleStartActivity}
-        onStartRecipe={handleStartRecipe}
-        onChooseJourneyGoal={handleChooseJourneyGoal}
-        onStopWork={handleStopWork}
-        onEquip={handleEquip}
-        onAllocateAttributes={handleAllocateAttributes}
-        onPerformCharacterPrestige={handlePerformCharacterPrestige}
-        onUnlockPrestigeNode={handleUnlockPrestigeNode}
-        onDepositBankStack={handleDepositBankStack}
-        onWithdrawBankStack={handleWithdrawBankStack}
-        onDepositBankEquipment={handleDepositBankEquipment}
-        onWithdrawBankEquipment={handleWithdrawBankEquipment}
-      />
+        <WebGameStatus canUpdate={false} />
+        <GameShell
+          save={activeSave}
+          message={message}
+          messageKind={notice?.kind ?? "info"}
+          lastWorkResult={lastWorkResult}
+          onDismissMessage={() => setMessage(null)}
+          riskActive={riskActive}
+          onRiskStateChange={setRiskActive}
+          onSwitchSave={switchSave}
+          onPersist={persistActive}
+          prepareRisk={prepareRisk}
+          onStartActivity={handleStartActivity}
+          onStartRecipe={handleStartRecipe}
+          onChooseJourneyGoal={handleChooseJourneyGoal}
+          onStopWork={handleStopWork}
+          onEquip={handleEquip}
+          onAllocateAttributes={handleAllocateAttributes}
+          onPerformCharacterPrestige={handlePerformCharacterPrestige}
+          onUnlockPrestigeNode={handleUnlockPrestigeNode}
+          onDepositBankStack={handleDepositBankStack}
+          onWithdrawBankStack={handleWithdrawBankStack}
+          onDepositBankEquipment={handleDepositBankEquipment}
+          onWithdrawBankEquipment={handleWithdrawBankEquipment}
+        />
       </>
-    )
+    );
   }
 
-  if (screen === 'save-list') {
+  if (screen === "save-list") {
     return (
-      <main className="entry-shell"><WebGameStatus canUpdate />
-        <header className="entry-header"><div><p className="section-kicker">Greywake</p><strong className="entry-brand">Build 0.1 · Offline</strong></div><button className="primary-button compact" type="button" onClick={startNewSave}>Novo personagem</button></header>
-        <section className="entry-intro"><p className="section-kicker">Continuar</p><h1 className="display-title">Escolha um personagem</h1><p className="muted">Saves locais, persistentes e separados de qualquer futuro modo Online.</p></section>
+      <main className="entry-shell">
+        <WebGameStatus canUpdate />
+        <header className="entry-header">
+          <div>
+            <p className="section-kicker">Greywake</p>
+            <strong className="entry-brand">Build 0.1 · Offline</strong>
+          </div>
+          <button
+            className="primary-button compact"
+            type="button"
+            onClick={startNewSave}
+          >
+            Novo personagem
+          </button>
+        </header>
+        <section className="entry-intro">
+          <p className="section-kicker">Continuar</p>
+          <h1 className="display-title">Escolha um personagem</h1>
+          <p className="muted">
+            Saves locais, persistentes e separados de qualquer futuro modo
+            Online.
+          </p>
+        </section>
         {message ? <p className="inline-message">{message}</p> : null}
         <section className="save-grid-runtime">
           {saves.map((save) => (
-            <button className="save-card-runtime" type="button" key={save.saveId} onClick={() => void handleLoadSave(save.saveId)}>
-              <span>{getClassName(save.character.classId)} · Nv. {save.character.level}</span>
+            <button
+              className="save-card-runtime"
+              type="button"
+              key={save.saveId}
+              onClick={() => void handleLoadSave(save.saveId)}
+            >
+              <span>
+                {getClassName(save.character.classId)} · Nv.{" "}
+                {save.character.level}
+              </span>
               <strong>{save.character.name}</strong>
               <small>{getGiftName(save.character.giftId)}</small>
-              <em>{save.dungeon.activeRun ? 'EXPEDIÇÃO ATIVA · RETOMAR DÚN LIATH' : 'OFFLINE · LOCAL'}</em>
+              <em>
+                {save.dungeon.activeRun
+                  ? "EXPEDIÇÃO ATIVA · RETOMAR DÚN LIATH"
+                  : "OFFLINE · LOCAL"}
+              </em>
             </button>
           ))}
         </section>
         <AssetCredits />
       </main>
-    )
+    );
   }
 
   return (
-    <main className="entry-shell"><WebGameStatus canUpdate={creationStep === 0 && !isSaving} />
-      <header className="entry-header"><div><p className="section-kicker">Novo jogo</p><strong className="entry-brand">Greywake</strong></div>{saves.length > 0 ? <button className="ghost-button" type="button" onClick={() => setScreen('save-list')}>Voltar aos saves</button> : null}</header>
+    <main className="entry-shell">
+      <WebGameStatus canUpdate={creationStep === 0 && !isSaving} />
+      <header className="entry-header">
+        <div>
+          <p className="section-kicker">Novo jogo</p>
+          <strong className="entry-brand">Greywake</strong>
+        </div>
+        {saves.length > 0 ? (
+          <button
+            className="ghost-button"
+            type="button"
+            onClick={() => setScreen("save-list")}
+          >
+            Voltar aos saves
+          </button>
+        ) : null}
+      </header>
       <section className="creation-stage">
-        <div className="creation-progress" aria-label={`Etapa ${creationStep + 1} de 5`}>
-          {[0, 1, 2, 3, 4].map((step) => <span key={step} className={step <= creationStep ? 'active' : ''}>{step + 1}</span>)}
+        <div
+          className="creation-progress"
+          aria-label={`Etapa ${creationStep + 1} de 5`}
+        >
+          {[0, 1, 2, 3, 4].map((step) => (
+            <span key={step} className={step <= creationStep ? "active" : ""}>
+              {step + 1}
+            </span>
+          ))}
         </div>
 
         {creationStep === 0 ? (
-          <div className="creation-focus"><p className="section-kicker">Modo</p><h1 className="display-title">Offline</h1><p className="muted">Este personagem usa save local persistente. Nenhum sistema Online é necessário para jogar.</p><button className="primary-button compact" type="button" onClick={() => setCreationStep(1)}>Continuar</button></div>
+          <div className="creation-focus">
+            <p className="section-kicker">Modo</p>
+            <h1 className="display-title">Offline</h1>
+            <p className="muted">
+              Este personagem usa save local persistente. Nenhum sistema Online
+              é necessário para jogar.
+            </p>
+            <button
+              className="primary-button compact"
+              type="button"
+              onClick={() => setCreationStep(1)}
+            >
+              Continuar
+            </button>
+          </div>
         ) : null}
 
         {creationStep === 1 ? (
-          <div className="creation-focus"><p className="section-kicker">Nome</p><h1 className="display-title">Quem desperta em Greywake?</h1><label className="field-stack"><span>Nome do personagem</span><input autoFocus autoComplete="off" value={characterName} onChange={(event) => setCharacterName(event.target.value)} placeholder="Nome" /></label><div className="button-row"><button className="ghost-button" type="button" onClick={() => setCreationStep(0)}>Voltar</button><button className="primary-button compact" type="button" disabled={!characterName.trim()} onClick={() => setCreationStep(2)}>Continuar</button></div></div>
+          <div className="creation-focus">
+            <p className="section-kicker">Nome</p>
+            <h1 className="display-title">Quem desperta em Greywake?</h1>
+            <label className="field-stack">
+              <span>Nome do personagem</span>
+              <input
+                autoFocus
+                autoComplete="off"
+                value={characterName}
+                onChange={(event) => setCharacterName(event.target.value)}
+                placeholder="Nome"
+              />
+            </label>
+            <div className="button-row">
+              <button
+                className="ghost-button"
+                type="button"
+                onClick={() => setCreationStep(0)}
+              >
+                Voltar
+              </button>
+              <button
+                className="primary-button compact"
+                type="button"
+                disabled={!characterName.trim()}
+                onClick={() => setCreationStep(2)}
+              >
+                Continuar
+              </button>
+            </div>
+          </div>
         ) : null}
 
         {creationStep === 2 ? (
-          <div className="creation-focus wide"><p className="section-kicker">Classe inicial</p><h1 className="display-title">Escolha como começar</h1><p className="muted">A classe define seu início, não seu destino.</p><div className="creation-choice-grid">{CHARACTER_CLASSES.map((definition) => <button className={`creation-choice ${selectedClassId === definition.id ? 'selected' : ''}`} type="button" key={definition.id} onClick={() => setSelectedClassId(definition.id)}><strong>{definition.name}</strong><span>{definition.summary}</span></button>)}</div><div className="button-row"><button className="ghost-button" type="button" onClick={() => setCreationStep(1)}>Voltar</button><button className="primary-button compact" type="button" disabled={!selectedClassId} onClick={() => setCreationStep(3)}>Continuar</button></div></div>
+          <div className="creation-focus wide">
+            <p className="section-kicker">Classe inicial</p>
+            <h1 className="display-title">Escolha como começar</h1>
+            <p className="muted">
+              A classe define seu início, não seu destino.
+            </p>
+            <div className="creation-choice-grid">
+              {CHARACTER_CLASSES.map((definition) => {
+                const gif = CLASS_GIFS[definition.id];
+
+                return (
+                  <button
+                    key={definition.id}
+                    type="button"
+                    className={`creation-choice ${
+                      gif ? "creation-class-choice" : ""
+                    } ${selectedClassId === definition.id ? "selected" : ""}`}
+                    aria-pressed={selectedClassId === definition.id}
+                    onClick={() => setSelectedClassId(definition.id)}
+                  >
+                    {gif && (
+                      <img
+                        className="creation-class-gif"
+                        src={gif}
+                        alt=""
+                        width={80}
+                        height={80}
+                      />
+                    )}
+
+                    <span className="creation-class-copy">
+                      <strong>{definition.name}</strong>
+                      <span>{definition.summary}</span>
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
         ) : null}
 
         {creationStep === 3 ? (
-          <div className="creation-focus wide"><p className="section-kicker">Presente</p><h1 className="display-title">Escolha o que levar</h1><div className="creation-choice-grid">{INITIAL_GIFTS.map((definition) => <button className={`creation-choice ${selectedGiftId === definition.id ? 'selected' : ''}`} type="button" key={definition.id} onClick={() => setSelectedGiftId(definition.id)}><strong>{definition.name}</strong><span>{definition.summary}</span></button>)}</div><div className="button-row"><button className="ghost-button" type="button" onClick={() => setCreationStep(2)}>Voltar</button><button className="primary-button compact" type="button" disabled={!selectedGiftId} onClick={() => setCreationStep(4)}>Continuar</button></div></div>
+          <div className="creation-focus wide">
+            <p className="section-kicker">Presente</p>
+            <h1 className="display-title">Escolha o que levar</h1>
+            <div className="creation-choice-grid">
+              {INITIAL_GIFTS.map((definition) => (
+                <button
+                  className={`creation-choice ${selectedGiftId === definition.id ? "selected" : ""}`}
+                  type="button"
+                  key={definition.id}
+                  onClick={() => setSelectedGiftId(definition.id)}
+                >
+                  <strong>{definition.name}</strong>
+                  <span>{definition.summary}</span>
+                </button>
+              ))}
+            </div>
+            <div className="button-row">
+              <button
+                className="ghost-button"
+                type="button"
+                onClick={() => setCreationStep(2)}
+              >
+                Voltar
+              </button>
+              <button
+                className="primary-button compact"
+                type="button"
+                disabled={!selectedGiftId}
+                onClick={() => setCreationStep(4)}
+              >
+                Continuar
+              </button>
+            </div>
+          </div>
         ) : null}
 
         {creationStep === 4 ? (
-          <div className="creation-focus"><p className="section-kicker">Confirmar</p><h1 className="display-title">{characterName}</h1><div className="creation-summary-runtime"><div><span>Modo</span><strong>{BUILD_SAVE_MODE}</strong></div><div><span>Classe</span><strong>{selectedClassId ? getClassName(selectedClassId) : '—'}</strong></div><div><span>Presente</span><strong>{selectedGiftId ? getGiftName(selectedGiftId) : '—'}</strong></div></div>{message ? <p className="inline-message">{message}</p> : null}<div className="button-row"><button className="ghost-button" type="button" onClick={() => setCreationStep(3)}>Voltar</button><button className="primary-button compact" type="button" disabled={isSaving} onClick={() => void handleCreateSave()}>{isSaving ? 'Criando…' : 'Criar personagem'}</button></div></div>
+          <div className="creation-focus">
+            <p className="section-kicker">Confirmar</p>
+            <h1 className="display-title">{characterName}</h1>
+            <div className="creation-summary-runtime">
+              <div>
+                <span>Modo</span>
+                <strong>{BUILD_SAVE_MODE}</strong>
+              </div>
+              <div>
+                <span>Classe</span>
+                <strong>
+                  {selectedClassId ? getClassName(selectedClassId) : "—"}
+                </strong>
+              </div>
+              <div>
+                <span>Presente</span>
+                <strong>
+                  {selectedGiftId ? getGiftName(selectedGiftId) : "—"}
+                </strong>
+              </div>
+            </div>
+            {message ? <p className="inline-message">{message}</p> : null}
+            <div className="button-row">
+              <button
+                className="ghost-button"
+                type="button"
+                onClick={() => setCreationStep(3)}
+              >
+                Voltar
+              </button>
+              <button
+                className="primary-button compact"
+                type="button"
+                disabled={isSaving}
+                onClick={() => void handleCreateSave()}
+              >
+                {isSaving ? "Criando…" : "Criar personagem"}
+              </button>
+            </div>
+          </div>
         ) : null}
       </section>
       <AssetCredits />
     </main>
-  )
+  );
 }
 
-export default App
+export default App;
