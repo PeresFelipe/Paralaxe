@@ -6,6 +6,7 @@ import './idle-progress.css'
 import './generated-art.css'
 import './compact-layout.css'
 import './typography.css'
+import './game-theme.css'
 
 const rootElement = document.getElementById('root')
 

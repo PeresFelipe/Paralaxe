@@ -2,6 +2,7 @@ export default function AssetCredits() {
   return (
     <details className="asset-credits">
       <summary>Créditos</summary>
+      <p>Molduras e ornamentos <a href="https://hypnobius.itch.io/dark-ages-ui" target="_blank" rel="noopener noreferrer">Dark Ages UI</a> por Hypnobius. Uso pessoal e comercial gratuito, conforme a licença do autor. Recortes do tilesheet original, sem recoloração.</p>
       <p>
         Fonte <a href="https://ninjikin.itch.io/font-antiquity-script" target="_blank" rel="noopener noreferrer">Antiquity Print</a>
         {' por '}<a href="https://ninjikin.itch.io/" target="_blank" rel="noopener noreferrer">SciGho</a>

@@ -61,8 +61,8 @@ export default function ActivitiesView({ save, lastWorkResult, selectedSkill, on
   return (
     <section className="feature-view activities-view" aria-label="Atividades">
       <div className="view-heading">
-        <div><p className="section-kicker">Atividades</p><h1 className="display-title">{skillLabels[selectedSkill]}</h1></div>
-        <p className="activity-rule muted">Uma atividade por vez · continua em áreas seguras</p>
+        <div><p className="section-kicker">Ofícios da Cidade Livre</p><h1 className="display-title"><GameIcon icon={skillIconById[selectedSkill]} size={32} />{skillLabels[selectedSkill]}</h1></div>
+        <span className={`activity-state ${activeSkill === selectedSkill ? 'activity-state--running' : ''}`}>{activeSkill === selectedSkill ? 'EM ATIVIDADE' : 'EM CONSULTA'}</span>
       </div>
       <div className="activities-layout">
         <nav className="activities-skill-rail" aria-label="Escolher habilidade">
@@ -71,7 +71,7 @@ export default function ActivitiesView({ save, lastWorkResult, selectedSkill, on
               <h2 className="section-title-runtime">{label}</h2>
               <div className="skill-card-grid">
                 {skills.map((skill) => <button className={`skill-card ${selectedSkill === skill ? 'active' : ''}`} type="button" key={skill} aria-current={selectedSkill === skill ? 'true' : undefined} onClick={() => chooseSkill(skill)}>
-                  <span className="skill-card__label"><GameIcon icon={skillIconById[skill]} size={24} /><span>{skillLabels[skill]}{activeSkill === skill ? <small className="skill-running">Em curso</small> : null}</span></span><strong>Nv. {save.skills[skill].level}</strong>
+                  <span className="skill-card__label"><GameIcon icon={skillIconById[skill]} size={32} /><span>{skillLabels[skill]}{activeSkill === skill ? <small className="skill-running">Em curso</small> : null}</span></span><strong>{save.skills[skill].level}</strong>
                 </button>)}
               </div>
             </div>
@@ -84,16 +84,24 @@ export default function ActivitiesView({ save, lastWorkResult, selectedSkill, on
         </label>
         <div className="activities-workspace" aria-busy={pending}>
           <div className="activity-stage">
+            <div className="activity-scene-wrap">
             <div className={`context-art activity-scene${animatedArt ? ' context-art--individual' : ''}`} data-skill={selectedSkill} aria-hidden="true">
               {animatedArt ? <picture>
-                <source media="(prefers-reduced-motion: no-preference)" srcSet={animatedArt.motion} />
+                <source media="(prefers-reduced-motion: no-preference)" srcSet={activeSkill === selectedSkill ? animatedArt.motion : animatedArt.still} />
                 <img src={animatedArt.still} alt="" width={480} height={270} decoding="async" />
               </picture> : null}
             </div>
+            <p className="activity-scene-caption">{activities[0]?.name ?? skillLabels[selectedSkill]}</p>
+            </div>
             <div className="activity-live panel">
-              <IdleProgressIndicator save={save} />
+              {activeSkill === selectedSkill ? <IdleProgressIndicator save={save} /> : <div className="activity-ready">
+                <p className="section-kicker">{recipes.length ? 'Na bancada' : 'No campo'}</p>
+                <h2>{recipes.length ? 'Tudo começa com os materiais.' : 'O próximo ciclo começa com você.'}</h2>
+                <p>{work ? `${work} continua em curso. Iniciar uma nova tarefa substitui a atual.` : 'Escolha abaixo o que deseja coletar ou produzir.'}</p>
+                {activeSkill ? <button className="material-source" type="button" onClick={() => chooseSkill(activeSkill)}>Ver atividade em curso →</button> : null}
+              </div>}
               <div className="activity-live-actions">
-                {work ? <button className="ghost-button" type="button" disabled={pending} onClick={() => void act(onStopWork)}>Parar atividade</button> : <span className="muted">Escolha um recurso ou receita abaixo.</span>}
+                {activeSkill === selectedSkill ? <button className="ghost-button" type="button" disabled={pending} onClick={() => void act(onStopWork)}>Parar atividade</button> : null}
               </div>
             </div>
           </div>
@@ -104,6 +112,7 @@ export default function ActivitiesView({ save, lastWorkResult, selectedSkill, on
           </div>
           {actionError ? <p className="fact-warning" role="alert">{actionError}</p> : null}
           <div className="activity-options">
+            <div className="activity-options-heading"><h2>{recipes.length ? 'Receitas conhecidas' : 'Recursos disponíveis'}</h2><span>Rendimento por ciclo</span></div>
             {activities.map((activity) => {
               const active = idle?.id === activity.id
               const unlocked = progress.level >= activity.requiredSkillLevel

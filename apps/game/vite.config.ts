@@ -19,15 +19,15 @@ export default defineConfig({
       start_url: '/',
       scope: '/',
       display: 'standalone',
-      background_color: '#101315',
-      theme_color: '#171c1f',
+      background_color: '#10130f',
+      theme_color: '#171d14',
       icons: [
         { src: '/icons/greywake-192.png', sizes: '192x192', type: 'image/png' },
         { src: '/icons/greywake-512.png', sizes: '512x512', type: 'image/png', purpose: 'any maskable' },
       ],
     },
     workbox: {
-      globPatterns: ['**/*.{js,css,html,svg,png,webp,gif,ttf}', 'fonts/**/*.txt', 'art/icons/**/*.txt'],
+      globPatterns: ['**/*.{js,css,html,svg,png,webp,gif,ttf}', 'fonts/**/*.txt', 'art/icons/**/*.txt', 'art/ui/**/*.txt'],
       maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
       cleanupOutdatedCaches: true,
       ignoreURLParametersMatching: [/^v$/, /^utm_/, /^fbclid$/],

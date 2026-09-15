@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react'
 import {
+  CHARACTER_CLASSES,
   INITIAL_CRAFTING_RECIPES,
   INITIAL_IDLE_ACTIVITIES,
   getCombatAbilityDefinition,
@@ -25,8 +26,9 @@ import PrestigePanel from './PrestigePanel'
 import QuickSheet from './QuickSheet'
 import AssetCredits from './AssetCredits'
 import GameIcon from './GameIcon'
-import { getEquipmentIcon, getItemIcon, hudIconById, skillIconById } from './assetIcons'
-import { itemLabels, skillLabels } from './gameLabels'
+import InventoryBoard from './InventoryBoard'
+import { getEquipmentIcon, hudIconById, skillIconById } from './assetIcons'
+import { skillLabels } from './gameLabels'
 
 type PrimaryDestination = 'character' | 'activities' | 'adventure' | 'city'
 type CharacterTab = 'overview' | 'attributes' | 'equipment' | 'techniques' | 'inventory' | 'prestige'
@@ -132,6 +134,7 @@ export default function GameShell({
   const [preparationActive, setPreparationActive] = useState(false)
 
   const stats = useMemo(() => derivePlayerCombatStats(save, combatCatalog), [save])
+  const className = CHARACTER_CLASSES.find((item) => item.id === save.character.classId)?.name
   const work = activeWork(save)
   const journey = journeyCopy(save)
   const dungeonActive = Boolean(save.dungeon.activeRun)
@@ -160,14 +163,14 @@ export default function GameShell({
   const mainClass = `game-shell ${focusedRisk ? 'game-shell--risk' : ''} ${preparationActive && !focusedRisk ? 'game-shell--preparation' : ''}`
 
   return (
-    <div className={mainClass}>
+    <div className={mainClass} data-destination={destination}>
       <a className="skip-link" href="#game-content">Ir para o jogo</a>
       <header className="game-topbar">
         <div className="player-identity">
-          <div className="avatar-placeholder" aria-hidden="true">{save.character.name.slice(0, 1).toUpperCase()}</div>
+          <div className="avatar-placeholder" aria-hidden="true"><GameIcon icon="helmet-barbute" size={32} /></div>
           <div>
             <strong className="player-name">{save.character.name}</strong>
-            <span>Nível {save.character.level}</span>
+            <span>{className} · Nível {save.character.level}</span>
           </div>
         </div>
         <div className="global-resources" aria-label="Estado global do personagem">
@@ -179,20 +182,32 @@ export default function GameShell({
         </div>
       </header>
 
-      <nav className="primary-nav" aria-label="Navegação principal">
-        {([
-          ['character', 'Personagem'],
-          ['activities', 'Atividades'],
-          ['adventure', 'Aventura'],
-          ['city', 'Cidade'],
-        ] as const).map(([id, label]) => (
-          <button key={id} type="button" className={destination === id ? 'active' : ''} aria-current={destination === id ? 'page' : undefined} onClick={() => go(id)}>{label}</button>
-        ))}
-      </nav>
+      <aside className="game-sidebar" aria-label="Menu do jogo">
+        <div className="game-brand"><span className="brand-sigil" aria-hidden="true"><GameIcon icon="sword-long" size={48} /></span><strong>GREYWAKE</strong><small>CRÔNICAS DA CIDADE LIVRE</small><span className="brand-flourish" aria-hidden="true" /></div>
+        <nav className="primary-nav" aria-label="Navegação principal">
+          {([
+            ['character', 'Personagem', 'helmet-barbute', 'Seu legado'],
+            ['activities', 'Atividades', 'pickaxe', 'Ofícios e recursos'],
+            ['adventure', 'Aventura', 'sword-long', 'Além dos portões'],
+            ['city', 'Cidade', 'book-open', 'Abrigo e comércio'],
+          ] as const).map(([id, label, icon, detail]) => (
+            <button key={id} type="button" className={destination === id ? 'active' : ''} disabled={focusedRisk}
+              aria-current={destination === id ? 'page' : undefined} onClick={() => go(id)}>
+              <GameIcon icon={icon} size={32} /><span>{label}<small>{detail}</small></span>
+            </button>
+          ))}
+        </nav>
+        <div className={`realm-status ${focusedRisk ? 'realm-status--risk' : ''}`}>
+          <span className="realm-light" aria-hidden="true" /><strong>{focusedRisk ? 'Em expedição' : 'Cidade Livre'}</strong>
+          <small>{focusedRisk ? 'Atividade externa pausada' : 'Território seguro'}</small>
+        </div>
+        <div className="sidebar-footnote">O mundo espera.<br />Seu legado permanece.</div>
+      </aside>
 
       {preparationActive && !focusedRisk ? <div className="preparation-state-strip"><span>PREPARAÇÃO</span><strong>Dún Liath · Idle continua</strong></div> : null}
       {focusedRisk ? <div className="risk-state-strip"><span>ESTADO DE RISCO</span><strong>{dungeonActive ? 'Dún Liath · Idle pausado' : 'Combate · Idle pausado'}</strong></div> : null}
 
+      <div className="game-layout">
       <main className="game-content" id="game-content" tabIndex={-1}>
 
         {destination === 'character' ? (
@@ -245,12 +260,26 @@ export default function GameShell({
             onWithdrawBankEquipment={onWithdrawBankEquipment}
           />
         ) : null}
-        <AssetCredits />
+        <div className="mobile-credits"><AssetCredits /></div>
       </main>
+      <aside className="game-companion" aria-label="Resumo da jornada">
+        <section className="companion-section">
+          <div className="companion-heading"><GameIcon icon="book-open" size={24} /><h2>Jornada</h2></div>
+          <p className="section-kicker">EM ANDAMENTO</p><h3>{journey.title}</h3>
+          <p className="companion-copy">{journey.body}</p>
+          <button className="ghost-button full-width" type="button" disabled={focusedRisk} onClick={() => setQuickPanel('journey')}>Consultar jornada</button>
+        </section>
+        <section className="companion-section">
+          <InventoryBoard save={save} compact />
+          <button className="ghost-button full-width" type="button" disabled={focusedRisk} onClick={openFullInventory}>Abrir bolsa</button>
+        </section>
+        <AssetCredits />
+      </aside>
+      </div>
 
-      {!focusedRisk ? (
-        <footer className="continuity-bar">
+      <footer className="continuity-bar">
           <button
+            disabled={focusedRisk}
             className="current-work"
             type="button"
             onClick={() => {
@@ -259,15 +288,14 @@ export default function GameShell({
               if (work) setSelectedSkill(work.skillId)
             }}
           >
-            <span aria-hidden="true">⌁</span>
-            <IdleProgressIndicator save={save} compact />
+            <span aria-hidden="true"><GameIcon icon={work ? skillIconById[work.skillId] : 'pickaxe'} size={32} /></span>
+            <IdleProgressIndicator save={save} compact paused={focusedRisk} />
           </button>
           <div className="continuity-actions">
-            <button type="button" aria-haspopup="dialog" onClick={() => setQuickPanel('inventory')}>Inventário</button>
-            <button type="button" aria-haspopup="dialog" onClick={() => setQuickPanel('journey')}>Jornada</button>
+            <button type="button" disabled={focusedRisk} aria-haspopup="dialog" onClick={() => setQuickPanel('inventory')}><GameIcon icon="armor-layered" size={24} /><span>Inventário</span></button>
+            <button type="button" disabled={focusedRisk} aria-haspopup="dialog" onClick={() => setQuickPanel('journey')}><GameIcon icon="book-open" size={24} /><span>Jornada</span></button>
           </div>
         </footer>
-      ) : null}
 
       {message ? <div className="game-notice"><p role="status">{message}</p><button type="button" onClick={onDismissMessage} aria-label="Dispensar mensagem">×</button></div> : null}
 
@@ -276,11 +304,7 @@ export default function GameShell({
           <button className="sheet-close" type="button" onClick={() => setQuickPanel(null)} aria-label="Fechar">×</button>
           <p className="section-kicker">Consulta rápida</p>
           <h2 className="display-title">Inventário</h2>
-          <div className="sheet-list">
-            {save.character.inventory.length === 0 ? <p className="muted">Ainda não há itens aqui.</p> : save.character.inventory.slice(0, 8).map((stack) => (
-              <div className="sheet-row" key={stack.definitionId}><span className="sheet-item-label"><GameIcon icon={getItemIcon(stack.definitionId)} size={24} /><span>{itemLabels[stack.definitionId] ?? stack.definitionId}</span></span><strong>×{stack.quantity}</strong></div>
-            ))}
-          </div>
+          <InventoryBoard save={save} compact onEquip={onEquip} />
           <button className="ghost-button full-width" type="button" onClick={openFullInventory}>Abrir Inventário completo</button>
         </QuickSheet>
       ) : null}
@@ -322,7 +346,7 @@ function CharacterView({
 
   return (
     <section className="feature-view">
-      <div className="view-heading"><div><p className="section-kicker">Personagem</p><h1 className="display-title">{save.character.name}</h1><p className="muted">Visão geral do personagem e de sua preparação.</p></div></div>
+      <div className="view-heading"><div><p className="section-kicker">Personagem</p><h1 className="display-title">{save.character.name}</h1><p className="muted">Toda jornada deixa suas marcas.</p></div></div>
       <div className="subnav" aria-label="Personagem">
         {([
           ['overview', 'Visão Geral'], ['attributes', 'Atributos'], ['equipment', 'Equipamento'], ['techniques', 'Técnicas'], ['inventory', 'Inventário'], ['prestige', 'Prestígio'],
@@ -331,10 +355,14 @@ function CharacterView({
 
       {tab === 'overview' ? (
         <div className="character-layout">
-          <div className="portrait-placeholder" aria-hidden="true"><span>RETRATO 4:5</span></div>
+          <div className="character-effigy">
+            <div className="portrait-placeholder" aria-hidden="true" />
+            <p className="effigy-label">EQUIPAMENTO EM USO</p>
+            <div className="equipped-rack">{save.character.equipmentItems.filter((item) => Object.values(save.character.equipment).includes(item.instanceId)).map((item) => <button type="button" className="equipped-slot" key={item.instanceId} title={getEquipmentDefinition(item.definitionId)?.name} aria-label={`Ver ${getEquipmentDefinition(item.definitionId)?.name ?? 'equipamento'}`} onClick={() => onTab('equipment')}><GameIcon icon={getEquipmentIcon(item.definitionId)} size={32} /></button>)}</div>
+          </div>
           <div className="overview-stack">
-            <article className="panel"><p className="section-kicker">Estado geral</p><h2>{save.character.name} · Nível {save.character.level}</h2><div className="facts-grid"><div><span>XP geral</span><strong>{save.character.xp}</strong></div><div><span>Pontos disponíveis</span><strong>{save.character.unspentAttributePoints}</strong></div><div><span>Equipamentos</span><strong>{save.character.equipmentItems.length}</strong></div><div><span>Técnicas conhecidas</span><strong>{save.character.knownAbilityIds.length}</strong></div></div></article>
-            <article className="panel"><p className="section-kicker">Progressão</p><div className="skill-summary-grid">{Object.entries(save.skills).map(([skillId, progress]) => <div key={skillId}><span className="skill-summary-label"><GameIcon icon={skillIconById[skillId as SkillId]} size={22} /><span>{skillLabels[skillId as SkillId]}</span></span><strong>Nv. {progress.level}</strong></div>)}</div></article>
+            <article className="panel"><p className="section-kicker">Seu legado</p><h2>{save.character.name} · Nível {save.character.level}</h2><div className="facts-grid"><div><span>XP geral</span><strong>{save.character.xp}</strong></div><div><span>Pontos disponíveis</span><strong>{save.character.unspentAttributePoints}</strong></div><div><span>Equipamentos</span><strong>{save.character.equipmentItems.length}</strong></div><div><span>Técnicas conhecidas</span><strong>{save.character.knownAbilityIds.length}</strong></div></div></article>
+            <article className="panel"><p className="section-kicker">Domínio dos ofícios</p><div className="skill-summary-grid">{Object.entries(save.skills).map(([skillId, progress]) => <div key={skillId}><span className="skill-summary-label"><GameIcon icon={skillIconById[skillId as SkillId]} size={22} /><span>{skillLabels[skillId as SkillId]}</span></span><strong>Nv. {progress.level}</strong></div>)}</div></article>
           </div>
         </div>
       ) : null}
@@ -364,9 +392,7 @@ function CharacterView({
         <article className="panel dense-panel"><div className="panel-heading"><div><p className="section-kicker">Estilo</p><h2>{save.combat.preferences.style}</h2></div><span className="status-chip">ordem = prioridade real</span></div><div className="technique-list">{save.character.activeAbilitySlots.map((abilityId, index) => { const ability = abilityId ? getCombatAbilityDefinition(abilityId) : null; return <div className="technique-row" key={`${abilityId ?? 'empty'}-${index}`}><span className="priority-index">{index + 1}</span><div><strong>{ability?.name ?? 'Slot vazio'}</strong><small>{ability ? `CD ${ability.cooldownSeconds}s${ability.resourceCost !== undefined ? ` · custo ${ability.resourceCost} ${ability.resource ?? ''}` : ''}` : 'Nenhuma Técnica equipada'}</small></div></div>})}</div></article>
       ) : null}
 
-      {tab === 'inventory' ? (
-        <article className="panel dense-panel"><div className="panel-heading"><div><p className="section-kicker">Inventário</p><h2>Patrimônio seguro</h2></div><span className="status-chip">{save.character.inventory.length} pilha(s)</span></div><div className="inventory-grid-runtime">{save.character.inventory.length === 0 ? <p className="muted">Ainda não há itens aqui.</p> : save.character.inventory.map((stack) => <div className="inventory-tile" key={stack.definitionId}><div className="item-thumb" aria-hidden="true"><GameIcon icon={getItemIcon(stack.definitionId)} size={48} /></div><strong>{itemLabels[stack.definitionId] ?? stack.definitionId}</strong><span>×{stack.quantity}</span></div>)}</div></article>
-      ) : null}
+      {tab === 'inventory' ? <article className="panel inventory-panel"><InventoryBoard save={save} onEquip={onEquip} /></article> : null}
 
       {tab === 'prestige' ? <PrestigePanel save={save} onPerformPrestige={onPerformCharacterPrestige} onUnlockNode={onUnlockPrestigeNode} /> : null}
     </section>
@@ -465,11 +491,11 @@ function CityViewComponent({
       <div className="city-overview-layout section-gap">
         <div className="context-art context-art--city" aria-hidden="true"><span>ARTE 16:9 · CIDADE LIVRE</span></div>
         <div className="city-place-grid">
-          <button type="button" onClick={() => onView('tavern')}><strong>Taverna</strong><span>Contratos e conversas</span></button>
-          <button type="button" onClick={() => onView('market')}><strong>Mercado</strong><span>Compra e venda</span></button>
-          <button type="button" onClick={() => onView('smith')}><strong>Ferreiro</strong><span>Serviços de equipamento</span></button>
-          <button type="button" onClick={() => onView('bank')}><strong>Banco</strong><span>Armazenamento seguro</span></button>
-          <button type="button" onClick={() => onView('reliquary')}><strong>Relicário</strong><span>Relíquias e memória</span></button>
+          <button type="button" onClick={() => onView('tavern')}><GameIcon icon="book-open" size={32} /><strong>Taverna</strong><span>Contratos e conversas</span></button>
+          <button type="button" onClick={() => onView('market')}><GameIcon icon="crown-coin" size={32} /><strong>Mercado</strong><span>Compra e venda</span></button>
+          <button type="button" onClick={() => onView('smith')}><GameIcon icon="blacksmith" size={32} /><strong>Ferreiro</strong><span>Serviços de equipamento</span></button>
+          <button type="button" onClick={() => onView('bank')}><GameIcon icon="key" size={32} /><strong>Banco</strong><span>Armazenamento seguro</span></button>
+          <button type="button" onClick={() => onView('reliquary')}><GameIcon icon="runestone" size={32} /><strong>Relicário</strong><span>Relíquias e memória</span></button>
         </div>
       </div>
     </section>
