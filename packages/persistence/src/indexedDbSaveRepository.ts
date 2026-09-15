@@ -3,6 +3,7 @@ import {
   createDefaultConsumableSlots,
   createInitialCharacterPrestige,
   createInitialSkillProgress,
+  createInitialJourney,
   createStartingEquipmentState,
   type CombatState,
   type CraftingState,
@@ -51,13 +52,13 @@ interface LegacyOfflineGameSaveV2 extends Omit<LegacyOfflineGameSaveV1, 'saveSch
 }
 
 interface LegacyOfflineGameSaveV3
-  extends Omit<OfflineGameSave, 'saveSchemaVersion' | 'combat' | 'dungeon'> {
+  extends Omit<OfflineGameSave, 'saveSchemaVersion' | 'combat' | 'dungeon' | 'journey'> {
   saveSchemaVersion: 3
   crafting: CraftingState
 }
 
 interface LegacyOfflineGameSaveV4
-  extends Omit<OfflineGameSave, 'saveSchemaVersion' | 'combat' | 'dungeon'> {
+  extends Omit<OfflineGameSave, 'saveSchemaVersion' | 'combat' | 'dungeon' | 'journey'> {
   saveSchemaVersion: 4
   combat: Omit<CombatState, 'preferences'> & {
     preferences: Omit<CombatState['preferences'], 'consumableSlots'>
@@ -65,23 +66,23 @@ interface LegacyOfflineGameSaveV4
 }
 
 interface LegacyOfflineGameSaveV5
-  extends Omit<OfflineGameSave, 'saveSchemaVersion' | 'combat' | 'dungeon'> {
+  extends Omit<OfflineGameSave, 'saveSchemaVersion' | 'combat' | 'dungeon' | 'journey'> {
   saveSchemaVersion: 5
   combat: LegacyOfflineGameSaveV4['combat']
   dungeon: Omit<OfflineGameSave['dungeon'], 'contractAccepted'>
 }
 
-interface LegacyOfflineGameSaveV6 extends Omit<OfflineGameSave, 'saveSchemaVersion' | 'character'> {
+interface LegacyOfflineGameSaveV6 extends Omit<OfflineGameSave, 'saveSchemaVersion' | 'character' | 'journey'> {
   saveSchemaVersion: 6
   character: Omit<OfflineGameSave['character'], 'bank'>
 }
 
-interface LegacyOfflineGameSaveV7 extends Omit<OfflineGameSave, 'saveSchemaVersion' | 'character'> {
+interface LegacyOfflineGameSaveV7 extends Omit<OfflineGameSave, 'saveSchemaVersion' | 'character' | 'journey'> {
   saveSchemaVersion: 7
   character: Omit<OfflineGameSave['character'], 'prestige'>
 }
 
-interface LegacyOfflineGameSaveV8 extends Omit<OfflineGameSave, 'saveSchemaVersion' | 'character'> {
+interface LegacyOfflineGameSaveV8 extends Omit<OfflineGameSave, 'saveSchemaVersion' | 'character' | 'journey'> {
   saveSchemaVersion: 8
   character: Omit<OfflineGameSave['character'], 'prestige'>
 }
@@ -234,11 +235,17 @@ function migrateSave(rawSave: unknown): OfflineGameSave {
     return rawSave as OfflineGameSave
   }
 
+  if (candidate.saveSchemaVersion === 9) {
+    const legacy = rawSave as Omit<OfflineGameSave, 'journey' | 'saveSchemaVersion'>
+    return { ...legacy, saveSchemaVersion: SAVE_SCHEMA_VERSION, journey: createInitialJourney() }
+  }
+
   if (candidate.saveSchemaVersion === 8) {
     const legacy = rawSave as LegacyOfflineGameSaveV8
     return {
       ...legacy,
       saveSchemaVersion: SAVE_SCHEMA_VERSION,
+      journey: createInitialJourney(),
       character: normalizeTravellerRingGift(withInitialCharacterPrestige(legacy.character)),
     }
   }
@@ -248,6 +255,7 @@ function migrateSave(rawSave: unknown): OfflineGameSave {
     return {
       ...legacy,
       saveSchemaVersion: SAVE_SCHEMA_VERSION,
+      journey: createInitialJourney(),
       character: normalizeTravellerRingGift(withInitialCharacterPrestige(legacy.character)),
     }
   }
@@ -257,6 +265,7 @@ function migrateSave(rawSave: unknown): OfflineGameSave {
     return {
       ...legacy,
       saveSchemaVersion: SAVE_SCHEMA_VERSION,
+      journey: createInitialJourney(),
       character: withEmptyBank(legacy.character),
     }
   }
@@ -266,6 +275,7 @@ function migrateSave(rawSave: unknown): OfflineGameSave {
     return {
       ...legacy,
       saveSchemaVersion: SAVE_SCHEMA_VERSION,
+      journey: createInitialJourney(),
       character: withEmptyBank(legacy.character),
       combat: migrateCombatState(legacy.combat),
       dungeon: {
@@ -281,6 +291,7 @@ function migrateSave(rawSave: unknown): OfflineGameSave {
     return {
       ...legacy,
       saveSchemaVersion: SAVE_SCHEMA_VERSION,
+      journey: createInitialJourney(),
       character: withEmptyBank(legacy.character),
       combat: migrateCombatState(legacy.combat),
       dungeon: createDefaultDungeonState(),
@@ -292,6 +303,7 @@ function migrateSave(rawSave: unknown): OfflineGameSave {
     return {
       ...legacy,
       saveSchemaVersion: SAVE_SCHEMA_VERSION,
+      journey: createInitialJourney(),
       character: withEmptyBank(legacy.character),
       combat: createDefaultCombatState(),
       dungeon: createDefaultDungeonState(),
@@ -304,6 +316,7 @@ function migrateSave(rawSave: unknown): OfflineGameSave {
     return {
       ...legacy,
       saveSchemaVersion: SAVE_SCHEMA_VERSION,
+      journey: createInitialJourney(),
       character: migrateLegacyCharacter(legacy.character),
       crafting: { activeRecipe: null },
       combat: createDefaultCombatState(),
@@ -317,6 +330,7 @@ function migrateSave(rawSave: unknown): OfflineGameSave {
     return {
       ...legacy,
       saveSchemaVersion: SAVE_SCHEMA_VERSION,
+      journey: createInitialJourney(),
       character: migrateLegacyCharacter(legacy.character),
       skills: createInitialSkillProgress(),
       idle: { activeActivity: null },

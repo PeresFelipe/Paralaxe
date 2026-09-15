@@ -9,6 +9,7 @@ import {
   type StartingEquipmentLoadout,
 } from './equipment'
 import { createInitialSkillProgress, type IdleState, type SkillProgressById } from './idle'
+import { createInitialJourney, type JourneyState } from './journey'
 
 export const ATTRIBUTE_KEYS = [
   'vitality',
@@ -125,7 +126,7 @@ export interface CharacterState {
   prestige: CharacterPrestigeState
 }
 
-export const SAVE_SCHEMA_VERSION = 9 as const
+export const SAVE_SCHEMA_VERSION = 10 as const
 
 export interface OfflineGameSave {
   saveId: string
@@ -141,6 +142,7 @@ export interface OfflineGameSave {
   crafting: CraftingState
   combat: CombatState
   dungeon: DungeonProgressState
+  journey: JourneyState
 }
 
 export interface CreateOfflineGameSaveInput {
@@ -263,6 +265,7 @@ export function createOfflineGameSave(input: CreateOfflineGameSaveInput): Offlin
     skills: createInitialSkillProgress(),
     idle: { activeActivity: null },
     crafting: { activeRecipe: null },
+    journey: createInitialJourney(),
     combat: {
       preferences: {
         style: 'mixed',

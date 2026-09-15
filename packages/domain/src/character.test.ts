@@ -44,7 +44,8 @@ describe('character creation', () => {
     })
 
     expect(save.saveMode).toBe('OFFLINE')
-    expect(save.saveSchemaVersion).toBe(9)
+    expect(save.saveSchemaVersion).toBe(10)
+    expect(save.journey).toEqual({ goal: null, craftedRecipeIds: [] })
     expect(save.character.prestige).toEqual({ level: 0, points: 0, unlockedNodeIds: [] })
     expect(save.character.name).toBe('Ailith')
     expect(save.character.classId).toBe('wanderer')

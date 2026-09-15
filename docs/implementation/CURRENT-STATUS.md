@@ -14,7 +14,9 @@
 
 O M5.5 — UX Foundation e o M6 — Build 0.1 validável estão concluídos. A Build 0.1 local possui fluxo integrado de criação de personagem, Idle/offline, crafting, equipamento, Mercado, Banco, combate, Serviço e Dún Liath — Fácil, usando o `GameShell` canônico.
 
-O próximo marco de produto ainda deve ser definido explicitamente antes de iniciar novo escopo. Não adicionar sistemas Online ou novo conteúdo apenas para prolongar a Build 0.1.
+O primeiro pacote de gamificação foi autorizado e aplicado à Build 0.1 em 15/09/2026: meta opcional de fabricação na Jornada, comparação de equipamento, primeira fabricação registrada, contexto de meta no retorno offline e encerramento narrativo de Dún Liath. Detalhes em [GAMIFICATION-0.1.md](GAMIFICATION-0.1.md). O save passa ao schema 10 com migração das versões anteriores. Receitas, custos, tempos, recompensas e regras de risco permanecem os mesmos.
+
+Os próximos pacotes do plano (novas receitas, Códice, desafios e expansão de Prestígio) dependem da avaliação deste primeiro ciclo. Não adicionar sistemas Online ou novo conteúdo apenas para prolongar a Build 0.1.
 
 O layout compacto da Build 0.1 está registrado como experimento visual reversível em `docs/implementation/LAYOUT-0.1-COMPACT.md`. O layout anterior foi preservado em `backup/layout-0.1-740e1c5` antes da aplicação do passe.
 
