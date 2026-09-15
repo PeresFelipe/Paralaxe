@@ -7,6 +7,8 @@ import {
   getCombatConsumableDefinition,
   getEnemyDefinition,
   getEquipmentDefinition,
+  getJourneyStory,
+  getBrannDialogue,
 } from '@greywake/content'
 import {
   derivePlayerCombatStats,
@@ -27,6 +29,7 @@ import QuickSheet from './QuickSheet'
 import AssetCredits from './AssetCredits'
 import GameIcon from './GameIcon'
 import InventoryBoard from './InventoryBoard'
+import JourneyGoal, { JourneyGoalSummary } from './JourneyGoal'
 import { getEquipmentIcon, hudIconById, skillIconById } from './assetIcons'
 import { skillLabels } from './gameLabels'
 
@@ -39,6 +42,7 @@ type QuickPanel = 'journey' | 'inventory' | null
 type GameShellProps = {
   save: OfflineGameSave
   message: string | null
+  messageKind: 'info' | 'achievement'
   lastWorkResult: string | null
   onDismissMessage: () => void
   riskActive: boolean
@@ -48,6 +52,7 @@ type GameShellProps = {
   prepareRisk: () => Promise<OfflineGameSave>
   onStartActivity: (activityDefinitionId: string) => Promise<void>
   onStartRecipe: (recipeDefinitionId: string, targetEquipmentInstanceId?: string | null) => Promise<void>
+  onChooseJourneyGoal: (recipeId: string | null) => Promise<void>
   onStopWork: () => Promise<void>
   onEquip: (instanceId: string) => Promise<void>
   onAllocateAttributes: (allocation: AttributeAllocation) => Promise<void>
@@ -78,34 +83,10 @@ function activeWork(save: OfflineGameSave) {
   return null
 }
 
-function journeyCopy(save: OfflineGameSave) {
-  if (save.dungeon.activeRun) {
-    return {
-      title: 'Expedição em Dún Liath',
-      body: 'A expedição está ativa. Sua atividade Idle permanece pausada até retornar a um contexto seguro.',
-    }
-  }
-  if (save.dungeon.contractAccepted && !save.dungeon.contractCompleted) {
-    return {
-      title: 'Fortaleza Cinzenta',
-      body: 'O contrato de Dún Liath está ativo. Você pode revisar sua preparação em Aventura antes de entrar.',
-    }
-  }
-  if (save.combat.wolfDefeated) {
-    return {
-      title: 'Depois da Estrada Baixa',
-      body: 'O Serviço foi concluído. Brann possui o caminho para o contrato da Fortaleza Cinzenta.',
-    }
-  }
-  return {
-    title: 'Estrada Baixa',
-    body: 'Há relatos de hostilidade fora da Cidade. O Serviço em Aventura é o próximo teste conhecido de preparação.',
-  }
-}
-
 export default function GameShell({
   save,
   message,
+  messageKind,
   lastWorkResult,
   onDismissMessage,
   riskActive,
@@ -115,6 +96,7 @@ export default function GameShell({
   prepareRisk,
   onStartActivity,
   onStartRecipe,
+  onChooseJourneyGoal,
   onStopWork,
   onEquip,
   onAllocateAttributes,
@@ -136,7 +118,7 @@ export default function GameShell({
   const stats = useMemo(() => derivePlayerCombatStats(save, combatCatalog), [save])
   const className = CHARACTER_CLASSES.find((item) => item.id === save.character.classId)?.name
   const work = activeWork(save)
-  const journey = journeyCopy(save)
+  const journey = getJourneyStory(save)
   const dungeonActive = Boolean(save.dungeon.activeRun)
   const focusedRisk = riskActive || dungeonActive
 
@@ -158,6 +140,24 @@ export default function GameShell({
     setDestination('character')
     setCharacterTab('inventory')
     setQuickPanel(null)
+  }
+
+  function openSkill(skill: SkillId) {
+    if (focusedRisk) return
+    setSelectedSkill(skill)
+    go('activities')
+  }
+
+  function openEquipment() {
+    if (focusedRisk) return
+    setCharacterTab('equipment')
+    go('character')
+  }
+
+  function openTavern() {
+    if (focusedRisk) return
+    go('city')
+    setCityView('tavern')
   }
 
   const mainClass = `game-shell ${focusedRisk ? 'game-shell--risk' : ''} ${preparationActive && !focusedRisk ? 'game-shell--preparation' : ''}`
@@ -210,6 +210,8 @@ export default function GameShell({
       <div className="game-layout">
       <main className="game-content" id="game-content" tabIndex={-1}>
 
+        {!focusedRisk ? <JourneyGoalSummary save={save} onOpen={() => setQuickPanel('journey')} /> : null}
+
         {destination === 'character' ? (
           <CharacterView
             save={save}
@@ -232,6 +234,7 @@ export default function GameShell({
             onStartActivity={onStartActivity}
             onStartRecipe={onStartRecipe}
             onStopWork={onStopWork}
+            onTrackRecipe={async (recipeId) => { if (save.journey.goal?.recipeDefinitionId !== recipeId) await onChooseJourneyGoal(recipeId); setQuickPanel('journey') }}
           />
         ) : null}
 
@@ -265,7 +268,7 @@ export default function GameShell({
       <aside className="game-companion" aria-label="Resumo da jornada">
         <section className="companion-section">
           <div className="companion-heading"><GameIcon icon="book-open" size={24} /><h2>Jornada</h2></div>
-          <p className="section-kicker">EM ANDAMENTO</p><h3>{journey.title}</h3>
+          <p className="section-kicker">{journey.label}</p><h3>{journey.title}</h3>
           <p className="companion-copy">{journey.body}</p>
           <button className="ghost-button full-width" type="button" disabled={focusedRisk} onClick={() => setQuickPanel('journey')}>Consultar jornada</button>
         </section>
@@ -297,7 +300,10 @@ export default function GameShell({
           </div>
         </footer>
 
-      {message ? <div className="game-notice"><p role="status">{message}</p><button type="button" onClick={onDismissMessage} aria-label="Dispensar mensagem">×</button></div> : null}
+      {message ? <div className={`game-notice ${messageKind === 'achievement' ? 'game-notice--achievement' : ''}`}>
+        {messageKind === 'achievement' ? <GameIcon icon="blacksmith" size={32} /> : null}
+        <p role="status">{message}</p><button type="button" onClick={onDismissMessage} aria-label="Dispensar mensagem">×</button>
+      </div> : null}
 
       {quickPanel === 'inventory' && !focusedRisk ? (
         <QuickSheet label="Inventário rápido" onClose={() => setQuickPanel(null)}>
@@ -314,8 +320,10 @@ export default function GameShell({
           <button className="sheet-close" type="button" onClick={() => setQuickPanel(null)} aria-label="Fechar">×</button>
           <p className="section-kicker">Continuidade</p>
           <h2 className="display-title">Jornada</h2>
+          <JourneyGoal save={save} onChooseGoal={onChooseJourneyGoal} onOpenSkill={openSkill} onOpenEquipment={openEquipment} />
           <div className="journey-section"><span>AGORA</span><strong>{work?.title ?? 'Sem atividade Idle'}</strong></div>
-          <div className="journey-section"><span>EM ANDAMENTO</span><strong>{journey.title}</strong><p>{journey.body}</p></div>
+          <div className="journey-section"><span>{journey.label}</span><strong>{journey.title}</strong><p>{journey.body}</p></div>
+          {save.combat.wolfDefeated || save.dungeon.contractCompleted ? <button className="ghost-button full-width" type="button" onClick={openTavern}>Conversar com Brann</button> : null}
           <button className="ghost-button full-width" type="button" onClick={() => openAdventure(save.dungeon.activeRun ? 'dungeon' : 'overview')}>Ver em Aventura</button>
         </QuickSheet>
       ) : null}
@@ -473,7 +481,18 @@ function CityViewComponent({
   }
 
   if (view === 'tavern') {
-    return <section className="feature-view"><div className="view-heading"><div><p className="section-kicker">Cidade · Taverna</p><h1 className="display-title">Taverna</h1><p className="muted">Conversas e contratos.</p></div><button className="ghost-button" type="button" onClick={() => onView('overview')}>Voltar à Cidade</button></div><div className="city-context-layout"><div className="context-art context-art--city" aria-hidden="true"><span>ARTE 16:9 · TAVERNA</span></div><article className="panel npc-card"><div className="portrait-placeholder portrait-placeholder--npc" aria-hidden="true"><span>NPC 4:5</span></div><div><p className="section-kicker">Brann</p><h2>{save.combat.wolfDefeated ? 'A estrada confirmou os rumores.' : 'Há trabalho fora dos portões.'}</h2><p className="muted">{save.combat.wolfDefeated ? 'Dún Liath agora é um objetivo conhecido.' : 'Conclua o Serviço — Estrada Baixa para avançar o primeiro arco.'}</p>{save.combat.wolfDefeated ? <button className="primary-button compact" type="button" onClick={onOpenAdventure}>Ver contrato de Dún Liath</button> : null}</div></article></div></section>
+    const dialogue = getBrannDialogue(save)
+    return <section className="feature-view">
+      <div className="view-heading"><div><p className="section-kicker">Cidade · Taverna</p><h1 className="display-title">Taverna</h1><p className="muted">Conversas e contratos.</p></div><button className="ghost-button" type="button" onClick={() => onView('overview')}>Voltar à Cidade</button></div>
+      <div className="city-context-layout"><div className="context-art context-art--city" aria-hidden="true"><span>ARTE 16:9 · TAVERNA</span></div>
+        <article className="panel npc-card"><div className="portrait-placeholder portrait-placeholder--npc" aria-hidden="true"><span>NPC 4:5</span></div><div>
+          <p className="section-kicker">Brann{save.dungeon.contractCompleted ? ' · Contrato concluído' : ''}</p>
+          <h2>{dialogue.title}</h2><p className="muted">{dialogue.body}</p>
+          {dialogue.memory ? <blockquote className="brann-memory">{dialogue.memory}</blockquote> : null}
+          {dialogue.action ? <button className="primary-button compact" type="button" onClick={onOpenAdventure}>{dialogue.action}</button> : null}
+        </div></article>
+      </div>
+    </section>
   }
 
   if (view !== 'overview') {

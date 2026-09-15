@@ -3,6 +3,7 @@ import { INITIAL_CRAFTING_RECIPES, INITIAL_IDLE_ACTIVITIES } from '@greywake/con
 import { getSkillXpForNextLevel, type OfflineGameSave, type SkillId } from '@greywake/domain'
 import IdleProgressIndicator from './IdleProgressIndicator'
 import GameIcon from './GameIcon'
+import EquipmentComparison from './EquipmentComparison'
 import { getItemIcon, skillIconById } from './assetIcons'
 import { gatheringSkills, itemLabels, productionSkills, skillLabels } from './gameLabels'
 
@@ -14,9 +15,10 @@ type ActivitiesViewProps = {
   onStartActivity: (id: string) => Promise<void>
   onStartRecipe: (id: string) => Promise<void>
   onStopWork: () => Promise<void>
+  onTrackRecipe: (recipeId: string) => Promise<void>
 }
 
-export default function ActivitiesView({ save, lastWorkResult, selectedSkill, onSelectSkill, onStartActivity, onStartRecipe, onStopWork }: ActivitiesViewProps) {
+export default function ActivitiesView({ save, lastWorkResult, selectedSkill, onSelectSkill, onStartActivity, onStartRecipe, onStopWork, onTrackRecipe }: ActivitiesViewProps) {
   const [pending, setPending] = useState(false)
   const [actionError, setActionError] = useState<string | null>(null)
   const progress = save.skills[selectedSkill]
@@ -136,6 +138,7 @@ export default function ActivitiesView({ save, lastWorkResult, selectedSkill, on
                 <div className="activity-option-body">
                   <h2>{recipe.name}</h2>
                   <p className="activity-yield">{recipe.actionSeconds}s por ciclo · +{recipe.skillXpPerAction} XP</p>
+                  <EquipmentComparison save={save} recipeId={recipe.id} />
                   <div className="ingredient-list">
                     {recipe.ingredients.map((ingredient) => {
                       const quantity = owned(ingredient.definitionId)
@@ -148,7 +151,8 @@ export default function ActivitiesView({ save, lastWorkResult, selectedSkill, on
                   </div>
                   {!unlocked ? <p className="fact-warning">Requer {skillLabels[selectedSkill]} no nível {recipe.requiredSkillLevel}.</p> : null}
                   {work && !active ? <p className="activity-replacement">Ao iniciar, substitui {work}.</p> : null}
-                  <button className={active ? 'ghost-button' : 'primary-button compact'} type="button" disabled={pending || (!active && (!enough || !unlocked))} onClick={() => void act(active ? onStopWork : () => onStartRecipe(recipe.id))}>{active ? 'Em curso · Parar' : enough ? 'Iniciar produção' : 'Faltam materiais'}</button>
+                  <div className="button-row"><button className={active ? 'ghost-button' : 'primary-button compact'} type="button" disabled={pending || (!active && (!enough || !unlocked))} onClick={() => void act(active ? onStopWork : () => onStartRecipe(recipe.id))}>{active ? 'Em curso · Parar' : enough ? 'Iniciar produção' : 'Faltam materiais'}</button>
+                    <button className="ghost-button" type="button" disabled={pending || !unlocked} onClick={() => void act(() => onTrackRecipe(recipe.id))}>{save.journey.goal?.recipeDefinitionId === recipe.id ? 'Ver meta na Jornada' : 'Acompanhar na Jornada'}</button></div>
                 </div>
               </article>
             })}

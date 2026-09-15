@@ -7,6 +7,7 @@ import './generated-art.css'
 import './compact-layout.css'
 import './typography.css'
 import './game-theme.css'
+import './journey.css'
 
 const rootElement = document.getElementById('root')
 

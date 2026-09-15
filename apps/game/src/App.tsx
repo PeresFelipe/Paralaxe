@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import {
   CHARACTER_CLASSES,
   CONTENT_VERSION,
@@ -6,11 +6,14 @@ import {
   getCraftingRecipeDefinition,
   getEquipmentDefinition,
   getIdleActivityDefinition,
+  getJourneyCraftFeedback,
+  getJourneyReturnSummary,
 } from '@greywake/content'
 import {
   BUILD_SAVE_MODE,
   allocateAttributePoints,
   createOfflineGameSave,
+  chooseJourneyGoal,
   depositEquipmentToBank,
   depositInventoryStackToBank,
   equipEquipment,
@@ -34,11 +37,12 @@ import { createIndexedDbSaveRepository } from '@greywake/persistence'
 import GameShell from './GameShell'
 import WebGameStatus from './WebGameStatus'
 import AssetCredits from './AssetCredits'
+import GameIcon from './GameIcon'
 
 const saveRepository = createIndexedDbSaveRepository()
 
 type Screen = 'loading' | 'save-list' | 'create' | 'game' | 'error'
-type OfflineSummary = { duration: string; result: string }
+type OfflineSummary = { duration: string; result: string; goal: string | null; milestone: string | null }
 
 function getClassName(classId: CharacterClassId) {
   return CHARACTER_CLASSES.find((definition) => definition.id === classId)?.name ?? classId
@@ -125,11 +129,50 @@ function App() {
   const [selectedClassId, setSelectedClassId] = useState<CharacterClassId | null>(null)
   const [selectedGiftId, setSelectedGiftId] = useState<GiftId | null>(null)
   const [creationStep, setCreationStep] = useState(0)
-  const [message, setMessage] = useState<string | null>(null)
+  const [notice, setNotice] = useState<{ text: string; kind: 'info' | 'achievement' } | null>(null)
+  const message = notice?.text ?? null
   const [lastWorkResult, setLastWorkResult] = useState<string | null>(null)
   const [offlineSummary, setOfflineSummary] = useState<OfflineSummary | null>(null)
   const [isSaving, setIsSaving] = useState(false)
   const [riskActive, setRiskActive] = useState(false)
+  const activeSaveRef = useRef<OfflineGameSave | null>(null)
+  const writeQueue = useRef<Promise<void>>(Promise.resolve())
+
+  function setMessage(text: string | null) {
+    setNotice(text ? { text, kind: 'info' } : null)
+  }
+
+  function selectActiveSave(save: OfflineGameSave | null) {
+    activeSaveRef.current = save
+    setActiveSave(save)
+  }
+
+  // Work ticks and player actions derive from the latest saved state in order.
+  // Pinning a goal during a tick must not overwrite ingredients or achievements.
+  function applyActiveChange(
+    update: (current: OfflineGameSave) => OfflineGameSave,
+    text?: string | (() => string | undefined),
+  ): Promise<OfflineGameSave> {
+    const saveId = activeSaveRef.current?.saveId
+    const task = writeQueue.current.then(async () => {
+      const current = activeSaveRef.current
+      if (!current || current.saveId !== saveId) throw new Error('O personagem ativo mudou. Tente novamente.')
+      const next = update(current)
+      if (next === current) return current
+      await saveRepository.put(next)
+      if (activeSaveRef.current?.saveId === saveId) {
+        selectActiveSave(next)
+        setSaves((previous) => updateSaveInList(previous, next))
+        const milestone = getJourneyCraftFeedback(current, next)
+        const info = typeof text === 'function' ? text() : text
+        if (milestone) setNotice({ text: milestone, kind: 'achievement' })
+        else if (info) setMessage(info)
+      }
+      return next
+    })
+    writeQueue.current = task.then(() => undefined, () => undefined)
+    return task
+  }
 
   useEffect(() => {
     let cancelled = false
@@ -158,16 +201,12 @@ function App() {
     if (!activeSave.idle.activeActivity && !activeSave.crafting.activeRecipe) return
 
     const timer = window.setInterval(() => {
-      const result = processCurrentWork(activeSave, new Date().toISOString())
-      if (result.save === activeSave) return
-
-      void saveRepository.put(result.save).then(() => {
-        setActiveSave(result.save)
-        setSaves((current) => updateSaveInList(current, result.save))
-        if (result.text) {
-          setLastWorkResult(result.text)
-          if (!result.save.idle.activeActivity && !result.save.crafting.activeRecipe) setMessage(result.text)
-        }
+      let result: ReturnType<typeof processCurrentWork> | null = null
+      void applyActiveChange((current) => {
+        result = processCurrentWork(current, new Date().toISOString())
+        return result.save
+      }, () => result && !result.save.idle.activeActivity && !result.save.crafting.activeRecipe ? result.text ?? undefined : undefined).then(() => {
+        if (result?.text) setLastWorkResult(result.text)
       }).catch((error: unknown) => {
         setMessage(error instanceof Error ? error.message : 'Não foi possível salvar o progresso da atividade.')
       })
@@ -177,22 +216,18 @@ function App() {
   }, [screen, activeSave, riskActive])
 
   async function persistActive(save: OfflineGameSave, text?: string) {
-    await saveRepository.put(save)
-    setActiveSave(save)
-    setSaves((current) => updateSaveInList(current, save))
-    if (text) setMessage(text)
+    await applyActiveChange((current) => ({ ...save, journey: current.journey }), text)
   }
 
   async function prepareRisk() {
     if (!activeSave) throw new Error('Nenhum personagem ativo.')
-    const now = new Date().toISOString()
-    const processed = processCurrentWork(activeSave, now).save
-    const paused = pauseCurrentWorkForRisk(processed, now)
-    await saveRepository.put(paused)
-    setActiveSave(paused)
-    setSaves((current) => updateSaveInList(current, paused))
     setRiskActive(true)
-    return paused
+    try {
+      return await applyActiveChange((current) => {
+        const now = new Date().toISOString()
+        return pauseCurrentWorkForRisk(processCurrentWork(current, now).save, now)
+      })
+    } catch (error) { setRiskActive(false); throw error }
   }
 
   async function handleCreateSave() {
@@ -215,7 +250,7 @@ function App() {
       })
       await saveRepository.put(save)
       setSaves((current) => [save, ...current])
-      setActiveSave(save)
+      selectActiveSave(save)
       setRiskActive(false)
       setOfflineSummary(null)
       setScreen('game')
@@ -231,6 +266,7 @@ function App() {
     setOfflineSummary(null)
     setLastWorkResult(null)
     try {
+      await writeQueue.current
       const stored = await saveRepository.get(saveId)
       if (!stored) {
         setMessage('Esse save não foi encontrado no armazenamento local.')
@@ -238,7 +274,7 @@ function App() {
       }
 
       if (stored.dungeon.activeRun) {
-        setActiveSave(stored)
+        selectActiveSave(stored)
         setSaves((current) => updateSaveInList(current, stored))
         setRiskActive(true)
         setMessage('Expedição em Dún Liath em andamento. Retome do ponto em que parou.')
@@ -251,14 +287,15 @@ function App() {
       const result = processCurrentWork(stored, now)
       await saveRepository.put(result.save)
       setSaves((current) => updateSaveInList(current, result.save))
-      setActiveSave(result.save)
+      selectActiveSave(result.save)
       setRiskActive(false)
       setScreen('game')
 
       if (result.text && absence >= 60_000) {
-        setOfflineSummary({ duration: formatAbsence(absence), result: result.text })
+        setOfflineSummary({ duration: formatAbsence(absence), result: result.text, goal: getJourneyReturnSummary(stored, result.save), milestone: getJourneyCraftFeedback(stored, result.save) })
       } else if (result.text) {
-        setMessage(result.text)
+        const milestone = getJourneyCraftFeedback(stored, result.save)
+        setNotice({ text: milestone ?? result.text, kind: milestone ? 'achievement' : 'info' })
       }
     } catch (error) {
       setMessage(error instanceof Error ? error.message : 'Não foi possível carregar o save.')
@@ -271,12 +308,13 @@ function App() {
     if (!activity) return
 
     try {
-      const now = new Date().toISOString()
-      let save = processCurrentWork(activeSave, now).save
-      if (save.crafting.activeRecipe) save = stopCraftingRecipe(save, now)
-      if (save.idle.activeActivity) save = stopIdleActivity(save, now)
-      save = startIdleActivity(save, activity, now)
-      await persistActive(save, `${activity.resultName} agora é sua atividade Idle.`)
+      await applyActiveChange((current) => {
+        const now = new Date().toISOString()
+        let save = processCurrentWork(current, now).save
+        if (save.crafting.activeRecipe) save = stopCraftingRecipe(save, now)
+        if (save.idle.activeActivity) save = stopIdleActivity(save, now)
+        return startIdleActivity(save, activity, now)
+      }, `${activity.resultName} agora é sua atividade Idle.`)
     } catch (error) {
       setMessage(error instanceof Error ? error.message : 'Não foi possível iniciar a atividade.')
     }
@@ -288,12 +326,13 @@ function App() {
     if (!recipe) return
 
     try {
-      const now = new Date().toISOString()
-      let save = processCurrentWork(activeSave, now).save
-      if (save.idle.activeActivity) save = stopIdleActivity(save, now)
-      if (save.crafting.activeRecipe) save = stopCraftingRecipe(save, now)
-      save = startCraftingRecipe(save, recipe, now, targetEquipmentInstanceId)
-      await persistActive(save, `${recipe.name} iniciado. A atividade anterior foi substituída.`)
+      await applyActiveChange((current) => {
+        const now = new Date().toISOString()
+        let save = processCurrentWork(current, now).save
+        if (save.idle.activeActivity) save = stopIdleActivity(save, now)
+        if (save.crafting.activeRecipe) save = stopCraftingRecipe(save, now)
+        return startCraftingRecipe(save, recipe, now, targetEquipmentInstanceId)
+      }, `${recipe.name} iniciado. A atividade anterior foi substituída.`)
     } catch (error) {
       setMessage(error instanceof Error ? error.message : 'Não foi possível iniciar a produção.')
     }
@@ -301,11 +340,23 @@ function App() {
 
   async function handleStopWork() {
     if (!activeSave) return
-    const now = new Date().toISOString()
-    let save = processCurrentWork(activeSave, now).save
-    if (save.idle.activeActivity) save = stopIdleActivity(save, now)
-    if (save.crafting.activeRecipe) save = stopCraftingRecipe(save, now)
-    await persistActive(save, 'Atividade interrompida.')
+    await applyActiveChange((current) => {
+      const now = new Date().toISOString()
+      let save = processCurrentWork(current, now).save
+      if (save.idle.activeActivity) save = stopIdleActivity(save, now)
+      if (save.crafting.activeRecipe) save = stopCraftingRecipe(save, now)
+      return save
+    }, 'Atividade interrompida.')
+  }
+
+  async function handleChooseJourneyGoal(recipeId: string | null) {
+    if (riskActive) throw new Error('Escolha sua meta após retornar a um lugar seguro.')
+    const recipe = recipeId ? getCraftingRecipeDefinition(recipeId) : null
+    if (recipeId && !recipe) throw new Error('Receita não encontrada.')
+    await applyActiveChange((current) => {
+      const now = new Date().toISOString()
+      return chooseJourneyGoal(processCurrentWork(current, now).save, recipe, now)
+    })
   }
 
   async function handleEquip(instanceId: string) {
@@ -316,8 +367,7 @@ function App() {
     if (!definition) return
 
     try {
-      const save = equipEquipment(activeSave, instanceId, definition, new Date().toISOString())
-      await persistActive(save, `${definition.name} equipado.`)
+      await applyActiveChange((current) => equipEquipment(current, instanceId, definition, new Date().toISOString()), `${definition.name} equipado.`)
     } catch (error) {
       setMessage(error instanceof Error ? error.message : 'Não foi possível equipar o item.')
     }
@@ -327,8 +377,7 @@ function App() {
     if (!activeSave) return
 
     try {
-      const save = allocateAttributePoints(activeSave, allocation, new Date().toISOString())
-      await persistActive(save, 'Distribuição de atributos confirmada.')
+      await applyActiveChange((current) => allocateAttributePoints(current, allocation, new Date().toISOString()), 'Distribuição de atributos confirmada.')
     } catch (error) {
       setMessage(error instanceof Error ? error.message : 'Não foi possível distribuir os pontos de atributo.')
       throw error
@@ -339,8 +388,7 @@ function App() {
     if (!activeSave) return
 
     try {
-      const save = unlockCharacterPrestigeNode(activeSave, nodeId, new Date().toISOString())
-      await persistActive(save, 'Nó de Prestígio desbloqueado.')
+      await applyActiveChange((current) => unlockCharacterPrestigeNode(current, nodeId, new Date().toISOString()), 'Nó de Prestígio desbloqueado.')
     } catch (error) {
       setMessage(error instanceof Error ? error.message : 'Não foi possível desbloquear o nó de Prestígio.')
     }
@@ -356,8 +404,7 @@ function App() {
     }
 
     try {
-      const save = performCharacterPrestige(activeSave, characterClass.attributes, new Date().toISOString())
-      await persistActive(save, `Prestígio ${save.character.prestige.level} realizado. A nova jornada começa no nível 1.`)
+      await applyActiveChange((current) => performCharacterPrestige(current, characterClass.attributes, new Date().toISOString()), 'Prestígio realizado. A nova jornada começa no nível 1.')
     } catch (error) {
       setMessage(error instanceof Error ? error.message : 'Não foi possível realizar o Prestígio do personagem.')
     }
@@ -366,8 +413,7 @@ function App() {
   async function handleDepositBankStack(definitionId: string, quantity: number) {
     if (!activeSave) return
     try {
-      const save = depositInventoryStackToBank(activeSave, definitionId, quantity, new Date().toISOString())
-      await persistActive(save, `Depósito realizado: ${quantity} item(ns).`)
+      await applyActiveChange((current) => depositInventoryStackToBank(current, definitionId, quantity, new Date().toISOString()), `Depósito realizado: ${quantity} item(ns).`)
     } catch (error) {
       setMessage(error instanceof Error ? error.message : 'Não foi possível depositar no Banco.')
     }
@@ -376,8 +422,7 @@ function App() {
   async function handleWithdrawBankStack(definitionId: string, quantity: number) {
     if (!activeSave) return
     try {
-      const save = withdrawInventoryStackFromBank(activeSave, definitionId, quantity, new Date().toISOString())
-      await persistActive(save, `Retirada realizada: ${quantity} item(ns).`)
+      await applyActiveChange((current) => withdrawInventoryStackFromBank(current, definitionId, quantity, new Date().toISOString()), `Retirada realizada: ${quantity} item(ns).`)
     } catch (error) {
       setMessage(error instanceof Error ? error.message : 'Não foi possível retirar do Banco.')
     }
@@ -386,8 +431,7 @@ function App() {
   async function handleDepositBankEquipment(instanceId: string) {
     if (!activeSave) return
     try {
-      const save = depositEquipmentToBank(activeSave, instanceId, new Date().toISOString())
-      await persistActive(save, 'Equipamento depositado no Banco.')
+      await applyActiveChange((current) => depositEquipmentToBank(current, instanceId, new Date().toISOString()), 'Equipamento depositado no Banco.')
     } catch (error) {
       setMessage(error instanceof Error ? error.message : 'Não foi possível depositar o equipamento.')
     }
@@ -396,8 +440,7 @@ function App() {
   async function handleWithdrawBankEquipment(instanceId: string) {
     if (!activeSave) return
     try {
-      const save = withdrawEquipmentFromBank(activeSave, instanceId, new Date().toISOString())
-      await persistActive(save, 'Equipamento retirado do Banco.')
+      await applyActiveChange((current) => withdrawEquipmentFromBank(current, instanceId, new Date().toISOString()), 'Equipamento retirado do Banco.')
     } catch (error) {
       setMessage(error instanceof Error ? error.message : 'Não foi possível retirar o equipamento.')
     }
@@ -415,7 +458,7 @@ function App() {
   }
 
   function switchSave() {
-    setActiveSave(null)
+    selectActiveSave(null)
     setLastWorkResult(null)
     setOfflineSummary(null)
     setRiskActive(false)
@@ -440,6 +483,8 @@ function App() {
             <h1 className="display-title">{activeSave.character.name}</h1>
             <p className="offline-duration">Ausente por <strong>{offlineSummary.duration}</strong></p>
             <div className="offline-result"><span>Durante sua ausência</span><strong>{offlineSummary.result}</strong></div>
+            {offlineSummary.goal ? <div className="offline-goal-result"><GameIcon icon="book-open" size={32} /><p>{offlineSummary.goal}</p></div> : null}
+            {offlineSummary.milestone ? <p className="offline-milestone">{offlineSummary.milestone}</p> : null}
             <button className="primary-button compact" type="button" onClick={() => setOfflineSummary(null)}>Continuar</button>
           </section>
         </main>
@@ -452,6 +497,7 @@ function App() {
       <GameShell
         save={activeSave}
         message={message}
+        messageKind={notice?.kind ?? 'info'}
         lastWorkResult={lastWorkResult}
         onDismissMessage={() => setMessage(null)}
         riskActive={riskActive}
@@ -461,6 +507,7 @@ function App() {
         prepareRisk={prepareRisk}
         onStartActivity={handleStartActivity}
         onStartRecipe={handleStartRecipe}
+        onChooseJourneyGoal={handleChooseJourneyGoal}
         onStopWork={handleStopWork}
         onEquip={handleEquip}
         onAllocateAttributes={handleAllocateAttributes}

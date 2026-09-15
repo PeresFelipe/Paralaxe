@@ -1,6 +1,7 @@
 import type { InventoryStack, OfflineGameSave } from './character'
 import { applySkillXp, getOfflineLimitSeconds, type SkillId } from './idle'
 import { getInventoryEquipmentRoom, getInventoryStackRoom } from './storage'
+import { recordJourneyCraft } from './journey'
 
 export interface RecipeIngredient {
   definitionId: string
@@ -313,6 +314,7 @@ export function processCraftingProgress(
   const nextSave: OfflineGameSave = {
     ...save,
     updatedAt: now,
+    journey: completedActions > 0 ? recordJourneyCraft(save.journey, recipe.id, now) : save.journey,
     character: {
       ...save.character,
       xp: save.character.xp + generalXp,
