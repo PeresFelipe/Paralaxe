@@ -1,0 +1,15 @@
+Wizard Pack — LuizMelo
+Origem: https://luizmelo.itch.io/wizard-pack
+Autor: https://luizmelo.itch.io/
+Licença: Creative Commons Zero v1.0 Universal (CC0 1.0).
+https://creativecommons.org/publicdomain/zero/1.0/
+https://creativecommons.org/publicdomain/zero/1.0/legalcode
+Revisado em: 16/09/2026
+
+Uso no Greywake: animação do Mago na criação de personagem.
+Adaptação: montagem dos quadros originais em GIF; folhas PNG preservadas.
+A página do pacote declara CC0 e permite uso comercial.
+O crédito é oferecido como reconhecimento ao autor.
+
+Este registro foi preparado pelo projeto com base na página do autor.
+Não é um arquivo de licença fornecido dentro do ZIP original.

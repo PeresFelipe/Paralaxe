@@ -1,113 +1,91 @@
+import { useEffect, useId, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
+import catalogo from './catalogoDeCreditos.json'
+import IconeDoJogo from './IconeDoJogo'
+
+function ListaDeContribuicoes({ grupo }: { grupo: string }) {
+  return <ul className="creditos-lista">
+    {catalogo.recursos.filter((recurso) => recurso.grupo === grupo).map((recurso) => <li key={recurso.id} className="creditos-contribuicao">
+      <div className="creditos-autoria">
+        <h4>{recurso.titulo}</h4>
+        <p className="creditos-autores">{recurso.autores.map((autor) => autor.url
+          ? <a key={autor.nome} href={autor.url} target="_blank" rel="noopener noreferrer">{autor.nome}<span className="creditos-leitor"> (abre em nova aba)</span></a>
+          : <span key={autor.nome}>{autor.nome}</span>)}</p>
+      </div>
+      <div className="creditos-descricao">
+        <p>{recurso.contribuicao}</p>
+        <p className="creditos-adaptacao">{recurso.modificacoes}</p>
+        <div className="creditos-referencias">
+          {recurso.licenca.url
+            ? <a className="creditos-licenca" href={recurso.licenca.url} target="_blank" rel="noopener noreferrer" aria-label={`${recurso.licenca.nome} · ${recurso.titulo} (abre em nova aba)`}>{recurso.licenca.nome}</a>
+            : <span className="creditos-licenca">{recurso.licenca.nome}</span>}
+          {recurso.origem ? <a href={recurso.origem} target="_blank" rel="noopener noreferrer" aria-label={`Página original · ${recurso.titulo} (abre em nova aba)`}>Página original <span aria-hidden="true">↗</span></a> : null}
+          {recurso.avisos.map((aviso) => <a key={aviso.url} href={aviso.url} target="_blank" rel="noopener noreferrer" aria-label={`${aviso.rotulo} · ${recurso.titulo} (abre em nova aba)`}>{aviso.rotulo} <span aria-hidden="true">↗</span></a>)}
+        </div>
+        {recurso.creditosComplementares.map((credito) => <div key={credito.url} className="creditos-origem-complementar">
+          <p><a href={credito.url} target="_blank" rel="noopener noreferrer">{credito.nome}<span className="creditos-leitor"> (abre em nova aba)</span></a>{' · '}<a href={credito.urlLicenca} target="_blank" rel="noopener noreferrer">{credito.licenca}<span className="creditos-leitor"> (abre em nova aba)</span></a></p>
+          <p>{credito.observacao}</p>
+        </div>)}
+      </div>
+    </li>)}
+  </ul>
+}
+
+function JanelaDeCreditos({ aoFechar }: { aoFechar: () => void }) {
+  const referencia = useRef<HTMLDialogElement>(null)
+  const id = useId()
+
+  useEffect(() => {
+    const janela = referencia.current
+    const acionador = document.activeElement
+    janela?.showModal()
+    return () => {
+      janela?.close()
+      if (acionador instanceof HTMLElement && acionador.isConnected) acionador.focus()
+    }
+  }, [])
+
+  return createPortal(<dialog ref={referencia} className="creditos-janela" aria-labelledby={`${id}-titulo`} aria-describedby={`${id}-descricao`}
+    onCancel={(evento) => { evento.preventDefault(); aoFechar() }}
+    onClick={(evento) => {
+      if (evento.target !== evento.currentTarget) return
+      const limites = evento.currentTarget.getBoundingClientRect()
+      if (evento.clientX < limites.left || evento.clientX > limites.right || evento.clientY < limites.top || evento.clientY > limites.bottom) aoFechar()
+    }}>
+    <header className="creditos-cabecalho">
+      <div>
+        <p className="creditos-marca">Greywake</p>
+        <h2 id={`${id}-titulo`}>Créditos e licenças</h2>
+        <p id={`${id}-descricao`}>Arte, autoria e contribuições que dão vida à jornada.</p>
+      </div>
+      <button className="creditos-fechar" type="button" aria-label="Fechar créditos" onClick={aoFechar}>×</button>
+    </header>
+    <div className="creditos-conteudo" tabIndex={0} role="region" aria-label="Contribuições ao Greywake">
+      {catalogo.grupos.filter((grupo) => grupo.id !== 'tecnologia').map((grupo) => <section key={grupo.id} className="creditos-grupo" aria-labelledby={`${id}-${grupo.id}`}>
+        <h3 id={`${id}-${grupo.id}`}>{grupo.titulo}</h3>
+        <ListaDeContribuicoes grupo={grupo.id} />
+      </section>)}
+      <details className="creditos-tecnologia">
+        <summary>Tecnologia e licenças de software</summary>
+        <ListaDeContribuicoes grupo="tecnologia" />
+      </details>
+      <p className="creditos-agradecimento">Obrigado aos artistas e colaboradores por compartilharem seu trabalho.</p>
+    </div>
+    <footer className="creditos-rodape">
+      <span>Cada contribuição mantém seus próprios termos de uso.</span>
+      <a href="/creditos/LEIA-ME.txt" target="_blank" rel="noopener noreferrer">Consultar os avisos<span className="creditos-leitor"> (abre em nova aba)</span> <span aria-hidden="true">↗</span></a>
+    </footer>
+  </dialog>, document.body)
+}
+
 export default function CreditosDosRecursos() {
-  return (
-    <details className="recursoVisual-creditos">
-      <summary>Créditos</summary>
-      <p>
-        Molduras e ornamentos{" "}
-        <a
-          href="https://hypnobius.itch.io/dark-ages-ui"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Dark Ages UI
-        </a>{" "}
-        por Hypnobius. Uso pessoal e comercial gratuito, conforme a licença do
-        autor. Recortes do tilesheet original, sem recoloração.
-      </p>
-      <p>
-        Fonte{" "}
-        <a
-          href="https://ninjikin.itch.io/font-antiquity-script"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Antiquity Print
-        </a>
-        {" por "}
-        <a
-          href="https://ninjikin.itch.io/"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          SciGho
-        </a>
-        {" · "}
-        <a
-          href="https://creativecommons.org/licenses/by/4.0/"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          CC BY 4.0
-        </a>
-        .
-      </p>
-      <p>© 2021 SciGho. Fonte original, sem alterações.</p>
-      <p>
-        Ícones{" "}
-        <a
-          href="https://shikashipx.itch.io/shikashis-fantasy-icons-pack"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Shikashi&apos;s Fantasy Icons Pack
-        </a>
-        {" por "}
-        <a
-          href="https://shikashipx.itch.io/"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Matt Firth (shikashipx)
-        </a>
-        {" · "}
-        <a
-          href="https://creativecommons.org/licenses/by/4.0/"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          CC BY 4.0
-        </a>
-        . Alguns designs têm origem em{" "}
-        <a
-          href="https://game-icons.net/"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          game-icons.net
-        </a>
-        .
-      </p>
-      <p>Ícones usados como recortes 32×32, sem recoloração ou redesenho.</p>
-      <p>
-        Arte do Guerreiro:{" "}
-        <a
-          href="https://xzany.itch.io/free-knight-2d-pixel-art"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          FREE - Knight 2D Pixel Art
-        </a>
-        {" por Mattz Art. Animação convertida para GIF."}
-      </p>
-      <p>
-        Arte do Mago:{" "}
-        <a
-          href="https://luizmelo.itch.io/wizard-pack"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Wizard Pack
-        </a>
-        {" por LuizMelo. "}
-        <a
-          href="https://creativecommons.org/publicdomain/zero/1.0/"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          CC0 1.0 Universal
-        </a>
-        .
-      </p>
-    </details>
-  );
+  const [aberto, definirAberto] = useState(false)
+  return <div className="recursoVisual-creditos">
+    <button className="creditos-abrir" type="button" aria-haspopup="dialog" onClick={() => definirAberto(true)}>
+      <IconeDoJogo icone="livro-abrir" tamanho={24} />
+      <span>Créditos e licenças</span>
+      <span aria-hidden="true">→</span>
+    </button>
+    {aberto ? <JanelaDeCreditos aoFechar={() => definirAberto(false)} /> : null}
+  </div>
 }

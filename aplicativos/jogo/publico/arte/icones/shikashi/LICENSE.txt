@@ -17,3 +17,11 @@ The game-icons.net collection is referenced by its site as CC BY 3.0.
 
 Greywake uses these selected crops in its web game UI. This notice is kept
 with the runtime assets and the full pack is not redistributed here.
+
+Registro complementar de proveniência (16/09/2026):
+O texto original fornecido no ZIP v2 foi preservado em
+/creditos/shikashi-aviso-original.txt. Ele menciona CC BY 3.0 para os
+desenhos-base do game-icons.net; a página atual do pacote declara CC BY 4.0.
+Ambos os avisos são mantidos. O pacote não identifica o desenho e o autor
+individual de cada recorte. Nenhuma autoria individual foi presumida.
+Consulte https://game-icons.net/about.html e a pendência em CREDITOS.md.

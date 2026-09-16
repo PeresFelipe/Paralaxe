@@ -1,0 +1,10 @@
+Produção visual do projeto Greywake
+
+Cenas, retratos e animações de Pesca, Mineração, Lenhador, Herbologia,
+Metalurgia, Forja e Culinária foram criados para o projeto com assistência
+de IA, com montagem, recortes e ajustes de apresentação.
+Favicon e ícones de instalação integram a identidade visual do projeto.
+
+Esses recursos não são atribuídos aos artistas dos pacotes do itch.io.
+Este registro identifica a origem do material; não concede uma licença
+Creative Commons nem altera os direitos e termos aplicáveis a cada recurso.

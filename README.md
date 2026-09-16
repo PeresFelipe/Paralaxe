@@ -52,16 +52,10 @@ As partidas anteriores continuam no mesmo banco IndexedDB e no esquema 10. O ada
 
 A interface envia intenções ao domínio, que concentra as regras. O conteúdo permanece separado do estado do jogador. Recursos conectados, conta, armazenamento na nuvem e mercado entre jogadores dependem de um novo marco de desenvolvimento.
 
-## Créditos de recursos visuais
+## Créditos e licenças
 
-- **[Antiquity Print](https://ninjikin.itch.io/font-antiquity-script)** por **[SciGho](https://ninjikin.itch.io/)** — Copyright SciGho 2021, [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). O TTF original é distribuído sem alterações. [Atribuição e proveniência da licença](aplicativos/jogo/publico/fontes/antiquity-print-LICENSE.txt).
+Os créditos do jogo estão organizados por personagens, interface, tipografia, produção visual e tecnologia. Incluem Mattz Art, LuizMelo, Hypnobius, Matt Firth (shikashipx), game-icons.net e SciGho, com fontes, licenças e adaptações registradas.
 
-A fonte é usada na marca Greywake. No tema de jogo, os títulos e a navegação operacional usam Georgia para manter os acentos do português na mesma família. O arquivo original não inclui letras acentuadas; o navegador usa fontes de apoio quando necessário. Os créditos também podem ser consultados no próprio jogo. A fonte e seu aviso de atribuição são incluídos no cache sem conexão.
+Consulte [CREDITOS.md](CREDITOS.md) para ver as atribuições completas, os avisos preservados e a pendência de autoria individual dos desenhos-base do game-icons.net. O botão **Créditos e licenças** abre os mesmos registros dentro do jogo.
 
-- **[Shikashi&apos;s Fantasy Icons Pack (FREE)](https://shikashipx.itch.io/shikashis-fantasy-icons-pack)** por **[Matt Firth (shikashipx)](https://shikashipx.itch.io/)** — [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/), com designs derivados de **[game-icons.net](https://game-icons.net/)**. [Aviso de atribuição](aplicativos/jogo/publico/arte/icones/shikashi/LICENSE.txt).
-
-O Greywake usa recortes 32×32 da folha transparente v2 em Profissões, indicadores globais, materiais, Inventário, Banco e Equipamento. Os recortes não foram recoloridos ou redesenhados; a licença e a proveniência ficam junto dos arquivos públicos e os créditos aparecem no jogo.
-
-- **[Dark Ages UI](https://hypnobius.itch.io/dark-ages-ui)** por **Hypnobius** — uso pessoal e comercial gratuito, conforme [licença original](aplicativos/jogo/publico/arte/interface/dark-ages/LICENSE.txt). Crédito opcional, incluído no jogo. Quatro recortes sem recoloração implementam molduras, espaços e ornamento. Não redistribuir esses recursos visuais como pacote separado. [Proveniência](aplicativos/jogo/publico/arte/interface/dark-ages/README.md).
-
-Pesquisa, decisões do tema e limites da validação: [Interface de jogo medieval fantasia sombria](documentacao/pesquisa/INTERFACE-DE-JOGO-2026-09-15.md).
+Para acrescentar recursos, edite `aplicativos/jogo/fonte/catalogoDeCreditos.json`. Execute `pnpm verificar:creditos` para conferir a cobertura das imagens e fontes e a existência dos avisos. Essa verificação também faz parte de `pnpm verificar` e da automação do GitHub.

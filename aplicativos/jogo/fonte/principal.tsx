@@ -8,6 +8,7 @@ import './disposicao-compacta.css'
 import './tipografia.css'
 import './tema-do-jogo.css'
 import './jornada.css'
+import './creditos.css'
 
 const raizElemento = document.getElementById("raiz")
 

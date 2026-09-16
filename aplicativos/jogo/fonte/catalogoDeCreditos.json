@@ -1,0 +1,284 @@
+{
+  "revisadoEm": "2026-09-16",
+  "grupos": [
+    {
+      "id": "personagens",
+      "titulo": "Arte dos personagens"
+    },
+    {
+      "id": "interface",
+      "titulo": "Interface e tipografia"
+    },
+    {
+      "id": "projeto",
+      "titulo": "Produção do projeto"
+    },
+    {
+      "id": "tecnologia",
+      "titulo": "Tecnologia"
+    }
+  ],
+  "recursos": [
+    {
+      "id": "guerreiro",
+      "grupo": "personagens",
+      "titulo": "FREE - Knight 2D Pixel Art",
+      "autores": [
+        {
+          "nome": "Mattz Art",
+          "url": "https://xzany.itch.io/"
+        }
+      ],
+      "contribuicao": "Animação do Guerreiro.",
+      "licenca": {
+        "nome": "Licença do autor",
+        "url": "/arte/classes/guerreiro/MattzArt/License.txt"
+      },
+      "origem": "https://xzany.itch.io/free-knight-2d-pixel-art",
+      "modificacoes": "Animação montada em GIF a partir dos quadros originais.",
+      "avisos": [
+        {
+          "rotulo": "Atribuição local",
+          "url": "/creditos/guerreiro.txt"
+        }
+      ],
+      "arquivos": [
+        "/arte/classes/guerreiro/MattzArt/"
+      ],
+      "creditosComplementares": []
+    },
+    {
+      "id": "mago",
+      "grupo": "personagens",
+      "titulo": "Wizard Pack",
+      "autores": [
+        {
+          "nome": "LuizMelo",
+          "url": "https://luizmelo.itch.io/"
+        }
+      ],
+      "contribuicao": "Animação do Mago.",
+      "licenca": {
+        "nome": "CC0 1.0",
+        "url": "https://creativecommons.org/publicdomain/zero/1.0/"
+      },
+      "origem": "https://luizmelo.itch.io/wizard-pack",
+      "modificacoes": "Animação montada em GIF a partir dos quadros originais.",
+      "avisos": [
+        {
+          "rotulo": "Atribuição local",
+          "url": "/creditos/mago.txt"
+        }
+      ],
+      "arquivos": [
+        "/arte/classes/mago/LuizMelo/"
+      ],
+      "creditosComplementares": []
+    },
+    {
+      "id": "molduras",
+      "grupo": "interface",
+      "titulo": "Dark Ages UI",
+      "autores": [
+        {
+          "nome": "Hypnobius",
+          "url": "https://hypnobius.itch.io/"
+        }
+      ],
+      "contribuicao": "Molduras, ornamentos e espaços da interface.",
+      "licenca": {
+        "nome": "Licença do autor",
+        "url": "/arte/interface/dark-ages/LICENSE.txt"
+      },
+      "origem": "https://hypnobius.itch.io/dark-ages-ui",
+      "modificacoes": "Quatro recortes do material original, sem recoloração.",
+      "avisos": [
+        {
+          "rotulo": "Atribuição local",
+          "url": "/creditos/interface.txt"
+        }
+      ],
+      "arquivos": [
+        "/arte/interface/dark-ages/"
+      ],
+      "creditosComplementares": []
+    },
+    {
+      "id": "icones",
+      "grupo": "interface",
+      "titulo": "Shikashi’s Fantasy Icons Pack",
+      "autores": [
+        {
+          "nome": "Matt Firth (shikashipx)",
+          "url": "https://shikashipx.itch.io/"
+        }
+      ],
+      "contribuicao": "Ícones de profissões, recursos, inventário e equipamentos.",
+      "licenca": {
+        "nome": "CC BY 4.0",
+        "url": "https://creativecommons.org/licenses/by/4.0/"
+      },
+      "origem": "https://shikashipx.itch.io/shikashis-fantasy-icons-pack",
+      "modificacoes": "Recortes de 32 × 32 da folha v2, sem recoloração ou redesenho.",
+      "avisos": [
+        {
+          "rotulo": "Atribuição local",
+          "url": "/arte/icones/shikashi/LICENSE.txt"
+        },
+        {
+          "rotulo": "Aviso original do pacote",
+          "url": "/creditos/shikashi-aviso-original.txt"
+        }
+      ],
+      "arquivos": [
+        "/arte/icones/shikashi/"
+      ],
+      "creditosComplementares": [
+        {
+          "nome": "Desenhos-base: game-icons.net",
+          "url": "https://game-icons.net/",
+          "licenca": "CC BY 3.0",
+          "urlLicenca": "https://creativecommons.org/licenses/by/3.0/",
+          "observacao": "A origem e a licença dos desenhos-base são preservadas conforme o aviso original do pacote."
+        }
+      ]
+    },
+    {
+      "id": "tipografia",
+      "grupo": "interface",
+      "titulo": "Antiquity Print",
+      "autores": [
+        {
+          "nome": "SciGho",
+          "url": "https://ninjikin.itch.io/"
+        }
+      ],
+      "contribuicao": "Tipografia da marca Greywake.",
+      "licenca": {
+        "nome": "CC BY 4.0",
+        "url": "https://creativecommons.org/licenses/by/4.0/"
+      },
+      "origem": "https://ninjikin.itch.io/font-antiquity-script",
+      "modificacoes": "© 2021 SciGho. Arquivo da fonte preservado, sem alterações.",
+      "avisos": [
+        {
+          "rotulo": "Atribuição e proveniência",
+          "url": "/fontes/antiquity-print-LICENSE.txt"
+        }
+      ],
+      "arquivos": [
+        "/fontes/antiquity-print.ttf"
+      ],
+      "creditosComplementares": []
+    },
+    {
+      "id": "ambientacao",
+      "grupo": "projeto",
+      "titulo": "Ambientação e identidade visual",
+      "autores": [
+        {
+          "nome": "Projeto Greywake",
+          "url": null
+        }
+      ],
+      "contribuicao": "Cenas, retratos, animações das profissões e símbolos do jogo.",
+      "licenca": {
+        "nome": "Produção do projeto",
+        "url": null
+      },
+      "origem": null,
+      "modificacoes": "Artes de ambientação geradas com assistência de IA, com recortes, montagem e ajustes para o jogo.",
+      "avisos": [
+        {
+          "rotulo": "Registro de origem",
+          "url": "/creditos/producao-do-projeto.txt"
+        }
+      ],
+      "arquivos": [
+        "/arte/cenas-geradas.webp",
+        "/arte/retratos-gerados.webp",
+        "/arte/atividades/culinaria.gif",
+        "/arte/atividades/culinaria-estatico.png",
+        "/arte/atividades/forja.gif",
+        "/arte/atividades/forja-estatico.png",
+        "/arte/atividades/herbologia.gif",
+        "/arte/atividades/herbologia-estatico.png",
+        "/arte/atividades/lenhador.gif",
+        "/arte/atividades/lenhador-estatico.png",
+        "/arte/atividades/metalurgia.gif",
+        "/arte/atividades/metalurgia-estatico.png",
+        "/arte/atividades/mineracao.gif",
+        "/arte/atividades/mineracao-estatico.png",
+        "/arte/atividades/pesca.gif",
+        "/arte/atividades/pesca-estatico.png",
+        "/favicon.svg",
+        "/icones/greywake-192.png",
+        "/icones/greywake-512.png"
+      ],
+      "creditosComplementares": []
+    },
+    {
+      "id": "react",
+      "grupo": "tecnologia",
+      "titulo": "React, React DOM e Scheduler",
+      "autores": [
+        {
+          "nome": "Meta Platforms, Inc. e colaboradores",
+          "url": "https://react.dev/"
+        }
+      ],
+      "contribuicao": "Interface e atualização das telas.",
+      "licenca": {
+        "nome": "MIT",
+        "url": "/creditos/software.txt"
+      },
+      "origem": "https://react.dev/",
+      "modificacoes": "Avisos de direitos autorais e licenças incluídos na distribuição.",
+      "avisos": [],
+      "arquivos": [],
+      "creditosComplementares": []
+    },
+    {
+      "id": "workbox",
+      "grupo": "tecnologia",
+      "titulo": "Workbox",
+      "autores": [
+        {
+          "nome": "Google LLC",
+          "url": "https://developer.chrome.com/docs/workbox/"
+        }
+      ],
+      "contribuicao": "Cache e suporte ao uso sem conexão.",
+      "licenca": {
+        "nome": "MIT",
+        "url": "/creditos/software.txt"
+      },
+      "origem": "https://developer.chrome.com/docs/workbox/",
+      "modificacoes": "Avisos de direitos autorais e licenças incluídos na distribuição.",
+      "avisos": [],
+      "arquivos": [],
+      "creditosComplementares": []
+    },
+    {
+      "id": "idb",
+      "grupo": "tecnologia",
+      "titulo": "idb",
+      "autores": [
+        {
+          "nome": "Jake Archibald",
+          "url": "https://github.com/jakearchibald/idb"
+        }
+      ],
+      "contribuicao": "Acesso ao IndexedDB utilizado pelo cache do Workbox.",
+      "licenca": {
+        "nome": "ISC",
+        "url": "/creditos/software.txt"
+      },
+      "origem": "https://github.com/jakearchibald/idb",
+      "modificacoes": "Avisos de direitos autorais e licenças incluídos na distribuição.",
+      "avisos": [],
+      "arquivos": [],
+      "creditosComplementares": []
+    }
+  ]
+}

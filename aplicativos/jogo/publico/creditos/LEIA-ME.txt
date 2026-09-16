@@ -1,0 +1,49 @@
+CRÉDITOS E ATRIBUIÇÕES — GREYWAKE
+Revisão: 16/09/2026
+
+Arte dos personagens
+- Guerreiro: FREE - Knight 2D Pixel Art, por Mattz Art.
+  Origem: https://xzany.itch.io/free-knight-2d-pixel-art
+  Registro: /creditos/guerreiro.txt
+  Licença original: /arte/classes/guerreiro/MattzArt/License.txt
+- Mago: Wizard Pack, por LuizMelo, sob CC0 1.0 Universal.
+  Origem: https://luizmelo.itch.io/wizard-pack
+  Registro: /creditos/mago.txt
+
+Interface e tipografia
+- Dark Ages UI, por Hypnobius, sob licença própria do autor.
+  Origem: https://hypnobius.itch.io/dark-ages-ui
+  Registro: /creditos/interface.txt
+  Licença original: /arte/interface/dark-ages/LICENSE.txt
+- Shikashi's Fantasy Icons Pack, por Matt Firth (shikashipx), CC BY 4.0.
+  Origem: https://shikashipx.itch.io/shikashis-fantasy-icons-pack
+  Atribuição: /arte/icones/shikashi/LICENSE.txt
+  Aviso original do pacote v2: /creditos/shikashi-aviso-original.txt
+  Desenhos-base: https://game-icons.net/ — CC BY 3.0, conforme o aviso do pacote.
+- Antiquity Print, por SciGho. Copyright SciGho 2021. CC BY 4.0.
+  Origem: https://ninjikin.itch.io/font-antiquity-script
+  Atribuição e proveniência: /fontes/antiquity-print-LICENSE.txt
+
+Produção visual do projeto
+- Ambientação gerada com assistência de IA e preparada para Greywake.
+  Registro: /creditos/producao-do-projeto.txt
+
+Software
+- React, React DOM e Scheduler: Meta Platforms, Inc. e colaboradores — MIT.
+- Workbox: Google LLC — MIT.
+- idb: Jake Archibald — ISC.
+  Avisos completos: /creditos/software.txt
+
+Os caminhos acima são relativos à raiz do jogo. Estes avisos também estão
+incluídos no cache de produção para consulta após o preparo do modo sem conexão.
+As páginas externas dos autores e das licenças exigem conexão.
+
+Proveniência dos ícones
+A página atual de Shikashi declara CC BY 4.0. O texto que acompanha o pacote
+v2 menciona desenhos-base de game-icons.net sob CC BY 3.0. Ambos os avisos
+foram mantidos. O pacote não identifica a correspondência de cada recorte
+com um desenho-base e seu autor individual. Essa autoria individual permanece
+sem confirmação; não foi substituída por nomes presumidos.
+
+Cada recurso mantém seus próprios termos. Este índice não concede uma licença
+única para o jogo ou para o conjunto dos recursos de terceiros.

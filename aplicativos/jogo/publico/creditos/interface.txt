@@ -1,0 +1,15 @@
+Dark Ages UI — Hypnobius
+Origem: https://hypnobius.itch.io/dark-ages-ui
+Autor: https://hypnobius.itch.io/
+Revisado em: 16/09/2026
+
+Uso: molduras, ornamentos e espaços da interface.
+Adaptação: quatro recortes da folha original, sem recoloração.
+Licença: termos próprios do autor; uso pessoal e comercial e modificações permitidos.
+A licença original é mantida integralmente em:
+/arte/interface/dark-ages/LICENSE.txt
+
+Os recortes integram o Greywake; a licença não permite redistribuir o pacote
+como recursos para terceiros, incluí-lo em outros pacotes, NFTs, jogos de
+blockchain ou conjuntos de treinamento de IA. O crédito é opcional e foi mantido.
+Este aviso não substitui os termos originais.

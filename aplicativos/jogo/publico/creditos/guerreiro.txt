@@ -1,0 +1,15 @@
+FREE - Knight 2D Pixel Art — Mattz Art
+Origem: https://xzany.itch.io/free-knight-2d-pixel-art
+Autor: https://xzany.itch.io/
+Revisado em: 16/09/2026
+
+Uso no Greywake: animação do Guerreiro na criação de personagem.
+Adaptação: montagem dos quadros em GIF. As folhas PNG originais foram preservadas.
+
+Licença própria do autor: permite projetos pessoais e comerciais e adaptações;
+o crédito é opcional. O material deve integrar um projeto e não pode ser
+revendido ou redistribuído como pacote de recursos nem convertido em NFT.
+A licença original permanece em:
+/arte/classes/guerreiro/MattzArt/License.txt
+
+Este aviso registra a atribuição; não substitui nem altera a licença original.
