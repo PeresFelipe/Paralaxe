@@ -1,0 +1,84 @@
+import { useState } from 'react'
+import { OFERTAS_INICIAIS_DO_MERCADO_DE_PNJ } from '@greywake/conteudo'
+import { comprarOfertaDoMercadoDePnj, type PartidaLocal } from '@greywake/dominio'
+
+type PropriedadesDaTelaDeMercado = {
+  partida: PartidaLocal
+  aoAlterarPartida: (partida: PartidaLocal, mensagem?: string) => void | Promise<void>
+}
+
+export default function BancadaDoMercado({ partida, aoAlterarPartida }: PropriedadesDaTelaDeMercado) {
+  const [mensagem, definirMensagem] = useState<string | null>(null)
+  const [ocupado, definirOcupado] = useState(false)
+
+  async function comprar(ofertaId: string) {
+    if (ocupado) return
+    const oferta = OFERTAS_INICIAIS_DO_MERCADO_DE_PNJ.find((item) => item.id === ofertaId)
+    if (!oferta) return
+
+    definirOcupado(true)
+    try {
+      const atualizado = comprarOfertaDoMercadoDePnj(partida, oferta, new Date().toISOString())
+      const textoExibido = `${oferta.nome} comprado por ${oferta.preco} moedas.`
+      await aoAlterarPartida(atualizado, textoExibido)
+      definirMensagem(textoExibido)
+    } catch (erro) {
+      definirMensagem(erro instanceof Error ? erro.message : 'Não foi possível concluir a compra.')
+    } finally {
+      definirOcupado(false)
+    }
+  }
+
+  return (
+    <section className="funcionalidade-telaDoJogo mercado-telaDoJogo" aria-labelledby="mercado-titulo">
+      <div className="contexto-arte contexto-arte--compacto" aria-hidden="true">
+        <span>ARTE 16:9 · MERCADO</span>
+      </div>
+
+      <div className="telaDoJogo-tituloDaSecao">
+        <div>
+          <p className="secao-chamada">Cidade · Mercado</p>
+          <h2 id="mercado-titulo" className="destaque-titulo">Comprar</h2>
+          <p className="atenuado">Preços e consequências aparecem antes da compra.</p>
+        </div>
+        <div className="moedaCorrente-selo" aria-label={`${partida.personagem.ouro} moedas`}>
+          <span aria-hidden="true">◇</span>
+          <strong>{partida.personagem.ouro}</strong>
+          <small>moedas</small>
+        </div>
+      </div>
+
+      {mensagem ? <p className="emLinha-mensagem" role="status">{mensagem}</p> : null}
+
+      <div className="mercado-gradeVisual">
+        {OFERTAS_INICIAIS_DO_MERCADO_DE_PNJ.map((oferta) => {
+          const podePagar = partida.personagem.ouro >= oferta.preco
+          return (
+            <article className="item-cartao" key={oferta.id}>
+              <div className="item-miniatura" aria-hidden="true">{oferta.nome.slice(0, 1)}</div>
+              <div className="item-cartaoCorpo">
+                <p className="secao-chamada">Mercado</p>
+                <h3>{oferta.nome}</h3>
+                <p className="atenuado">
+                  {oferta.produto.tipo === "equipamento"
+                    ? `Equipamento · ${oferta.produto.espaco}`
+                    : `${oferta.produto.quantidade} unidade(s)`}
+                </p>
+                <div className="informacao-linhaDeDados"><span>Preço</span><strong>{oferta.preco} moedas</strong></div>
+                {!podePagar ? <p className="informacao-alerta">Faltam {oferta.preco - partida.personagem.ouro} moedas.</p> : null}
+                <button
+                  className="principal-botao compacto"
+                  type="button"
+                  disabled={ocupado || !podePagar}
+                  onClick={() => void comprar(oferta.id)}
+                >
+                  Comprar
+                </button>
+              </div>
+            </article>
+          )
+        })}
+      </div>
+    </section>
+  )
+}

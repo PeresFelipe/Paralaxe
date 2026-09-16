@@ -1,0 +1,196 @@
+import { beforeEach, describe, expect, it } from 'vitest'
+import { indexedDB } from 'fake-indexeddb'
+import {
+  aceitarContratoDeDunLiath,
+  criarPartidaLocal,
+  iniciarMasmorra,
+  type DefinicaoDeClasseDoPersonagem,
+  type DefinicaoDeMasmorra,
+  type DefinicaoDePresente,
+  type PartidaLocal,
+} from '@greywake/dominio'
+import { criarRepositorioDePartidasIndexedDb } from './repositorioDePartidasIndexedDb'
+
+Object.defineProperty(globalThis, 'indexedDB', {
+  configurable: true,
+  writable: true,
+  value: indexedDB,
+})
+
+const classeDoPersonagem: DefinicaoDeClasseDoPersonagem = {
+  id: "errante",
+  nome: 'Errante',
+  resumo: 'Equilibrado.',
+  atributos: {
+    vitalidade: 5,
+    mente: 5,
+    vigor: 5,
+    forca: 5,
+    destreza: 5,
+    inteligencia: 5,
+    fe: 5,
+  },
+  equipamentosIniciais: { maoPrincipal: "arma.viagem-lanca" },
+  idDaHabilidadeInicial: "habilidade.abertura",
+}
+
+const presente: DefinicaoDePresente = {
+  id: "nenhum",
+  nome: 'Nenhum',
+  resumo: 'Sem presente.',
+  concessoes: [],
+}
+
+const masmorra: DefinicaoDeMasmorra = {
+  id: "masmorra.dun-liath.facil",
+  nome: 'Dún Liath — Fácil',
+  dificuldade: "facil",
+  idDaSalaInicial: "sala.entrada",
+  salas: [
+    { id: "sala.entrada", nome: 'Entrada', tipo: "entrada", idsDasProximasSalas: ["sala.patio"] },
+    { id: "sala.patio", nome: 'Pátio', tipo: "evento", idsDasProximasSalas: [] },
+  ],
+}
+
+function excluirBancoDeDados() {
+  return new Promise<void>((resolver, rejeitar) => {
+    const requisicao = indexedDB.deleteDatabase('greywake')
+    requisicao.onsuccess = () => resolver()
+    requisicao.onerror = () => rejeitar(requisicao.error)
+    requisicao.onblocked = () => resolver()
+  })
+}
+
+describe("repositório de partidas em IndexedDB", () => {
+  beforeEach(async () => {
+    await excluirBancoDeDados()
+  })
+
+  it("reabre uma expedição ativa com semente, sala, bolsa e recursos intactos", async () => {
+    let partida = criarPartidaLocal({
+      idDaPartida: "recarregar-masmorra",
+      criadoEm: '2026-09-09T12:00:00.000Z',
+      versaoDoConteudo: '0.1.0-dev',
+      nomeDoPersonagem: 'Ailith',
+      classeDoPersonagem,
+      presente,
+    })
+    partida = {
+      ...partida,
+      combate: { ...partida.combate, loboDerrotado: true },
+    }
+    partida = aceitarContratoDeDunLiath(partida, '2026-09-09T12:01:00.000Z')
+    partida = iniciarMasmorra(partida, masmorra, 991337, '2026-09-09T12:02:00.000Z')
+
+    const execucao = partida.masmorra.expedicaoAtiva
+    if (!execucao) throw new Error("Expedição na Masmorra ausente no teste.")
+
+    partida = {
+      ...partida,
+      masmorra: {
+        ...partida.masmorra,
+        expedicaoAtiva: {
+          ...execucao,
+          idDaSalaAtual: "sala.patio",
+          idsDasSalasVisitadas: ["sala.entrada", "sala.patio"],
+          idsDasSalasResolvidas: ["sala.entrada"],
+          bolsaDaExpedicao: [{ idDaDefinicao: "item.tratado-fragmento", quantidade: 1 }],
+          recursos: { ...execucao.recursos, vida: execucao.recursos.vidaMaxima - 37, folego: 41 },
+        },
+      },
+    }
+
+    const repositorioAntesFechar = criarRepositorioDePartidasIndexedDb()
+    await repositorioAntesFechar.salvar(partida)
+
+    const repositorioAposRecarregar = criarRepositorioDePartidasIndexedDb()
+    const carregado = await repositorioAposRecarregar.obter(partida.idDaPartida)
+
+    expect(carregado?.versaoDoEsquemaDaPartida).toBe(10)
+    expect(carregado?.personagem.prestigio).toEqual({ nivel: 0, pontos: 0, idsDosNosDesbloqueados: [] })
+    expect(carregado?.personagem.banco).toEqual({ inventario: [], itensDeEquipamento: [] })
+    expect(carregado?.masmorra.contratoAceito).toBe(true)
+    expect(carregado?.masmorra.expedicaoAtiva?.semente).toBe(991337)
+    expect(carregado?.masmorra.expedicaoAtiva?.idDaSalaAtual).toBe("sala.patio")
+    expect(carregado?.masmorra.expedicaoAtiva?.idsDasSalasVisitadas).toEqual(["sala.entrada", "sala.patio"])
+    expect(carregado?.masmorra.expedicaoAtiva?.idsDasSalasResolvidas).toEqual(["sala.entrada"])
+    expect(carregado?.masmorra.expedicaoAtiva?.bolsaDaExpedicao).toEqual([
+      { idDaDefinicao: "item.tratado-fragmento", quantidade: 1 },
+    ])
+    expect(carregado?.masmorra.expedicaoAtiva?.recursos.vida).toBe(execucao.recursos.vidaMaxima - 37)
+    expect(carregado?.masmorra.expedicaoAtiva?.recursos.folego).toBe(41)
+  })
+
+  it("migra uma pilha do Anel do Viajante da versão 7 para uma instância equipada", async () => {
+    const atual = criarPartidaLocal({
+      idDaPartida: "legado-anel",
+      criadoEm: '2026-09-09T12:00:00.000Z',
+      versaoDoConteudo: '0.1.0-dev',
+      nomeDoPersonagem: 'Ailith',
+      classeDoPersonagem,
+      presente,
+    })
+    const legado = {
+      ...atual,
+      versaoDoEsquemaDaPartida: 7 as const,
+      personagem: {
+        ...atual.personagem,
+        idDoPresente: "viajante-anel" as const,
+        inventario: [{ idDaDefinicao: "item.equipamento.viajante-anel", quantidade: 1 }],
+      },
+    }
+    const repositorio = criarRepositorioDePartidasIndexedDb()
+    await repositorio.salvar(legado as unknown as PartidaLocal)
+    const carregado = await repositorio.obter("legado-anel")
+    const anelId = carregado?.personagem.equipamento.anel1
+    const anel = carregado?.personagem.itensDeEquipamento.find((item) => item.idDaInstancia === anelId)
+
+    expect(carregado?.versaoDoEsquemaDaPartida).toBe(10)
+    expect(carregado?.personagem.prestigio).toEqual({ nivel: 0, pontos: 0, idsDosNosDesbloqueados: [] })
+    expect(anel?.idDaDefinicao).toBe("item.equipamento.viajante-anel")
+    expect(carregado?.personagem.inventario.some((pilha) => pilha.idDaDefinicao === "item.equipamento.viajante-anel")).toBe(false)
+  })
+
+  it("adiciona o estado de prestígio vazio ao carregar uma partida da versão 8", async () => {
+    const atual = criarPartidaLocal({
+      idDaPartida: "legado-prestigio",
+      criadoEm: '2026-09-09T12:00:00.000Z',
+      versaoDoConteudo: '0.1.0-dev',
+      nomeDoPersonagem: 'Ailith',
+      classeDoPersonagem,
+      presente,
+    })
+    const legadoPersonagem = Object.fromEntries(
+      Object.entries(atual.personagem).filter(([chave]) => chave !== "prestigio"),
+    )
+    const legado = {
+      ...atual,
+      versaoDoEsquemaDaPartida: 8 as const,
+      personagem: legadoPersonagem,
+    }
+    const repositorio = criarRepositorioDePartidasIndexedDb()
+    await repositorio.salvar(legado as unknown as PartidaLocal)
+    const carregado = await repositorio.obter("legado-prestigio")
+
+    expect(carregado?.versaoDoEsquemaDaPartida).toBe(10)
+    expect(carregado?.personagem.prestigio).toEqual({ nivel: 0, pontos: 0, idsDosNosDesbloqueados: [] })
+  })
+
+  it("migra a versão 9 sem inferir fabricações pelo inventário e preserva a meta após reabrir", async () => {
+    const original = criarPartidaLocal({ idDaPartida: "legado-jornada", criadoEm: '2026-09-15T12:00:00.000Z', versaoDoConteudo: 'test', nomeDoPersonagem: 'Aedan', classeDoPersonagem, presente })
+    original.personagem.inventario = [{ idDaDefinicao: "material.tratada-cloch", quantidade: 10 }]
+    const legado = Object.fromEntries(Object.entries(original).filter(([chave]) => chave !== "jornada"))
+    const repositorio = criarRepositorioDePartidasIndexedDb()
+    await repositorio.salvar({ ...legado, versaoDoEsquemaDaPartida: 9 } as unknown as PartidaLocal)
+    const migrado = await repositorio.obter(original.idDaPartida)
+    expect(migrado?.versaoDoEsquemaDaPartida).toBe(10)
+    expect(migrado?.personagem).toEqual(original.personagem)
+    expect(migrado?.jornada).toEqual({ meta: null, idsDasReceitasFabricadas: [] })
+    if (!migrado) throw new Error("Partida ausente")
+    const progredido = { ...migrado, jornada: { meta: { idDaDefinicaoDaReceita: "receita.metalurgia.tratada-cloch", selecionadoEm: original.criadoEm, concluidoEm: '2026-09-15T12:00:06.000Z' }, idsDasReceitasFabricadas: ["receita.metalurgia.tratada-cloch"] } }
+    await repositorio.salvar(progredido)
+    const reaberto = criarRepositorioDePartidasIndexedDb()
+    expect((await reaberto.obter(original.idDaPartida))?.jornada).toEqual(progredido.jornada)
+    expect((await reaberto.listar())[0]?.jornada).toEqual(progredido.jornada)
+  })
+})

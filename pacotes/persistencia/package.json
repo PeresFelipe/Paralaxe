@@ -1,0 +1,24 @@
+{
+  "name": "@greywake/persistencia",
+  "private": true,
+  "version": "0.0.1",
+  "type": "module",
+  "exports": {
+    ".": "./fonte/indice.ts"
+  },
+  "types": "./fonte/indice.ts",
+  "scripts": {
+    "analisar": "oxlint fonte",
+    "verificar:tipos": "tsc -p tsconfig.json --noEmit",
+    "testar": "vitest run"
+  },
+  "dependencies": {
+    "@greywake/dominio": "workspace:*"
+  },
+  "devDependencies": {
+    "fake-indexeddb": "^6.2.2",
+    "oxlint": "^1.81.0",
+    "typescript": "~6.0.2",
+    "vitest": "^5.0.0"
+  }
+}

@@ -109,20 +109,20 @@ importers:
 
   .: {}
 
-  apps/game:
+  aplicativos/jogo:
     dependencies:
-      '@greywake/content':
+      '@greywake/conteudo':
         specifier: workspace:*
-        version: link:../../packages/content
-      '@greywake/domain':
+        version: link:../../pacotes/conteudo
+      '@greywake/dominio':
         specifier: workspace:*
-        version: link:../../packages/domain
-      '@greywake/persistence':
+        version: link:../../pacotes/dominio
+      '@greywake/persistencia':
         specifier: workspace:*
-        version: link:../../packages/persistence
-      '@greywake/ui':
+        version: link:../../pacotes/persistencia
+      '@greywake/interface':
         specifier: workspace:*
-        version: link:../../packages/ui
+        version: link:../../pacotes/interface
       react:
         specifier: ^19.2.8
         version: 19.2.8
@@ -158,11 +158,11 @@ importers:
         specifier: ^1.3.0
         version: 1.3.0(vite@8.2.2(@types/node@24.13.3)(terser@5.51.2))(workbox-build@7.4.1)(workbox-window@7.4.1)
 
-  packages/content:
+  pacotes/conteudo:
     dependencies:
-      '@greywake/domain':
+      '@greywake/dominio':
         specifier: workspace:*
-        version: link:../domain
+        version: link:../dominio
     devDependencies:
       oxlint:
         specifier: ^1.81.0
@@ -174,7 +174,7 @@ importers:
         specifier: ^5.0.0
         version: 5.0.0(@types/node@24.13.3)(vite@8.2.2(@types/node@24.13.3)(terser@5.51.2))
 
-  packages/domain:
+  pacotes/dominio:
     devDependencies:
       oxlint:
         specifier: ^1.81.0
@@ -186,11 +186,11 @@ importers:
         specifier: ^5.0.0
         version: 5.0.0(@types/node@24.13.3)(vite@8.2.2(@types/node@24.13.3)(terser@5.51.2))
 
-  packages/persistence:
+  pacotes/persistencia:
     dependencies:
-      '@greywake/domain':
+      '@greywake/dominio':
         specifier: workspace:*
-        version: link:../domain
+        version: link:../dominio
     devDependencies:
       fake-indexeddb:
         specifier: ^6.2.2
@@ -205,7 +205,7 @@ importers:
         specifier: ^5.0.0
         version: 5.0.0(@types/node@24.13.3)(vite@8.2.2(@types/node@24.13.3)(terser@5.51.2))
 
-  packages/ui:
+  pacotes/interface:
     devDependencies:
       oxlint:
         specifier: ^1.81.0

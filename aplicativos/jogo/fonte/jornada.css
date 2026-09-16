@@ -1,0 +1,64 @@
+.jornada-meta-resumo {
+  display: flex; align-items: center; gap: 14px; width: 100%; min-width: 0;
+  padding: 14px 16px; margin: 0 0 22px; text-align: left;
+  border: 1px solid #746544; border-left: 3px solid #bd9b59;
+  background: linear-gradient(100deg, #303322, #20291e); color: #e5d6b1; cursor: pointer;
+}
+.jornada-meta-resumo > span:nth-child(2) { display: grid; gap: 4px; flex: 1; min-width: 0; }
+.jornada-meta-resumo small { color: #c3ae7a; font-size: .65rem; letter-spacing: .09em; text-transform: uppercase; }
+.jornada-meta-resumo strong { font: 1rem/1.4 Georgia, serif; overflow-wrap: anywhere; }
+.jornada-meta-resumo span > span { color: #b9beaa; font-size: .75rem; line-height: 1.45; overflow-wrap: anywhere; }
+.jornada-meta-resumo > .jogo-icone { flex-shrink: 0; }
+.jornada-meta-resumo:hover { border-color: #d3ba80; background: #343c28; }
+.jornada-meta--conclusao { border-left-color: #a9c478; }
+.jornada-meta { min-width: 0; padding: 20px 0; border-top: 1px solid #716440; }
+.jornada-meta h3 { margin: 0; font: 1.2rem/1.45 Georgia, serif; color: #e8d6a9; overflow-wrap: anywhere; }
+.jornada-meta .atenuado { margin: 12px 0; font-size: .82rem; line-height: 1.65; }
+.jornada-meta-titulo { display: flex; gap: 12px; align-items: center; }
+.jornada-meta-titulo .jogo-icone { flex-shrink: 0; }
+.jornada-meta progress { width: 100%; height: 8px; accent-color: #c0a25c; }
+.jornada-progresso-rotulo { color: #c4c7b4; font-size: .75rem; margin: 6px 0 14px; }
+.jornada-ingredientes { list-style: none; margin: 0 0 16px; padding: 0; }
+.jornada-ingredientes li { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 12px; padding: 10px 0; border-bottom: 1px solid #434c39; }
+.jornada-ingredientes li > div { display: grid; gap: 4px; min-width: 0; font-size: .82rem; }
+.jornada-ingredientes li span { color: #b9bea9; font-size: .75rem; overflow-wrap: anywhere; }
+.jornada-meta-acoes { display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: center; margin: 16px 0; }
+.jornada-meta-opcoes { display: grid; gap: 10px; margin-top: 16px; }
+.jornada-receita-escolha { display: grid; gap: 7px; width: 100%; min-width: 0; padding: 14px; text-align: left; color: #dfd3b3; background: #28301f; border: 1px solid #5e6549; cursor: pointer; }
+.jornada-receita-escolha:hover:not(:disabled) { border-color: #c1a363; background: #343d27; }
+.jornada-receita-escolha strong { font: 1rem/1.45 Georgia, serif; }
+.jornada-receita-escolha span { color: #c0c2ad; font-size: .78rem; line-height: 1.6; }
+.jornada-receita-escolha small { color: #c7ad76; font-size: .72rem; }
+.jornada-receita-escolha :is(strong, span, small) { overflow-wrap: anywhere; }
+.jornada-conclusao-texto { padding: 14px; border-left: 2px solid #a5be79; background: #2d3727; color: #d6dfbf; }
+.jornada-conclusao-texto p { font-size: .8rem; line-height: 1.6; }
+.jornada-fabricar-registros { margin-top: 16px; color: #bfbea7; font-size: .78rem; line-height: 1.8; }
+.jornada-fabricar-registros summary { cursor: pointer; padding: 10px 0; }
+.equipamento-comparacao { padding: 12px; margin: 12px 0; border: 1px solid #4e5941; background: #1d251b; font-size: .75rem; line-height: 1.6; min-width: 0; }
+.equipamento-comparacao p { margin: 0 0 8px; color: #b8bdaa; overflow-wrap: anywhere; }
+.equipamento-comparacao dl { display: grid; gap: 5px; margin: 0; }
+.equipamento-comparacao dl > div { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 12px; }
+.equipamento-comparacao dd { margin: 0; font-variant-numeric: tabular-nums; }
+.equipamento-comparacao dd strong { color: #dfd8b7; }
+.equipamento-comparacao dd span { color: #bac2a5; }
+.jogo-aviso--conquista { border-color: #cfb573; background: #323a25; box-shadow: 0 0 0 2px #71613a, 0 12px 35px #0006; animation: jornada-revelacao .35s ease-out; }
+.jogo-aviso--conquista p { color: #efe0b8; }
+.jogo-aviso--conquista > img { flex-shrink: 0; }
+.ausente-meta-resultado { display: flex; align-items: center; gap: 14px; padding: 16px; margin: 20px 0; background: #303b24; border-left: 3px solid #b89f61; }
+.ausente-meta-resultado p { margin: 0; color: #e0d8b9; line-height: 1.65; overflow-wrap: anywhere; }
+.ausente-marco { color: #d3bb7e; line-height: 1.65; }
+.brann-lembranca { margin: 18px 0; padding: 12px 16px; border-left: 2px solid #b29a65; color: #c8c6b2; font: italic .95rem/1.8 Georgia, serif; }
+@keyframes jornada-revelacao { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+@media (max-width: 720px) {
+  .jornada-meta-resumo { padding: 12px; gap: 10px; margin-bottom: 18px; }
+  .jornada-meta-resumo strong { font-size: .9rem; }
+  .jornada-meta-resumo span > span { font-size: .7rem; }
+  .jornada-meta h3 { font-size: 1.05rem; }
+  .jornada-meta .principal-botao { white-space: normal; }
+  .jornada-meta-acoes > button { min-height: 44px; }
+  .ausente-meta-resultado { padding: 12px; align-items: flex-start; }
+}
+@media (prefers-reduced-motion: reduce) { .jogo-aviso--conquista { animation: none; } }
+@media (forced-colors: active) {
+  .jornada-meta-resumo, .jornada-receita-escolha, .equipamento-comparacao, .jogo-aviso--conquista { border: 1px solid CanvasText; }
+}

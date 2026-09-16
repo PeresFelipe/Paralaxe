@@ -1,0 +1,132 @@
+.ocioso-progresso {
+  width: 100%;
+  display: grid;
+  gap: 10px;
+}
+
+.ocioso-progressoTituloDaSecao {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.ocioso-progressoTituloDaSecao > span {
+  min-width: 0;
+  display: grid;
+}
+
+.ocioso-progressoTituloDaSecao small,
+.ocioso-progressoDetalhes small {
+  color: var(--atenuado);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+}
+
+.ocioso-progressoTituloDaSecao strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.8rem;
+}
+
+.ocioso-progressoTituloDaSecao em {
+  flex: 0 0 auto;
+  color: var(--ferro);
+  font-size: 0.75rem;
+  font-style: normal;
+  font-variant-numeric: tabular-nums;
+}
+
+.ocioso-progressoTrilha {
+  position: relative;
+  height: 8px;
+  overflow: hidden;
+  border: 1px solid #41494c;
+  border-radius: 3px;
+  background: #0e1214;
+}
+
+.ocioso-progressoPreenchimento {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, var(--bronze-escuro), var(--bronze));
+  width: 100%;
+  transform: scaleX(0);
+  transform-origin: left;
+}
+
+.ocioso-progressoPreenchimento::after {
+  content: "";
+  float: right;
+  width: 2px;
+  height: 100%;
+  background: var(--ferro);
+  opacity: 0.65;
+}
+
+.ocioso-progressoDetalhes {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  gap: 12px;
+}
+
+.ocioso-progressoDetalhes > span {
+  min-width: 0;
+  display: grid;
+  gap: 2px;
+}
+
+.ocioso-progressoDetalhes strong {
+  color: var(--textoExibido);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.ocioso-progresso--compacto {
+  min-width: 0;
+  gap: 6px;
+}
+
+.ocioso-progresso--compacto .ocioso-progressoTrilha {
+  height: 6px;
+}
+
+.ocioso-progresso--vazio .ocioso-progressoTituloDaSecao em,
+.ocioso-progresso--pausado .ocioso-progressoTituloDaSecao em {
+  color: var(--atenuado);
+}
+
+.ocioso-progresso--pausado .ocioso-progressoPreenchimento {
+  background: #596064;
+}
+
+.atividade-atual-cartao .ocioso-progresso {
+  padding: 15px 16px;
+  border: 1px solid #4a4640;
+  border-radius: var(--raio);
+  background: rgba(169, 133, 85, 0.045);
+}
+
+.atual-trabalho .ocioso-progresso {
+  width: 100%;
+}
+
+@media (max-width: 760px) {
+  .ocioso-progressoDetalhes {
+    grid-template-columns: 1fr;
+  }
+
+  .ocioso-progresso--compacto,
+  .atual-trabalho .ocioso-progresso {
+    min-width: 0;
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ocioso-progressoPreenchimento {
+    transition: none;
+  }
+}

@@ -1,0 +1,32 @@
+name: Validar versão 0.1
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validar:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Obter código
+        uses: actions/checkout@v4
+
+      - name: Configurar Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Ativar Corepack
+        run: corepack enable
+
+      - name: Instalar dependências
+        run: pnpm install --no-frozen-lockfile
+
+      - name: Verificar código, tipos e testes
+        run: pnpm verificar
+
+      - name: Compilar versão de produção
+        run: pnpm compilar

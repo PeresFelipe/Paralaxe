@@ -1,0 +1,999 @@
+/* Versão 0.1: disposição compacta e legível. Cópia anterior: backup/web-usability-453dbba. */
+:root {
+  --compacto-conteudo-largura: 1180px;
+  --estrutura-cabecalho: 60px;
+  --estrutura-rodape: 68px;
+  --toque-alvo: 44px;
+}
+.jogo-estrutura {
+  padding-bottom: 0;
+}
+.jogo-barraSuperior {
+  min-height: var(--estrutura-cabecalho);
+  gap: 16px;
+  padding: 8px 24px;
+}
+.jogador-identidade {
+  gap: 9px;
+  min-width: 0;
+}
+.jogador-identidade > div:last-child {
+  min-width: 0;
+}
+.jogador-nome {
+  display: block;
+  max-width: 24ch;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 1rem;
+}
+.jogador-identidade span {
+  font-size: 0.75rem;
+}
+.avatar-marcador {
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+}
+.global-recursos {
+  gap: 14px;
+}
+.global-recursos small {
+  font-size: 0.75rem;
+  text-transform: none;
+}
+.global-recursos strong {
+  font-size: 0.875rem;
+  font-variant-numeric: tabular-nums;
+}
+.global-recursos > .icone-botao {
+  display: block;
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+}
+.principal-navegacao {
+  min-height: 44px;
+  height: auto;
+  top: var(--estrutura-cabecalho);
+  padding-inline: 24px;
+}
+.principal-navegacao button {
+  min-height: 44px;
+  padding: 8px 20px;
+  font-size: 0.875rem;
+  letter-spacing: 0.035em;
+  text-transform: none;
+}
+.risco-estado-faixa,
+.preparacao-estado-faixa {
+  min-height: 40px;
+  height: auto;
+  padding: 8px 24px;
+}
+.jogo-conteudo {
+  width: min(var(--compacto-conteudo-largura), calc(100% - 40px));
+  padding: 18px 0 calc(var(--estrutura-rodape) + 20px);
+}
+.jogo-estrutura--risco .jogo-conteudo {
+  padding-bottom: 24px;
+}
+.destaque-titulo {
+  font-size: clamp(1.6rem, 2.2vw, 2rem);
+  line-height: 1.15;
+  overflow-wrap: anywhere;
+}
+.secao-chamada {
+  margin-bottom: 4px;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+}
+.telaDoJogo-tituloDaSecao {
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+.telaDoJogo-tituloDaSecao p:last-child {
+  font-size: 0.875rem;
+}
+.telaDoJogo-tituloDaSecao .atenuado {
+  margin-block: 6px 0;
+}
+.secao-espacamento {
+  margin-top: 14px;
+}
+.painel {
+  padding: 14px;
+  box-shadow: none;
+}
+.painel-tituloDaSecao {
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.funcionalidade-telaDoJogo h2 {
+  font-size: 1.125rem;
+}
+.funcionalidade-telaDoJogo h3 {
+  font-size: 1rem;
+}
+.funcionalidade-telaDoJogo h2.destaque-titulo {
+  font-size: clamp(1.6rem, 2.2vw, 2rem);
+}
+.principal-botao,
+.principal-botao.compacto,
+.discreto-botao {
+  min-height: var(--toque-alvo);
+  padding: 8px 12px;
+  font-size: 0.875rem;
+}
+.principal-botao {
+  background: #725635;
+  border-color: #b79564;
+  color: #fff8eb;
+}
+.botao-linhaDeDados {
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.pequeno-texto,
+.informacao-alerta {
+  font-size: 0.8125rem;
+}
+.situacao-selo {
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+}
+.jogo-conteudo :where(button, input, select, summary, a):focus-visible,
+.pular-ligacao:focus-visible {
+  outline: 2px solid #dbc393;
+  outline-offset: 3px;
+}
+button,
+select,
+a,
+summary {
+  touch-action: manipulation;
+}
+.pular-ligacao {
+  position: fixed;
+  left: 16px;
+  top: -100px;
+  z-index: 100;
+  background: var(--superficie);
+  color: var(--textoExibido);
+  padding: 12px;
+}
+.pular-ligacao:focus {
+  top: 8px;
+}
+#jogo-conteudo {
+  scroll-margin-top: 120px;
+}
+#jogo-conteudo:focus {
+  outline: none;
+}
+
+.continuidade-barra {
+  height: var(--estrutura-rodape);
+  gap: 14px;
+  padding: 8px max(24px, calc((100vw - var(--compacto-conteudo-largura)) / 2));
+}
+.atual-trabalho {
+  flex: 1;
+  min-width: 0;
+  max-width: 550px;
+  gap: 8px;
+  min-height: 44px;
+}
+.atual-trabalho > span:first-child {
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+}
+.atual-trabalho strong {
+  font-size: 0.875rem;
+}
+.atual-trabalho small,
+.atual-trabalho em {
+  font-size: 0.75rem;
+}
+.continuidade-acoes {
+  flex-shrink: 0;
+}
+.continuidade-acoes button {
+  height: 44px;
+  padding-inline: 12px;
+  font-size: 0.8125rem;
+}
+.jogo-aviso {
+  position: fixed;
+  right: 20px;
+  bottom: calc(var(--estrutura-rodape) + 12px);
+  z-index: 45;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: min(440px, calc(100% - 40px));
+  padding: 8px 8px 8px 14px;
+  border: 1px solid #8e7755;
+  border-radius: 6px;
+  background: #22282a;
+  box-shadow: 0 8px 30px #0006;
+}
+.jogo-aviso p {
+  margin: 0;
+  font-size: 0.875rem;
+  overflow-wrap: anywhere;
+}
+.jogo-aviso button {
+  min-width: 44px;
+  height: 44px;
+  margin-left: auto;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  font-size: 1.25rem;
+}
+.jogo-estrutura--risco .jogo-aviso {
+  bottom: 12px;
+}
+.lateral-folha {
+  inset: 0 0 0 auto;
+  width: min(410px, 100%);
+  max-width: 100%;
+  height: 100dvh;
+  max-height: 100dvh;
+  margin: 0;
+  padding: 22px;
+  border: 0;
+  border-left: 1px solid var(--linha);
+  color: var(--textoExibido);
+  overscroll-behavior: contain;
+}
+.lateral-folha::backdrop {
+  background: #070b0db3;
+}
+.lateral-folha .destaque-titulo {
+  font-size: 1.65rem;
+  margin-bottom: 18px;
+}
+.folha-fechar {
+  min-width: 44px;
+  min-height: 44px;
+}
+.folha-linhaDeDados {
+  padding: 10px 0;
+  font-size: 0.875rem;
+}
+.jornada-secao {
+  padding: 14px 0;
+}
+.subnavegacao {
+  gap: 6px;
+  margin-bottom: 14px;
+}
+.subnavegacao button {
+  min-height: 44px;
+  padding: 8px 12px;
+  font-size: 0.875rem;
+}
+.personagem-disposicao {
+  grid-template-columns: 180px minmax(0, 1fr);
+  gap: 14px;
+}
+.personagem-disposicao > .retrato-marcador {
+  width: 180px;
+  max-width: 100%;
+}
+.visaoGeral-pilha {
+  gap: 10px;
+}
+.informacoes-gradeVisual {
+  gap: 8px;
+  margin-top: 10px;
+}
+.informacoes-gradeVisual > div {
+  gap: 3px;
+  padding: 8px;
+}
+.informacoes-gradeVisual span {
+  font-size: 0.8125rem;
+}
+.informacoes-gradeVisual strong {
+  font-size: 0.875rem;
+}
+.profissao-resumo-gradeVisual {
+  gap: 6px;
+}
+.profissao-resumo-gradeVisual > div {
+  gap: 8px;
+  padding: 8px;
+  font-size: 0.875rem;
+}
+.atributo-listar {
+  gap: 6px;
+}
+.atributo-listar > div {
+  padding: 9px 10px;
+}
+.equipamento-gradeVisual-emExecucao {
+  gap: 10px;
+}
+.item-cartao {
+  grid-template-columns: 56px minmax(0, 1fr);
+  gap: 10px;
+  padding: 12px;
+}
+.item-miniatura {
+  font-size: 1.2rem;
+}
+.item-cartaoCorpo h3 {
+  margin: 1px 0 5px;
+}
+.item-cartaoCorpo p {
+  margin-bottom: 8px;
+  font-size: 0.875rem;
+}
+.tecnica-linhaDeDados {
+  grid-template-columns: 28px 1fr;
+  gap: 8px;
+  padding: 8px 0;
+}
+.prioridade-indice {
+  width: 28px;
+  height: 28px;
+  font-size: 0.8125rem;
+}
+.tecnica-linhaDeDados small {
+  font-size: 0.8125rem;
+}
+.prestigio-no {
+  min-height: 44px;
+  padding: 8px;
+}
+.prestigio-noTexto strong {
+  font-size: 0.8125rem;
+}
+.prestigio-noTexto small,
+.prestigio-noDetalhesAdicionais {
+  font-size: 0.75rem;
+}
+.inventario-gradeVisual-emExecucao {
+  gap: 8px;
+}
+.inventario-bloco {
+  gap: 4px;
+}
+.inventario-bloco strong,
+.inventario-bloco span {
+  font-size: 0.8125rem;
+}
+
+/* Atividade selecionada, resultado e controles de início e parada compartilham a mesma área. */
+.atividade-regra {
+  text-align: right;
+}
+.atividades-disposicao {
+  display: grid;
+  grid-template-columns: 184px minmax(0, 1fr);
+  gap: 16px;
+  align-items: start;
+}
+.atividades-profissao-trilho {
+  position: sticky;
+  top: 120px;
+  display: grid;
+  gap: 16px;
+}
+.atividade-profissao-grupo .secao-titulo-emExecucao {
+  margin: 0 0 8px;
+  font-family: inherit;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--atenuado);
+}
+.atividade-profissao-grupo .profissao-cartao-gradeVisual {
+  grid-template-columns: 1fr;
+  gap: 5px;
+}
+.atividade-profissao-grupo .profissao-cartao {
+  min-height: 46px;
+  padding: 8px 10px;
+  gap: 6px;
+  align-items: center;
+  border-radius: 5px;
+}
+.atividade-profissao-grupo .profissao-cartao span {
+  font-size: 0.875rem;
+}
+.atividade-profissao-grupo .profissao-cartao strong {
+  font-size: 0.75rem;
+  white-space: nowrap;
+  font-weight: 500;
+}
+.profissao-cartao.ativo span {
+  color: var(--textoExibido);
+}
+.profissao-executando {
+  display: block;
+  font-size: 0.75rem;
+  color: #cfb783;
+}
+.movel-profissao-seletor {
+  display: none;
+}
+.atividades-areaDeTrabalho {
+  --atividade-cena-largura: 224px;
+  min-width: 0;
+}
+.atividade-etapa {
+  display: grid;
+  grid-template-columns: minmax(0, var(--atividade-cena-largura)) minmax(0, 1fr);
+  gap: 12px;
+  align-items: stretch;
+}
+.atividade-cena {
+  width: 100%;
+  max-width: var(--atividade-cena-largura);
+  min-width: 0;
+  aspect-ratio: 16 / 9;
+  align-self: start;
+}
+.atividade-cena[data-profissao="lenhador"],
+.atividade-cena[data-profissao="herbologia"] {
+  background-position: 66.6667% 0;
+}
+.atividade-cena[data-profissao="metalurgia"],
+.atividade-cena[data-profissao="forja"],
+.atividade-cena[data-profissao="culinaria"] {
+  background-position: 100% 0;
+}
+.atividade-atualizado {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 12px;
+  border-color: #574b39;
+  background: #1c2223;
+}
+.atividade-atualizado .ocioso-progressoTituloDaSecao {
+  align-items: start;
+}
+.atividade-atualizado .ocioso-progressoTituloDaSecao strong {
+  white-space: normal;
+  font-size: 0.9375rem;
+}
+.atividade-atualizado .ocioso-progressoDetalhes {
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+.atividade-atualizado .ocioso-progressoDetalhes > span:last-child {
+  display: none;
+}
+.atividade-atualizado .ocioso-progressoDetalhes strong {
+  font-size: 0.875rem;
+}
+.atividade-atualizado-acoes {
+  display: flex;
+  justify-content: flex-end;
+  font-size: 0.875rem;
+}
+.profissao-nivel-faixa {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--linha);
+  font-size: 0.8125rem;
+}
+.profissao-nivel-faixa strong {
+  font-size: 0.875rem;
+}
+.profissao-nivel-faixa progress {
+  flex: 1;
+  min-width: 80px;
+  max-width: 240px;
+  height: 6px;
+  accent-color: var(--bronze);
+  border: 0;
+  border-radius: 3px;
+  overflow: hidden;
+}
+progress::-webkit-progress-bar {
+  background: var(--superficie-3);
+}
+progress::-webkit-progress-value {
+  background: var(--bronze);
+}
+progress::-moz-progress-bar {
+  background: var(--bronze);
+}
+.profissao-nivel-faixa > span {
+  color: var(--atenuado);
+  font-variant-numeric: tabular-nums;
+}
+.profissao-nivel-faixa details {
+  margin-left: auto;
+  max-width: 100%;
+}
+.profissao-nivel-faixa summary {
+  cursor: pointer;
+  min-height: 32px;
+  display: list-item;
+  width: fit-content;
+  padding-block: 5px;
+  color: var(--atenuado);
+}
+.profissao-nivel-faixa details p {
+  margin: 4px 0;
+}
+.trabalho-resultado {
+  display: grid;
+  gap: 3px;
+  min-height: 62px;
+  margin: 0;
+  padding-block: 10px;
+}
+.trabalho-resultado span {
+  font-size: 0.75rem;
+  color: var(--atenuado);
+}
+.trabalho-resultado strong {
+  font-size: 0.8125rem;
+  font-weight: 500;
+}
+.atividade-opcoes {
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+.atividade-opcao {
+  grid-template-columns: 48px minmax(0, 1fr);
+  gap: 12px;
+  padding: 12px;
+}
+.atividade-opcao .item-miniatura {
+  width: 48px;
+}
+.atividade-opcao-corpo {
+  min-width: 0;
+}
+.atividade-opcao-titulo {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: space-between;
+}
+.atividade-opcao-titulo > span {
+  font-size: 0.8125rem;
+  color: var(--atenuado);
+}
+.atividade-opcao h2 {
+  margin: 0;
+  font-size: 1.125rem;
+}
+.atividade-rendimento {
+  font-size: 0.875rem;
+  color: var(--atenuado);
+  margin: 4px 0 10px;
+}
+.atividade-substituicao {
+  margin: 6px 0;
+  font-size: 0.8125rem;
+  color: #cfb783;
+}
+.ingrediente-listar {
+  margin: 6px 0 10px;
+}
+.ingrediente-listar > div {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 12px;
+  padding: 5px 0;
+  font-size: 0.875rem;
+}
+.ingrediente-listar > div > span {
+  flex: 1;
+}
+.ingrediente-listar strong {
+  margin-left: 6px;
+  font-variant-numeric: tabular-nums;
+}
+.ingrediente-listar small {
+  display: block;
+  font-size: 0.75rem;
+  color: #d1ac72;
+}
+.material-origem {
+  min-height: 44px;
+  padding: 6px 8px;
+  background: transparent;
+  border: 1px solid var(--linha);
+  border-radius: 4px;
+  font-size: 0.8125rem;
+  color: #dcc499;
+  cursor: pointer;
+}
+
+/* Mantém a identidade visual em janelas estreitas e com ampliação. */
+.contexto-arte {
+  box-shadow: none;
+}
+.informacao-linhaDeDados {
+  padding: 8px 0;
+  font-size: 0.875rem;
+}
+.aventura-visaoGeral-disposicao,
+.cidade-visaoGeral-disposicao {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: 14px;
+  align-items: start;
+}
+.aventura-visaoGeral-disposicao > .contexto-arte,
+.cidade-visaoGeral-disposicao > .contexto-arte {
+  width: 100%;
+}
+.aventura-gradeVisual,
+.masmorra-entrada-gradeVisual {
+  gap: 10px;
+}
+.aventura-visaoGeral-disposicao .aventura-gradeVisual {
+  grid-template-columns: 1fr;
+  margin-top: 0;
+}
+.aventura-cartao h2 {
+  margin: 2px 0 6px;
+}
+.aventura-cartao p {
+  font-size: 0.875rem;
+}
+.funcionalidade-telaDoJogo > .contexto-arte--aventura,
+.funcionalidade-telaDoJogo > .contexto-arte--cidade {
+  width: min(100%, 580px);
+}
+.cidade-localDoJogo-gradeVisual {
+  gap: 8px;
+}
+.cidade-visaoGeral-disposicao .cidade-localDoJogo-gradeVisual {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-top: 0;
+}
+.cidade-localDoJogo-gradeVisual button {
+  min-height: 84px;
+  gap: 5px;
+  padding: 12px;
+}
+.cidade-localDoJogo-gradeVisual strong {
+  font-size: 1rem;
+}
+.cidade-localDoJogo-gradeVisual span {
+  font-size: 0.8125rem;
+}
+.cidade-contexto-disposicao {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 14px;
+  align-items: start;
+}
+.pnj-cartao {
+  gap: 12px;
+}
+.retrato-marcador--pnj {
+  width: 112px;
+  min-width: 112px;
+}
+.preparacao-disposicao {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 14px;
+}
+.preparacao-cartoes {
+  gap: 8px;
+}
+.preparacao-cartoes p:last-child {
+  font-size: 0.8125rem;
+}
+.confirmar-painel,
+.chefe-confirmar,
+.masmorra-conclusao-painel {
+  gap: 16px;
+  padding: 14px;
+}
+.combate-gradeVisual {
+  gap: 10px;
+}
+.combate-combatente h3 {
+  margin: 2px 0 9px;
+}
+.recurso-pilha {
+  gap: 6px;
+}
+.recurso-pilha > div {
+  padding: 8px;
+}
+.masmorra-execucao-gradeVisual {
+  gap: 12px;
+}
+.masmorra-lateral {
+  gap: 10px;
+}
+.web-jogo-situacao {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 12px;
+  margin-bottom: 16px;
+  border: 1px solid var(--linha);
+  border-radius: 6px;
+  font-size: 0.875rem;
+}
+.web-jogo-situacao p {
+  flex: 1;
+  margin: 0;
+  min-width: 180px;
+  color: var(--atenuado);
+}
+
+@media (max-width: 980px) {
+  .jogo-barraSuperior,
+  .principal-navegacao {
+    padding-inline: 16px;
+  }
+  .global-recursos {
+    gap: 8px;
+  }
+  .jogo-conteudo {
+    width: calc(100% - 32px);
+  }
+  .atividades-disposicao {
+    grid-template-columns: 166px minmax(0, 1fr);
+    gap: 12px;
+  }
+  .atividades-areaDeTrabalho {
+    --atividade-cena-largura: 192px;
+  }
+  .personagem-disposicao {
+    grid-template-columns: 150px minmax(0, 1fr);
+  }
+  .personagem-disposicao > .retrato-marcador {
+    width: 150px;
+  }
+  .preparacao-disposicao,
+  .cidade-contexto-disposicao {
+    grid-template-columns: 1fr;
+  }
+  .continuidade-barra {
+    padding-inline: 16px;
+  }
+}
+@media (max-width: 720px) {
+  :root {
+    --estrutura-rodape: 74px;
+    --estrutura-cabecalho: 64px;
+  }
+  .jogo-estrutura {
+    padding-bottom: 0;
+  }
+  .jogo-barraSuperior {
+    min-height: var(--estrutura-cabecalho);
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px 12px;
+    padding: 8px 12px;
+  }
+  .jogador-identidade {
+    flex: 1;
+  }
+  .jogador-identidade span {
+    display: block;
+  }
+  .global-recursos {
+    display: flex;
+    gap: 8px;
+  }
+  .global-recursos > div {
+    display: flex;
+    gap: 4px;
+  }
+  .global-recursos > div:nth-child(4) {
+    display: flex;
+  }
+  .global-recursos strong {
+    font-size: 0.8125rem;
+  }
+  .global-recursos > .icone-botao {
+    display: block;
+  }
+  .global-recursos small {
+    display: none;
+  }
+  .principal-navegacao {
+    top: auto;
+    height: calc(56px + env(safe-area-inset-bottom));
+    padding: 0 4px env(safe-area-inset-bottom);
+  }
+  .principal-navegacao button {
+    min-width: 0;
+    font-size: 0.8125rem;
+    letter-spacing: 0;
+    padding: 4px;
+  }
+  .jogo-conteudo {
+    width: calc(100% - 24px);
+    padding: 14px 0
+      calc(var(--estrutura-rodape) + 76px + env(safe-area-inset-bottom));
+  }
+  .telaDoJogo-tituloDaSecao {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+  .atividade-regra {
+    text-align: left;
+  }
+  .atividades-disposicao {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  .atividades-profissao-trilho {
+    display: none;
+  }
+  .movel-profissao-seletor {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 0.875rem;
+    color: var(--atenuado);
+  }
+  .movel-profissao-seletor select {
+    min-width: 0;
+    flex: 1;
+    min-height: 44px;
+    padding: 8px;
+    color: var(--textoExibido);
+    background: var(--superficie);
+    border: 1px solid var(--linha);
+    border-radius: 5px;
+    font-size: 1rem;
+  }
+  .atividades-areaDeTrabalho {
+    --atividade-cena-largura: 160px;
+  }
+  .atividade-etapa {
+    gap: 10px;
+  }
+  .atividade-atualizado {
+    padding: 10px;
+  }
+  .atividade-atualizado .ocioso-progressoTituloDaSecao {
+    flex-wrap: wrap;
+    gap: 3px;
+  }
+  .atividade-atualizado .ocioso-progressoTituloDaSecao em {
+    display: block;
+  }
+  .personagem-disposicao,
+  .aventura-visaoGeral-disposicao,
+  .cidade-visaoGeral-disposicao {
+    grid-template-columns: 1fr;
+  }
+  .personagem-disposicao > .retrato-marcador {
+    width: 128px;
+  }
+  .continuidade-barra {
+    bottom: calc(56px + env(safe-area-inset-bottom));
+    height: var(--estrutura-rodape);
+    padding-inline: 12px;
+    gap: 8px;
+  }
+  .atual-trabalho > span:first-child {
+    display: none;
+  }
+  .atual-trabalho .ocioso-progressoTituloDaSecao {
+    gap: 4px;
+    flex-wrap: wrap;
+  }
+  .atual-trabalho em {
+    display: inline;
+  }
+  .atual-trabalho strong {
+    font-size: 0.8125rem;
+  }
+  .atual-trabalho small {
+    display: none;
+  }
+  .continuidade-acoes {
+    gap: 5px;
+  }
+  .continuidade-acoes button,
+  .continuidade-acoes button:first-child {
+    font-size: 0.75rem;
+    padding-inline: 8px;
+  }
+  .continuidade-acoes button:first-child::after {
+    content: none;
+  }
+  .continuidade-acoes button:nth-child(2) {
+    max-width: none;
+  }
+  .jogo-aviso {
+    right: 12px;
+    width: calc(100% - 24px);
+    bottom: calc(var(--estrutura-rodape) + 68px + env(safe-area-inset-bottom));
+  }
+  .lateral-folha {
+    inset: 0 0 0 auto;
+    padding-top: max(20px, env(safe-area-inset-top));
+    padding-bottom: max(20px, env(safe-area-inset-bottom));
+  }
+  .cidade-visaoGeral-disposicao .cidade-localDoJogo-gradeVisual {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 420px) {
+  .jogador-identidade {
+    flex-basis: 100%;
+  }
+  .jogador-identidade > div:last-child {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .avatar-marcador {
+    width: 28px;
+    height: 28px;
+  }
+  .global-recursos {
+    width: 100%;
+    justify-content: space-between;
+  }
+  .atividade-etapa {
+    grid-template-columns: 1fr;
+  }
+  .atividades-areaDeTrabalho {
+    --atividade-cena-largura: 128px;
+  }
+  .atividade-atualizado {
+    gap: 8px;
+  }
+  .atividade-atualizado .ocioso-progressoTituloDaSecao {
+    flex-wrap: nowrap;
+  }
+  .atividade-atualizado .ocioso-progressoDetalhes {
+    grid-template-columns: 1fr;
+  }
+  .atividade-atualizado-acoes {
+    justify-content: flex-start;
+  }
+  .profissao-nivel-faixa {
+    gap: 6px 8px;
+  }
+  .profissao-nivel-faixa progress {
+    max-width: 90px;
+  }
+  .atividade-opcao {
+    grid-template-columns: 36px minmax(0, 1fr);
+    gap: 8px;
+  }
+  .atividade-opcao .item-miniatura {
+    width: 36px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .jogo-estrutura *,
+  .jogo-estrutura *::before,
+  .jogo-estrutura *::after {
+    scroll-behavior: auto;
+  }
+}
+
+html {
+  scrollbar-gutter: stable;
+}
+body:has(dialog[open]) {
+  overflow: hidden;
+}

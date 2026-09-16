@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Greywake — Atividades › Mineração — Alta fidelidade v0.1</title>
+<style>
+:root{
+  --fundo:#101315;
+  --superficie:#171c1f;
+  --superficie-2:#20262a;
+  --linha:#343b3f;
+  --textoExibido:#e5e1d8;
+  --atenuado:#a9aaa5;
+  --ferro:#c4c7c5;
+  --bronze:#a98555;
+  --bronze-escuro:#725a3c;
+  --mana:#718c95;
+  --positivo:#788a72;
+  --alerta:#b99255;
+  --perigo:#9e5550;
+  --r-pequeno:5px;
+  --r-medio:8px;
+  --sombra:0 18px 48px rgba(0,0,0,.24);
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--fundo);color:var(--textoExibido)}
+body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe Interface",sans-serif;letter-spacing:.01em}
+button{font:inherit}
+button:focus-visible,.recurso-cartao:focus-visible{outline:2px solid var(--ferro);outline-offset:3px}
+.aplicativo{min-height:100vh;background:
+  radial-gradient(circle at 82% -10%,rgba(169,133,85,.07),transparent 32rem),
+  linear-gradient(180deg,#121719 0%,var(--fundo) 38%)}
+.barraSuperior{height:74px;border-bottom:1px solid var(--linha);display:flex;align-items:center;justify-content:space-between;padding:0 32px;background:rgba(16,19,21,.94)}
+.identidade,.recursos{display:flex;align-items:center;gap:14px}
+.avatar{width:42px;height:42px;border:1px solid #64533f;border-radius:50%;background:linear-gradient(145deg,#444a4d,#1a1f22);box-shadow:inset 0 0 0 3px #171c1f;display:grid;place-items:center;color:var(--atenuado);font-size:12px}
+.personagem-nome{font-family:Spectral,Georgia,serif;font-weight:600;font-size:18px;letter-spacing:.06em;text-transform:uppercase}.nivel{font-size:12px;color:var(--atenuado);margin-top:2px}
+.recurso-pill{display:flex;align-items:center;gap:7px;color:var(--atenuado);font-size:13px;white-space:nowrap}.recurso-pill b{color:var(--textoExibido);font-weight:600}.simbolo{width:9px;height:9px;border:1px solid currentColor;transform:rotate(45deg);display:inline-block}.vida{color:#a76661}.mana{color:var(--mana)}.folego{color:#9a9979}.moeda{color:var(--bronze)}
+.icone-botao{width:36px;height:36px;border:1px solid var(--linha);background:var(--superficie);color:var(--atenuado);border-radius:var(--r-pequeno);cursor:pointer}.icone-botao:hover{background:var(--superficie-2);color:var(--textoExibido)}
+.navegacao{height:56px;border-bottom:1px solid var(--linha);padding:0 32px;display:flex;align-items:stretch;background:#121719}.navegacao button{position:relative;padding:0 24px;border:0;background:transparent;color:var(--atenuado);text-transform:uppercase;font-size:12px;letter-spacing:.14em;cursor:pointer}.navegacao button:hover{color:var(--textoExibido)}.navegacao .ativo{color:var(--textoExibido)}.navegacao .ativo:after{content:"";position:absolute;left:24px;right:24px;bottom:0;height:2px;background:var(--bronze)}
+.conteudo{width:min(1280px,calc(100% - 64px));margin:0 auto;padding:32px 0 104px}
+.eyebrow{font-size:11px;text-transform:uppercase;letter-spacing:.18em;color:var(--bronze);margin-bottom:8px}.titulo-linhaDeDados{display:flex;align-items:end;justify-content:space-between;margin-bottom:24px}.titulo-linhaDeDados h1{font-family:Spectral,Georgia,serif;font-size:34px;letter-spacing:.05em;margin:0;font-weight:600}.subtle{color:var(--atenuado);font-size:13px}
+.hero{display:grid;grid-template-columns:minmax(0,1.65fr) minmax(300px,.85fr);gap:20px;margin-bottom:30px}.arte{aspect-ratio:16/9;position:relative;overflow:hidden;border:1px solid #394044;border-radius:var(--r-medio);box-shadow:var(--sombra);background:
+  linear-gradient(180deg,transparent 40%,rgba(10,12,13,.74)),
+  radial-gradient(circle at 68% 34%,rgba(113,140,149,.24),transparent 25%),
+  linear-gradient(140deg,#384348 0%,#1e282c 38%,#182023 72%,#0f1416 100%)}
+.arte:before{content:"";position:absolute;left:-4%;right:-4%;bottom:18%;height:30%;background:linear-gradient(164deg,transparent 0 28%,rgba(118,127,127,.23) 29% 31%,transparent 32% 48%,rgba(89,99,100,.22) 49% 52%,transparent 53%);transform:skewY(-5deg)}
+.arte:after{content:"ARTE PROVISÓRIA · ARTE DE MINERAÇÃO 16:9";position:absolute;left:20px;bottom:18px;color:#ddd9cf;font-family:Spectral,Georgia,serif;font-size:13px;letter-spacing:.12em}.arte-badge{position:absolute;top:16px;left:16px;padding:7px 10px;border:1px solid rgba(229,225,216,.23);background:rgba(15,19,21,.72);font-size:10px;text-transform:uppercase;letter-spacing:.14em;color:var(--atenuado);border-radius:var(--r-pequeno)}
+.profissao-painel{border:1px solid var(--linha);background:linear-gradient(180deg,#1a2023,#151a1d);border-radius:var(--r-medio);padding:24px;display:flex;flex-direction:column;justify-content:space-between}.profissao-painel h2{font-family:Spectral,Georgia,serif;letter-spacing:.06em;font-size:21px;margin:0 0 18px}.nivel-linha{display:flex;align-items:referência inicial;justify-content:space-between;margin-bottom:8px}.nivel-linha strong{font-size:22px;font-weight:600}.progresso{height:7px;border:1px solid #333b3f;background:#101416;border-radius:999px;overflow:hidden}.progresso span{display:block;height:100%;width:63%;background:linear-gradient(90deg,var(--bronze-escuro),var(--bronze))}.xp{display:flex;justify-content:space-between;color:var(--atenuado);font-size:11px;margin-top:7px}.divisor{height:1px;background:var(--linha);margin:20px 0}.detalhesAdicionais-rotulo{font-size:10px;text-transform:uppercase;letter-spacing:.15em;color:var(--atenuado);margin-bottom:8px}.tool{display:flex;justify-content:space-between;gap:16px;font-size:14px}.tool span:last-child{color:var(--ferro)}
+.secao-cabeca{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}.secao-cabeca h2{font-family:Spectral,Georgia,serif;font-size:18px;letter-spacing:.05em;margin:0}.secao-cabeca span{font-size:12px;color:var(--atenuado)}
+.recurso-grauVisual{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px}.recurso-cartao{appearance:none;text-align:left;border:1px solid var(--linha);background:var(--superficie);border-radius:var(--r-medio);padding:12px;color:var(--textoExibido);cursor:pointer;transition:.14s ease}.recurso-cartao:hover{border-color:#565e62;background:#1a2023;transform:translateY(-1px)}.recurso-cartao.ativo{border-color:var(--bronze);box-shadow:inset 0 0 0 1px rgba(169,133,85,.18)}.miniatura{aspect-ratio:1/1;border:1px solid #3b4347;background:radial-gradient(circle at 35% 35%,#596164,#272d30 42%,#171c1f 72%);border-radius:var(--r-pequeno);margin-bottom:12px;display:grid;place-items:center;color:#a8aca9;font-family:Spectral,Georgia,serif;font-size:24px}.recurso-cartao:nth-child(2) .miniatura{background:radial-gradient(circle at 36% 33%,#66726e,#2f3837 42%,#171c1f 72%)}.recurso-cartao:nth-child(3) .miniatura,.recurso-cartao:nth-child(4) .miniatura{filter:saturate(.45);opacity:.72}.cartao-superior{display:flex;justify-content:space-between;gap:8px;align-items:center}.cartao-nome{font-weight:650;font-size:14px}.estado{font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--bronze)}.bloqueado{color:#838784}.cartao-detalhesAdicionais{margin-top:6px;color:var(--atenuado);font-size:11px}
+.detalhe{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(280px,.65fr);gap:20px;border-top:1px solid var(--linha);padding-top:24px}.detalhe-principal{display:grid;grid-template-columns:94px 1fr;gap:18px}.detalhe-miniatura{aspect-ratio:1/1;border:1px solid #485054;border-radius:var(--r-medio);background:radial-gradient(circle at 36% 33%,#626a6d,#2b3235 45%,#171c1f 74%);display:grid;place-items:center;font-family:Spectral,Georgia,serif;font-size:30px;color:var(--ferro)}.detalhe h3{font-family:Spectral,Georgia,serif;font-size:25px;margin:1px 0 5px;letter-spacing:.04em}.descricao{color:var(--atenuado);font-size:13px;line-height:1.6;margin:0 0 18px}.estatistica-linhaDeDados{display:flex;gap:28px;flex-wrap:wrap}.estatistica{min-width:84px}.estatistica b{display:block;font-size:15px;margin-top:4px}.usos{margin-top:22px;padding-top:16px;border-top:1px solid var(--linha)}.ligacao-botao{border:0;background:transparent;color:var(--bronze);padding:0;cursor:pointer;font-size:12px}.ligacao-botao:hover{text-decoration:underline}
+.atividade-box{border:1px solid #5f513f;background:linear-gradient(180deg,rgba(169,133,85,.08),rgba(169,133,85,.035));border-radius:var(--r-medio);padding:20px}.atividade-box .detalhesAdicionais-rotulo{color:#bca07c}.atividade-titulo{font-family:Spectral,Georgia,serif;font-size:20px;letter-spacing:.04em;margin-bottom:4px}.ciclo{display:flex;align-items:center;gap:12px;margin:16px 0 12px}.ciclo-barra{flex:1;height:8px;border-radius:999px;background:#101416;border:1px solid #3a3731;overflow:hidden}.ciclo-barra span{display:block;width:68%;height:100%;background:linear-gradient(90deg,var(--bronze-escuro),var(--bronze))}.ciclo-tempo{font-variant-numeric:tabular-nums;color:var(--ferro);font-size:12px}.acao-linhaDeDados{display:flex;gap:8px;margin-top:14px}.botao{min-height:38px;border-radius:var(--r-pequeno);padding:0 14px;border:1px solid var(--linha);cursor:pointer}.botao-secundario{background:var(--superficie-2);color:var(--textoExibido)}.botao-secundario:hover{background:#272e32}.botao-terciario{background:transparent;color:var(--atenuado)}.botao-terciario:hover{color:var(--textoExibido)}
+.inferior{position:fixed;left:0;right:0;bottom:0;height:68px;border-top:1px solid #3a403f;background:rgba(14,18,20,.96);backdrop-filter:blur(10px);display:flex;justify-content:center}.inferior-interior{width:min(1280px,calc(100% - 64px));display:flex;align-items:center;justify-content:space-between;gap:20px}.ocioso{display:flex;align-items:center;gap:12px;font-size:13px}.ocioso-marcaVisual{width:31px;height:31px;border:1px solid #67573f;background:#1a1f21;border-radius:var(--r-pequeno);display:grid;place-items:center;color:var(--bronze)}.ocioso small{display:block;color:var(--atenuado);margin-top:2px}.rapido{display:flex;gap:8px}.rapido button{height:36px;padding:0 14px;border:1px solid var(--linha);background:var(--superficie);color:var(--atenuado);border-radius:var(--r-pequeno);cursor:pointer}.rapido button:hover{color:var(--textoExibido);background:var(--superficie-2)}
+.prototype-nota{position:fixed;right:12px;top:142px;writing-mode:vertical-rl;color:#676d6d;font-size:9px;letter-spacing:.16em;text-transform:uppercase}
+@media(max-width:900px){
+  .barraSuperior{height:auto;min-height:64px;padding:10px 16px}.personagem-nome{font-size:15px}.recursos{gap:8px}.recurso-pill span.rotulo{display:none}.navegacao{position:fixed;left:0;right:0;bottom:0;z-index:20;height:62px;padding:0;justify-content:space-around;border-top:1px solid var(--linha);border-bottom:0}.navegacao button{padding:0 10px;font-size:9px;flex:1}.navegacao .ativo:after{left:18px;right:18px;top:0;bottom:auto}.conteudo{width:calc(100% - 28px);padding:22px 0 152px}.hero,.detalhe{grid-template-columns:1fr}.profissao-painel{padding:18px}.recurso-grauVisual{grid-template-columns:repeat(2,1fr)}.inferior{bottom:62px;height:58px}.inferior-interior{width:calc(100% - 28px)}.rapido button{padding:0 10px;font-size:11px}.prototype-nota{display:none}.titulo-linhaDeDados h1{font-size:28px}}
+@media(max-width:520px){.recurso-pill:nth-child(2),.recurso-pill:nth-child(3),.recurso-pill:nth-child(4){display:none}.titulo-linhaDeDados{align-items:start;gap:14px;flex-direction:column}.detalhe-principal{grid-template-columns:72px 1fr}.estatistica-linhaDeDados{gap:14px}.rapido button:first-child{display:none}.arte:after{font-size:10px;left:12px;bottom:12px}.barraSuperior{padding-right:10px}}
+</style>
+</head>
+<body>
+<div class="aplicativo">
+  <header class="barraSuperior">
+    <div class="identidade">
+      <div class="avatar">4:5</div>
+      <div><div class="personagem-nome">Kael</div><div class="nivel">Nível 12 · Errante</div></div>
+    </div>
+    <div class="recursos" aria-label="Recursos globais">
+      <div class="recurso-pill"><span class="simbolo vida"></span><span class="rotulo">Vida</span><b>244/244</b></div>
+      <div class="recurso-pill"><span class="simbolo mana"></span><span class="rotulo">Mana</span><b>70/70</b></div>
+      <div class="recurso-pill"><span class="simbolo folego"></span><span class="rotulo">Fôlego</span><b>148/148</b></div>
+      <div class="recurso-pill"><span class="simbolo moeda"></span><b>1.284</b></div>
+      <button class="icone-botao" aria-label="Configurações">⚙</button>
+    </div>
+  </header>
+
+  <nav class="navegacao" aria-label="Navegação principal">
+    <button>Personagem</button>
+    <button class="ativo" aria-current="page">Atividades</button>
+    <button>Aventura</button>
+    <button>Cidade</button>
+  </nav>
+
+  <main class="conteudo">
+    <div class="eyebrow">Atividades · Coleta</div>
+    <div class="titulo-linhaDeDados">
+      <h1>Mineração</h1>
+      <div class="subtle">Escolha um recurso para iniciar ou alterar a atividade.</div>
+    </div>
+
+    <section class="hero" aria-label="Visão da Profissão">
+      <div class="arte" role="img" aria-label="Placeholder 16 por 9 para arte autoral de Mineração">
+        <div class="arte-badge">Arte contextual · 16:9</div>
+      </div>
+      <aside class="profissao-painel">
+        <div>
+          <div class="detalhesAdicionais-rotulo">Progresso da Profissão</div>
+          <h2>Mineração</h2>
+          <div class="nivel-linha"><span>Nível</span><strong>10</strong></div>
+          <div class="progresso" aria-label="63% para o próximo nível"><span></span></div>
+          <div class="xp"><span>6.320 XP</span><span>10.000 XP</span></div>
+        </div>
+        <div>
+          <div class="divisor"></div>
+          <div class="detalhesAdicionais-rotulo">Ferramenta</div>
+          <div class="tool"><span>Picareta de Iarann</span><span>Equipada</span></div>
+        </div>
+      </aside>
+    </section>
+
+    <section aria-labelledby="recursos">
+      <div class="secao-cabeca"><h2 id="recursos">Recursos</h2><span>4 conhecidos</span></div>
+      <div class="recurso-grauVisual">
+        <button class="recurso-cartao ativo" aria-pressed="true">
+          <div class="miniatura">C</div>
+          <div class="cartao-superior"><span class="cartao-nome">Cloch</span><span class="estado">Ativo</span></div>
+          <div class="cartao-detalhesAdicionais">Disponível · Nv.1</div>
+        </button>
+        <button class="recurso-cartao">
+          <div class="miniatura">S</div>
+          <div class="cartao-superior"><span class="cartao-nome">Stán</span><span class="estado">Novo</span></div>
+          <div class="cartao-detalhesAdicionais">Disponível · Nv.10</div>
+        </button>
+        <button class="recurso-cartao">
+          <div class="miniatura">C</div>
+          <div class="cartao-superior"><span class="cartao-nome">Copar</span><span class="estado bloqueado">Bloqueado</span></div>
+          <div class="cartao-detalhesAdicionais">Requer Mineração Nv.20</div>
+        </button>
+        <button class="recurso-cartao">
+          <div class="miniatura">I</div>
+          <div class="cartao-superior"><span class="cartao-nome">Iarann</span><span class="estado bloqueado">Bloqueado</span></div>
+          <div class="cartao-detalhesAdicionais">Requer Mineração Nv.30</div>
+        </button>
+      </div>
+    </section>
+
+    <section class="detalhe" aria-label="Detalhes do recurso selecionado">
+      <div class="detalhe-principal">
+        <div class="detalhe-miniatura">C</div>
+        <div>
+          <div class="detalhesAdicionais-rotulo">Recurso selecionado</div>
+          <h3>Cloch</h3>
+          <p class="descricao">Pedra comum extraída em veios superficiais. É uma matéria-prima básica de produção e reforço.</p>
+          <div class="estatistica-linhaDeDados">
+            <div class="estatistica"><span class="detalhesAdicionais-rotulo">Tempo</span><b>2,1 s</b></div>
+            <div class="estatistica"><span class="detalhesAdicionais-rotulo">Resultado</span><b>1 Cloch</b></div>
+            <div class="estatistica"><span class="detalhesAdicionais-rotulo">XP</span><b>+4</b></div>
+            <div class="estatistica"><span class="detalhesAdicionais-rotulo">Possuído</span><b>284</b></div>
+          </div>
+          <div class="usos">
+            <div class="detalhesAdicionais-rotulo">Usos conhecidos</div>
+            <div>Cloch Tratada · Metalurgia</div>
+            <div style="margin-top:7px"><button class="ligacao-botao">Ver usos conhecidos</button></div>
+          </div>
+        </div>
+      </div>
+
+      <aside class="atividade-box">
+        <div class="detalhesAdicionais-rotulo">Atividade atual</div>
+        <div class="atividade-titulo">Mineração · Cloch</div>
+        <div class="subtle">Continua enquanto você navega em áreas seguras.</div>
+        <div class="ciclo"><div class="ciclo-barra"><span></span></div><div class="ciclo-tempo">1,3 s</div></div>
+        <div class="subtle">Próximo ciclo · +1 Cloch · +4 XP</div>
+        <div class="acao-linhaDeDados">
+          <button class="botao botao-secundario">Detalhes</button>
+          <button class="botao botao-terciario">Parar</button>
+        </div>
+      </aside>
+    </section>
+  </main>
+
+  <div class="prototype-nota">Protótipo isolado · não é implementação de produção</div>
+
+  <footer class="inferior">
+    <div class="inferior-interior">
+      <div class="ocioso"><div class="ocioso-marcaVisual">⛏</div><div><b>Mineração · Cloch</b><small>próximo ciclo em 1,3 s</small></div></div>
+      <div class="rapido"><button>Inventário</button><button>Jornada · Fortaleza Cinzenta</button></div>
+    </div>
+  </footer>
+</div>
+</body>
+</html>

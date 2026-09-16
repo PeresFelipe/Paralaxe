@@ -1,0 +1,862 @@
+{
+  "estado": "integracao_em_execucao_e_catalogo_de_revisao",
+  "revisadoEm": "2026-09-11",
+  "commitBaseDoProjeto": "6351cb1b856dab4cd41cee79f3df1bb2a830edd1",
+  "origem": {
+    "arquivoCompactado": "Shikashi's Fantasy Icons Pack v2.zip",
+    "sha256DoArquivoCompactado": "eb3725a63ec7afa04c8942057717758cc0a9388ceb1d4348a7e8487dfbc0492e",
+    "folha": "Shikashi's Fantasy Icons Pack v2/#1 - Transparent Icons.png",
+    "sha256DaFolha": "e5dced4f6e04f7f79101f189f95124a0dba93546e464d76af8af6b72f1d670e8",
+    "largura": 512,
+    "altura": 867,
+    "tamanhoDaCelula": 32,
+    "origemDasCoordenadas": "canto superior esquerdo; coluna e linha iniciam em zero",
+    "criador": "Matt Firth (shikashipx)",
+    "url": "https://shikashipx.itch.io/shikashis-fantasy-icons-pack",
+    "licenca": "CC BY 4.0",
+    "urlDaLicenca": "https://creativecommons.org/licenses/by/4.0/",
+    "creditoDoDesenhoOriginal": "game-icons.net; manter os avisos originais CC BY 3.0 e identificar os autores de origem das derivações conhecidas"
+  },
+  "significadoDosEstados": {
+    "utilizavel": "A silhueta representa o tipo de objeto; avaliar a leitura na integração.",
+    "adaptacao": "O candidato exige ajuste ou diferenciação antes da aplicação definitiva.",
+    "ausente": "Não foi identificado equivalente adequado; requer outra arte."
+  },
+  "candidatos": [
+    {
+      "tipo": "profissao",
+      "id": "mineracao",
+      "rotulo": "Mineração",
+      "iconeCandidato": "picareta",
+      "estado": "utilizavel",
+      "celula": {
+        "coluna": 2,
+        "linha": 10,
+        "x": 64,
+        "y": 320,
+        "largura": 32,
+        "altura": 32
+      },
+      "observacao": ""
+    },
+    {
+      "tipo": "profissao",
+      "id": "lenhador",
+      "rotulo": "Lenhador",
+      "iconeCandidato": "machado",
+      "estado": "utilizavel",
+      "celula": {
+        "coluna": 1,
+        "linha": 10,
+        "x": 32,
+        "y": 320,
+        "largura": 32,
+        "altura": 32
+      },
+      "observacao": ""
+    },
+    {
+      "tipo": "profissao",
+      "id": "pesca",
+      "rotulo": "Pesca",
+      "iconeCandidato": "vara de pesca",
+      "estado": "utilizavel",
+      "celula": {
+        "coluna": 0,
+        "linha": 16,
+        "x": 0,
+        "y": 512,
+        "largura": 32,
+        "altura": 32
+      },
+      "observacao": ""
+    },
+    {
+      "tipo": "profissao",
+      "id": "herbologia",
+      "rotulo": "Herbologia",
+      "iconeCandidato": "erva",
+      "estado": "utilizavel",
+      "celula": {
+        "coluna": 13,
+        "linha": 11,
+        "x": 416,
+        "y": 352,
+        "largura": 32,
+        "altura": 32
+      },
+      "observacao": ""
+    },
+    {
+      "tipo": "profissao",
+      "id": "metalurgia",
+      "rotulo": "Metalurgia",
+      "iconeCandidato": "lingote de ouro",
+      "estado": "adaptacao",
+      "celula": {
+        "coluna": 3,
+        "linha": 17,
+        "x": 96,
+        "y": 544,
+        "largura": 32,
+        "altura": 32
+      },
+      "observacao": "Adaptar a barra dourada para metal neutro e evitar confusão com moeda/ouro."
+    },
+    {
+      "tipo": "profissao",
+      "id": "forja",
+      "rotulo": "Forja",
+      "iconeCandidato": "ferreiro/bigorna",
+      "estado": "utilizavel",
+      "celula": {
+        "coluna": 4,
+        "linha": 4,
+        "x": 128,
+        "y": 128,
+        "largura": 32,
+        "altura": 32
+      },
+      "observacao": ""
+    },
+    {
+      "tipo": "profissao",
+      "id": "culinaria",
+      "rotulo": "Culinária",
+      "iconeCandidato": "caldeirão ao fogo",
+      "estado": "utilizavel",
+      "celula": {
+        "coluna": 8,
+        "linha": 19,
+        "x": 256,
+        "y": 608,
+        "largura": 32,
+        "altura": 32
+      },
+      "observacao": ""
+    },
+    {
+      "tipo": "indicador",
+      "id": "vidaMaxima",
+      "rotulo": "Vida máxima",
+      "iconeCandidato": "coração",
+      "estado": "utilizavel",
+      "celula": {
+        "coluna": 0,
+        "linha": 1,
+        "x": 0,
+        "y": 32,
+        "largura": 32,
+        "altura": 32
+      },
+      "observacao": ""
+    },
+    {
+      "tipo": "indicador",
+      "id": "manaMaxima",
+      "rotulo": "Mana máxima",
+      "iconeCandidato": "orbe azul",
+      "estado": "adaptacao",
+      "celula": {
+        "coluna": 1,
+        "linha": 18,
+        "x": 32,
+        "y": 576,
+        "largura": 32,
+        "altura": 32
+      },
+      "observacao": "Testar distinção de Mana; não depender somente da cor."
+    },
+    {
+      "tipo": "indicador",
+      "id": "folegoMaximo",
+      "rotulo": "Stamina máxima",
+      "iconeCandidato": "pulmões",
+      "estado": "utilizavel",
+      "celula": {
+        "coluna": 1,
+        "linha": 1,
+        "x": 32,
+        "y": 32,
+        "largura": 32,
+        "altura": 32
+      },
+      "observacao": ""
+    },
+    {
+      "tipo": "indicador",
+      "id": "ouro",
+      "rotulo": "Moeda",
+      "iconeCandidato": "moeda com coroa",
+      "estado": "utilizavel",
+      "celula": {
+        "coluna": 7,
+        "linha": 12,
+        "x": 224,
+        "y": 384,
+        "largura": 32,
+        "altura": 32
+      },
+      "observacao": ""
+    },
+    {
+      "tipo": "item",
+      "id": "material.cloch",
+      "rotulo": "Cloch",
+      "iconeCandidato": "pedra",
+      "estado": "utilizavel",
+      "celula": {
+        "coluna": 1,
+        "linha": 17,
+        "x": 32,
+        "y": 544,
+        "largura": 32,
+        "altura": 32
+      },
+      "observacao": ""
+    },
+    {
+      "tipo": "item",
+      "id": "material.giuis",
+      "rotulo": "Giúis",
+      "iconeCandidato": "madeira",
+      "estado": "utilizavel",
+      "celula": {
+        "coluna": 0,
+        "linha": 17,
+        "x": 0,
+        "y": 544,
+        "largura": 32,
+        "altura": 32
+      },
+      "observacao": ""
+    },
+    {
+      "tipo": "item",
+      "id": "material.scadan",
+      "rotulo": "Scadán",
+      "iconeCandidato": "truta de lago",
+      "estado": "utilizavel",
+      "celula": {
+        "coluna": 3,
+        "linha": 16,
+        "x": 96,
+        "y": 512,
+        "largura": 32,
+        "altura": 32
+      },
+      "observacao": "Peixe genérico; não representa uma identificação biológica da espécie fictícia."
+    },
+    {
+      "tipo": "item",
+      "id": "material.neantog",
+      "rotulo": "Neantóg",
+      "iconeCandidato": "erva",
+      "estado": "utilizavel",
+      "celula": {
+        "coluna": 13,
+        "linha": 11,
+        "x": 416,
+        "y": 352,
+        "largura": 32,
+        "altura": 32
+      },
+      "observacao": "Erva genérica; manter o nome e a identidade do material no rótulo."
+    },
+    {
+      "tipo": "item",
+      "id": "material.tratada-cloch",
+      "rotulo": "Cloch Tratada",
+      "iconeCandidato": "lingote de ouro",
+      "estado": "adaptacao",
+      "celula": {
+        "coluna": 3,
+        "linha": 17,
+        "x": 96,
+        "y": 544,
+        "largura": 32,
+        "altura": 32
+      },
+      "observacao": "Recolorir para metal neutro; a folha oferece uma barra dourada."
+    },
+    {
+      "tipo": "item",
+      "id": "item.comida.assado-scadan",
+      "rotulo": "Scadán Assado",
+      "iconeCandidato": "peixe cozido",
+      "estado": "utilizavel",
+      "celula": {
+        "coluna": 4,
+        "linha": 15,
+        "x": 128,
+        "y": 480,
+        "largura": 32,
+        "altura": 32
+      },
+      "observacao": ""
+    },
+    {
+      "tipo": "item",
+      "id": "item.consumivel.neantog-preparacao",
+      "rotulo": "Preparado de Neantóg",
+      "iconeCandidato": "poção verde",
+      "estado": "utilizavel",
+      "celula": {
+        "coluna": 2,
+        "linha": 9,
+        "x": 64,
+        "y": 288,
+        "largura": 32,
+        "altura": 32
+      },
+      "observacao": ""
+    },
+    {
+      "tipo": "item",
+      "id": "item.consumivel.campo-preparacao",
+      "rotulo": "Preparado de Campo",
+      "iconeCandidato": "poção vermelha",
+      "estado": "utilizavel",
+      "celula": {
+        "coluna": 0,
+        "linha": 9,
+        "x": 0,
+        "y": 288,
+        "largura": 32,
+        "altura": 32
+      },
+      "observacao": ""
+    },
+    {
+      "tipo": "item",
+      "id": "item.consumivel.carmesim-frasco",
+      "rotulo": "Frasco Carmesim",
+      "iconeCandidato": "poção vermelha rara",
+      "estado": "utilizavel",
+      "celula": {
+        "coluna": 8,
+        "linha": 9,
+        "x": 256,
+        "y": 288,
+        "largura": 32,
+        "altura": 32
+      },
+      "observacao": ""
+    },
+    {
+      "tipo": "item",
+      "id": "item.chave.enferrujada",
+      "rotulo": "Chave Enferrujada",
+      "iconeCandidato": "chave de latão",
+      "estado": "adaptacao",
+      "celula": {
+        "coluna": 9,
+        "linha": 11,
+        "x": 288,
+        "y": 352,
+        "largura": 32,
+        "altura": 32
+      },
+      "observacao": "A chave da folha é de metal amarelo; adaptar para aspecto enferrujado."
+    },
+    {
+      "tipo": "item",
+      "id": "item.missao.semNome-pedra",
+      "rotulo": "Pedra Sem Nome",
+      "iconeCandidato": "pedra rúnica",
+      "estado": "adaptacao",
+      "celula": {
+        "coluna": 0,
+        "linha": 11,
+        "x": 0,
+        "y": 352,
+        "largura": 32,
+        "altura": 32
+      },
+      "observacao": "Somente candidato provisório. A pedra narrativa precisa de identidade própria."
+    },
+    {
+      "tipo": "item",
+      "id": "item.guarnicao-suprimento-registroDeDados",
+      "rotulo": "Registro de Suprimentos",
+      "iconeCandidato": "livro aberto",
+      "estado": "utilizavel",
+      "celula": {
+        "coluna": 8,
+        "linha": 13,
+        "x": 256,
+        "y": 416,
+        "largura": 32,
+        "altura": 32
+      },
+      "observacao": ""
+    },
+    {
+      "tipo": "item",
+      "id": "item.tratado-fragmento",
+      "rotulo": "Fragmento do Tratado",
+      "iconeCandidato": null,
+      "estado": "ausente",
+      "celula": null,
+      "observacao": "Há pergaminhos, mas não um fragmento com identidade própria. Não usar um documento intacto como arte definitiva."
+    },
+    {
+      "tipo": "item",
+      "id": "item.fairtheoir-fragmento",
+      "rotulo": "Fragmento de Fairtheoir",
+      "iconeCandidato": null,
+      "estado": "ausente",
+      "celula": null,
+      "observacao": "Relíquia narrativa sem equivalente no pacote."
+    },
+    {
+      "tipo": "equipamento",
+      "id": "arma.milicia-espada",
+      "rotulo": "Espada de Milícia",
+      "iconeCandidato": "espada longa",
+      "estado": "utilizavel",
+      "celula": {
+        "coluna": 1,
+        "linha": 5,
+        "x": 32,
+        "y": 160,
+        "largura": 32,
+        "altura": 32
+      },
+      "observacao": ""
+    },
+    {
+      "tipo": "equipamento",
+      "id": "escudo.milicia-escudo",
+      "rotulo": "Escudo de Milícia",
+      "iconeCandidato": "escudo de madeira",
+      "estado": "utilizavel",
+      "celula": {
+        "coluna": 1,
+        "linha": 6,
+        "x": 32,
+        "y": 192,
+        "largura": 32,
+        "altura": 32
+      },
+      "observacao": ""
+    },
+    {
+      "tipo": "equipamento",
+      "id": "armadura.milicia-peitoral",
+      "rotulo": "Peitoral de Milícia",
+      "iconeCandidato": "armadura de ferro",
+      "estado": "utilizavel",
+      "celula": {
+        "coluna": 4,
+        "linha": 7,
+        "x": 128,
+        "y": 224,
+        "largura": 32,
+        "altura": 32
+      },
+      "observacao": ""
+    },
+    {
+      "tipo": "equipamento",
+      "id": "arma.simples-cajado",
+      "rotulo": "Cajado Simples",
+      "iconeCandidato": "cajado de mago",
+      "estado": "utilizavel",
+      "celula": {
+        "coluna": 7,
+        "linha": 6,
+        "x": 224,
+        "y": 192,
+        "largura": 32,
+        "altura": 32
+      },
+      "observacao": ""
+    },
+    {
+      "tipo": "equipamento",
+      "id": "armadura.simples-vestes",
+      "rotulo": "Vestes Simples",
+      "iconeCandidato": "capa",
+      "estado": "adaptacao",
+      "celula": {
+        "coluna": 14,
+        "linha": 7,
+        "x": 448,
+        "y": 224,
+        "largura": 32,
+        "altura": 32
+      },
+      "observacao": "Capa é apenas uma aproximação; é preciso representar vestes longas."
+    },
+    {
+      "tipo": "equipamento",
+      "id": "arma.curto-arco",
+      "rotulo": "Arco Curto",
+      "iconeCandidato": "arco e flecha",
+      "estado": "utilizavel",
+      "celula": {
+        "coluna": 3,
+        "linha": 6,
+        "x": 96,
+        "y": 192,
+        "largura": 32,
+        "altura": 32
+      },
+      "observacao": ""
+    },
+    {
+      "tipo": "equipamento",
+      "id": "armadura.caca-gibao",
+      "rotulo": "Gibão de Caça",
+      "iconeCandidato": "armadura de couro",
+      "estado": "utilizavel",
+      "celula": {
+        "coluna": 6,
+        "linha": 7,
+        "x": 192,
+        "y": 224,
+        "largura": 32,
+        "altura": 32
+      },
+      "observacao": ""
+    },
+    {
+      "tipo": "equipamento",
+      "id": "arma.simples-maca",
+      "rotulo": "Maça Simples",
+      "iconeCandidato": "porrete com espinhos",
+      "estado": "adaptacao",
+      "celula": {
+        "coluna": 13,
+        "linha": 5,
+        "x": 416,
+        "y": 160,
+        "largura": 32,
+        "altura": 32
+      },
+      "observacao": "Porrete com espinhos é apenas aproximação da maça."
+    },
+    {
+      "tipo": "equipamento",
+      "id": "catalisador.simples",
+      "rotulo": "Catalisador Simples",
+      "iconeCandidato": "orbe azul",
+      "estado": "adaptacao",
+      "celula": {
+        "coluna": 1,
+        "linha": 18,
+        "x": 32,
+        "y": 576,
+        "largura": 32,
+        "altura": 32
+      },
+      "observacao": "Forma final do catalisador ainda precisa ser definida; distinguir do indicador de Mana."
+    },
+    {
+      "tipo": "equipamento",
+      "id": "armadura.acolito-vestes",
+      "rotulo": "Vestes do Acólito",
+      "iconeCandidato": "capa",
+      "estado": "adaptacao",
+      "celula": {
+        "coluna": 14,
+        "linha": 7,
+        "x": 448,
+        "y": 224,
+        "largura": 32,
+        "altura": 32
+      },
+      "observacao": "Criar silhueta de veste e identidade do Acólito; não confundir com capa."
+    },
+    {
+      "tipo": "equipamento",
+      "id": "arma.caca-adaga",
+      "rotulo": "Adaga de Caça",
+      "iconeCandidato": "adaga",
+      "estado": "utilizavel",
+      "celula": {
+        "coluna": 6,
+        "linha": 5,
+        "x": 192,
+        "y": 160,
+        "largura": 32,
+        "altura": 32
+      },
+      "observacao": ""
+    },
+    {
+      "tipo": "equipamento",
+      "id": "armadura.leve-traje",
+      "rotulo": "Traje Leve",
+      "iconeCandidato": "túnica verde",
+      "estado": "utilizavel",
+      "celula": {
+        "coluna": 9,
+        "linha": 7,
+        "x": 288,
+        "y": 224,
+        "largura": 32,
+        "altura": 32
+      },
+      "observacao": ""
+    },
+    {
+      "tipo": "equipamento",
+      "id": "arma.viagem-lanca",
+      "rotulo": "Lança de Viagem",
+      "iconeCandidato": null,
+      "estado": "ausente",
+      "celula": null,
+      "observacao": "Nenhuma lança no pacote."
+    },
+    {
+      "tipo": "equipamento",
+      "id": "armadura.viagem-protecao",
+      "rotulo": "Proteção de Viagem",
+      "iconeCandidato": "armadura de placas sobrepostas",
+      "estado": "adaptacao",
+      "celula": {
+        "coluna": 7,
+        "linha": 7,
+        "x": 224,
+        "y": 224,
+        "largura": 32,
+        "altura": 32
+      },
+      "observacao": "Revisar peso visual e material da proteção de viagem antes de aplicar."
+    },
+    {
+      "tipo": "equipamento",
+      "id": "armadura.simples-luvas",
+      "rotulo": "Luvas Simples",
+      "iconeCandidato": "manopla de couro",
+      "estado": "utilizavel",
+      "celula": {
+        "coluna": 0,
+        "linha": 8,
+        "x": 0,
+        "y": 256,
+        "largura": 32,
+        "altura": 32
+      },
+      "observacao": ""
+    },
+    {
+      "tipo": "equipamento",
+      "id": "armadura.simples-botas",
+      "rotulo": "Botas Simples",
+      "iconeCandidato": "botas de couro",
+      "estado": "utilizavel",
+      "celula": {
+        "coluna": 2,
+        "linha": 8,
+        "x": 64,
+        "y": 256,
+        "largura": 32,
+        "altura": 32
+      },
+      "observacao": ""
+    },
+    {
+      "tipo": "equipamento",
+      "id": "armadura.giuis-bracadeiras",
+      "rotulo": "Braçadeiras de Giúis",
+      "iconeCandidato": "manopla de couro",
+      "estado": "adaptacao",
+      "celula": {
+        "coluna": 0,
+        "linha": 8,
+        "x": 0,
+        "y": 256,
+        "largura": 32,
+        "altura": 32
+      },
+      "observacao": "Transformar a luva em braçadeiras e representar o material Giúis."
+    },
+    {
+      "tipo": "equipamento",
+      "id": "item.equipamento.viajante-anel",
+      "rotulo": "Anel do Viajante",
+      "iconeCandidato": "anel",
+      "estado": "utilizavel",
+      "celula": {
+        "coluna": 4,
+        "linha": 8,
+        "x": 128,
+        "y": 256,
+        "largura": 32,
+        "altura": 32
+      },
+      "observacao": ""
+    },
+    {
+      "tipo": "equipamento",
+      "id": "armadura.guarnicao-elmo",
+      "rotulo": "Capacete da Guarnição",
+      "iconeCandidato": "elmo barbuta",
+      "estado": "utilizavel",
+      "celula": {
+        "coluna": 1,
+        "linha": 7,
+        "x": 32,
+        "y": 224,
+        "largura": 32,
+        "altura": 32
+      },
+      "observacao": ""
+    },
+    {
+      "tipo": "equipamento",
+      "id": "armadura.guarnicao-luvas",
+      "rotulo": "Luvas da Guarnição",
+      "iconeCandidato": "manopla de metal",
+      "estado": "utilizavel",
+      "celula": {
+        "coluna": 1,
+        "linha": 8,
+        "x": 32,
+        "y": 256,
+        "largura": 32,
+        "altura": 32
+      },
+      "observacao": ""
+    },
+    {
+      "tipo": "equipamento",
+      "id": "armadura.guarnicao-perneiras",
+      "rotulo": "Perneiras da Guarnição",
+      "iconeCandidato": "calças",
+      "estado": "adaptacao",
+      "celula": {
+        "coluna": 10,
+        "linha": 7,
+        "x": 320,
+        "y": 224,
+        "largura": 32,
+        "altura": 32
+      },
+      "observacao": "Calças de tecido não representam perneiras de armadura; requer adaptação."
+    },
+    {
+      "tipo": "equipamento",
+      "id": "armadura.guarnicao-botas",
+      "rotulo": "Botas da Guarnição",
+      "iconeCandidato": "botas com biqueira de aço",
+      "estado": "utilizavel",
+      "celula": {
+        "coluna": 3,
+        "linha": 8,
+        "x": 96,
+        "y": 256,
+        "largura": 32,
+        "altura": 32
+      },
+      "observacao": ""
+    },
+    {
+      "tipo": "equipamento",
+      "id": "arma.guarnicao-espada",
+      "rotulo": "Espada da Guarnição",
+      "iconeCandidato": "gládio",
+      "estado": "utilizavel",
+      "celula": {
+        "coluna": 4,
+        "linha": 5,
+        "x": 128,
+        "y": 160,
+        "largura": 32,
+        "altura": 32
+      },
+      "observacao": ""
+    },
+    {
+      "tipo": "equipamento",
+      "id": "arma.bastiao-maca",
+      "rotulo": "Maça do Bastião",
+      "iconeCandidato": "porrete com espinhos",
+      "estado": "adaptacao",
+      "celula": {
+        "coluna": 13,
+        "linha": 5,
+        "x": 416,
+        "y": 160,
+        "largura": 32,
+        "altura": 32
+      },
+      "observacao": "Criar maça e diferenciá-la da Maça Simples."
+    },
+    {
+      "tipo": "equipamento",
+      "id": "arma.vigia-lanca",
+      "rotulo": "Lança do Vigia",
+      "iconeCandidato": null,
+      "estado": "ausente",
+      "celula": null,
+      "observacao": "Nenhuma lança no pacote."
+    },
+    {
+      "tipo": "equipamento",
+      "id": "arma.patrulha-arco",
+      "rotulo": "Arco de Patrulha",
+      "iconeCandidato": "arco e flecha",
+      "estado": "adaptacao",
+      "celula": {
+        "coluna": 3,
+        "linha": 6,
+        "x": 96,
+        "y": 192,
+        "largura": 32,
+        "altura": 32
+      },
+      "observacao": "Reutiliza a silhueta do Arco Curto; diferenciar a arte sem esconder o rótulo."
+    },
+    {
+      "tipo": "equipamento",
+      "id": "arma.campanha-cajado",
+      "rotulo": "Cajado de Campanha",
+      "iconeCandidato": "cajado com gema verde",
+      "estado": "utilizavel",
+      "celula": {
+        "coluna": 8,
+        "linha": 6,
+        "x": 256,
+        "y": 192,
+        "largura": 32,
+        "altura": 32
+      },
+      "observacao": ""
+    },
+    {
+      "tipo": "equipamento",
+      "id": "escudo.vigia-escudo",
+      "rotulo": "Escudo do Vigia",
+      "iconeCandidato": "escudo quadriculado",
+      "estado": "utilizavel",
+      "celula": {
+        "coluna": 2,
+        "linha": 6,
+        "x": 64,
+        "y": 192,
+        "largura": 32,
+        "altura": 32
+      },
+      "observacao": ""
+    }
+  ],
+  "integracaoEmExecucao": {
+    "estado": "integrado",
+    "diretorioDosRecursos": "aplicativos/jogo/publico/arte/icones/shikashi",
+    "componente": "aplicativos/jogo/fonte/IconeDoJogo.tsx",
+    "mapeamento": "aplicativos/jogo/fonte/iconesDosRecursos.ts",
+    "quantidadeDeRecortes": 41,
+    "idsDeDefinicoesEProfissoesMapeados": 49,
+    "idsAusentes": [
+      "item.tratado-fragmento",
+      "item.fairtheoir-fragmento",
+      "arma.viagem-lanca",
+      "arma.vigia-lanca"
+    ],
+    "observacao": "Candidatos marcados como adaptação são aproximações visuais temporárias; suas observações documentam as diferenças."
+  }
+}

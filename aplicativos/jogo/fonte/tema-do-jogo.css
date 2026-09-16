@@ -1,0 +1,2100 @@
+/* Interface do Greywake. Dark Ages UI, de Hypnobius; consulte arte/interface/dark-ages/LICENSE.txt.
+   A estrutura temática compartilha o estado, o conteúdo e a persistência existentes. */
+:root {
+  --fundo: #10130f;
+  --superficie: #1a1f19;
+  --superficie-2: #252b23;
+  --superficie-3: #30362c;
+  --linha: #444a3c;
+  --textoExibido: #e6e0ce;
+  --atenuado: #b1b4a3;
+  --ferro: #c6c9b9;
+  --bronze: #d0b477;
+  --bronze-escuro: #826b3b;
+  --positivo: #91ac81;
+  --mana: #88a9bb;
+  --perigo-textoExibido: #e0a398;
+  --raio: 0px;
+  --fonte-destaque: Georgia, "Times New Roman", serif;
+  --jogo-trilho: 188px;
+  --estrutura-rodape: 76px;
+  --moldura-ouro: url("/arte/interface/dark-ages/frame-gold.png");
+  --moldura-escuro: url("/arte/interface/dark-ages/frame-dark.png");
+  --espaco-moldura: url("/arte/interface/dark-ages/slot-iron.png");
+  color-scheme: dark;
+}
+
+body {
+  background:
+    radial-gradient(ellipse at 45% 0%, #293023 0%, transparent 55%),
+    repeating-linear-gradient(93deg, #ffffff02 0 1px, transparent 1px 5px),
+    #10130f;
+}
+
+button,
+a,
+summary {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button:disabled {
+  opacity: 0.55;
+}
+
+button:focus-visible,
+a:focus-visible,
+summary:focus-visible,
+.jogo-conteudo :where(button, input, select, summary, a):focus-visible {
+  outline: 2px solid #f0d798;
+  outline-offset: 4px;
+}
+
+.destaque-titulo,
+.funcionalidade-telaDoJogo h2,
+.funcionalidade-telaDoJogo h3,
+.jogador-nome,
+.criacao-escolha strong,
+.partida-cartao-emExecucao > strong,
+.cidade-localDoJogo-gradeVisual strong {
+  font-family: var(--fonte-destaque);
+  font-weight: 400;
+  line-height: 1.3;
+}
+
+.destaque-titulo {
+  font-size: clamp(1.65rem, 2.2vw, 2.15rem);
+  color: #e6d6ad;
+}
+
+.secao-chamada {
+  font-size: 0.7rem;
+  letter-spacing: 0.13em;
+  color: #bca77d;
+}
+
+.funcionalidade-telaDoJogo h2 {
+  font-size: 1.15rem;
+}
+
+.funcionalidade-telaDoJogo h3 {
+  font-size: 1rem;
+}
+
+.telaDoJogo-tituloDaSecao {
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 4px 2px 16px;
+  margin-bottom: 18px;
+  border-bottom: 1px solid #665639;
+}
+
+.telaDoJogo-tituloDaSecao > div {
+  flex: 1 1 200px;
+  min-width: 0;
+}
+
+.telaDoJogo-tituloDaSecao .destaque-titulo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.telaDoJogo-tituloDaSecao .destaque-titulo .jogo-icone {
+  filter: drop-shadow(0 2px 2px #000);
+}
+
+.telaDoJogo-tituloDaSecao p:last-child {
+  font-size: 0.8125rem;
+}
+
+:where(
+  .painel,
+  .companheiro-secao,
+  .inventario-grade,
+  .item-cartaoCorpo,
+  .criacao-escolha,
+  .partida-cartao-emExecucao
+) {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+/* Moldura fixa do jogo, com destinos persistentes e situação do trabalho. */
+.jogo-estrutura {
+  min-height: 100dvh;
+  padding-bottom: var(--estrutura-rodape);
+}
+
+.jogo-barraLateral {
+  position: fixed;
+  inset: 0 auto 0 0;
+  z-index: 34;
+  width: var(--jogo-trilho);
+  display: flex;
+  flex-direction: column;
+  padding: 24px 12px 18px;
+  border-right: 1px solid #645434;
+  background:
+    repeating-linear-gradient(0deg, #ffffff02 0 1px, transparent 1px 4px),
+    #131810;
+  box-shadow:
+    6px 0 22px #0005,
+    inset -3px 0 #242c20;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+}
+
+.jogo-barraLateral > * {
+  flex-shrink: 0;
+}
+
+.jogo-marca {
+  display: grid;
+  justify-items: center;
+  gap: 12px;
+  padding: 0 0 25px;
+  text-align: center;
+}
+
+.marca-simbolo {
+  width: 76px;
+  height: 84px;
+  display: grid;
+  place-items: center;
+  border: 12px solid transparent;
+  border-image: var(--moldura-ouro) 24 / 12px stretch;
+  background: #282e22;
+}
+
+.marca-simbolo .jogo-icone {
+  filter: drop-shadow(2px 3px 0 #0008);
+}
+
+.jogo-marca strong {
+  max-width: 100%;
+  color: #e6c87f;
+  font:
+    1.0625rem/1.6 "Antiquity Print",
+    Georgia,
+    serif;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+.jogo-marca small {
+  color: #b1b49f;
+  font-size: 0.54rem;
+  letter-spacing: 0.15em;
+  line-height: 1.6;
+}
+
+.marca-ornamento {
+  width: min(132px, 100%);
+  height: 44px;
+  background: url("/arte/interface/dark-ages/flourish-gold.png") center / contain
+    no-repeat;
+  image-rendering: pixelated;
+}
+
+.principal-navegacao {
+  position: static;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  height: auto;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+.principal-navegacao button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 68px;
+  width: 100%;
+  padding: 9px 10px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--atenuado);
+  font:
+    0.94rem/1.3 Georgia,
+    serif;
+  letter-spacing: 0.01em;
+  text-align: left;
+  text-transform: none;
+}
+
+.principal-navegacao button > span {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+}
+
+.principal-navegacao button small {
+  color: #a6ac98;
+  font:
+    0.65rem/1.25 ui-sans-serif,
+    sans-serif;
+}
+
+.principal-navegacao button.ativo {
+  color: #f0dfae;
+  border-color: #796137;
+  background: linear-gradient(90deg, #3b3522, #262d20);
+  box-shadow:
+    inset 3px 0 #d0b477,
+    0 2px 5px #0005;
+}
+
+.principal-navegacao button.ativo::after {
+  display: none;
+}
+
+.principal-navegacao button:hover:not(:disabled) {
+  background-color: #2b3324;
+  border-color: #777452;
+}
+
+.reino-situacao {
+  margin-top: auto;
+  padding: 28px 8px 12px;
+  display: grid;
+  grid-template-columns: 8px 1fr;
+  gap: 7px 8px;
+}
+
+.reino-situacao strong {
+  color: #c1cba9;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.reino-situacao small {
+  grid-column: 2;
+  color: var(--atenuado);
+  font-size: 0.65rem;
+}
+
+.reino-leve {
+  align-self: center;
+  width: 6px;
+  height: 6px;
+  background: #9eb780;
+  box-shadow: 0 0 8px #9eb78055;
+  transform: rotate(45deg);
+}
+
+.reino-situacao--risco .reino-leve {
+  background: #d38978;
+}
+
+.barraLateral-notaDeRodape {
+  border-top: 1px solid #343d2c;
+  margin: 4px 8px 0;
+  padding-top: 12px;
+  color: #9ca18d;
+  font:
+    italic 0.7rem/1.7 Georgia,
+    serif;
+}
+
+.jogo-barraSuperior {
+  min-height: 80px;
+  margin-left: var(--jogo-trilho);
+  padding: 13px 26px;
+  gap: 12px 20px;
+  flex-wrap: wrap;
+  background: #171d14;
+  border-bottom: 3px double #645535;
+  box-shadow: 0 5px 16px #0004;
+  backdrop-filter: none;
+}
+
+.avatar-marcador {
+  width: 48px;
+  height: 48px;
+  border-radius: 0;
+  border: 5px solid transparent;
+  border-image: var(--espaco-moldura) 8 / 8px stretch;
+  background: #2a3023;
+}
+
+.jogador-identidade {
+  gap: 12px;
+}
+
+.jogador-nome {
+  color: #e2d3ad;
+  font-size: 1rem;
+  letter-spacing: 0.03em;
+  text-transform: none;
+}
+
+.jogador-identidade span {
+  margin-top: 3px;
+  color: var(--atenuado);
+  font-size: 0.72rem;
+}
+
+.global-recursos {
+  gap: 20px;
+}
+
+.global-recursos > div {
+  min-width: 73px;
+  position: relative;
+  padding-bottom: 7px;
+  border-bottom: 2px solid #8f6559;
+}
+
+.global-recursos > div:nth-child(2) {
+  border-bottom-color: #6f8f9c;
+}
+
+.global-recursos > div:nth-child(3) {
+  border-bottom-color: #83966b;
+}
+
+.global-recursos > div:nth-child(4) {
+  border-bottom-color: #aa8e54;
+}
+
+.global-recursos small {
+  display: block;
+  font-size: 0.64rem;
+}
+
+.global-recursos strong {
+  font-size: 0.94rem;
+  font-weight: 500;
+  color: #eee5cc;
+}
+
+.recurso-simbolo {
+  padding: 0;
+  border: 0;
+  width: 24px;
+  height: 24px;
+  border-radius: 0;
+}
+
+.recurso-simbolo .jogo-icone {
+  width: 24px;
+  height: 24px;
+}
+
+.icone-botao {
+  border-radius: 0;
+  background: #242b1e;
+  border-color: #625639;
+}
+
+.jogo-disposicao {
+  margin-left: var(--jogo-trilho);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 240px;
+  align-items: start;
+  gap: 20px;
+  padding: 24px;
+}
+
+.jogo-conteudo {
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+  padding: 20px;
+  min-height: 560px;
+  border: 14px solid transparent;
+  border-image: var(--moldura-ouro) 24 / 14px stretch;
+  background:
+    repeating-linear-gradient(0deg, #ffffff01 0 1px, transparent 1px 4px),
+    #1b2118;
+  box-shadow: 0 10px 25px #0005;
+}
+
+#jogo-conteudo {
+  scroll-margin-top: 100px;
+}
+
+.jogo-companheiro {
+  display: grid;
+  gap: 20px;
+}
+
+.companheiro-secao {
+  padding: 15px 12px;
+  border: 8px solid transparent;
+  border-image: var(--moldura-escuro) 12 / 12px stretch;
+  background: #252b21;
+  min-width: 0;
+}
+
+.companheiro-tituloDaSecao {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding-bottom: 12px;
+  margin-bottom: 15px;
+  border-bottom: 1px solid #4b513f;
+}
+
+.companheiro-tituloDaSecao h2 {
+  margin: 0;
+  color: #decda3;
+  font:
+    1.12rem Georgia,
+    serif;
+}
+
+.companheiro-secao h3 {
+  margin: 6px 0 10px;
+  font:
+    1rem/1.45 Georgia,
+    serif;
+  color: #e1d6bb;
+}
+
+.companheiro-secao .secao-chamada {
+  font-size: 0.6rem;
+}
+
+.companheiro-texto {
+  color: var(--atenuado);
+  font-size: 0.75rem;
+  line-height: 1.7;
+  margin-bottom: 16px;
+}
+
+.companheiro-secao > .discreto-botao {
+  margin-top: 12px;
+  font-size: 0.72rem;
+}
+
+.jogo-companheiro .recursoVisual-creditos {
+  padding: 0 6px;
+  margin: 0;
+  font-size: 0.7rem;
+}
+
+.movel-creditos {
+  display: none;
+}
+
+/* Painéis com moldura e controles rebaixados usam os recursos visuais licenciados. */
+.painel {
+  padding: 14px;
+  border: 8px solid transparent;
+  border-image: var(--moldura-escuro) 12 / 10px stretch;
+  border-radius: 0;
+  background: #242b20;
+  box-shadow: 0 3px 7px #0003;
+}
+
+.principal-botao,
+.principal-botao.compacto,
+.discreto-botao {
+  border-radius: 0;
+  min-height: 44px;
+  padding: 9px 14px;
+  font-size: 0.8125rem;
+  min-width: 0;
+  max-width: 100%;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  line-height: 1.4;
+  box-shadow:
+    inset 0 1px #ffffff0c,
+    inset 0 -3px #0004,
+    0 2px 4px #0003;
+}
+
+.principal-botao,
+.principal-botao.compacto {
+  color: #fff2cf;
+  border: 1px solid #c1a262;
+  background: linear-gradient(#625332, #423c25);
+}
+
+.principal-botao:hover:not(:disabled) {
+  background: #74613a;
+  filter: none;
+  border-color: #f1d38e;
+}
+
+.discreto-botao {
+  color: #d5d7c3;
+  border: 1px solid #667054;
+  background: #303928;
+}
+
+.discreto-botao:hover:not(:disabled) {
+  background: #3d472f;
+}
+
+.situacao-selo,
+.risco-selo,
+.moedaCorrente-selo {
+  border-radius: 0;
+  background: #282b1e;
+  font-size: 0.7rem;
+}
+
+.selecionado-cartao {
+  border-image-source: var(--moldura-ouro);
+  border-image-slice: 24;
+  background: #2b3022;
+}
+
+.subnavegacao {
+  border-bottom: 1px solid #4c523f;
+  padding-bottom: 10px;
+  gap: 4px;
+}
+
+.subnavegacao button {
+  border-radius: 0;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  padding: 10px;
+  background: transparent;
+  color: #b4b9a5;
+  font-size: 0.8rem;
+}
+
+.subnavegacao button.ativo {
+  border-color: #d0b477;
+  color: #f0dfb4;
+  background: #343927;
+}
+
+.subnavegacao button:hover:not(:disabled) {
+  color: var(--textoExibido);
+  background: #2c3324;
+}
+
+.contexto-arte {
+  border-radius: 0;
+  border-color: #61563c;
+  image-rendering: pixelated;
+  box-shadow: inset 0 0 0 4px #0008;
+}
+
+/* A profissão consultada e a tarefa em execução têm indicações distintas. */
+.atividades-disposicao {
+  grid-template-columns: 156px minmax(0, 1fr);
+  gap: 20px;
+}
+
+.atividades-areaDeTrabalho {
+  container: activity-workspace / inline-size;
+}
+
+.atividades-profissao-trilho {
+  position: static;
+  gap: 22px;
+}
+
+.atividade-profissao-grupo .secao-titulo-emExecucao {
+  color: #bdad86;
+  font-size: 0.65rem;
+  letter-spacing: 0.13em;
+  padding-left: 8px;
+}
+
+.atividade-profissao-grupo .profissao-cartao-gradeVisual {
+  gap: 6px;
+}
+
+.atividade-profissao-grupo .profissao-cartao {
+  min-height: 58px;
+  border: 1px solid #3f4835;
+  border-radius: 0;
+  padding: 7px;
+  background: #1e271b;
+}
+
+.atividade-profissao-grupo .profissao-cartao span {
+  font-size: 0.75rem;
+}
+
+.atividade-profissao-grupo .profissao-cartao strong {
+  color: #d0b477;
+  font:
+    0.85rem Georgia,
+    serif;
+}
+
+.atividade-profissao-grupo .profissao-cartao.ativo {
+  background: #373a25;
+  border-color: #9d8550;
+  box-shadow: inset 2px 0 #cfb477;
+}
+
+.atividade-profissao-grupo .profissao-cartao:hover {
+  border-color: #b19e6b;
+}
+
+.profissao-cartaoRotulo {
+  gap: 8px;
+}
+
+.profissao-cartaoRotulo .jogo-icone {
+  width: 32px;
+  height: 32px;
+}
+
+.profissao-executando {
+  color: #b5cea0;
+  font-size: 0.6rem;
+}
+
+.atividade-estado {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 10px;
+  border: 1px solid #596047;
+  color: #bdc4ad;
+  font-size: 0.6rem;
+  letter-spacing: 0.08em;
+}
+
+.atividade-estado::before {
+  content: "";
+  width: 5px;
+  height: 5px;
+  background: #a8af93;
+  transform: rotate(45deg);
+}
+
+.atividade-estado--executando {
+  color: #c0d7a8;
+  border-color: #72885a;
+  background: #2e3922;
+}
+
+.atividade-estado--executando::before {
+  background: #b9d891;
+  box-shadow: 0 0 6px #b9d89155;
+}
+
+.atividade-etapa {
+  grid-template-columns: minmax(0, var(--atividade-cena-largura)) minmax(0, 1fr);
+  gap: 14px;
+}
+
+.atividade-cena-envoltorio {
+  min-width: 0;
+  align-self: start;
+  padding: 7px;
+  border: 1px solid #665737;
+  background: #10160e;
+  box-shadow: 0 3px 8px #0005;
+}
+
+.atividade-cena {
+  border: 0;
+  box-shadow: none;
+}
+
+.atividade-cena-legenda {
+  color: #c1bc9e;
+  text-align: center;
+  font:
+    italic 0.7rem/1.5 Georgia,
+    serif;
+  margin: 9px 0 3px;
+}
+
+.atividade-atualizado {
+  background: #283021;
+  min-width: 0;
+  gap: 12px;
+  padding: 8px;
+}
+
+.atividade-atualizado .ocioso-progressoTituloDaSecao strong {
+  font:
+    1rem/1.35 Georgia,
+    serif;
+  color: #e5d2a1;
+}
+
+.atividade-atualizado .ocioso-progressoTituloDaSecao {
+  flex-wrap: wrap;
+  gap: 6px 10px;
+}
+
+.atividade-atualizado .ocioso-progressoTituloDaSecao > span {
+  flex: 1 1 110px;
+}
+
+.atividade-pronto h2 {
+  font-size: 1rem;
+  margin: 6px 0 8px;
+  color: #e5d7b6;
+}
+
+.atividade-pronto > p:not(.secao-chamada) {
+  font-size: 0.75rem;
+  line-height: 1.6;
+  color: var(--atenuado);
+  margin: 0;
+}
+
+.atividade-pronto .material-origem {
+  margin-top: 10px;
+}
+
+.atividade-atualizado-acoes:empty {
+  display: none;
+}
+
+.atividade-atualizado-acoes .discreto-botao {
+  min-height: 44px;
+  padding: 7px 12px;
+  font-size: 0.75rem;
+}
+
+.profissao-nivel-faixa {
+  padding: 17px 0;
+  gap: 8px;
+  border-bottom: 1px solid #4a513b;
+}
+
+.profissao-nivel-faixa > strong {
+  font-size: 0.76rem;
+}
+
+.profissao-nivel-faixa > span {
+  font-size: 0.7rem;
+}
+
+.profissao-nivel-faixa progress {
+  height: 8px;
+  border-radius: 0;
+  min-width: 70px;
+}
+
+.profissao-nivel-faixa summary {
+  min-height: 44px;
+  padding-block: 12px;
+  font-size: 0.7rem;
+}
+
+.profissao-nivel-faixa details {
+  position: relative;
+}
+
+.profissao-nivel-faixa details p {
+  color: var(--textoExibido);
+  font-size: 0.75rem;
+  max-width: 36ch;
+}
+
+.atividade-opcoes {
+  margin-top: 18px;
+  display: grid;
+  gap: 12px;
+}
+
+.atividade-opcoes-tituloDaSecao {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  grid-column: 1 / -1;
+}
+
+.atividade-opcoes-tituloDaSecao h2 {
+  margin: 0;
+  font-size: 1rem;
+  color: #cabc97;
+}
+
+.atividade-opcoes-tituloDaSecao > span {
+  color: #b0b59f;
+  font-size: 0.65rem;
+}
+
+.atividade-opcao {
+  display: grid;
+  grid-template-columns: 52px minmax(0, 1fr);
+  gap: 13px;
+}
+
+.atividade-opcao .item-miniatura {
+  width: 52px;
+  height: 52px;
+}
+
+.atividade-opcao .item-miniatura .jogo-icone {
+  width: 32px;
+  height: 32px;
+}
+
+.atividade-opcao h2 {
+  margin: 0;
+  color: #e8d9b4;
+}
+
+.atividade-opcao-titulo > span {
+  font-size: 0.7rem;
+}
+
+.atividade-opcao-titulo > span strong {
+  color: #d0b477;
+}
+
+.atividade-rendimento {
+  color: #c4ceae;
+  font-size: 0.8rem;
+}
+
+.atividade-substituicao {
+  color: var(--atenuado);
+  font-size: 0.75rem;
+}
+
+.ingrediente-listar > div {
+  border-color: #4a513c;
+  background: #1c2418;
+}
+
+.ingrediente-listar > div > span {
+  min-width: 0;
+  flex-basis: 130px;
+}
+
+.material-origem {
+  color: #e0c888;
+  font-size: 0.75rem;
+  min-height: 44px;
+  max-width: 100%;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.trabalho-resultado {
+  border-top: 1px solid #4c513c;
+  padding: 14px 0 0;
+  margin-top: 18px;
+}
+
+.trabalho-resultado > span {
+  color: #b1b798;
+  font-size: 0.66rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.trabalho-resultado > strong {
+  color: #d1d9bd;
+  font-size: 0.78rem;
+}
+
+/* O inventário apresenta uma grade de itens, com capacidade e inspeção explícitas. */
+.inventario-legenda {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 14px;
+  font:
+    1.15rem Georgia,
+    serif;
+  color: #dac99e;
+}
+
+.inventario-legenda > strong {
+  flex-shrink: 0;
+  white-space: nowrap;
+  font:
+    0.75rem ui-sans-serif,
+    sans-serif;
+  color: #c4c7b0;
+}
+
+.inventario-filtros {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-bottom: 16px;
+}
+
+.inventario-filtros button {
+  min-height: 44px;
+  padding: 8px 12px;
+  border: 1px solid #515b43;
+  background: #1b2317;
+  color: var(--atenuado);
+  cursor: pointer;
+  font-size: 0.75rem;
+}
+
+.inventario-filtros button[aria-pressed="true"] {
+  border-color: #cfb477;
+  color: #ebd9ac;
+  background: #353b25;
+}
+
+.inventario-espacos {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(44px, 64px));
+  gap: 10px;
+  justify-content: start;
+}
+
+.inventario-espaco,
+.equipado-espaco {
+  min-width: 0;
+  min-height: 52px;
+  padding: 0;
+  aspect-ratio: 1;
+  position: relative;
+  display: grid;
+  place-items: center;
+  border: 7px solid transparent;
+  border-image: var(--espaco-moldura) 8 / 8px stretch;
+  background: radial-gradient(ellipse at 50% 40%, #3e4731, #181f14 85%);
+  color: #f0e4c9;
+}
+
+button.inventario-espaco,
+button.equipado-espaco {
+  cursor: pointer;
+}
+
+.inventario-espaco .jogo-icone,
+.equipado-espaco .jogo-icone {
+  width: 32px;
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: 1;
+  filter: drop-shadow(1px 3px 2px #0008);
+}
+
+.inventario-espaco:hover,
+.equipado-espaco:hover {
+  background-color: #455033;
+  box-shadow: 0 0 0 1px #9b8e5e;
+}
+
+.inventario-espaco--selecionado {
+  outline: 2px solid #d0b477;
+  outline-offset: 1px;
+  background: #414831;
+}
+
+.inventario-espaco--vazio {
+  background: #171f15;
+  opacity: 0.65;
+}
+
+.inventario-espaco--vazio:hover {
+  box-shadow: none;
+}
+
+.espaco-quantidade {
+  position: absolute;
+  bottom: -2px;
+  right: 0;
+  font-size: 0.65rem;
+  line-height: 1.2;
+  font-variant-numeric: tabular-nums;
+  background: #11190ddb;
+  padding: 1px 3px;
+  text-shadow: 1px 1px #000;
+}
+
+.inventario-inspecao {
+  padding: 15px 12px;
+  border-left: 2px solid #d0b477;
+  background: #1b2317;
+  margin-top: 18px;
+}
+
+.inventario-inspecao > strong {
+  color: #e4d4ad;
+  font:
+    1rem Georgia,
+    serif;
+}
+
+.inventario-inspecao p,
+.inventario-dica {
+  color: var(--atenuado);
+  font-size: 0.8rem;
+  line-height: 1.6;
+}
+
+.inventario-grade--compacto .inventario-legenda {
+  font-size: 1rem;
+}
+
+.inventario-grade--compacto .inventario-espacos {
+  grid-template-columns: repeat(4, minmax(44px, 56px));
+  gap: 5px;
+}
+
+.inventario-grade--compacto .inventario-espaco {
+  min-height: 44px;
+  border-width: 4px;
+  border-image-width: 5px;
+}
+
+.inventario-grade--compacto .inventario-inspecao {
+  padding: 10px 8px;
+  margin-top: 12px;
+}
+
+.inventario-grade--compacto .inventario-inspecao p,
+.inventario-grade--compacto > .atenuado {
+  font-size: 0.7rem;
+}
+
+.lateral-folha .inventario-grade--compacto .inventario-espacos {
+  gap: 10px;
+}
+
+.item-miniatura {
+  border-radius: 0;
+  background: #28321f;
+  border: 6px solid transparent;
+  border-image: var(--espaco-moldura) 8 / 8px stretch;
+}
+
+.item-cartao {
+  border: 1px solid #586344;
+  border-radius: 0;
+  background: #242d1d;
+}
+
+.item-cartao .item-miniatura .jogo-icone {
+  width: 32px;
+  height: 32px;
+}
+
+.personagem-disposicao {
+  grid-template-columns: 180px minmax(0, 1fr);
+  gap: 20px;
+}
+
+.personagem-efigie {
+  min-width: 0;
+  padding: 10px;
+  border: 1px solid #6e5b36;
+  background: #141c10;
+}
+
+.personagem-efigie .retrato-marcador {
+  width: 100%;
+  border-radius: 0;
+  border: 1px solid #5d654a;
+}
+
+.efigie-rotulo {
+  margin: 15px 0 9px;
+  text-align: center;
+  color: #b4b99d;
+  font-size: 0.56rem;
+  letter-spacing: 0.1em;
+}
+
+.equipado-suporte {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(44px, 1fr));
+  gap: 5px;
+}
+
+.equipado-espaco {
+  min-height: 44px;
+  border-width: 4px;
+  border-image-width: 5px;
+}
+
+.visaoGeral-pilha {
+  gap: 16px;
+}
+
+.informacoes-gradeVisual {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.informacoes-gradeVisual > div {
+  border: 0;
+  border-left: 1px solid #5e6349;
+  background: transparent;
+  padding: 5px 10px;
+}
+
+.informacoes-gradeVisual > div,
+.profissao-resumo-gradeVisual > div,
+.profissao-resumo-rotulo > span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.informacoes-gradeVisual span {
+  color: #b5baa3;
+  font-size: 0.66rem;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.informacoes-gradeVisual strong {
+  color: #e3d3a6;
+  font:
+    1.3rem Georgia,
+    serif;
+}
+
+.profissao-resumo-gradeVisual {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 5px;
+}
+
+.profissao-resumo-gradeVisual > div {
+  font-size: 0.72rem;
+  padding: 10px 3px;
+}
+
+.profissao-resumo-gradeVisual strong {
+  white-space: nowrap;
+  color: #d1b577;
+  font-size: 0.65rem;
+  font-weight: 500;
+}
+
+.atributo-listar > div,
+.tecnica-linhaDeDados,
+.banco-item-linhaDeDados {
+  background-color: #1e2819;
+  border-color: #444f37;
+}
+
+.cidade-localDoJogo-gradeVisual button {
+  align-content: start;
+  text-align: left;
+  border-radius: 0;
+  border-color: #606546;
+  background: #29341f;
+}
+
+.cidade-localDoJogo-gradeVisual button .jogo-icone {
+  margin-bottom: 7px;
+}
+
+.cidade-localDoJogo-gradeVisual button:hover {
+  background: #38452a;
+  border-color: #c1ab70;
+}
+
+.cidade-visaoGeral-disposicao,
+.aventura-visaoGeral-disposicao {
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  gap: 20px;
+}
+
+.cidade-localDoJogo-gradeVisual strong {
+  color: #e1d0a5;
+}
+
+.cidade-localDoJogo-gradeVisual span {
+  color: #b9c1a7;
+}
+
+.recurso-pilha > div {
+  background: #20291b;
+  border-color: #46523a;
+}
+
+.combate-combatente,
+.masmorra-lateral .painel {
+  border-color: #665e42;
+}
+
+.combate-registro,
+.masmorra-registro {
+  background: #121a0f;
+}
+
+/* Painel ocioso persistente: animação e cor acompanham outros indicadores de estado. */
+.continuidade-barra,
+.jogo-estrutura--risco .continuidade-barra {
+  display: flex;
+  left: var(--jogo-trilho);
+  right: 0;
+  bottom: 0;
+  height: var(--estrutura-rodape);
+  padding: 10px 26px;
+  background: #1b2316;
+  border-top: 3px double #806b42;
+  box-shadow: 0 -5px 18px #0005;
+  backdrop-filter: none;
+}
+
+.atual-trabalho {
+  max-width: 570px;
+  gap: 12px;
+}
+
+.atual-trabalho .ocioso-progressoTituloDaSecao {
+  gap: 6px;
+}
+
+.atual-trabalho .ocioso-progressoTituloDaSecao > span {
+  flex: 1;
+}
+
+.atual-trabalho .ocioso-progressoTituloDaSecao em {
+  max-width: 45%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.atual-trabalho > span:first-child {
+  width: 42px;
+  height: 42px;
+  border: 0;
+  border-radius: 0;
+  background: #293420;
+}
+
+.atual-trabalho small {
+  font-size: 0.6rem;
+  color: #b4bb9e;
+}
+
+.atual-trabalho strong {
+  font-size: 0.8rem;
+  color: #e4d7b6;
+}
+
+.atual-trabalho:disabled {
+  opacity: 1;
+}
+
+.ocioso-progressoTrilha,
+.ocioso-progresso--compacto .ocioso-progressoTrilha {
+  height: 10px;
+  border: 1px solid #897547;
+  border-radius: 0;
+  background: #10170c;
+  box-shadow: inset 0 1px 2px #000;
+}
+
+.ocioso-progressoPreenchimento {
+  background: linear-gradient(#bc9b56, #897442);
+}
+
+.ocioso-progressoTituloDaSecao em {
+  padding: 3px 5px;
+  border: 1px solid #4f5c3e;
+  background: #1b2614;
+  color: #d9d3b8;
+}
+
+.ocioso-progressoDetalhes small {
+  color: #b7bda4;
+  font-size: 0.62rem;
+}
+
+.ocioso-progressoDetalhes strong {
+  font-size: 0.8rem;
+  line-height: 1.5;
+}
+
+.continuidade-acoes {
+  gap: 8px;
+}
+
+.continuidade-acoes button {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  min-height: 44px;
+  padding: 8px 12px;
+  border-radius: 0;
+  border: 1px solid #64734e;
+  background: #2d3a22;
+  color: #d5dcc4;
+}
+
+.jogo-estrutura--risco .principal-navegacao {
+  display: flex;
+}
+
+.jogo-estrutura--preparacao .principal-navegacao,
+.jogo-estrutura--preparacao .continuidade-barra {
+  opacity: 1;
+}
+
+.risco-estado-faixa,
+.preparacao-estado-faixa {
+  margin-left: var(--jogo-trilho);
+  border-bottom: 1px solid #8c654c;
+  padding: 12px 26px;
+  height: auto;
+  background: #342920;
+  flex-wrap: wrap;
+}
+
+.preparacao-estado-faixa {
+  background: #302e1e;
+}
+
+.jogo-estrutura--risco .jogo-conteudo {
+  padding: 20px;
+}
+
+.jogo-estrutura--risco .jogo-aviso {
+  bottom: calc(var(--estrutura-rodape) + 12px);
+}
+
+.jogo-aviso {
+  border-radius: 0;
+  background: #2d3525;
+  border-color: #ab935d;
+}
+
+.lateral-folha {
+  background: #202b19;
+  border-left: 3px double #b7995f;
+  padding: 26px 20px;
+}
+
+.lateral-folha::backdrop {
+  background: #070d06c9;
+}
+
+.folha-fechar {
+  border-radius: 0;
+  color: #e4d5ad;
+  background: #303d23;
+}
+
+.jornada-secao {
+  border-color: #5b6648;
+}
+
+.recursoVisual-creditos summary {
+  color: #adb79c;
+}
+
+.recursoVisual-creditos a {
+  color: #dfc586;
+}
+
+/* A criação de personagem compartilha os materiais e o tom do jogo. */
+.entrada-estrutura {
+  max-width: 980px;
+}
+
+.entrada-marca {
+  display: block;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  color: #e1c788;
+  font-family: "Antiquity Print", Georgia, serif;
+}
+
+.entrada-cabecalho {
+  border-bottom: 3px double #6d5c3b;
+  flex-wrap: wrap;
+  gap: 12px 20px;
+}
+
+.entrada-cabecalho > div {
+  flex: 1 1 240px;
+  min-width: 0;
+}
+
+.criacao-foco {
+  padding: 24px;
+  border: 16px solid transparent;
+  border-image: var(--moldura-ouro) 24 / 18px stretch;
+  background: #1d2817;
+}
+
+.criacao-progresso span {
+  border-radius: 0;
+  border-color: #5c6d46;
+  background: #192411;
+}
+
+.criacao-progresso span.ativo {
+  border-color: #d0b477;
+  color: #f1dfb0;
+  background: #4a4529;
+}
+
+.criacao-escolha,
+.partida-cartao-emExecucao {
+  border-radius: 0;
+  background: #25331d;
+  border-color: #576743;
+}
+
+.criacao-escolha.selecionado,
+.partida-cartao-emExecucao:hover {
+  border-color: #d0b477;
+  background: #3b4028;
+}
+
+.nome-entradaDeDados {
+  border-radius: 0;
+  background: #111b0c;
+  border-color: #6f7958;
+}
+
+.ausente-retorno-cartao {
+  border-radius: 0;
+  border: 16px solid transparent;
+  border-image: var(--moldura-ouro) 24 / 18px stretch;
+  background: #1f2a19;
+}
+
+@media (max-width: 1250px) {
+  .jogo-disposicao {
+    grid-template-columns: minmax(0, 1fr);
+    padding: 20px;
+  }
+
+  .jogo-companheiro {
+    display: none;
+  }
+
+  .movel-creditos {
+    display: block;
+    margin-top: 24px;
+  }
+
+  .jogo-conteudo {
+    min-height: 0;
+  }
+}
+
+@media (max-width: 980px) and (min-width: 721px) {
+  :root {
+    --jogo-trilho: 88px;
+  }
+
+  .jogo-barraLateral {
+    padding: 20px 9px;
+  }
+
+  .jogo-marca {
+    padding-bottom: 22px;
+  }
+
+  .marca-simbolo {
+    width: 56px;
+    height: 66px;
+  }
+
+  .marca-simbolo .jogo-icone {
+    width: 32px;
+    height: 32px;
+  }
+
+  .jogo-marca strong {
+    display: none;
+  }
+
+  .jogo-marca small,
+  .marca-ornamento,
+  .principal-navegacao button small,
+  .reino-situacao,
+  .barraLateral-notaDeRodape {
+    display: none;
+  }
+
+  .principal-navegacao button {
+    flex-direction: column;
+    justify-content: center;
+    gap: 8px;
+    padding: 8px 0;
+    font:
+      0.65rem ui-sans-serif,
+      sans-serif;
+  }
+
+  .jogo-barraSuperior {
+    padding-inline: 18px;
+  }
+
+  .global-recursos {
+    gap: 12px;
+  }
+
+  .atividades-disposicao {
+    grid-template-columns: 148px minmax(0, 1fr);
+    gap: 14px;
+  }
+
+  .atividade-etapa {
+    grid-template-columns: minmax(0, 192px) minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 720px) {
+  :root {
+    --jogo-trilho: 0px;
+    --estrutura-rodape: 76px;
+  }
+
+  .jogo-estrutura {
+    padding-bottom: calc(146px + env(safe-area-inset-bottom));
+  }
+
+  .jogo-barraLateral {
+    position: static;
+    padding: 0;
+    border: 0;
+    box-shadow: none;
+    width: auto;
+  }
+
+  .jogo-marca,
+  .reino-situacao,
+  .barraLateral-notaDeRodape {
+    display: none;
+  }
+
+  .principal-navegacao,
+  .jogo-estrutura--risco .principal-navegacao {
+    display: flex;
+    flex-direction: row;
+    position: fixed;
+    inset: auto 0 0;
+    width: 100%;
+    height: calc(66px + env(safe-area-inset-bottom));
+    padding: 3px 5px env(safe-area-inset-bottom);
+    gap: 4px;
+    border-top: 1px solid #71633d;
+    background: #151e10;
+    z-index: 40;
+  }
+
+  .principal-navegacao button {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 4px;
+    min-height: 60px;
+    padding: 4px 1px;
+    text-align: center;
+    font:
+      0.65rem ui-sans-serif,
+      sans-serif;
+  }
+
+  .principal-navegacao button .jogo-icone {
+    width: 24px;
+    height: 24px;
+  }
+
+  .principal-navegacao button small {
+    display: none;
+  }
+
+  .principal-navegacao button.ativo {
+    box-shadow: inset 0 2px #d0b477;
+  }
+
+  .jogo-barraSuperior {
+    position: sticky;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    min-height: 76px;
+    padding: 10px 12px;
+    gap: 10px;
+  }
+
+  #jogo-conteudo {
+    scroll-margin-top: 136px;
+  }
+
+  .jogador-identidade {
+    flex: 1;
+    gap: 8px;
+  }
+
+  .jogador-nome {
+    max-width: 24ch;
+    font-size: 0.9rem;
+  }
+
+  .jogador-identidade span {
+    font-size: 0.65rem;
+  }
+
+  .avatar-marcador {
+    width: 40px;
+    height: 40px;
+  }
+
+  .avatar-marcador .jogo-icone {
+    width: 28px;
+    height: 28px;
+  }
+
+  .global-recursos {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) 44px;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .global-recursos > div {
+    display: grid;
+    grid-template-columns: 16px minmax(0, 1fr);
+    grid-template-areas: "sig label" "value value";
+    min-width: 0;
+    padding-bottom: 4px;
+    gap: 2px 4px;
+  }
+
+  .global-recursos > div:nth-child(4) {
+    display: grid;
+  }
+
+  .global-recursos small {
+    display: block;
+    font-size: 0.6rem;
+    overflow-wrap: anywhere;
+  }
+
+  .global-recursos strong {
+    font-size: 0.8rem;
+    overflow-wrap: anywhere;
+  }
+
+  .global-recursos .recurso-simbolo,
+  .recurso-simbolo .jogo-icone {
+    min-width: 0;
+    width: 16px;
+    height: 16px;
+  }
+
+  .global-recursos > .icone-botao {
+    position: static;
+    width: 44px;
+    align-self: center;
+  }
+
+  .jogo-disposicao {
+    padding: 12px;
+    gap: 0;
+  }
+
+  .jogo-conteudo,
+  .jogo-estrutura--risco .jogo-conteudo {
+    padding: 10px;
+    border-width: 8px;
+    border-image-width: 10px;
+    width: 100%;
+  }
+
+  .telaDoJogo-tituloDaSecao {
+    flex-direction: row;
+    align-items: center;
+    padding-bottom: 14px;
+    margin-bottom: 12px;
+  }
+
+  .telaDoJogo-tituloDaSecao {
+    flex-wrap: wrap;
+  }
+
+  .telaDoJogo-tituloDaSecao .destaque-titulo {
+    font-size: 1.55rem;
+    gap: 8px;
+  }
+
+  .telaDoJogo-tituloDaSecao p:last-child {
+    font-size: 0.72rem;
+  }
+
+  .telaDoJogo-tituloDaSecao .secao-chamada {
+    font-size: 0.58rem;
+  }
+
+  .atividade-estado {
+    padding: 6px;
+    font-size: 0.625rem;
+  }
+
+  .atividades-disposicao {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .atividades-profissao-trilho {
+    display: none;
+  }
+
+  .movel-profissao-seletor {
+    display: flex;
+  }
+
+  .movel-profissao-seletor select {
+    border-radius: 0;
+    border-color: #7d7650;
+    background: #27341e;
+  }
+
+  .atividade-etapa {
+    grid-template-columns: minmax(0, 160px) minmax(0, 1fr);
+    gap: 10px;
+  }
+
+  .atividade-cena-envoltorio {
+    padding: 4px;
+  }
+
+  .atividade-cena-legenda {
+    font-size: 0.62rem;
+  }
+
+  .atividade-atualizado {
+    border-width: 5px;
+    border-image-width: 7px;
+    padding: 6px;
+  }
+
+  .atividade-pronto h2 {
+    font-size: 0.87rem;
+  }
+
+  .atividade-pronto > p:not(.secao-chamada) {
+    font-size: 0.75rem;
+  }
+
+  .atividade-atualizado .ocioso-progressoTituloDaSecao strong {
+    font-size: 0.88rem;
+  }
+
+  .atividade-atualizado .ocioso-progressoDetalhes strong {
+    font-size: 0.7rem;
+  }
+
+  .atividade-opcoes-tituloDaSecao > span {
+    display: none;
+  }
+
+  .atividade-opcao {
+    grid-template-columns: 44px minmax(0, 1fr);
+    gap: 10px;
+    padding: 10px;
+  }
+
+  .atividade-opcao .item-miniatura {
+    width: 44px;
+    height: 44px;
+  }
+
+  .personagem-disposicao {
+    grid-template-columns: 124px minmax(0, 1fr);
+    gap: 12px;
+  }
+
+  .personagem-efigie {
+    padding: 6px;
+  }
+
+  .profissao-resumo-gradeVisual {
+    grid-template-columns: 1fr;
+  }
+
+  .informacoes-gradeVisual {
+    gap: 10px;
+  }
+
+  .informacoes-gradeVisual > div {
+    padding: 3px 6px;
+  }
+
+  .informacoes-gradeVisual span {
+    font-size: 0.6rem;
+  }
+
+  .informacoes-gradeVisual strong {
+    font-size: 1.1rem;
+  }
+
+  .painel {
+    padding: 10px;
+    border-width: 6px;
+    border-image-width: 8px;
+  }
+
+  .inventario-espacos {
+    grid-template-columns: repeat(4, minmax(44px, 64px));
+    gap: 8px;
+  }
+
+  .subnavegacao {
+    gap: 2px;
+  }
+
+  .subnavegacao button {
+    padding-inline: 8px;
+    font-size: 0.72rem;
+  }
+
+  .cidade-visaoGeral-disposicao,
+  .aventura-visaoGeral-disposicao,
+  .cidade-contexto-disposicao,
+  .preparacao-disposicao {
+    grid-template-columns: 1fr;
+  }
+
+  .cidade-visaoGeral-disposicao > .contexto-arte,
+  .aventura-visaoGeral-disposicao > .contexto-arte {
+    max-width: 360px;
+    justify-self: center;
+  }
+
+  .cidade-visaoGeral-disposicao .cidade-localDoJogo-gradeVisual {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .continuidade-barra,
+  .jogo-estrutura--risco .continuidade-barra {
+    bottom: calc(66px + env(safe-area-inset-bottom));
+    height: var(--estrutura-rodape);
+    padding: 8px 12px;
+    gap: 8px;
+  }
+
+  .atual-trabalho {
+    gap: 7px;
+  }
+
+  .atual-trabalho .ocioso-progressoTituloDaSecao {
+    flex-wrap: nowrap;
+  }
+
+  .atual-trabalho > span:first-child {
+    display: none;
+  }
+
+  .atual-trabalho strong {
+    font-size: 0.74rem;
+  }
+
+  .atual-trabalho .ocioso-progressoTituloDaSecao em {
+    font-size: 0.6rem;
+  }
+
+  .continuidade-acoes button {
+    flex-direction: column;
+    justify-content: center;
+    gap: 3px;
+    padding: 4px 8px;
+    font-size: 0.52rem;
+    min-width: 48px;
+    height: 52px;
+  }
+
+  .continuidade-acoes button:first-child {
+    font-size: 0.52rem;
+  }
+
+  .continuidade-acoes button .jogo-icone {
+    width: 20px;
+    height: 20px;
+  }
+
+  .jogo-aviso,
+  .jogo-estrutura--risco .jogo-aviso {
+    bottom: calc(156px + env(safe-area-inset-bottom));
+    right: 12px;
+    width: calc(100% - 24px);
+  }
+
+  .risco-estado-faixa,
+  .preparacao-estado-faixa {
+    padding-inline: 12px;
+    font-size: 0.64rem;
+    gap: 10px;
+  }
+
+  .criacao-foco {
+    padding: 14px;
+    border-width: 10px;
+    border-image-width: 12px;
+  }
+}
+
+@media (max-width: 440px) {
+  .jogo-barraSuperior {
+    gap: 7px;
+  }
+
+  .jogador-identidade > div:last-child {
+    display: grid;
+    gap: 0;
+  }
+
+  .global-recursos {
+    gap: 6px;
+  }
+
+  .jogo-disposicao {
+    padding: 8px;
+  }
+
+  .atividade-etapa {
+    grid-template-columns: 1fr;
+  }
+
+  .atividade-cena-envoltorio {
+    width: min(100%, 140px);
+  }
+
+  .atividade-estado {
+    gap: 4px;
+  }
+
+  .atividade-pronto h2 {
+    font-size: 0.8rem;
+  }
+
+  .atividade-pronto > p:not(.secao-chamada) {
+    font-size: 0.75rem;
+  }
+
+  .atividade-atualizado-acoes .discreto-botao {
+    font-size: 0.75rem;
+    padding: 6px;
+  }
+
+  .atividade-opcao-titulo {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+  }
+
+  .personagem-disposicao {
+    grid-template-columns: 1fr;
+  }
+
+  .personagem-efigie {
+    display: grid;
+    grid-template-columns: 100px minmax(0, 1fr);
+    align-items: center;
+    gap: 12px;
+    padding: 10px;
+  }
+
+  .personagem-efigie .retrato-marcador {
+    grid-row: 1 / 3;
+  }
+
+  .efigie-rotulo {
+    margin: 0;
+  }
+
+  .inventario-filtros button {
+    flex: 1;
+    padding: 8px 5px;
+  }
+}
+
+@container activity-workspace (max-width: 420px) {
+  .atividade-etapa {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .atividade-cena-envoltorio {
+    width: min(100%, calc(var(--atividade-cena-largura) + 16px));
+  }
+}
+
+@media (max-height: 740px) and (min-width: 981px) {
+  .jogo-marca {
+    gap: 8px;
+    padding-bottom: 16px;
+  }
+
+  .marca-simbolo {
+    width: 64px;
+    height: 64px;
+  }
+
+  .marca-simbolo .jogo-icone {
+    width: 32px;
+    height: 32px;
+  }
+
+  .marca-ornamento,
+  .barraLateral-notaDeRodape {
+    display: none;
+  }
+
+  .reino-situacao {
+    padding-top: 18px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+  }
+
+  button {
+    transition: none !important;
+  }
+}
+
+@media (forced-colors: active) {
+  .jogo-conteudo,
+  .painel,
+  .inventario-espaco,
+  .equipado-espaco,
+  .companheiro-secao,
+  .criacao-foco {
+    border-image: none;
+    border: 1px solid CanvasText;
+  }
+
+  .principal-navegacao button.ativo,
+  .inventario-espaco--selecionado {
+    outline: 2px solid Highlight;
+  }
+}
+
+.criacao-escolha.criacao-classe-escolha {
+  grid-template-columns: 160px minmax(0, 1fr);
+  align-items: center;
+  align-content: center;
+  gap: 14px;
+}
+
+.criacao-classe-gif {
+  display: block;
+  width: 160px;
+  height: 160px;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+
+.criacao-classe-texto {
+  display: grid;
+  gap: 7px;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.criacao-classe-texto strong {
+  color: var(--textoExibido);
+}
