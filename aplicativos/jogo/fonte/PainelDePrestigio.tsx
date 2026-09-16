@@ -1,3 +1,8 @@
+/**
+ * @file Apresentação da árvore de prestígio e confirmação de reinício do personagem.
+ * Disponibilidade, custos e pré-requisitos vêm do domínio. O componente agrupa os nós
+ * em ramos puros e híbridos e controla apenas confirmações e operações pendentes.
+ */
 import { useState } from 'react'
 import {
   NIVEL_MAXIMO_DE_PRESTIGIO_DO_PERSONAGEM,
@@ -22,6 +27,7 @@ type PropriedadesDePainelDePrestigio = {
 const hibridoCaminhos = ["corpo-arcano", "corpo-espirito", "tecnica-arcano", "tecnica-espirito"] as const
 const prestigioNivelRotulos = ['I', 'II', 'III'] as const
 
+/** Mostra a prontidão das profissões, os pontos conquistados/gastos e a próxima etapa de prestígio. */
 export default function PainelDePrestigio({ partida, aoRealizarPrestigio, aoDesbloquearNo }: PropriedadesDePainelDePrestigio) {
   const [idDoNoPendente, definirPendenteNoId] = useState<string | null>(null)
   const [confirmandoPrestigio, definirConfirmandoPrestigio] = useState(false)
@@ -51,6 +57,7 @@ export default function PainelDePrestigio({ partida, aoRealizarPrestigio, aoDesb
           ? 'Nós disponíveis respeitam os caminhos e os custos definidos no GDD.'
           : "Todas as Profissões já estão prontas. Confirme o primeiro Prestígio para receber 5 pontos."
 
+  /** Mantém um único ID pendente durante a compra para bloquear solicitações concorrentes no painel. */
   async function desbloquear(noId: string) {
     if (idDoNoPendente) return
     definirPendenteNoId(noId)
@@ -61,6 +68,7 @@ export default function PainelDePrestigio({ partida, aoRealizarPrestigio, aoDesb
     }
   }
 
+  /** Só envia o reinício quando os requisitos visíveis são satisfeitos e fecha a confirmação após o callback. */
   async function realizarPrestigio() {
     if (!podeRealizarPrestigio || ehRealizandoPrestigio) return
     definirEhRealizandoPrestigio(true)
@@ -106,6 +114,7 @@ export default function PainelDePrestigio({ partida, aoRealizarPrestigio, aoDesb
             </button>
           ) : null}
         </div>
+        {/* A confirmação permite revisar o reinício de nível e atributos antes de enviar a alteração permanente. */}
         {confirmandoPrestigio ? (
           <div className="prestigio-confirmacao" role="group" aria-labelledby="prestigio-confirmacao-titulo">
             <p id="prestigio-confirmacao-titulo"><strong>Reinício permanente da jornada.</strong> O nível e os atributos normais voltam ao início; Profissões, equipamentos, inventário e nós já desbloqueados permanecem.</p>
@@ -158,6 +167,7 @@ export default function PainelDePrestigio({ partida, aoRealizarPrestigio, aoDesb
   )
 }
 
+/** Filtra os nós puros de um ramo e calcula sua contagem de desbloqueios sem alterar o progresso. */
 function RamoDePrestigio({
   ramo,
   partida,
@@ -195,6 +205,7 @@ function RamoDePrestigio({
   )
 }
 
+/** Usa a mesma decisão de disponibilidade do domínio para rótulo, motivo do bloqueio e ação de compra. */
 function NoDePrestigio({
   no,
   partida,

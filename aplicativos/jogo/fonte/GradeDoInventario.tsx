@@ -1,3 +1,8 @@
+/**
+ * @file Grade reutilizada pela bolsa completa e pelos resumos compactos.
+ * Converte pilhas e equipamentos guardados em entradas visuais, oferece filtros e
+ * inspeção, e encaminha o comando de equipar quando esse callback estiver disponível.
+ */
 import { useState } from 'react'
 import { obterDefinicaoDeEquipamento } from '@greywake/conteudo'
 import { LIMITE_DE_ESPACOS_DO_INVENTARIO_V01, obterUsoDeEspacosDoInventario, type PartidaLocal } from '@greywake/dominio'
@@ -7,6 +12,7 @@ import { rotulosDosItens } from './rotulosDoJogo'
 
 type Filtro = "todos" | 'material' | "consumivel" | "equipamento"
 
+/** Apresenta até oito entradas no modo compacto e todos os espaços da mochila no modo completo. */
 export default function GradeDoInventario({ partida, compacto = false, aoEquipar }: {
   partida: PartidaLocal
   compacto?: boolean
@@ -17,6 +23,7 @@ export default function GradeDoInventario({ partida, compacto = false, aoEquipar
   const [pendente, definirPendente] = useState(false)
   const [erro, definirErro] = useState<string | null>(null)
   const equipado = new Set(Object.values(partida.personagem.equipamento))
+  // Pilhas usam o ID da definição; equipamentos usam o ID da instância para distinguir cópias com a mesma aparência.
   const itens = [
     ...partida.personagem.inventario.map((pilha) => ({
       id: pilha.idDaDefinicao, nome: rotulosDosItens[pilha.idDaDefinicao] ?? pilha.idDaDefinicao,
@@ -33,8 +40,10 @@ export default function GradeDoInventario({ partida, compacto = false, aoEquipar
   const exibido = itens.filter((item) => filtro === "todos" || item.tipo === filtro)
   const visivel = compacto ? exibido.slice(0, 8) : exibido
   const selecionadoItem = itens.find((item) => item.id === selecionado)
+  // Espaços vazios completam somente a visão de todos os itens; filtros não devem parecer aumentar a capacidade disponível.
   const vazio = filtro === "todos" ? Math.max(0, (compacto ? 8 : LIMITE_DE_ESPACOS_DO_INVENTARIO_V01) - visivel.length) : 0
 
+  /** Espera a alteração persistida antes de fechar a inspeção e preserva uma mensagem local em caso de falha. */
   async function equipar(id: string) {
     if (!aoEquipar || pendente) return
     definirPendente(true)

@@ -1,3 +1,8 @@
+/**
+ * @file Testes de movimentação entre mochila e banco.
+ * Protegem limites de espaços, transferência gratuita de pilhas e preservação da identidade
+ * das peças; equipamentos em uso precisam ser retirados do corpo antes do depósito.
+ */
 import { describe, expect, it } from 'vitest'
 import { criarPartidaLocal, type DefinicaoDeClasseDoPersonagem, type DefinicaoDePresente } from './personagem'
 import {
@@ -33,6 +38,7 @@ const presente: DefinicaoDePresente = {
   ],
 }
 
+/** Cria um estado novo com identidade e horário fixos, isolando as alterações de cada caso. */
 function criarPartida() {
   return criarPartidaLocal({
     idDaPartida: "banco-test",

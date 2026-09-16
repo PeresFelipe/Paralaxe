@@ -1,3 +1,8 @@
+/**
+ * @file Testes de transformação de ingredientes, parada por falta de material e reforço.
+ * Os horários fixos permitem processar ciclos completos sem esperar tempo real;
+ * a receita de teste é independente dos números de balanceamento do catálogo publicado.
+ */
 import { describe, expect, it } from 'vitest'
 import { criarPartidaLocal, type DefinicaoDeClasseDoPersonagem, type DefinicaoDePresente } from './personagem'
 import { processarProgressoDeFabricacao, iniciarReceitaDeFabricacao, type DefinicaoDeReceitaDeFabricacao } from './fabricacao'
@@ -49,6 +54,7 @@ const reforcoReceita: DefinicaoDeReceitaDeFabricacao = {
   saida: { tipo: "equipamento-reforco", nome: 'Reforço Simples +1' },
 }
 
+/** Cria um estado novo com identidade e horário fixos, isolando as alterações de cada caso. */
 function criarPartida() {
   return criarPartidaLocal({
     idDaPartida: "partida-fabricacao",
@@ -101,6 +107,7 @@ describe("fabricação", () => {
 
   it("reforça uma instância específica de equipamento de +0 para +1", () => {
     const base = criarPartida()
+    // O reforço precisa apontar para uma instância: outras peças do mesmo modelo não devem mudar.
     const alvoId = base.personagem.equipamento.maoPrincipal
     if (!alvoId) throw new Error('Equipamento inicial ausente no teste.')
 

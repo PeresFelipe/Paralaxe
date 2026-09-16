@@ -1,4 +1,8 @@
+/* Arquivo: Ajustes de densidade, alvos de toque e comportamento responsivo sobre estilos.css.
+   O tema é carregado depois e substitui partes desta disposição; não reorganizar as
+   importações sem revisar o resultado combinado. */
 /* Versão 0.1: disposição compacta e legível. Cópia anterior: backup/web-usability-453dbba. */
+/* Medidas compartilhadas mantêm a posição da navegação, do conteúdo e do rodapé coerentes. */
 :root {
   --compacto-conteudo-largura: 1180px;
   --estrutura-cabecalho: 60px;
@@ -20,6 +24,7 @@
 .jogador-identidade > div:last-child {
   min-width: 0;
 }
+/* Nomes extensos podem encolher sem empurrar os recursos para fora do cabeçalho. */
 .jogador-nome {
   display: block;
   max-width: 24ch;
@@ -120,6 +125,7 @@
 .funcionalidade-telaDoJogo h2.destaque-titulo {
   font-size: clamp(1.6rem, 2.2vw, 2rem);
 }
+/* Os controles principais mantêm uma área mínima de toque de 44 pixels. */
 .principal-botao,
 .principal-botao.compacto,
 .discreto-botao {
@@ -155,6 +161,7 @@ a,
 summary {
   touch-action: manipulation;
 }
+/* O atalho fica fora da tela até receber foco; permite saltar a navegação com teclado. */
 .pular-ligacao {
   position: fixed;
   left: 16px;
@@ -174,6 +181,7 @@ summary {
   outline: none;
 }
 
+/* Reserva dimensões previsíveis para o trabalho atual e seus atalhos. */
 .continuidade-barra {
   height: var(--estrutura-rodape);
   gap: 14px;
@@ -206,6 +214,7 @@ summary {
   padding-inline: 12px;
   font-size: 0.8125rem;
 }
+/* O aviso flutua acima do rodapé para não cobrir os comandos persistentes. */
 .jogo-aviso {
   position: fixed;
   right: 20px;
@@ -238,6 +247,7 @@ summary {
 .jogo-estrutura--risco .jogo-aviso {
   bottom: 12px;
 }
+/* O diálogo ocupa a altura dinâmica do navegador e contém sua própria rolagem. */
 .lateral-folha {
   inset: 0 0 0 auto;
   width: min(410px, 100%);
@@ -278,6 +288,7 @@ summary {
   padding: 8px 12px;
   font-size: 0.875rem;
 }
+/* Reduz o retrato e deixa a coluna de dados encolher usando minmax(0, 1fr). */
 .personagem-disposicao {
   grid-template-columns: 180px minmax(0, 1fr);
   gap: 14px;
@@ -374,6 +385,7 @@ summary {
 .atividade-regra {
   text-align: right;
 }
+/* Trilho de profissões à esquerda e área de trabalho à direita; a opção móvel é alternativa visual. */
 .atividades-disposicao {
   display: grid;
   grid-template-columns: 184px minmax(0, 1fr);
@@ -424,6 +436,7 @@ summary {
 .movel-profissao-seletor {
   display: none;
 }
+/* A variável limita a cena sem impor uma largura mínima ao conteúdo textual. */
 .atividades-areaDeTrabalho {
   --atividade-cena-largura: 224px;
   min-width: 0;
@@ -480,6 +493,7 @@ summary {
   justify-content: flex-end;
   font-size: 0.875rem;
 }
+/* A barra nativa progress recebe ajustes separados para os motores WebKit e Gecko. */
 .profissao-nivel-faixa {
   display: flex;
   align-items: center;
@@ -545,6 +559,7 @@ progress::-moz-progress-bar {
   font-size: 0.8125rem;
   font-weight: 500;
 }
+/* Receitas ocupam uma coluna; título, rendimento e ingredientes permitem quebra de linha. */
 .atividade-opcoes {
   grid-template-columns: 1fr;
   gap: 10px;
@@ -627,6 +642,7 @@ progress::-moz-progress-bar {
   padding: 8px 0;
   font-size: 0.875rem;
 }
+/* Organiza cenas e destinos sem forçar a mesma altura entre as duas colunas. */
 .aventura-visaoGeral-disposicao,
 .cidade-visaoGeral-disposicao {
   display: grid;
@@ -720,6 +736,7 @@ progress::-moz-progress-bar {
 .masmorra-lateral {
   gap: 10px;
 }
+/* Avisos de atualização e instalação aceitam quebra dos botões conforme o espaço. */
 .web-jogo-situacao {
   display: flex;
   gap: 12px;
@@ -738,6 +755,7 @@ progress::-moz-progress-bar {
   color: var(--atenuado);
 }
 
+/* Reduz larguras e margens intermediárias antes de trocar para a disposição móvel. */
 @media (max-width: 980px) {
   .jogo-barraSuperior,
   .principal-navegacao {
@@ -770,6 +788,7 @@ progress::-moz-progress-bar {
     padding-inline: 16px;
   }
 }
+/* Usa seletor de profissão, navegação inferior e espaço seguro dos aparelhos móveis. */
 @media (max-width: 720px) {
   :root {
     --estrutura-rodape: 74px;
@@ -934,6 +953,7 @@ progress::-moz-progress-bar {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
+/* Empilha também cena e controles para evitar compressão excessiva em telas pequenas. */
 @media (max-width: 420px) {
   .jogador-identidade {
     flex-basis: 100%;
@@ -991,6 +1011,7 @@ progress::-moz-progress-bar {
   }
 }
 
+/* Reserva o espaço da barra de rolagem e impede rolagem da página atrás de diálogos abertos. */
 html {
   scrollbar-gutter: stable;
 }

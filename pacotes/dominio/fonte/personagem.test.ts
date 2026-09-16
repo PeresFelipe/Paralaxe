@@ -1,3 +1,8 @@
+/**
+ * @file Testes do estado inicial da partida e das validações de criação.
+ * As verificações detalhadas protegem o contrato consumido por todos os demais sistemas:
+ * inventário, equipamentos individuais, profissões, combate, banco e jornada.
+ */
 import { describe, expect, it } from 'vitest'
 import {
   criarPartidaLocal,

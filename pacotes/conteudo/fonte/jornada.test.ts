@@ -1,3 +1,8 @@
+/**
+ * @file Testes de metas com receitas reais, coleta, banco e fabricação.
+ * Comparam produção acompanhada e não acompanhada e processamento ativo e ausente,
+ * para que o acompanhamento não altere a economia. Também verificam a memória narrativa.
+ */
 import { describe, expect, it } from 'vitest'
 import {
   escolherMetaDaJornada, criarPartidaLocal, depositarPilhaDoInventarioNoBanco, obterProgressoDaMetaDaJornada,
@@ -8,10 +13,12 @@ import { obterDefinicaoDeReceitaDeFabricacao } from './receitasDeFabricacao'
 import { ATIVIDADES_OCIOSAS_INICIAIS } from './atividadesOciosas'
 import { obterDialogoDeBrann, obterComparacaoDeEquipamentoDaFabricacao, obterAvisoDeFabricacaoDaJornada, obterResumoDeRetornoDaJornada, obterHistoriaDaJornada } from './jornada'
 
+/** Gera horários relativos ao mesmo instante em UTC, sem depender do fuso do computador. */
 const tempo = (segundos: number) => new Date(Date.UTC(2026, 8, 15, 12, 0, segundos)).toISOString()
 const bracadeiras = obterDefinicaoDeReceitaDeFabricacao("receita.forja.giuis-bracadeiras")!
 const cloch = obterDefinicaoDeReceitaDeFabricacao("receita.metalurgia.tratada-cloch")!
 const lenhador = ATIVIDADES_OCIOSAS_INICIAIS.find((atividade) => atividade.idDaProfissao === "lenhador")!
+/** Cria um estado novo com identidade e horário fixos, isolando as alterações de cada caso. */
 function criarPartida() {
   return criarPartidaLocal({ idDaPartida: "jornada-test", criadoEm: tempo(0), versaoDoConteudo: 'test', nomeDoPersonagem: 'Aedan', classeDoPersonagem: CLASSES_DE_PERSONAGEM[0]!, presente: PRESENTES_INICIAIS.find((presente) => presente.id === "nenhum")! })
 }
@@ -37,6 +44,7 @@ describe("Jornada com conteúdo real de fabricação", () => {
     const preparado = interromperAtividadeOciosa(coletado, tempo(24))
     const fabricacao = iniciarReceitaDeFabricacao(preparado, bracadeiras, tempo(24))
     const concluido = processarProgressoDeFabricacao(fabricacao, bracadeiras, tempo(36)).partida
+    // A meta deve registrar a fabricação sem mudar itens, atributos ou experiência concedidos.
     const naoAcompanhado = processarProgressoDeFabricacao({ ...fabricacao, jornada: { meta: null, idsDasReceitasFabricadas: [] } }, bracadeiras, tempo(36)).partida
     expect(concluido.personagem).toEqual(naoAcompanhado.personagem)
     expect(concluido.profissoes).toEqual(naoAcompanhado.profissoes)
@@ -66,6 +74,7 @@ describe("Jornada com conteúdo real de fabricação", () => {
     const iniciado = iniciarReceitaDeFabricacao(partida, bracadeiras, tempo(0))
     const ausente = processarProgressoDeFabricacao(iniciado, bracadeiras, tempo(48)).partida
     let ativo = iniciado
+    // Compara quatro processamentos menores com um único processamento ausente de 48 segundos.
     for (const segundos of [12, 24, 36, 48]) ativo = processarProgressoDeFabricacao(ativo, bracadeiras, tempo(segundos)).partida
     expect(ativo.personagem).toEqual(ausente.personagem)
     expect(ativo.profissoes).toEqual(ausente.profissoes)

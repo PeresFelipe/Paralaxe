@@ -1,3 +1,9 @@
+/**
+ * @file Simulação determinística de combate automático e aplicação de seus resultados.
+ * O catálogo fornece definições; a partida fornece equipamento, preferências e estoque.
+ * A simulação usa um relógio próprio e uma semente, sem esperar tempo real nem salvar dados.
+ * O chamador decide quando aplicar e persistir o resultado retornado.
+ */
 import type { AtributosDoPersonagem, PilhaDoInventario, PartidaLocal } from './personagem'
 import {
   obterValorPrincipalDoEquipamento,
@@ -103,6 +109,7 @@ export interface CatalogoDeEquipamentosDeCombate {
   obterDefinicaoDeEquipamento(idDaDefinicao: string): DefinicaoDeEquipamento | null
 }
 
+/** Contrato mínimo para consultar conteúdo; o domínio não importa os dados concretos do pacote de conteúdo. */
 export interface CatalogoDeConteudoDeCombate extends CatalogoDeEquipamentosDeCombate {
   obterDefinicaoDeHabilidade(habilidadeId: string): DefinicaoDeHabilidadeDeCombate | null
   obterDefinicaoDeInimigo(inimigoId: string): DefinicaoDeInimigo | null
@@ -121,6 +128,7 @@ export interface PreferenciasDeCombate {
   espacosDeConsumiveis: [EspacoDeConsumivelDeCombate, EspacoDeConsumivelDeCombate]
 }
 
+/** Recursos atuais e máximos. Podem atravessar salas de uma expedição sem cura automática. */
 export interface RecursosDeCombate {
   vida: number
   vidaMaxima: number
@@ -145,6 +153,7 @@ export interface EntradaDoRegistroDeCombate {
   mensagem: string
 }
 
+/** Resultado transitório completo: inclui registro para apresentação e consumos a debitar da partida. */
 export interface ResultadoDeCombate {
   desfecho: "vitoria" | "derrota" | "tempoEsgotado"
   duracaoEmSegundos: number
@@ -164,12 +173,14 @@ export interface ResumoDeCombate {
   concluidoEm: string
 }
 
+/** Parte persistida: preferências e resumo da última luta, sem armazenar todo o registro da simulação. */
 export interface EstadoDeCombate {
   preferencias: PreferenciasDeCombate
   ultimaExpedicao: ResumoDeCombate | null
   loboDerrotado: boolean
 }
 
+/** Converte os graus de escalonamento da arma ou magia em pesos aplicados aos atributos. */
 const ESCALONAMENTO: Record<GrauDeEscalonamento, number> = { S: 1, A: 0.85, B: 0.7, C: 0.5, D: 0.3, E: 0.15 }
 const RESISTENCIA_A_DANO: Record<NivelDeResistencia, number> = {
   fraco: 1.25,
@@ -178,6 +189,7 @@ const RESISTENCIA_A_DANO: Record<NivelDeResistencia, number> = {
   "muito-resistente": 0.6,
   imune: 0,
 }
+/** Tolerância para comparar instantes calculados com números fracionários sem perder ações simultâneas. */
 const EPSILON = 0.000001
 const LIMIAR_DE_EFEITO = 100
 
@@ -225,6 +237,7 @@ function limitar(valor: number, minimo: number, maximo: number) {
   return Math.max(minimo, Math.min(maximo, valor))
 }
 
+/** Gerador congruente de 32 bits. A mesma semente e a mesma ordem de sorteios reproduzem a luta. */
 function criarGeradorAleatorio(semente: number) {
   let estado = semente >>> 0
   return () => {
@@ -233,6 +246,7 @@ function criarGeradorAleatorio(semente: number) {
   }
 }
 
+/** Soma a contribuição de cada atributo multiplicada pelo peso do grau de escalonamento. */
 function escalonamentoContribuicao(
   atributos: AtributosDoPersonagem,
   escalonamento: Partial<Record<keyof AtributosDoPersonagem, GrauDeEscalonamento>>,
@@ -243,14 +257,17 @@ function escalonamentoContribuicao(
   }, 0)
 }
 
+/** Converte defesa em redução de dano com teto de 75%, levando o nível do atacante em conta. */
 function mitigacao(defesa: number, atacanteNivel: number) {
   return Math.min(0.75, defesa / (defesa + 100 + 5 * atacanteNivel))
 }
 
+/** Transforma precisão, evasão e bônus em probabilidade, limitada entre 70% e 99%. */
 function acertoChance(precisao: number, evasao: number, bonus = 0) {
   return limitar(0.9 + (precisao - evasao) * 0.0025 + bonus / 100, 0.7, 0.99)
 }
 
+/** Resolve IDs das instâncias equipadas até suas definições, ignorando referências não encontradas. */
 function obterEquipadoDefinicoes(partida: PartidaLocal, catalogo: CatalogoDeEquipamentosDeCombate) {
   return Object.values(partida.personagem.equipamento).flatMap((idDaInstancia) => {
     const instancia = partida.personagem.itensDeEquipamento.find((item) => item.idDaInstancia === idDaInstancia)
@@ -260,6 +277,7 @@ function obterEquipadoDefinicoes(partida: PartidaLocal, catalogo: CatalogoDeEqui
   })
 }
 
+/** Cria os dois espaços vazios; o uso automático só passa a existir após configuração explícita. */
 export function criarEspacosPadraoDeConsumiveis(): [EspacoDeConsumivelDeCombate, EspacoDeConsumivelDeCombate] {
   return [
     { idDaDefinicao: null, recursoDeUsoAutomatico: null, porcentagemDoLimiarDeUsoAutomatico: null },
@@ -267,6 +285,7 @@ export function criarEspacosPadraoDeConsumiveis(): [EspacoDeConsumivelDeCombate,
   ]
 }
 
+/** Valida o limiar percentual e atualiza só o espaço escolhido; remover o item limpa sua automação. */
 export function configurarEspacoDeConsumivelDeCombate(
   partida: PartidaLocal,
   espacoIndice: 0 | 1,
@@ -299,6 +318,7 @@ export function configurarEspacoDeConsumivelDeCombate(
   }
 }
 
+/** Une o conhecimento sem duplicatas e usa os quatro primeiros IDs recebidos como ordem de habilidades ativas. */
 export function ensinarEEquiparHabilidadesDeCombate(
   partida: PartidaLocal,
   habilidadeIds: readonly string[],
@@ -323,6 +343,10 @@ export function ensinarEEquiparHabilidadesDeCombate(
   }
 }
 
+/**
+ * Calcula recursos, precisão, defesa e cadência a partir de atributos, afixos e equipamento vestido.
+ * Exige arma principal válida; itens apenas guardados não fornecem seus bônus.
+ */
 export function derivarEstatisticasDeCombateDoJogador(
   partida: PartidaLocal,
   catalogo: CatalogoDeEquipamentosDeCombate,
@@ -390,6 +414,7 @@ export function derivarEstatisticasDeCombateDoJogador(
   }
 }
 
+/** Preserva valores recebidos da expedição, limitando-os aos máximos derivados; sem valores, começa cheio. */
 function criarRecursosIniciais(estatisticas: EstatisticasDerivadasDeCombateDoJogador, persistido?: RecursosDeCombate): RecursosDeCombate {
   return {
     vida: limitar(persistido?.vida ?? estatisticas.vidaMaxima, 0, estatisticas.vidaMaxima),
@@ -401,6 +426,7 @@ function criarRecursosIniciais(estatisticas: EstatisticasDerivadasDeCombateDoJog
   }
 }
 
+/** Sorteia crítico e aplica multiplicadores e mitigação, arredondando com dano mínimo de 1 nesta versão. */
 function sortearDano(
   bruto: number,
   defesa: number,
@@ -414,6 +440,10 @@ function sortearDano(
   return { dano: Math.max(1, Math.round(dano)), critico }
 }
 
+/**
+ * Filtra habilidades conhecidas, prontas e pagáveis; depois aplica postura e prioridade dos espaços.
+ * Recuperações sem efeito são descartadas para não gastar uma ação com recursos já cheios.
+ */
 function escolherHabilidade(
   partida: PartidaLocal,
   catalogo: CatalogoDeConteudoDeCombate,
@@ -427,6 +457,7 @@ function escolherHabilidade(
     vidaPorcentagem <= partida.combate.preferencias.porcentagemDoLimiarDeVidaDefensiva ||
     (avisoDeAtaqueAtivo && habilidade.acionarAoAvisoDeAtaque === true)
 
+  // A ordem original dos espaços é mantida como critério de desempate após a prioridade da postura.
   const candidatos = partida.personagem.espacosDeHabilidadesAtivas
     .map((id, espaco) => ({ id, espaco }))
     .filter((entrada): entrada is { id: string; espaco: number } => Boolean(entrada.id))
@@ -466,12 +497,14 @@ function escolherHabilidade(
   })[0]?.definicao ?? null
 }
 
+/** Normaliza o recurso selecionado para compará-lo ao limiar percentual do consumível. */
 function recursoPorcentagem(recursos: RecursosDeCombate, recurso: RecursoDoLimiarDeCombate) {
   if (recurso === "vida") return (recursos.vida / recursos.vidaMaxima) * 100
   if (recurso === 'mana') return (recursos.mana / recursos.manaMaxima) * 100
   return (recursos.folego / recursos.folegoMaximo) * 100
 }
 
+/** Debita quantidades consolidadas em uma nova lista e remove pilhas esgotadas. */
 function removerConsumidoItens(inventario: PilhaDoInventario[], itensConsumidos: PilhaDoInventario[]) {
   const consumido = new Map(itensConsumidos.map((pilha) => [pilha.idDaDefinicao, pilha.quantidade]))
   return inventario
@@ -482,6 +515,7 @@ function removerConsumidoItens(inventario: PilhaDoInventario[], itensConsumidos:
     .filter((pilha) => pilha.quantidade > 0)
 }
 
+/** Oferece à simulação o estoque total da mochila e da bolsa ainda arriscada da expedição. */
 function totalInventarioParaCombate(partida: PartidaLocal) {
   const totais = new Map<string, number>()
   for (const pilha of partida.personagem.inventario) {
@@ -493,6 +527,7 @@ function totalInventarioParaCombate(partida: PartidaLocal) {
   return totais
 }
 
+/** Debita primeiro a bolsa da expedição e só depois o inventário seguro, preservando essa prioridade. */
 function consumirEntreSeguroEExpedicao(
   partida: PartidaLocal,
   itensConsumidos: PilhaDoInventario[],
@@ -530,6 +565,10 @@ function consumirEntreSeguroEExpedicao(
   }
 }
 
+/**
+ * Executa a luta até vitória, derrota ou limite de duração, sem alterar a partida recebida.
+ * Os instantes avançam diretamente para a próxima ação; o registro resultante pode ser apresentado depois.
+ */
 export function simularCombate(
   partida: PartidaLocal,
   catalogo: CatalogoDeConteudoDeCombate,
@@ -574,18 +613,22 @@ export function simularCombate(
     inimigoRecargas.set(habilidade.id, habilidade.atrasoInicialEmSegundos ?? 0)
   }
 
+  /** A queimadura ativa reduz temporariamente a defesa usada no cálculo do próximo golpe. */
   function jogadorDefesa() {
     return estatisticas.defesa * (queimaduraAte > agora + EPSILON ? 0.85 : 1)
   }
 
+  /** Acrescenta a melhoria de evasão somente durante sua janela de duração. */
   function jogadorEvasao() {
     return estatisticas.evasao + (evasaoAte > agora + EPSILON ? evasaoBonus : 0)
   }
 
+  /** O congelamento alonga o intervalo das ações enquanto seu efeito estiver ativo. */
   function jogadorIntervalo() {
     return estatisticas.intervaloDeAcaoEmSegundos * (congelamentoAte > agora + EPSILON ? 1.3 : 1)
   }
 
+  /** Aplica proteção temporária ao dano direto e, se configurado, consome-a no primeiro acerto. */
   function recebidoAgoraDiretoDano(brutoDano: number) {
     let finalDano = brutoDano
     if (danoReducao && danoReducao.expiraEm > agora + EPSILON) {
@@ -595,6 +638,7 @@ export function simularCombate(
     return Math.max(1, Math.round(finalDano))
   }
 
+  /** Combina resistência do tipo de dano com posturas e vulnerabilidades temporárias do inimigo. */
   function inimigoDanoMultiplicador(tipoDoDado: TipoDeDano) {
     const base = RESISTENCIA_A_DANO[inimigo.resistenciasADano?.[tipoDoDado] ?? 'normal']
     const temporizado = temporizadoInimigoMultiplicadores.reduce(
@@ -604,6 +648,7 @@ export function simularCombate(
     return base * temporizado
   }
 
+  /** Integra dano contínuo no intervalo decorrido, decai acúmulos e elimina multiplicadores expirados. */
   function avancarEfeitos(para: number) {
     const de = ultimoTempo
     if (para <= de) return
@@ -624,6 +669,10 @@ export function simularCombate(
     if (danoReducao && danoReducao.expiraEm <= para + EPSILON) danoReducao = null
   }
 
+  /**
+   * Acumula um efeito até 100 e então dispara sua consequência.
+   * Após a ativação, zera o medidor e reduz novos acúmulos durante uma janela de resistência de seis segundos.
+   */
   function aplicarAcumulo(aplicacao: DefinicaoDeAplicacaoDeEfeito) {
     const estado = acumulo.get(aplicacao.situacao) ?? {
       valor: 0,
@@ -670,6 +719,7 @@ export function simularCombate(
     acumulo.set(aplicacao.situacao, estado)
   }
 
+  /** Aplica os efeitos do ataque acertado e abre a vulnerabilidade prevista pela habilidade do inimigo. */
   function aposInimigoAcerto(habilidade: DefinicaoDeHabilidadeDoInimigo) {
     for (const aplicacao of habilidade.aplicacoesDeEfeito ?? []) aplicarAcumulo(aplicacao)
     if (habilidade.vulnerabilidadeApos) {
@@ -686,6 +736,10 @@ export function simularCombate(
     }
   }
 
+  /**
+   * Prioriza a solicitação manual, depois avalia os espaços automáticos.
+   * Confere estoque e restauração útil, registra o consumo e informa se a ação do jogador já foi usada.
+   */
   function tentarConsumivel() {
     const ordem: Array<{ indice: 0 | 1; manual: boolean }> = []
     if (manualPendente !== null) ordem.push({ indice: manualPendente, manual: true })
@@ -728,6 +782,7 @@ export function simularCombate(
     return false
   }
 
+  /** Aplica restauração e melhorias temporárias; dano e cura escalonada são resolvidos no fluxo da ação. */
   function aplicarJogadorHabilidadeEfeitos(habilidade: DefinicaoDeHabilidadeDeCombate) {
     if (habilidade.restaurar) {
       const antes = { ...recursos }
@@ -768,6 +823,8 @@ export function simularCombate(
     }
   }
 
+  // Laço por eventos: escolhe o menor instante entre ação do jogador, ação inimiga e ataque anunciado.
+  // Isso permite resolver a luta inteira sem temporizadores do navegador.
   while (agora <= maximoDuracaoSegundos + EPSILON && recursos.vida > 0 && vidaDoInimigo > 0) {
     const avisoDeAtaqueEm = avisoDeAtaque?.resolveEm ?? Number.POSITIVE_INFINITY
     const proximoTempo = Math.min(jogadorProntoEm, inimigoProntoEm, avisoDeAtaqueEm, maximoDuracaoSegundos)
@@ -781,6 +838,7 @@ export function simularCombate(
     ultimoTempo = agora
     if (recursos.vida <= 0) break
 
+    // Um ataque anunciado que vence neste instante é resolvido antes das demais ações simultâneas.
     if (avisoDeAtaque && Math.abs(avisoDeAtaque.resolveEm - agora) <= EPSILON) {
       const habilidade = avisoDeAtaque.habilidade
       if (aleatorio() < acertoChance(inimigo.precisao, jogadorEvasao())) {
@@ -798,6 +856,7 @@ export function simularCombate(
     }
 
     if (Math.abs(jogadorProntoEm - agora) <= EPSILON && recursos.vida > 0 && vidaDoInimigo > 0) {
+      // Um consumível útil ocupa a ação inteira. Sem consumo, tenta habilidade e por fim ataque básico.
       if (!tentarConsumivel()) {
         const habilidade = escolherHabilidade(
           partida,
@@ -872,6 +931,7 @@ export function simularCombate(
           inimigoProntoEm = agora + inimigo.intervaloDeAcaoEmSegundos
         } else if ((pronto.segundosDeAvisoDeAtaque ?? 0) > 0) {
           avisoDeAtaque = { habilidade: pronto, resolveEm: agora + (pronto.segundosDeAvisoDeAtaque ?? 0) }
+          // Enquanto prepara o golpe, o inimigo aguarda resolveEm em vez de ganhar outra ação comum.
           inimigoProntoEm = Number.POSITIVE_INFINITY
           registro.push({ instanteEmSegundos: agora, agente: "inimigo", tipo: "avisoDeAtaque", mensagem: `${inimigo.nome} prepara ${pronto.nome} por ${pronto.segundosDeAvisoDeAtaque}s.` })
         } else {
@@ -902,6 +962,7 @@ export function simularCombate(
     if (Math.abs(agora - maximoDuracaoSegundos) <= EPSILON) break
   }
 
+  // O resultado encerra a simulação; somente a etapa de aplicação posterior altera o progresso salvo.
   const desfecho: ResultadoDeCombate["desfecho"] = vidaDoInimigo <= 0 ? "vitoria" : recursos.vida <= 0 ? "derrota" : "tempoEsgotado"
   const xpConcedido = desfecho === "vitoria" ? inimigo.recompensaDeXp : 0
   registro.push({
@@ -928,6 +989,10 @@ export function simularCombate(
   }
 }
 
+/**
+ * Debita consumíveis, soma XP, registra a luta e calcula a perda de moedas fora da masmorra.
+ * Não avança níveis gerais aqui; a progressão é uma operação separada, usada pelo fluxo de introducao.ts.
+ */
 export function aplicarResultadoDeCombate(
   partida: PartidaLocal,
   idDaDefinicaoDoInimigo: string,

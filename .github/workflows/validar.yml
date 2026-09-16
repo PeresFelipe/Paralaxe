@@ -1,4 +1,7 @@
+# Executa os mesmos comandos de verificação documentados no README.
 name: Validar versão 0.1
+
+# Valida tanto a main após um envio quanto as propostas de alteração destinadas a ela.
 
 on:
   push:
@@ -19,14 +22,18 @@ jobs:
         with:
           node-version: '22'
 
+      # Usa a versão do pnpm indicada em packageManager no package.json da raiz.
       - name: Ativar Corepack
         run: corepack enable
 
+      # A opção atual permite ajustar a resolução do lockfile durante a instalação da automação.
       - name: Instalar dependências
         run: pnpm install --no-frozen-lockfile
 
+      # pnpm verificar também confere a cobertura do catálogo de créditos e os avisos locais.
       - name: Verificar código, tipos e testes
         run: pnpm verificar
 
+      # Gera os arquivos finais e o aplicativo web instalável; esta etapa não publica um site.
       - name: Compilar versão de produção
         run: pnpm compilar

@@ -1,3 +1,8 @@
+/**
+ * @file Testes de experiência geral acumulada e distribuição de atributos.
+ * Protegem ganhos de múltiplos níveis, preservação de níveis já existentes e o orçamento
+ * de pontos, incluindo a rejeição de uma distribuição maior que o saldo disponível.
+ */
 import { describe, expect, it } from 'vitest'
 import { criarPartidaLocal } from './personagem'
 import { distribuirPontosDeAtributo, concederXpGeral } from './progressao'
@@ -29,6 +34,7 @@ const presente = {
   concessoes: [],
 }
 
+/** Cria um estado novo com identidade e horário fixos, isolando as alterações de cada caso. */
 function criarPartida() {
   return criarPartidaLocal({
     idDaPartida: "progressao-test",

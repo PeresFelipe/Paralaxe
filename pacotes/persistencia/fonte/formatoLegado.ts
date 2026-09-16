@@ -1,4 +1,9 @@
 /**
+ * @file Conversão entre o vocabulário PT-BR em memória e o formato publicado das partidas.
+ * As tabelas são um contrato de compatibilidade: palavras inglesas aqui são chaves de dados
+ * já existentes, não rótulos de interface a traduzir livremente.
+ */
+/**
  * Fronteira com as partidas publicadas antes da tradução.
  * O esquema 10 mantém a base "greywake", o armazenamento "saves" e a chave "saveId".
  * Apenas este adaptador e as amostras de regressão conhecem o vocabulário anterior.
@@ -6,6 +11,7 @@
  */
 import type { PartidaLocal } from '@greywake/dominio'
 
+/** Mapeia nomes estruturais recebidos do armazenamento para os nomes internos atuais. */
 const CAMPOS_LEGADOS: Readonly<Record<string, string>> = {
   "save": "partida",
   "warrior": "guerreiro",
@@ -253,6 +259,7 @@ const CAMPOS_LEGADOS: Readonly<Record<string, string>> = {
   "ring1": "anel1"
 }
 
+/** Mapeia IDs de conteúdo e valores enumerados; nomes e mensagens livres são protegidos por CAMPOS_LIVRES. */
 const VALORES_LEGADOS: Readonly<Record<string, string>> = {
   "legs": "pernas",
   "equipment-upgrade": "equipamento-reforco",
@@ -532,6 +539,7 @@ const VALORES_LEGADOS: Readonly<Record<string, string>> = {
   "ability": "habilidade"
 }
 
+/** Produz a direção de escrita a partir da de leitura para manter um só mapeamento de cada vocabulário. */
 function inverter(mapa: Readonly<Record<string, string>>): Readonly<Record<string, string>> {
   return Object.fromEntries(Object.entries(mapa).map(([origem, destino]) => [destino, origem]))
 }
@@ -547,6 +555,10 @@ const CAMPOS_LIVRES = new Set([
   'amulet', 'amuleto', 'ring1', 'anel1', 'ring2', 'anel2',
   'message', 'mensagem', 'text', 'textoExibido', 'description', 'descricao', 'summary', 'resumo',
 ])
+/**
+ * Percorre objetos e listas criando novos valores. Chaves conhecidas são convertidas e as demais são preservadas.
+ * Strings de campos livres passam intactas, mesmo quando coincidem com um ID ou palavra do domínio.
+ */
 function converter(valor: unknown, campos: Readonly<Record<string, string>>, valores: Readonly<Record<string, string>>, campo = ''): unknown {
   if (Array.isArray(valor)) return valor.map((item) => converter(item, campos, valores, campo))
   if (valor && typeof valor === 'object') return Object.fromEntries(Object.entries(valor).map(([chave, item]) => [
@@ -555,9 +567,11 @@ function converter(valor: unknown, campos: Readonly<Record<string, string>>, val
   if (typeof valor === 'string' && !CAMPOS_LIVRES.has(campo)) return valores[valor] ?? valor
   return valor
 }
+/** Traduz o formato armazenado antes de executar migrações estruturais; não grava nada no banco. */
 export function lerFormatoLegado(valor: unknown): unknown {
   return converter(valor, CAMPOS_LEGADOS, VALORES_LEGADOS)
 }
+/** Codifica a partida atual no vocabulário reconhecido pelas versões anteriores antes do put no IndexedDB. */
 export function gravarFormatoLegado(partida: PartidaLocal): unknown {
   return converter(partida, CAMPOS_PARA_GRAVACAO, VALORES_PARA_GRAVACAO)
 }

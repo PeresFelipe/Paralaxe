@@ -1,3 +1,8 @@
+/**
+ * @file Teste da recompensa exclusiva do serviço da Estrada Baixa.
+ * Aplica duas vitórias já calculadas para separar o XP de combate, repetível,
+ * do ouro e bônus de experiência concedidos uma única vez.
+ */
 import { describe, expect, it } from 'vitest'
 import { criarPartidaLocal, type DefinicaoDeClasseDoPersonagem, type DefinicaoDePresente } from './personagem'
 import type { ResultadoDeCombate } from './combate'
@@ -15,6 +20,7 @@ const vitoria: ResultadoDeCombate = {
   jogador: { vida: 100, vidaMaxima: 160, mana: 80, manaMaxima: 80, folego: 80, folegoMaximo: 100 },
 }
 
+/** Cria um estado novo com identidade e horário fixos, isolando as alterações de cada caso. */
 function criarPartida() {
   return criarPartidaLocal({
     idDaPartida: "servico-test", criadoEm: '2026-09-10T12:00:00.000Z', versaoDoConteudo: '0.1.0-dev',

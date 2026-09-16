@@ -1,7 +1,13 @@
+/**
+ * @file Compras no mercado de personagens não jogáveis.
+ * A oferta vem do catálogo; saldo e capacidade vêm da partida. A compra devolve
+ * um estado completo com o débito e a entrega, sem depender da interface.
+ */
 import type { PartidaLocal } from './personagem'
 import type { EspacoDeEquipamento } from './equipamento'
 import { verificarCapacidadeParaEquipamentoNoInventario, verificarCapacidadeParaPilhaNoInventario } from './armazenamento'
 
+/** Separa produtos empilháveis de equipamentos que precisam de identidade própria. */
 export type ProdutoDoMercadoDePnj =
   | {
       tipo: 'item'
@@ -35,6 +41,10 @@ function adicionarInventarioItem(
   )
 }
 
+/**
+ * Confere preço, saldo e capacidade antes de descontar ouro.
+ * Itens somam à pilha; equipamentos recebem um novo ID da sequência da partida.
+ */
 export function comprarOfertaDoMercadoDePnj(
   partida: PartidaLocal,
   oferta: OfertaDoMercadoDePnj,
@@ -65,6 +75,7 @@ export function comprarOfertaDoMercadoDePnj(
   }
 
   verificarCapacidadeParaEquipamentoNoInventario(partida)
+  // A sequência compartilhada evita colisões com equipamentos recebidos da classe, de presentes ou de fabricação.
   const idDaInstancia = `eq-${partida.personagem.proximaSequenciaDeEquipamento}`
   return {
     ...partida,

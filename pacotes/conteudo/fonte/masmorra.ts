@@ -1,5 +1,11 @@
+/**
+ * @file Mapa declarativo de Dún Liath na dificuldade fácil.
+ * As saídas por ID formam o grafo de avanço; os efeitos dos eventos, saques e decisões
+ * são executados em dominio/masmorra.ts quando a sala é resolvida.
+ */
 import type { DefinicaoDeMasmorra } from '@greywake/dominio'
 
+/** Define entrada, ramificação inicial, convergência, recuperação e chefe. A sala final não possui próximas saídas. */
 export const DUN_LIATH_FACIL = {
   id: "masmorra.dun-liath.facil",
   nome: 'Dún Liath — A Fortaleza Cinzenta',
@@ -29,6 +35,7 @@ export const DUN_LIATH_FACIL = {
 
 export const MASMORRAS = [DUN_LIATH_FACIL] as const
 
+/** Localiza o mapa usado pela expedição persistida; IDs desconhecidos retornam null. */
 export function obterDefinicaoDeMasmorra(masmorraId: string) {
   return MASMORRAS.find((masmorra) => masmorra.id === masmorraId) ?? null
 }

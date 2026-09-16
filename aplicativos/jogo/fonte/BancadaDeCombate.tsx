@@ -1,3 +1,8 @@
+/**
+ * @file Preparação, apresentação e confirmação do serviço contra o lobo da estrada.
+ * O domínio calcula a luta inteira antes da exibição; o temporizador desta tela revela
+ * o registro aos poucos. Ao fim da apresentação, aplica o resultado e solicita sua gravação.
+ */
 import { useEffect, useMemo, useState } from "react";
 import {
   CONSUMIVEIS_DE_COMBATE,
@@ -47,6 +52,7 @@ function inventarioQuantidade(partida: PartidaLocal, idDaDefinicao: string) {
   );
 }
 
+/** Resolve o ID da técnica para exibir nome, custo e recarga junto de sua prioridade. */
 function habilidadeDetalhesAdicionais(habilidadeId: string | null) {
   if (!habilidadeId) return null;
   const habilidade = obterDefinicaoDeHabilidadeDeCombate(habilidadeId);
@@ -58,6 +64,7 @@ function habilidadeDetalhesAdicionais(habilidadeId: string | null) {
   return { habilidade, textoExibido: `${recurso}CD ${habilidade.segundosDeRecarga}s` };
 }
 
+/** Mantém resultado e tempo visível como estado transitório e usa callbacks para pausar trabalho e persistir a luta. */
 export default function BancadaDeCombate({
   partida,
   prepararRisco,
@@ -78,6 +85,7 @@ export default function BancadaDeCombate({
     () => derivarEstatisticasDeCombateDoJogador(partida, combateCatalogo),
     [partida],
   );
+  // Filtra o registro já calculado pelo relógio da apresentação; não executa novas ações de combate.
   const visivelRegistro =
     resultado?.registro.filter((entrada) => entrada.instanteEmSegundos <= visivelSegundos + 0.001) ??
     [];
@@ -89,6 +97,7 @@ export default function BancadaDeCombate({
     [...visivelRegistro].reverse().find((entrada) => entrada.tipo === "avisoDeAtaque") ??
     null;
 
+  // Este intervalo avança apenas a reprodução visual em passos de 0,1 segundo.
   useEffect(() => {
     if (!executando || !resultado) return;
 
@@ -101,6 +110,7 @@ export default function BancadaDeCombate({
     return () => window.clearInterval(temporizador);
   }, [executando, resultado]);
 
+  // Quando a reprodução termina, usa a partida-base daquela luta para aplicar recompensas e consumos.
   useEffect(() => {
     if (!executando || !resultado || !combateBasePartida) return;
     if (visivelSegundos + 0.0001 < resultado.duracaoEmSegundos) return;
@@ -110,6 +120,7 @@ export default function BancadaDeCombate({
     const primeiroServicoConcluir =
       resultado.desfecho === "vitoria" && !combateBasePartida.combate.loboDerrotado;
     const aplicado = aplicarResultadoDoCombateNaEstrada(combateBasePartida, resultado, agora);
+    // O horário do trabalho é reiniciado no retorno para que a duração da luta não gere coleta ou fabricação.
     const atualizado = retomarTrabalhoAposRisco(aplicado, agora);
     const perdidoMoedas = Math.max(
       0,
@@ -137,6 +148,7 @@ export default function BancadaDeCombate({
 
   useEffect(() => () => aoAlterarEstadoDeRisco?.(false), [aoAlterarEstadoDeRisco]);
 
+  /** Mescla somente os campos alterados de um espaço e aplica a configuração pelo domínio antes de salvar. */
   async function atualizarConsumivelEspaco(
     espacoIndice: 0 | 1,
     valores: {
@@ -166,6 +178,7 @@ export default function BancadaDeCombate({
     definirMensagem(`Espaço ${espacoIndice + 1} de consumível atualizado.`);
   }
 
+  /** Prepara o contexto de risco, cria a semente de 32 bits e solicita a simulação para iniciar sua apresentação. */
   async function iniciarLuta(manualEspaco?: 0 | 1) {
     if (executando) return;
 
@@ -173,6 +186,7 @@ export default function BancadaDeCombate({
       definirMensagem(null);
       const riscoPartida = await prepararRisco();
       const semente = Date.now() >>> 0;
+      // O simulador valida seus próprios pré-requisitos, inclusive ausência de trabalho ativo; falhas são exibidas pelo catch.
       const simulado = simularCombate(
         riscoPartida,
         combateCatalogo,
@@ -198,11 +212,13 @@ export default function BancadaDeCombate({
     }
   }
 
+  /** Reutiliza a semente anterior; a partida pode ter mudado, portanto isso não garante repetir o resultado anterior. */
   function repetirSemente() {
     if (!resultado || executando) return;
     void iniciarComSemente(resultado.semente);
   }
 
+  /** Inicia outra luta com a semente fornecida e o estado atual preparado para risco. */
   async function iniciarComSemente(semente: number) {
     try {
       const riscoPartida = await prepararRisco();
@@ -288,6 +304,7 @@ export default function BancadaDeCombate({
         </div>
       ) : null}
 
+      {/* Os recursos exibidos vêm do resultado calculado; a progressão temporal nesta versão se aplica à barra e ao registro. */}
       {executando || resultado ? (
         <>
           <div className="combate-contexto-linha">
@@ -475,6 +492,7 @@ export default function BancadaDeCombate({
         </>
       ) : null}
 
+      {/* A configuração de consumíveis fica disponível fora da reprodução do encontro. */}
       {!executando ? (
         <div className="consumivel-gradeVisual secao-espacamento">
           {([0, 1] as const).map((espacoIndice) => {

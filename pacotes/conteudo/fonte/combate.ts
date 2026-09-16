@@ -1,3 +1,8 @@
+/**
+ * @file Dados de habilidades, consumíveis, conjuntos de preparação e inimigos.
+ * Poder, custo, recarga e intervalos são parâmetros consumidos pelo simulador; este
+ * arquivo não sorteia ataques nem altera partidas. Os IDs também são usados nas partidas salvas.
+ */
 import type {
   IdDaClasseDoPersonagem,
   DefinicaoDeHabilidadeDeCombate,
@@ -5,6 +10,7 @@ import type {
   DefinicaoDeInimigo,
 } from '@greywake/dominio'
 
+/** A ordem de uso vem dos espaços ativos do personagem, não da ordem desta lista de definições. */
 export const HABILIDADES_DE_COMBATE = [
   {
     id: "habilidade.forca-golpe",
@@ -156,6 +162,7 @@ export const HABILIDADES_DE_COMBATE = [
   },
 ] as const satisfies readonly DefinicaoDeHabilidadeDeCombate[]
 
+/** Pacote de técnicas oferecido na preparação de cada classe; ensiná-lo e equipá-lo exige uma ação do fluxo. */
 export const CONJUNTOS_ANTES_DA_MASMORRA: Record<IdDaClasseDoPersonagem, readonly string[]> = {
   guerreiro: [
     "habilidade.forca-golpe",
@@ -195,10 +202,12 @@ export const CONJUNTOS_ANTES_DA_MASMORRA: Record<IdDaClasseDoPersonagem, readonl
   ],
 }
 
+/** Retorna os IDs do conjunto da classe para a preparação aplicar pelo domínio. */
 export function obterConjuntoDeHabilidadesAntesDaMasmorra(idDaClasse: IdDaClasseDoPersonagem) {
   return CONJUNTOS_ANTES_DA_MASMORRA[idDaClasse]
 }
 
+/** Quantidades de restauração por uso. O motor limita a recuperação aos máximos e debita o item consumido. */
 export const CONSUMIVEIS_DE_COMBATE = [
   {
     id: "item.consumivel.campo-preparacao",
@@ -222,6 +231,7 @@ export const CONSUMIVEIS_DE_COMBATE = [
   },
 ] as const satisfies readonly DefinicaoDeConsumivelDeCombate[]
 
+/** Cada inimigo define cadência e habilidades ordenadas; avisos de ataque criam uma janela de reação no motor. */
 export const INIMIGOS = [
   {
     id: "inimigo.estrada-lobo",
@@ -430,14 +440,17 @@ export const INIMIGOS = [
   },
 ] as const satisfies readonly DefinicaoDeInimigo[]
 
+/** Consulta habilidades do jogador; null impede resolver uma técnica cujo conteúdo não está disponível. */
 export function obterDefinicaoDeHabilidadeDeCombate(habilidadeId: string): DefinicaoDeHabilidadeDeCombate | null {
   return HABILIDADES_DE_COMBATE.find((habilidade) => habilidade.id === habilidadeId) ?? null
 }
 
+/** Consulta o perfil que determina os atributos e comportamentos do encontro simulado. */
 export function obterDefinicaoDeInimigo(inimigoId: string): DefinicaoDeInimigo | null {
   return INIMIGOS.find((inimigo) => inimigo.id === inimigoId) ?? null
 }
 
+/** Fornece a restauração ao motor de uso manual ou automático dos dois espaços de consumíveis. */
 export function obterDefinicaoDeConsumivelDeCombate(
   idDaDefinicao: string,
 ): DefinicaoDeConsumivelDeCombate | null {

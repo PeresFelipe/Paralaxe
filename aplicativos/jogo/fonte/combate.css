@@ -1,3 +1,6 @@
+/* Arquivo: Estilos da bancada de combate original.
+   Esta folha não é importada por principal.tsx na versão atual; os estilos em uso
+   estão em estilos.css, disposicao-compacta.css e tema-do-jogo.css. */
 .combate-bancada {
   width: min(1180px, calc(100% - 40px));
   margin: 0 auto 72px;
@@ -32,6 +35,7 @@
   color: #f5f4ef;
 }
 
+/* A disposição original separa jogador, registro central e inimigo em três colunas. */
 .combate-gradeVisual {
   display: grid;
   grid-template-columns: 0.75fr 1.5fr 0.75fr;
@@ -60,6 +64,7 @@
   min-width: 0;
 }
 
+/* A largura é fornecida pela apresentação da luta; a transição só suaviza a mudança visual. */
 .combate-progresso-trilha {
   height: 7px;
   overflow: hidden;
@@ -94,6 +99,7 @@
   width: auto;
 }
 
+/* A altura limitada mantém o histórico longo dentro da área rolável. */
 .combate-registro {
   max-height: 320px;
   overflow: auto;
@@ -146,6 +152,7 @@
   color: #f5f4ef;
 }
 
+/* Em janelas menores os combatentes e o centro ficam empilhados. */
 @media (max-width: 900px) {
   .combate-gradeVisual {
     grid-template-columns: 1fr;

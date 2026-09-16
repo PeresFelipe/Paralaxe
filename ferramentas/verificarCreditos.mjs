@@ -1,7 +1,13 @@
+/**
+ * @file Verificação automatizada da cobertura do catálogo de créditos.
+ * Confere arquivos, atribuições e avisos locais; não comprova a validade jurídica das licenças
+ * nem a disponibilidade de páginas externas. Um erro resulta em código de saída não zero.
+ */
 import { readdir, readFile, stat } from 'node:fs/promises'
 import { dirname, join, relative, resolve, sep } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
+/** Resolve o projeto a partir deste arquivo, independentemente da pasta de execução. */
 const raiz = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const publico = join(raiz, 'aplicativos/jogo/publico')
 const catalogo = JSON.parse(await readFile(join(raiz, 'aplicativos/jogo/fonte/catalogoDeCreditos.json'), 'utf8'))
@@ -9,6 +15,7 @@ const erros = []
 const ids = new Set()
 const grupos = new Set(catalogo.grupos.map((grupo) => grupo.id))
 
+/** Percorre a pasta pública e normaliza separadores do sistema para caminhos de URL. */
 async function listarArquivos(pasta) {
   const arquivos = []
   for (const entrada of await readdir(pasta, { withFileTypes: true })) {
@@ -19,10 +26,13 @@ async function listarArquivos(pasta) {
   return arquivos
 }
 const arquivos = await listarArquivos(publico)
+/** Restringe a cobertura obrigatória aos formatos de imagem e fonte distribuídos. */
 const recursosVisuais = arquivos.filter((arquivo) => /\.(png|gif|webp|svg|ttf|woff2?|jpe?g|avif|otf)$/i.test(arquivo))
+/** Caminhos terminados em / abrangem uma pasta inteira; os demais identificam um único arquivo. */
 const pertence = (arquivo, caminho) => caminho.endsWith('/') ? arquivo.startsWith(caminho) : arquivo === caminho
 const avisos = new Set(['/creditos/LEIA-ME.txt'])
 
+// Primeiro valida cada registro: identidade, grupo, atribuição, referências e arquivos existentes.
 for (const recurso of catalogo.recursos) {
   if (ids.has(recurso.id)) erros.push(`Crédito duplicado: ${recurso.id}`)
   ids.add(recurso.id)
@@ -38,10 +48,12 @@ for (const recurso of catalogo.recursos) {
     if (!caminho.startsWith('/') || caminho.includes('..') || !recursosVisuais.some((arquivo) => pertence(arquivo, caminho))) erros.push(`Caminho sem recurso correspondente: ${recurso.id} → ${caminho}`)
   }
 }
+// Cada arquivo deve ter exatamente um registro proprietário; isso detecta omissões e sobreposições.
 for (const arquivo of recursosVisuais) {
   const autores = catalogo.recursos.filter((recurso) => recurso.arquivos.some((caminho) => pertence(arquivo, caminho)))
   if (autores.length !== 1) erros.push(`${arquivo}: esperado um crédito, encontrados ${autores.length}`)
 }
+// Resolve links locais dentro da pasta pública e verifica se os avisos serão realmente distribuídos.
 for (const aviso of avisos) {
   const caminho = resolve(publico, '.' + aviso)
   if (!caminho.startsWith(publico + sep) || !(await stat(caminho).catch(() => null))?.isFile()) erros.push(`Aviso local ausente: ${aviso}`)

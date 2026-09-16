@@ -1,9 +1,13 @@
+/* Arquivo: Recortes das folhas de cenas e retratos e suporte à arte individual das atividades.
+   É carregado após a base; as URLs apontam para a pasta publico. */
+/* As variáveis permitem substituir a folha inteira sem alterar cada seletor. */
 :root {
   --gerada-cena-imagem: url("/arte/cenas-geradas.webp?v=6");
   --gerada-retrato-imagem: url("/arte/retratos-gerados.webp?v=6");
 }
 
 /* Arte gerada do Greywake, isolada para permitir sua substituição por arte autoral. */
+/* O fundo de 400% por 200% amplia uma folha de quatro colunas e duas linhas; a posição escolhe o quadro. */
 .contexto-arte {
   background-image: var(--gerada-cena-imagem) !important;
   background-size: 400% 200% !important;
@@ -11,6 +15,7 @@
   background-position: 0 0;
 }
 
+/* O degradê melhora a leitura sobre a cena e não intercepta cliques. */
 .contexto-arte::after {
   content: "";
   position: absolute;
@@ -28,6 +33,7 @@
   display: none;
 }
 
+/* Os seletores observam a profissão consultada; não iniciam nenhuma atividade no domínio. */
 .funcionalidade-telaDoJogo:has(
     .profissao-cartao-gradeVisual:not(.producao-cartoes) .profissao-cartao:nth-child(1).ativo
   )
@@ -80,6 +86,7 @@
   content: none;
 }
 
+/* O elemento picture fornece a imagem individual; contain preserva a proporção sem cortar a ilustração. */
 .contexto-arte--individual > picture {
   position: absolute;
   inset: 0;
@@ -97,6 +104,7 @@
   image-rendering: pixelated;
 }
 
+/* A folha de retratos possui duas colunas: a posição horizontal seleciona jogador ou PNJ. */
 .retrato-marcador {
   background-image: var(--gerada-retrato-imagem) !important;
   background-size: 200% 100% !important;

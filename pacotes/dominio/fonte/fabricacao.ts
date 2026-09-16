@@ -1,3 +1,8 @@
+/**
+ * @file Motor de fabricação e reforço de equipamentos.
+ * Consome ingredientes apenas para ciclos completos cujo resultado cabe no inventário.
+ * A entrada é preservada e o resultado descreve produção, experiência e motivo de parada.
+ */
 import type { PilhaDoInventario, PartidaLocal } from './personagem'
 import { aplicarXpDeProfissao, obterLimiteDeAusenciaEmSegundos, type IdDaProfissao } from './ocioso'
 import { obterEspacoParaEquipamentoNoInventario, obterEspacoParaPilhaNoInventario } from './armazenamento'
@@ -8,6 +13,7 @@ export interface IngredienteDaReceita {
   quantidade: number
 }
 
+/** A saída determina se o ciclo cria uma pilha, uma instância nova ou reforça uma instância existente. */
 export type ResultadoDaReceita =
   | {
       tipo: 'item'
@@ -36,6 +42,7 @@ export interface DefinicaoDeReceitaDeFabricacao {
   saida: ResultadoDaReceita
 }
 
+/** Mantém o relógio da produção e, no reforço, o ID exato do equipamento escolhido. */
 export interface ReceitaDeFabricacaoAtiva {
   idDaDefinicaoDaReceita: string
   iniciadoEm: string
@@ -67,6 +74,7 @@ function obterInventarioQuantidade(inventario: PilhaDoInventario[], idDaDefinica
   return inventario.find((pilha) => pilha.idDaDefinicao === idDaDefinicao)?.quantidade ?? 0
 }
 
+/** O ingrediente mais escasso limita o número de ciclos; receitas sem ingredientes não têm esse limite. */
 function obterMaximoFabricavelCiclos(inventario: PilhaDoInventario[], ingredientes: readonly IngredienteDaReceita[]) {
   if (ingredientes.length === 0) return Number.POSITIVE_INFINITY
 
@@ -77,6 +85,7 @@ function obterMaximoFabricavelCiclos(inventario: PilhaDoInventario[], ingredient
   )
 }
 
+/** Calcula o consumo por definição e elimina pilhas zeradas em uma nova lista. */
 function consumirIngredientes(
   inventario: PilhaDoInventario[],
   ingredientes: readonly IngredienteDaReceita[],
@@ -121,6 +130,7 @@ function adicionarInventarioItem(
   )
 }
 
+/** Valida exclusividade com a coleta, nível, ingredientes e alvo de reforço antes de iniciar o relógio. */
 export function iniciarReceitaDeFabricacao(
   partida: PartidaLocal,
   receita: DefinicaoDeReceitaDeFabricacao,
@@ -174,6 +184,7 @@ export function iniciarReceitaDeFabricacao(
   }
 }
 
+/** Cancela a seleção da receita; não executa ciclos nem devolve ingredientes já consumidos. */
 export function interromperReceitaDeFabricacao(partida: PartidaLocal, agora: string): PartidaLocal {
   return {
     ...partida,
@@ -182,6 +193,10 @@ export function interromperReceitaDeFabricacao(partida: PartidaLocal, agora: str
   }
 }
 
+/**
+ * Avança a produção por ciclos, respeitando tempo, ingredientes e capacidade.
+ * Reforço termina após uma aplicação; receitas repetíveis continuam enquanto houver condições.
+ */
 export function processarProgressoDeFabricacao(
   partida: PartidaLocal,
   receita: DefinicaoDeReceitaDeFabricacao,
@@ -237,6 +252,7 @@ export function processarProgressoDeFabricacao(
     personagem: { ...partida.personagem, inventario: proximoInventario, itensDeEquipamento: proximoEquipamento },
   })
 
+  /** Simula o espaço depois do consumo: uma pilha de ingredientes esvaziada pode liberar o espaço necessário. */
   const podeAjusteSaidaAposConsumo = (consumidoInventario: PilhaDoInventario[]) => {
     const previa = previstoPartida(consumidoInventario, itensDeEquipamento)
     if (receita.saida.tipo === 'item') {
@@ -248,6 +264,7 @@ export function processarProgressoDeFabricacao(
     return true
   }
 
+  // A capacidade é reavaliada a cada ciclo: um resultado pode ocupar o último espaço ou completar uma pilha.
   for (let indice = 0; indice < tempoCiclos; indice += 1) {
     if (receita.saida.tipo === "equipamento-reforco" && acoesConcluidas >= 1) break
     if (obterMaximoFabricavelCiclos(inventario, receita.ingredientes) < 1) {
@@ -261,6 +278,7 @@ export function processarProgressoDeFabricacao(
       break
     }
 
+    // Só confirma o consumo depois de validar a saída; uma produção bloqueada não destrói ingredientes.
     inventario = consumidoInventario
     acoesConcluidas += 1
 
@@ -291,6 +309,7 @@ export function processarProgressoDeFabricacao(
     }
   }
 
+  // Verifica também o próximo ciclo, para informar imediatamente por que a produção parou.
   let naoPodeRepetir = receita.saida.tipo === "equipamento-reforco" && acoesConcluidas > 0
   if (!naoPodeRepetir && !interrompidoPorCapacidade) {
     if (obterMaximoFabricavelCiclos(inventario, receita.ingredientes) < 1) {
@@ -309,6 +328,7 @@ export function processarProgressoDeFabricacao(
   const profissaoXp = acoesConcluidas * receita.xpDeProfissaoPorAcao
   const profissaoResultado = aplicarXpDeProfissao(partida.profissoes[receita.idDaProfissao], profissaoXp)
   const geralXp = profissaoResultado.niveisGanhos * 5
+  // O resto do tempo acompanha apenas uma receita que pode continuar; uma receita encerrada perde o saldo.
   const segundosRestantes = naoPodeRepetir ? 0 : totalSegundos % receita.segundosPorAcao
 
   const proximoPartida: PartidaLocal = {

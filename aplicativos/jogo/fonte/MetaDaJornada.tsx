@@ -1,3 +1,8 @@
+/**
+ * @file Escolha, acompanhamento e histórico de metas de fabricação.
+ * Consulta ingredientes na mochila, aponta fontes de coleta e apresenta conquistas
+ * persistidas. Abrir uma profissão pelo painel não inicia sua atividade automaticamente.
+ */
 import { useState } from 'react'
 import { RECEITAS_INICIAIS_DE_FABRICACAO, ATIVIDADES_OCIOSAS_INICIAIS, obterDefinicaoDeReceitaDeFabricacao } from '@greywake/conteudo'
 import { obterProgressoDaMetaDaJornada, type PartidaLocal, type IdDaProfissao } from '@greywake/dominio'
@@ -13,6 +18,7 @@ type Propriedades = {
   aoAbrirEquipamento: () => void
 }
 
+/** Metas acompanham produtos fabricados; reforço exige uma instância específica e fica fora das opções. */
 const receitas = RECEITAS_INICIAIS_DE_FABRICACAO.filter((receita) => receita.saida.tipo !== "equipamento-reforco")
 const finalidades: Record<string, string> = {
   "receita.forja.giuis-bracadeiras": 'Forje uma peça e compare a proteção com seu equipamento.',
@@ -21,6 +27,7 @@ const finalidades: Record<string, string> = {
   "receita.culinaria.neantog-preparacao": 'Prepare um consumível que recupera Vida em combate.',
 }
 
+/** Resume a meta em um botão permanente, distinguindo coleta de materiais, fabricação ativa e conclusão. */
 export function ResumoDaMetaDaJornada({ partida, aoAbrir }: { partida: PartidaLocal; aoAbrir: () => void }) {
   const receita = partida.jornada.meta ? obterDefinicaoDeReceitaDeFabricacao(partida.jornada.meta.idDaDefinicaoDaReceita) : null
   const progresso = receita ? obterProgressoDaMetaDaJornada(partida, receita) : null
@@ -33,12 +40,14 @@ export function ResumoDaMetaDaJornada({ partida, aoAbrir }: { partida: PartidaLo
   </button>
 }
 
+/** Mostra progresso e opções da meta e conecta os atalhos de produção e equipamento à navegação principal. */
 export default function MetaDaJornada({ partida, aoEscolherMeta, aoAbrirProfissao, aoAbrirEquipamento }: Propriedades) {
   const [escolhendo, definirEscolhendo] = useState(false)
   const [pendente, definirPendente] = useState(false)
   const [erro, definirErro] = useState<string | null>(null)
   const receita = partida.jornada.meta ? obterDefinicaoDeReceitaDeFabricacao(partida.jornada.meta.idDaDefinicaoDaReceita) : null
   const progresso = receita ? obterProgressoDaMetaDaJornada(partida, receita) : null
+  /** Espera a gravação da escolha ou remoção de meta antes de recolher as opções; não altera o histórico de feitos. */
   async function escolher(id: string | null) {
     if (pendente) return
     definirPendente(true)
@@ -60,6 +69,7 @@ export default function MetaDaJornada({ partida, aoEscolherMeta, aoAbrirProfissa
         <p className="jornada-progresso-rotulo">{progresso.fabricacao ? 'Fabricação em curso' : progresso.pronto ? 'Materiais reunidos' : `${progresso.coletado} / ${progresso.exigido} materiais reunidos`} · Inventário</p>
         <ul className="jornada-ingredientes">{progresso.ingredientes.map((ingrediente) => {
           const origem = ATIVIDADES_OCIOSAS_INICIAIS.find((atividade) => atividade.idDaDefinicaoDoItemProduzido === ingrediente.idDaDefinicao)
+          // O estoque do banco é apenas informativo: ingredientes precisam estar no inventário para a fabricação utilizá-los.
           const guardadoNoBanco = partida.personagem.banco.inventario.find((pilha) => pilha.idDaDefinicao === ingrediente.idDaDefinicao)?.quantidade ?? 0
           return <li key={ingrediente.idDaDefinicao}><div><strong>{rotulosDosItens[ingrediente.idDaDefinicao] ?? ingrediente.idDaDefinicao}</strong><span>{ingrediente.possuido} / {ingrediente.quantidade}{ingrediente.faltante ? ` · faltam ${ingrediente.faltante}` : ' · reunido'}{ingrediente.faltante && guardadoNoBanco ? ` · ${guardadoNoBanco} no Banco` : ''}</span></div>
             {ingrediente.faltante && origem ? <button className="material-origem" type="button" onClick={() => aoAbrirProfissao(origem.idDaProfissao)}>Ver {rotulosDasProfissoes[origem.idDaProfissao]} →</button> : null}

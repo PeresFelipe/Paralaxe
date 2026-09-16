@@ -1,3 +1,8 @@
+/**
+ * @file Testes da compra de equipamentos no mercado PNJ.
+ * Verificam débito, sequência de instâncias e rejeição por falta de moedas;
+ * os cenários de inventário cheio ficam em capacidadeDoInventario.test.ts.
+ */
 import { describe, expect, it } from 'vitest'
 import { criarPartidaLocal } from './personagem'
 import { comprarOfertaDoMercadoDePnj } from './economia'
@@ -13,6 +18,7 @@ const classeDoPersonagem = {
 
 const presente = { id: "moeda-bolsaDeMoedas" as const, nome: 'Bolsa', resumo: 'Teste', concessoes: [{ tipo: "ouro" as const, quantidadeTotal: 60 }] }
 
+/** Cria um estado novo com identidade e horário fixos, isolando as alterações de cada caso. */
 function criarPartida() {
   return criarPartidaLocal({
     idDaPartida: 'economy-test',

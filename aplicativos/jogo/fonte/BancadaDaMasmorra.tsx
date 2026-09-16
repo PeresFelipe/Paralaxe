@@ -1,3 +1,8 @@
+/**
+ * @file Fluxo de Dún Liath: contrato, preparação segura, expedição por salas e retorno.
+ * A viagem ativa vive na partida persistida; mensagem, preparação e último resultado
+ * são estados de apresentação. Toda decisão relevante solicita gravação por callback.
+ */
 import { useEffect, useMemo, useState } from "react";
 import {
   DUN_LIATH_FACIL,
@@ -45,6 +50,7 @@ const masmorraCatalogo = {
   obterDefinicaoDeMasmorra,
 };
 
+/** Texto de ambientação por ID; rotas, inimigos e efeitos das salas vêm dos catálogos e do domínio. */
 const salaTexto: Record<string, string> = {
   "sala.entrada":
     "A fortaleza está silenciosa. O caminho para dentro ainda está aberto.",
@@ -82,6 +88,7 @@ const salaTexto: Record<string, string> = {
     "Fairtheoir espera sem falar. O combate revelará duas fases do Último Vigia.",
 };
 
+/** Acrescenta ao nome a presença de combate ou recuperação para comunicar a natureza da próxima sala. */
 function salaRotulo(sala: DefinicaoDeSalaDaMasmorra) {
   const sufixo = sala.idDaDefinicaoDoInimigo
     ? " · Combate"
@@ -91,6 +98,7 @@ function salaRotulo(sala: DefinicaoDeSalaDaMasmorra) {
   return `${sala.nome}${sufixo}`;
 }
 
+/** Traduz os saques conhecidos para apresentação, mantendo o ID visível como alternativa quando faltar rótulo. */
 function itemRotulo(idDaDefinicao: string) {
   const rotulos: Record<string, string> = {
     "item.tratado-fragmento": "Fragmento do Tratado",
@@ -102,6 +110,7 @@ function itemRotulo(idDaDefinicao: string) {
   return rotulos[idDaDefinicao] ?? idDaDefinicao;
 }
 
+/** Mostra qual coleta ou receita foi preservada para continuar após a situação de risco. */
 function ativoTrabalhoRotulo(partida: PartidaLocal) {
   if (partida.ocioso.atividadeAtiva) {
     return (
@@ -118,6 +127,7 @@ function ativoTrabalhoRotulo(partida: PartidaLocal) {
   return "Nenhuma atividade automática ativa";
 }
 
+/** Escolhe a apresentação conforme preparação, viagem ativa e sala atual; não mantém uma segunda cópia da expedição. */
 export default function BancadaDaMasmorra({
   partida,
   prepararRisco,
@@ -144,12 +154,14 @@ export default function BancadaDaMasmorra({
     atualSala && execucao?.idsDasSalasResolvidas.includes(atualSala.id),
   );
 
+  // Mantém a estrutura principal ciente do risco persistido, inclusive quando uma partida é reaberta no meio da viagem.
   useEffect(() => {
     aoAlterarEstadoDeRisco?.(Boolean(execucao));
   }, [aoAlterarEstadoDeRisco, execucao]);
 
   useEffect(() => () => aoAlterarEstadoDeRisco?.(false), [aoAlterarEstadoDeRisco]);
 
+  // Preparação altera a apresentação, mas ainda não pausa o trabalho; a pausa ocorre ao confirmar a entrada.
   useEffect(() => {
     aoAlterarEstadoDePreparacao?.(preparando);
   }, [aoAlterarEstadoDePreparacao, preparando]);
@@ -159,11 +171,13 @@ export default function BancadaDaMasmorra({
     [aoAlterarEstadoDePreparacao],
   );
 
+  /** Espera o callback de gravação antes de anunciar localmente o resultado da ação. */
   async function persistir(proximo: PartidaLocal, textoExibido?: string) {
     await aoAlterarPartida(proximo, textoExibido);
     if (textoExibido) definirMensagem(textoExibido);
   }
 
+  /** Exige o serviço da estrada, prepara as técnicas da classe e solicita os suprimentos únicos do contrato. */
   async function tratarAceitarContrato() {
     if (ocupado) return;
     definirOcupado(true);
@@ -192,6 +206,7 @@ export default function BancadaDaMasmorra({
     }
   }
 
+  /** Credita e pausa o trabalho seguro, deriva recursos com equipamento e cria uma expedição com semente própria. */
   async function tratarIniciar() {
     if (ocupado) return;
     definirOcupado(true);
@@ -202,6 +217,7 @@ export default function BancadaDaMasmorra({
       const riscoPartida = await prepararRisco();
       const semente = Date.now() >>> 0;
       const estatisticas = derivarEstatisticasDeCombateDoJogador(riscoPartida, masmorraCatalogo);
+      // A entrada usa máximos derivados com bônus de equipamentos; passar estes valores evita depender do cálculo básico de apoio.
       const recursosIniciais = {
         vida: estatisticas.vidaMaxima,
         vidaMaxima: estatisticas.vidaMaxima,
@@ -236,6 +252,10 @@ export default function BancadaDaMasmorra({
     }
   }
 
+  /**
+   * Entrega a sala ao domínio, guarda seu resultado visual e persiste sucesso ou derrota.
+   * Somente o fim da expedição retoma o trabalho; vencer uma sala intermediária mantém o risco.
+   */
   async function tratarResolver() {
     if (!execucao || !atualSala || ocupado) return;
     definirOcupado(true);
@@ -283,6 +303,7 @@ export default function BancadaDaMasmorra({
     }
   }
 
+  /** Grava a saída escolhida e limpa o resultado do encontro anterior para apresentar a nova sala. */
   async function tratarCaminho(proximoSalaId: string) {
     if (ocupado) return;
     definirOcupado(true);
@@ -309,6 +330,7 @@ export default function BancadaDaMasmorra({
     }
   }
 
+  /** Grava a escolha narrativa antes de permitir a resolução do evento; ocupado evita reenvios durante a operação. */
   async function tratarProtetor(decisao: "morto" | "poupado") {
     if (ocupado) return;
     definirOcupado(true);
@@ -331,6 +353,7 @@ export default function BancadaDaMasmorra({
     }
   }
 
+  /** Solicita a transferência segura dos saques, reinicia o relógio do trabalho e retorna à visão de Aventura. */
   async function tratarExtrair() {
     if (ocupado) return;
     definirOcupado(true);
@@ -360,6 +383,7 @@ export default function BancadaDaMasmorra({
     }
   }
 
+  // A preparação só existe sem viagem ativa e informa as consequências antes de chamar tratarIniciar.
   if (!execucao && preparando) {
     const vazioTecnicas = partida.personagem.espacosDeHabilidadesAtivas.filter(
       (espaco) => !espaco,
@@ -733,6 +757,7 @@ export default function BancadaDaMasmorra({
             </div>
           ) : null}
 
+          {/* O portão do chefe explicita a escolha entre assegurar o saque atual e continuar assumindo risco. */}
           {salaResolvido && emChefePortao ? (
             <div className="chefe-confirmar">
               <p className="secao-chamada">Portão do Bastião</p>
@@ -786,6 +811,7 @@ export default function BancadaDaMasmorra({
           ) : null}
         </div>
 
+        {/* A bolsa mostra saque provisório; a rota lista apenas salas já visitadas, sem transformar navegação em movimento livre. */}
         <aside className="masmorra-lateral">
           <article className="painel expedicao-bolsa">
             <p className="secao-chamada">Bolsa de Expedição</p>

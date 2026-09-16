@@ -1,3 +1,8 @@
+/**
+ * @file Consulta e transferência entre mochila e banco da Cidade Livre.
+ * A tela mostra capacidades calculadas pelo domínio e envia quantidade ou ID de instância
+ * aos callbacks; estoque e validação de espaço permanecem na camada de regras.
+ */
 import { obterDefinicaoDeEquipamento } from "@greywake/conteudo";
 import {
   LIMITE_DE_ESPACOS_DO_BANCO_V01,
@@ -40,6 +45,7 @@ function itemNome(idDaDefinicao: string) {
   return rotulosDosItens[idDaDefinicao] ?? idDaDefinicao;
 }
 
+/** Apresenta duas origens de transferência e oferece uma unidade ou a pilha inteira sem modificar listas diretamente. */
 export default function PainelDoBanco({
   partida,
   aoDepositarPilha,
@@ -49,6 +55,7 @@ export default function PainelDoBanco({
   aoVoltar,
 }: PropriedadesDePainelDoBanco) {
   const equipadoIds = new Set(Object.values(partida.personagem.equipamento));
+  // Equipamentos vestidos não aparecem como candidatos ao depósito; o domínio também impede guardá-los enquanto equipados.
   const desequipadoEquipamento = partida.personagem.itensDeEquipamento.filter(
     (item) => !equipadoIds.has(item.idDaInstancia),
   );
@@ -86,6 +93,7 @@ export default function PainelDoBanco({
         </article>
       </div>
 
+      {/* A coluna do inventário deposita e a do banco retira; ambas usam a mesma identidade dos itens e equipamentos. */}
       <div className="banco-colunas secao-espacamento">
         <article className="painel dense-painel">
           <div className="painel-tituloDaSecao">

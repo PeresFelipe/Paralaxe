@@ -1,3 +1,8 @@
+/**
+ * @file Interface das compras no mercado PNJ.
+ * Exibe as ofertas do catálogo e o saldo atual; a regra de compra no domínio calcula
+ * a nova partida com débito e entrega, que é enviada ao callback de persistência.
+ */
 import { useState } from 'react'
 import { OFERTAS_INICIAIS_DO_MERCADO_DE_PNJ } from '@greywake/conteudo'
 import { comprarOfertaDoMercadoDePnj, type PartidaLocal } from '@greywake/dominio'
@@ -7,10 +12,12 @@ type PropriedadesDaTelaDeMercado = {
   aoAlterarPartida: (partida: PartidaLocal, mensagem?: string) => void | Promise<void>
 }
 
+/** Mantém apenas mensagem e bloqueio de operação; os produtos e preços vêm do catálogo fixo. */
 export default function BancadaDoMercado({ partida, aoAlterarPartida }: PropriedadesDaTelaDeMercado) {
   const [mensagem, definirMensagem] = useState<string | null>(null)
   const [ocupado, definirOcupado] = useState(false)
 
+  /** Resolve o ID da oferta, bloqueia reenvios durante a Promise e só anuncia sucesso depois de salvar. */
   async function comprar(ofertaId: string) {
     if (ocupado) return
     const oferta = OFERTAS_INICIAIS_DO_MERCADO_DE_PNJ.find((item) => item.id === ofertaId)
@@ -52,6 +59,7 @@ export default function BancadaDoMercado({ partida, aoAlterarPartida }: Propried
 
       <div className="mercado-gradeVisual">
         {OFERTAS_INICIAIS_DO_MERCADO_DE_PNJ.map((oferta) => {
+          // O saldo orienta a interface; a capacidade do inventário continua sendo validada pela regra de compra.
           const podePagar = partida.personagem.ouro >= oferta.preco
           return (
             <article className="item-cartao" key={oferta.id}>

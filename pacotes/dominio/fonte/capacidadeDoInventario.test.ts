@@ -1,3 +1,8 @@
+/**
+ * @file Testes de capacidade que atravessam coleta, fabricação, mercado e masmorra.
+ * Exercitam os pontos em que um recurso entra no inventário, verificando que uma recusa
+ * por falta de espaço não consome ingredientes nem encerra a expedição.
+ */
 import { describe, expect, it } from 'vitest'
 import { criarPartidaLocal, type DefinicaoDeClasseDoPersonagem, type DefinicaoDePresente, type PartidaLocal } from './personagem'
 import { processarProgressoOcioso, iniciarAtividadeOciosa, type DefinicaoDeAtividadeOciosa } from './ocioso'
@@ -16,6 +21,7 @@ const classeDoPersonagem: DefinicaoDeClasseDoPersonagem = {
 }
 const presente: DefinicaoDePresente = { id: "nenhum", nome: 'Nenhum', resumo: 'Teste', concessoes: [] }
 
+/** Cria um estado novo com identidade e horário fixos, isolando as alterações de cada caso. */
 function criarPartida() {
   return criarPartidaLocal({
     idDaPartida: "capacidade-test", criadoEm: '2026-09-10T12:00:00.000Z', versaoDoConteudo: '0.1.0-dev',
@@ -23,6 +29,7 @@ function criarPartida() {
   })
 }
 
+/** Preenche os espaços com IDs diferentes; aumentar a quantidade de uma única pilha não faria isso. */
 function comCompletoDistintoInventario(partida: PartidaLocal, primeiro = { idDaDefinicao: 'material.cloch', quantidade: 2 }) {
   const preenchimentoAuxiliar = Array.from({ length: LIMITE_DE_ESPACOS_DO_INVENTARIO_V01 - 1 }, (_, indice) => ({
     idDaDefinicao: `material.filler-${indice}`,
@@ -61,6 +68,7 @@ describe("capacidade do inventário nos fluxos de aquisição da versão 0.1", (
   })
 
   it("não consome ingredientes quando o resultado da fabricação não cabe no inventário", () => {
+    // Mantém dois ingredientes: consumir um não libera sua pilha, portanto o novo produto não cabe.
     const completo = comCompletoDistintoInventario(criarPartida())
     const iniciado = iniciarReceitaDeFabricacao(completo, tratamento, '2026-09-10T12:00:00.000Z')
     const resultado = processarProgressoDeFabricacao(iniciado, tratamento, '2026-09-10T12:00:06.000Z')

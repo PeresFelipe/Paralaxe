@@ -1,5 +1,10 @@
+/**
+ * @file Mapeamento entre identificadores do jogo e os ícones de Shikashi.
+ * Os nomes descrevem arquivos visuais; trocar uma associação não muda atributos ou recompensas.
+ */
 import type { IdDaProfissao } from "@greywake/dominio";
 
+/** Nomes aceitos para os PNGs publicados em publico/arte/icones/shikashi. */
 export type NomeDoIconeShikashi =
   | "picareta"
   | "machado"
@@ -43,6 +48,7 @@ export type NomeDoIconeShikashi =
   | "escudo-quadriculado"
   | "cajado-verde";
 
+/** Associação completa das profissões; o tipo exige uma entrada para cada profissão. */
 export const iconeDeProfissaoPorId: Record<IdDaProfissao, NomeDoIconeShikashi> = {
   mineracao: "picareta",
   lenhador: "machado",
@@ -53,6 +59,7 @@ export const iconeDeProfissaoPorId: Record<IdDaProfissao, NomeDoIconeShikashi> =
   culinaria: "caldeirao-fogo",
 };
 
+/** Símbolos dos recursos exibidos no resumo do personagem. */
 export const iconeDoPainelPorId = {
   vidaMaxima: "coracao",
   manaMaxima: "orbe-azul",
@@ -60,6 +67,7 @@ export const iconeDoPainelPorId = {
   ouro: "coroa-moeda",
 } as const satisfies Record<string, NomeDoIconeShikashi>;
 
+/** Associação de definições de itens empilháveis e de missão. */
 export const iconeDeItemPorId: Record<string, NomeDoIconeShikashi> = {
   "material.cloch": "pedra",
   "material.giuis": "madeira",
@@ -75,6 +83,7 @@ export const iconeDeItemPorId: Record<string, NomeDoIconeShikashi> = {
   "item.guarnicao-suprimento-registroDeDados": "livro-abrir",
 };
 
+/** Associação de modelos de equipamento, compartilhada por todas as suas instâncias. */
 export const iconeDeEquipamentoPorId: Record<string, NomeDoIconeShikashi> = {
   "arma.milicia-espada": "espada-longa",
   "escudo.milicia-escudo": "escudo-madeira",
@@ -104,14 +113,17 @@ export const iconeDeEquipamentoPorId: Record<string, NomeDoIconeShikashi> = {
   "escudo.vigia-escudo": "escudo-quadriculado",
 };
 
+/** Monta a URL pública; o parâmetro v identifica a revisão visual para o navegador. */
 export function obterCaminhoDoIconeShikashi(icone: NomeDoIconeShikashi) {
   return `/arte/icones/shikashi/${icone}.png?v=1`;
 }
 
+/** Consulta o símbolo de um item; IDs sem associação resultam em undefined. */
 export function obterIconeDoItem(idDaDefinicao: string) {
   return iconeDeItemPorId[idDaDefinicao];
 }
 
+/** Consulta pelo ID da definição, e não pelo ID individual da peça do jogador. */
 export function obterIconeDoEquipamento(idDaDefinicao: string) {
   return iconeDeEquipamentoPorId[idDaDefinicao];
 }

@@ -1,3 +1,8 @@
+/**
+ * @file Indicador visual do ciclo atual de coleta ou fabricação.
+ * Interpola o tempo a partir da última referência salva para desenhar a barra e a contagem.
+ * Não concede itens, experiência nem grava partidas: essa responsabilidade continua no domínio e em Aplicativo.
+ */
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
   RECEITAS_INICIAIS_DE_FABRICACAO,
@@ -26,6 +31,7 @@ function rotuloPara(idDaDefinicao: string) {
   return rotulosDosItens[idDaDefinicao] ?? idDaDefinicao;
 }
 
+/** Uniformiza coleta e receita em um modelo de apresentação com duração, saldo de tempo e próximo resultado. */
 function obterProgressoDoTrabalho(partida: PartidaLocal): ProgressoDoTrabalho | null {
   const ativoOcioso = partida.ocioso.atividadeAtiva;
   if (ativoOcioso) {
@@ -74,6 +80,7 @@ function obterProgressoDoTrabalho(partida: PartidaLocal): ProgressoDoTrabalho | 
   return null;
 }
 
+/** Apresenta o mesmo ciclo em versão completa ou compacta, podendo congelá-lo durante risco. */
 export default function IndicadorDeProgressoOcioso({
   partida,
   compacto = false,
@@ -92,6 +99,7 @@ export default function IndicadorDeProgressoOcioso({
     const movimento = window.matchMedia("(prefers-reduced-motion: reduce)");
     let temporizador: number | undefined;
     let animacao: Animation | undefined;
+    /** Calcula a fração dentro do ciclo pelo resto da divisão; o estado pausado ignora tempo novo decorrido. */
     const amostra = () => {
       const agora = Date.now();
       definirAgoraMs(agora);
@@ -100,11 +108,13 @@ export default function IndicadorDeProgressoOcioso({
         : Math.max(0, (agora - Date.parse(processadoPorUltimoEm)) / 1000);
       return ((segundosRestantes + decorrido) % segundosPorAcao) / segundosPorAcao;
     };
+    /** Cancela o intervalo de amostragem e a animação anterior antes de desmontar ou sincronizar novamente. */
     const parar = () => {
       window.clearInterval(temporizador);
       animacao?.cancel();
       animacao = undefined;
     };
+    /** Ajusta a barra ao relógio e anima apenas quando a página está visível, sem pausa e sem redução de movimento. */
     const sincronizar = () => {
       parar();
       if (document.hidden) return;
@@ -119,6 +129,7 @@ export default function IndicadorDeProgressoOcioso({
             easing: "linear",
           },
         );
+        // Retoma a animação no ponto correto do ciclo, em vez de voltar a zero após cada atualização da partida.
         animacao.currentTime = fracao * segundosPorAcao * 1000;
       }
       if (!pausado)
@@ -128,6 +139,7 @@ export default function IndicadorDeProgressoOcioso({
         }, 1000);
     };
     sincronizar();
+    // Ao voltar à aba, recalcula a posição a partir do horário; não tenta reproduzir todos os quadros que ficaram ocultos.
     document.addEventListener("visibilitychange", sincronizar);
     movimento.addEventListener("change", sincronizar);
     return () => {
@@ -153,6 +165,7 @@ export default function IndicadorDeProgressoOcioso({
     );
   }
 
+  // Estes números alimentam a contagem e o valor acessível da barra; os ganhos reais não dependem dessa estimativa visual.
   const ultimoProcessadoMs = Date.parse(trabalho.processadoPorUltimoEm);
   const decorridoSegundos =
     !pausado && Number.isFinite(ultimoProcessadoMs)

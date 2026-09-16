@@ -1,3 +1,8 @@
+/**
+ * @file Persistência IndexedDB, leitura do formato legado e migração de esquemas de partida.
+ * Cada operação abre sua conexão, aguarda a transação e a fecha em finally. Migrações
+ * acontecem na leitura em memória; somente salvar regrava a partida no armazenamento.
+ */
 import { lerFormatoLegado, gravarFormatoLegado } from './formatoLegado'
 import {
   VERSAO_DO_ESQUEMA_DA_PARTIDA,
@@ -15,10 +20,14 @@ import {
 } from '@greywake/dominio'
 import type { RepositorioDePartidasLocais } from './repositorioDePartidas'
 
+/** Nome já publicado no navegador; alterá-lo criaria outro banco e ocultaria as partidas existentes. */
 const NOME_DO_BANCO_DE_DADOS = 'greywake'
+/** Versão das estruturas do IndexedDB, independente da versão do esquema de cada partida. */
 const VERSAO_DO_BANCO_DE_DADOS = 1
+/** Nome histórico da coleção; deve continuar compatível com a chave saveId do formato gravado. */
 const ARMAZENAMENTO_DE_PARTIDAS = 'saves'
 
+/** Formato anterior aos equipamentos com instância: cada espaço apontava diretamente para uma definição. */
 interface EstadoLegadoDoPersonagem {
   nome: string
   idDaClasse: PartidaLocal["personagem"]["idDaClasse"]
@@ -88,6 +97,7 @@ interface PartidaLocalLegadaV8 extends Omit<PartidaLocal, "versaoDoEsquemaDaPart
   personagem: Omit<PartidaLocal["personagem"], "prestigio">
 }
 
+/** Adapta sucesso ou erro de uma requisição IndexedDB; isso, sozinho, ainda não confirma a transação. */
 function requisicaoParaPromessa<T>(requisicao: IDBRequest<T>) {
   return new Promise<T>((resolver, rejeitar) => {
     requisicao.addEventListener('success', () => resolver(requisicao.result), { once: true })
@@ -99,6 +109,7 @@ function requisicaoParaPromessa<T>(requisicao: IDBRequest<T>) {
   })
 }
 
+/** Espera a confirmação completa e também rejeita abortos, evitando anunciar uma gravação que não foi efetivada. */
 function transacaoParaPromessa(transacao: IDBTransaction) {
   return new Promise<void>((resolver, rejeitar) => {
     transacao.addEventListener('complete', () => resolver(), { once: true })
@@ -115,6 +126,7 @@ function transacaoParaPromessa(transacao: IDBTransaction) {
   })
 }
 
+/** Preenche partidas que ainda não tinham o sistema de combate, sem presumir vitórias anteriores. */
 function criarPadraoCombateEstado(): PartidaLocal["combate"] {
   return {
     preferencias: {
@@ -127,6 +139,7 @@ function criarPadraoCombateEstado(): PartidaLocal["combate"] {
   }
 }
 
+/** Acrescenta os dois espaços de consumíveis às preferências antigas sem perder postura e histórico. */
 function migrarCombateEstado(combate: PartidaLocalLegadaV4["combate"]): PartidaLocal["combate"] {
   return {
     ...combate,
@@ -137,6 +150,7 @@ function migrarCombateEstado(combate: PartidaLocalLegadaV4["combate"]): PartidaL
   }
 }
 
+/** Fornece flags vazias para partidas anteriores ao sistema de expedição e contrato. */
 function criarPadraoMasmorraEstado(): PartidaLocal["masmorra"] {
   return {
     expedicaoAtiva: null,
@@ -148,6 +162,7 @@ function criarPadraoMasmorraEstado(): PartidaLocal["masmorra"] {
   }
 }
 
+/** Converte o antigo anel empilhado em equipamento individual, sem duplicar uma instância já existente. */
 function normalizarViajanteAnelPresente(
   personagem: PartidaLocal["personagem"],
 ): PartidaLocal["personagem"] {
@@ -190,6 +205,7 @@ function normalizarViajanteAnelPresente(
   }
 }
 
+/** Acrescenta prestígio vazio somente quando esse estado ainda não existe na partida antiga. */
 function comInicialPersonagemPrestigio(
   personagem: Omit<PartidaLocal["personagem"], "prestigio"> | PartidaLocal["personagem"],
 ): PartidaLocal["personagem"] {
@@ -201,6 +217,7 @@ function comInicialPersonagemPrestigio(
   } as PartidaLocal["personagem"]
 }
 
+/** Inicializa o banco ausente e encadeia a normalização de prestígio e do presente Anel do Viajante. */
 function comVazioBanco(
   personagem:
     | Omit<PartidaLocal["personagem"], "banco">
@@ -212,6 +229,7 @@ function comVazioBanco(
   }))
 }
 
+/** Converte o conjunto antigo em instâncias equipadas e inicializa os sistemas adicionados depois. */
 function migrarLegadoPersonagem(personagem: EstadoLegadoDoPersonagem): PartidaLocal["personagem"] {
   const equipamentosIniciais = criarEstadoDosEquipamentosIniciais(personagem.equipamento)
 
@@ -225,6 +243,10 @@ function migrarLegadoPersonagem(personagem: EstadoLegadoDoPersonagem): PartidaLo
   })
 }
 
+/**
+ * Primeiro traduz o vocabulário, depois escolhe a migração pela versão do esquema.
+ * Versões reconhecidas recebem somente os estados que lhes faltavam; versões desconhecidas são rejeitadas.
+ */
 function migrarPartida(dadosArmazenados: unknown): PartidaLocal {
   const brutoPartida = lerFormatoLegado(dadosArmazenados)
   if (!brutoPartida || typeof brutoPartida !== 'object') {
@@ -237,6 +259,7 @@ function migrarPartida(dadosArmazenados: unknown): PartidaLocal {
     return brutoPartida as PartidaLocal
   }
 
+  // A jornada começa vazia: possuir um item numa partida antiga não comprova que o jogador o fabricou.
   if (candidato.versaoDoEsquemaDaPartida === 9) {
     const legado = brutoPartida as Omit<PartidaLocal, "jornada" | "versaoDoEsquemaDaPartida">
     return { ...legado, versaoDoEsquemaDaPartida: VERSAO_DO_ESQUEMA_DA_PARTIDA, jornada: criarJornadaInicial() }
@@ -345,6 +368,7 @@ function migrarPartida(dadosArmazenados: unknown): PartidaLocal {
   throw new Error(`Esquema de partida não suportado: ${String(candidato.versaoDoEsquemaDaPartida)}.`)
 }
 
+/** Abre a base publicada e cria a coleção apenas na atualização inicial da estrutura. */
 function abrirBancoDeDados() {
   if (!globalThis.indexedDB) {
     return Promise.reject(new Error('IndexedDB não está disponível neste navegador.'))
@@ -359,6 +383,7 @@ function abrirBancoDeDados() {
         const bancoDeDados = requisicao.result
 
         if (!bancoDeDados.objectStoreNames.contains(ARMAZENAMENTO_DE_PARTIDAS)) {
+          // A chave continua em inglês porque gravarFormatoLegado converte idDaPartida antes de persistir.
           bancoDeDados.createObjectStore(ARMAZENAMENTO_DE_PARTIDAS, { keyPath: 'saveId' })
         }
       },
@@ -374,8 +399,10 @@ function abrirBancoDeDados() {
   })
 }
 
+/** Entrega as operações do contrato, mantendo transações e compatibilidade dentro desta camada. */
 export function criarRepositorioDePartidasIndexedDb(): RepositorioDePartidasLocais {
   return {
+    // Migra cada registro em memória e ordena os horários ISO para mostrar primeiro a partida mais recente.
     async listar() {
       const bancoDeDados = await abrirBancoDeDados()
 
@@ -394,6 +421,7 @@ export function criarRepositorioDePartidasIndexedDb(): RepositorioDePartidasLoca
       }
     },
 
+    // Uma chave inexistente retorna null; erros de leitura ou migração são propagados para a aplicação.
     async obter(idDaPartida) {
       const bancoDeDados = await abrirBancoDeDados()
 
@@ -410,6 +438,7 @@ export function criarRepositorioDePartidasIndexedDb(): RepositorioDePartidasLoca
       }
     },
 
+    // Escuta a conclusão antes do put para não perder o evento; só depois dela a operação é considerada salva.
     async salvar(partida) {
       const bancoDeDados = await abrirBancoDeDados()
 

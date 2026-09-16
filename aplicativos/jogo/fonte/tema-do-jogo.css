@@ -1,5 +1,9 @@
+/* Arquivo: Tema medieval atual, aplicado sobre a base e os ajustes compactos.
+   Concentra paleta, molduras licenciadas, navegação lateral, bolsa visual e adaptações
+   por largura/altura. Os comentários agrupam responsabilidades sem alterar a cascata. */
 /* Interface do Greywake. Dark Ages UI, de Hypnobius; consulte arte/interface/dark-ages/LICENSE.txt.
    A estrutura temática compartilha o estado, o conteúdo e a persistência existentes. */
+/* Cores e medidas finais do tema; as URLs das molduras são recursos públicos licenciados. */
 :root {
   --fundo: #10130f;
   --superficie: #1a1f19;
@@ -107,6 +111,7 @@ summary:focus-visible,
   font-size: 0.8125rem;
 }
 
+/* Permite que filhos de grades e textos longos encolham sem causar rolagem horizontal. */
 :where(
   .painel,
   .companheiro-secao,
@@ -157,6 +162,7 @@ summary:focus-visible,
   text-align: center;
 }
 
+/* border-image divide a imagem de moldura em bordas e cantos; o conteúdo recebe fundo próprio. */
 .marca-simbolo {
   width: 76px;
   height: 84px;
@@ -300,6 +306,7 @@ summary:focus-visible,
     serif;
 }
 
+/* O deslocamento à esquerda acompanha a largura do trilho de navegação. */
 .jogo-barraSuperior {
   min-height: 80px;
   margin-left: var(--jogo-trilho);
@@ -391,6 +398,7 @@ summary:focus-visible,
   border-color: #625639;
 }
 
+/* No computador, a área central divide espaço com o painel auxiliar; minmax permite encolher o conteúdo. */
 .jogo-disposicao {
   margin-left: var(--jogo-trilho);
   display: grid;
@@ -478,6 +486,7 @@ summary:focus-visible,
   font-size: 0.7rem;
 }
 
+/* O acesso alternativo aos créditos aparece quando a coluna auxiliar é ocultada. */
 .movel-creditos {
   display: none;
 }
@@ -587,6 +596,7 @@ summary:focus-visible,
   gap: 20px;
 }
 
+/* A consulta de contêiner adapta a atividade pela largura disponível dentro do painel, não só da janela. */
 .atividades-areaDeTrabalho {
   container: activity-workspace / inline-size;
 }
@@ -650,6 +660,7 @@ summary:focus-visible,
   font-size: 0.6rem;
 }
 
+/* Este selo distingue trabalho em execução da profissão apenas consultada. */
 .atividade-estado {
   flex-shrink: 0;
   display: inline-flex;
@@ -941,6 +952,7 @@ summary:focus-visible,
   background: #353b25;
 }
 
+/* Os espaços exibidos são células visuais; o cálculo da capacidade continua no domínio. */
 .inventario-espacos {
   display: grid;
   grid-template-columns: repeat(6, minmax(44px, 64px));
@@ -998,6 +1010,7 @@ button.equipado-espaco {
   box-shadow: none;
 }
 
+/* Sobrepõe a quantidade no canto sem deslocar a imagem central do item. */
 .espaco-quantidade {
   position: absolute;
   bottom: -2px;
@@ -1035,6 +1048,7 @@ button.equipado-espaco {
   font-size: 1rem;
 }
 
+/* O resumo reduz o número de colunas e a moldura, preservando o tamanho mínimo dos controles. */
 .inventario-grade--compacto .inventario-espacos {
   grid-template-columns: repeat(4, minmax(44px, 56px));
   gap: 5px;
@@ -1083,6 +1097,7 @@ button.equipado-espaco {
   gap: 20px;
 }
 
+/* Agrupa o retrato com os atalhos para as peças atualmente equipadas. */
 .personagem-efigie {
   min-width: 0;
   padding: 10px;
@@ -1325,6 +1340,7 @@ button.equipado-espaco {
   color: #d5dcc4;
 }
 
+/* O tema mantém a navegação visível durante risco; a disponibilidade das ações é controlada no React. */
 .jogo-estrutura--risco .principal-navegacao {
   display: flex;
 }
@@ -1459,6 +1475,7 @@ button.equipado-espaco {
   background: #1f2a19;
 }
 
+/* Remove o painel auxiliar para priorizar a área de jogo e oferece o acesso alternativo aos créditos. */
 @media (max-width: 1250px) {
   .jogo-disposicao {
     grid-template-columns: minmax(0, 1fr);
@@ -1479,6 +1496,7 @@ button.equipado-espaco {
   }
 }
 
+/* Transforma o trilho lateral em uma faixa estreita com ícones e rótulos curtos. */
 @media (max-width: 980px) and (min-width: 721px) {
   :root {
     --jogo-trilho: 88px;
@@ -1542,6 +1560,7 @@ button.equipado-espaco {
   }
 }
 
+/* A navegação vai para o rodapé; o espaço seguro evita sobrepor a área de gestos do aparelho. */
 @media (max-width: 720px) {
   :root {
     --jogo-trilho: 0px;
@@ -1933,6 +1952,7 @@ button.equipado-espaco {
   }
 }
 
+/* Empilha os blocos mais largos e redistribui o retrato para a menor faixa de largura. */
 @media (max-width: 440px) {
   .jogo-barraSuperior {
     gap: 7px;
@@ -2008,6 +2028,7 @@ button.equipado-espaco {
   }
 }
 
+/* Mesmo numa janela larga, um painel estreito precisa empilhar cena e controles. */
 @container activity-workspace (max-width: 420px) {
   .atividade-etapa {
     grid-template-columns: minmax(0, 1fr);
@@ -2018,6 +2039,7 @@ button.equipado-espaco {
   }
 }
 
+/* Encurta ornamentos do trilho em monitores baixos sem retirar destinos de navegação. */
 @media (max-height: 740px) and (min-width: 981px) {
   .jogo-marca {
     gap: 8px;
@@ -2056,6 +2078,7 @@ button.equipado-espaco {
   }
 }
 
+/* Substitui molduras por bordas do sistema e mantém a seleção perceptível em alto contraste. */
 @media (forced-colors: active) {
   .jogo-conteudo,
   .painel,
@@ -2073,6 +2096,7 @@ button.equipado-espaco {
   }
 }
 
+/* Reserva a coluna da animação de classe; o texto ocupa o espaço restante e pode quebrar. */
 .criacao-escolha.criacao-classe-escolha {
   grid-template-columns: 160px minmax(0, 1fr);
   align-items: center;
@@ -2080,6 +2104,7 @@ button.equipado-espaco {
   gap: 14px;
 }
 
+/* width e height controlam a área exibida; contain preserva a proporção e pixelated evita suavização. */
 .criacao-classe-gif {
   display: block;
   width: 160px;

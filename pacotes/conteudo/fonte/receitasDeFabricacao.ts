@@ -1,5 +1,11 @@
+/**
+ * @file Receitas iniciais de Metalurgia, Forja e Culinária.
+ * Ingredientes são consumidos por ciclo; a saída distingue item empilhável, equipamento
+ * novo e reforço de uma instância escolhida. Duração e XP são parâmetros de balanceamento.
+ */
 import type { DefinicaoDeReceitaDeFabricacao } from '@greywake/dominio'
 
+/** Encadeia coleta e produção: Cloch vira material tratado, que também serve de ingrediente para o reforço. */
 export const RECEITAS_INICIAIS_DE_FABRICACAO = [
   {
     id: "receita.metalurgia.tratada-cloch",
@@ -53,6 +59,7 @@ export const RECEITAS_INICIAIS_DE_FABRICACAO = [
   },
 ] as const satisfies readonly DefinicaoDeReceitaDeFabricacao[]
 
+/** Consulta pela identidade estável da receita, usada tanto no trabalho salvo quanto na meta da jornada. */
 export function obterDefinicaoDeReceitaDeFabricacao(idDaDefinicaoDaReceita: string) {
   return RECEITAS_INICIAIS_DE_FABRICACAO.find((receita) => receita.id === idDaDefinicaoDaReceita) ?? null
 }

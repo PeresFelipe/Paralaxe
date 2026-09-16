@@ -1,5 +1,11 @@
+/**
+ * @file Catálogo das quatro coletas iniciais: Mineração, Lenhador, Pesca e Herbologia.
+ * Define produto, nível exigido, duração em segundos e XP por ação; o domínio transforma
+ * esses dados em progresso, sem que este arquivo execute ou salve a coleta.
+ */
 import type { DefinicaoDeAtividadeOciosa } from '@greywake/dominio'
 
+/** Cada ação completa entrega uma unidade do recurso; o tempo e a experiência variam por atividade. */
 export const ATIVIDADES_OCIOSAS_INICIAIS = [
   {
     id: "coletar.mineracao.cloch",
@@ -43,6 +49,7 @@ export const ATIVIDADES_OCIOSAS_INICIAIS = [
   },
 ] as const satisfies readonly DefinicaoDeAtividadeOciosa[]
 
+/** Resolve o ID persistido da atividade; null permite ao chamador tratar referências fora do catálogo atual. */
 export function obterDefinicaoDeAtividadeOciosa(idDaDefinicaoDaAtividade: string) {
   return ATIVIDADES_OCIOSAS_INICIAIS.find((atividade) => atividade.id === idDaDefinicaoDaAtividade) ?? null
 }

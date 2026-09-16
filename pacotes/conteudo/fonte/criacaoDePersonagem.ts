@@ -1,5 +1,11 @@
+/**
+ * @file Opções iniciais de classes e presentes, separadas do estado de cada partida.
+ * Os IDs conectam os catálogos de equipamentos e habilidades ao construtor do domínio.
+ * Textos descrevem as opções; as concessões são os dados efetivamente aplicados na criação.
+ */
 import type { DefinicaoDeClasseDoPersonagem, DefinicaoDePresente } from '@greywake/dominio'
 
+/** Seis distribuições com 35 pontos cada. Alterar uma definição afeta novas criações, não reescreve personagens salvos. */
 export const CLASSES_DE_PERSONAGEM = [
   {
     id: "guerreiro",
@@ -119,6 +125,7 @@ export const CLASSES_DE_PERSONAGEM = [
   },
 ] as const satisfies readonly DefinicaoDeClasseDoPersonagem[]
 
+/** Concessões por tipo: ouro, pilha ou instância de equipamento. Nenhum presente usa uma lista vazia, sem bônus oculto. */
 export const PRESENTES_INICIAIS = [
   {
     id: "enferrujada-chave",

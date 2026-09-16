@@ -1,3 +1,8 @@
+/**
+ * @file Capacidade e transferências entre inventário e banco.
+ * Pilhas ocupam um espaço por definição; equipamentos são instâncias individuais.
+ * As operações validam o destino antes de retirar itens da origem e não cobram moedas.
+ */
 import type { PartidaLocal } from './personagem'
 
 export const LIMITE_DE_ESPACOS_DO_INVENTARIO_V01 = 24
@@ -15,12 +20,14 @@ function equipadoInstanciaIds(partida: PartidaLocal) {
   return new Set(Object.values(partida.personagem.equipamento))
 }
 
+/** Consumíveis e comidas usam pilhas de 99; os demais itens usam o limite de materiais de 9.999. */
 export function obterPilhaLimite(idDaDefinicao: string) {
   return idDaDefinicao.startsWith("item.consumivel.") || idDaDefinicao.startsWith("item.comida.")
     ? LIMITE_DE_PILHA_DE_CONSUMIVEIS_V01
     : LIMITE_DE_PILHA_DE_MATERIAIS_V01
 }
 
+/** Conta pilhas e equipamentos guardados; equipamentos já vestidos não ocupam espaço da mochila. */
 export function obterUsoDeEspacosDoInventario(partida: PartidaLocal) {
   const equipado = equipadoInstanciaIds(partida)
   const desequipadoEquipamento = partida.personagem.itensDeEquipamento.filter(
@@ -29,26 +36,31 @@ export function obterUsoDeEspacosDoInventario(partida: PartidaLocal) {
   return partida.personagem.inventario.length + desequipadoEquipamento
 }
 
+/** Soma pilhas e equipamentos armazenados; o banco não possui espaços de equipamento ativo. */
 export function obterUsoDeEspacosDoBanco(partida: PartidaLocal) {
   return partida.personagem.banco.inventario.length + partida.personagem.banco.itensDeEquipamento.length
 }
 
+/** Uma pilha existente ainda pode crescer com a mochila cheia, até seu limite de quantidade. */
 export function obterEspacoParaPilhaNoInventario(partida: PartidaLocal, idDaDefinicao: string) {
   const existente = partida.personagem.inventario.find((pilha) => pilha.idDaDefinicao === idDaDefinicao)
   if (!existente && obterUsoDeEspacosDoInventario(partida) >= LIMITE_DE_ESPACOS_DO_INVENTARIO_V01) return 0
   return Math.max(0, obterPilhaLimite(idDaDefinicao) - (existente?.quantidade ?? 0))
 }
 
+/** Calcula a quantidade admissível, levando em conta tanto uma pilha existente quanto os 80 espaços. */
 export function obterEspacoParaPilhaNoBanco(partida: PartidaLocal, idDaDefinicao: string) {
   const existente = partida.personagem.banco.inventario.find((pilha) => pilha.idDaDefinicao === idDaDefinicao)
   if (!existente && obterUsoDeEspacosDoBanco(partida) >= LIMITE_DE_ESPACOS_DO_BANCO_V01) return 0
   return Math.max(0, obterPilhaLimite(idDaDefinicao) - (existente?.quantidade ?? 0))
 }
 
+/** Cada nova instância precisa de um espaço livre, independentemente de sua definição ou raridade. */
 export function obterEspacoParaEquipamentoNoInventario(partida: PartidaLocal) {
   return Math.max(0, LIMITE_DE_ESPACOS_DO_INVENTARIO_V01 - obterUsoDeEspacosDoInventario(partida))
 }
 
+/** Lança erro se a quantidade for inválida ou não couber integralmente; não faz uma entrega parcial. */
 export function verificarCapacidadeParaPilhaNoInventario(
   partida: PartidaLocal,
   idDaDefinicao: string,
@@ -60,6 +72,7 @@ export function verificarCapacidadeParaPilhaNoInventario(
   }
 }
 
+/** Valida o número de instâncias antes de compras, fabricação, saques ou retiradas do banco. */
 export function verificarCapacidadeParaEquipamentoNoInventario(partida: PartidaLocal, quantidade = 1) {
   validarQuantidade(quantidade)
   if (obterEspacoParaEquipamentoNoInventario(partida) < quantidade) {
@@ -67,6 +80,7 @@ export function verificarCapacidadeParaEquipamentoNoInventario(partida: PartidaL
   }
 }
 
+/** Transfere uma quantidade inteira da mochila para o banco, juntando pilhas da mesma definição. */
 export function depositarPilhaDoInventarioNoBanco(
   partida: PartidaLocal,
   idDaDefinicao: string,
@@ -107,6 +121,7 @@ export function depositarPilhaDoInventarioNoBanco(
   }
 }
 
+/** Faz a transferência inversa após validar a capacidade da mochila e a quantidade disponível. */
 export function retirarPilhaDoBancoParaInventario(
   partida: PartidaLocal,
   idDaDefinicao: string,
@@ -145,6 +160,7 @@ export function retirarPilhaDoBancoParaInventario(
   }
 }
 
+/** Move a mesma instância, preservando reforço e afixos; itens equipados precisam ser desequipados antes. */
 export function depositarEquipamentoNoBanco(
   partida: PartidaLocal,
   idDaInstancia: string,
@@ -173,6 +189,7 @@ export function depositarEquipamentoNoBanco(
   }
 }
 
+/** Retira a instância sem recriá-la e recusa colisões de ID no inventário. */
 export function retirarEquipamentoDoBanco(
   partida: PartidaLocal,
   idDaInstancia: string,

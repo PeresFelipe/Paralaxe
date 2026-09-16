@@ -1,4 +1,7 @@
+/* Arquivo: Carregamento da fonte licenciada Antiquity Print e estilos tipográficos básicos.
+   O tema posterior redefine parte dos títulos; a marca continua usando a fonte decorativa. */
 /* Antiquity Print, de SciGho — CC BY 4.0. Consulte publico/fontes/antiquity-print-LICENSE.txt. */
+/* font-display: swap mantém o texto legível enquanto a fonte local é carregada. */
 @font-face {
   font-family: 'Antiquity Print';
   src: url('/fontes/antiquity-print.ttf') format('truetype');
@@ -9,6 +12,7 @@
   unicode-range: U+0020-007E, U+2018-2019, U+201C-201D;
 }
 
+/* Georgia e Times oferecem alternativas, inclusive para caracteres fora da cobertura da fonte. */
 :root {
   --fonte-destaque: 'Antiquity Print', Georgia, 'Times New Roman', serif;
 }
@@ -28,6 +32,7 @@
   line-height: 1.6;
 }
 
+/* Estilos compartilhados do contêiner de créditos; creditos.css detalha a janela atual. */
 .recursoVisual-creditos {
   margin-top: 16px;
   color: var(--atenuado);

@@ -1,3 +1,7 @@
+/* Arquivo: Base global e estrutura inicial de todas as telas.
+   As folhas importadas depois dela em principal.tsx refinam tamanhos, tipografia e tema.
+   Uma regra aqui pode ser sobrescrita: confira a cascata antes de ajustar a aparência final. */
+/* Paleta e medidas básicas; tema-do-jogo.css redefine as variáveis para o tema medieval atual. */
 :root {
   font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   color: #e5e1d8;
@@ -24,6 +28,7 @@
   --raio: 6px;
 }
 
+/* Padronização do modelo de caixa, formulários, foco de teclado e botões indisponíveis. */
 * { box-sizing: border-box; }
 html { min-width: 320px; min-height: 100%; background: var(--fundo); }
 body { margin: 0; min-width: 320px; min-height: 100vh; background: radial-gradient(circle at 82% -12%, rgba(169,133,85,.07), transparent 34rem), linear-gradient(#121719, var(--fundo) 36%); }
@@ -41,6 +46,7 @@ button:disabled { cursor: not-allowed; opacity: .46; }
 .secao-divisor { height: 1px; margin: 18px 0; background: var(--linha); }
 .completo-largura { width: 100%; }
 
+/* Famílias de controles reutilizadas por todas as telas. */
 .principal-botao, .discreto-botao, .icone-botao, .folha-fechar { border-radius: 5px; cursor: pointer; transition: background 150ms ease, border-color 150ms ease, filter 150ms ease; }
 .principal-botao { border: 1px solid #b18f61; background: linear-gradient(#9f7e52, #765c3d); color: #f0ece2; font-weight: 700; padding: 12px 17px; }
 .principal-botao:hover:not(:disabled) { filter: brightness(1.08); }
@@ -62,6 +68,7 @@ button:disabled { cursor: not-allowed; opacity: .46; }
 .situacao-selo, .risco-selo, .moedaCorrente-selo { display: inline-flex; align-items: center; gap: 6px; border: 1px solid #655239; border-radius: 999px; background: rgba(169,133,85,.06); color: #c4a377; padding: 5px 9px; font-size: .68rem; font-family: Inter, sans-serif; letter-spacing: .04em; }
 .risco-selo { border-color: #674643; color: var(--perigo-textoExibido); background: rgba(158,85,80,.07); }
 
+/* Seleção de partidas e apresentação anterior à entrada no mundo. */
 .entrada-estrutura { width: min(1180px, calc(100% - 40px)); margin: 0 auto; padding: 34px 0 70px; }
 .entrada-centralizado { min-height: 100vh; display: grid; place-content: center; justify-items: center; text-align: center; }
 .entrada-cabecalho { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding-bottom: 28px; border-bottom: 1px solid var(--linha); }
@@ -77,6 +84,7 @@ button:disabled { cursor: not-allowed; opacity: .46; }
 .carregando-marcaVisual { width: 32px; height: 32px; margin-bottom: 15px; border: 2px solid rgba(255,255,255,.12); border-top-color: var(--bronze); border-radius: 50%; animation: girar 800ms linear infinite; }
 @keyframes girar { to { transform: rotate(360deg); } }
 
+/* Etapas de criação, cartões de classe/presente e campos do personagem. */
 .criacao-etapa { min-height: calc(100vh - 130px); display: grid; align-content: start; justify-items: center; padding: 54px 0; }
 .criacao-progresso { display: flex; gap: 7px; margin-bottom: 44px; }
 .criacao-progresso span { width: 28px; height: 28px; display: grid; place-items: center; border: 1px solid var(--linha); border-radius: 50%; color: var(--atenuado); font-size: .68rem; }
@@ -96,12 +104,14 @@ button:disabled { cursor: not-allowed; opacity: .46; }
 .campo-pilha { display: grid; gap: 7px; margin: 12px 0; color: var(--atenuado); font-size: .76rem; font-weight: 700; }
 .campo-pilha input, .campo-pilha select { width: 100%; min-height: 40px; border: 1px solid var(--linha); border-radius: 5px; background: #111619; color: var(--textoExibido); padding: 8px 10px; }
 
+/* Resumo do progresso calculado ao retornar à partida. */
 .ausente-retorno-tela { min-height: 100vh; display: grid; place-items: center; padding: 24px; }
 .ausente-retorno-cartao { width: min(680px,100%); padding: 30px; border: 1px solid #5b503f; border-radius: var(--raio); background: linear-gradient(180deg,#1b2022,#131719); box-shadow: 0 30px 90px rgba(0,0,0,.35); }
 .ausente-duracao { color: var(--atenuado); }
 .ausente-resultado { display: grid; gap: 5px; margin: 24px 0; padding: 17px; border-left: 2px solid var(--bronze); background: rgba(169,133,85,.06); }
 .ausente-resultado span { color: var(--atenuado); font-size: .72rem; text-transform: uppercase; letter-spacing: .12em; }
 
+/* Estrutura global: identidade, recursos, navegação e área central. */
 .jogo-estrutura { min-height: 100vh; padding-bottom: 76px; }
 .jogo-barraSuperior { min-height: 72px; position: sticky; top: 0; z-index: 30; display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 9px 28px; border-bottom: 1px solid var(--linha); background: rgba(15,19,21,.96); backdrop-filter: blur(12px); }
 .jogador-identidade { display: flex; align-items: center; gap: 11px; }
@@ -134,6 +144,7 @@ button:disabled { cursor: not-allowed; opacity: .46; }
 .jogo-conteudo { width: min(1260px, calc(100% - 56px)); margin: 0 auto; padding: 28px 0 110px; }
 .funcionalidade-telaDoJogo { min-width: 0; }
 
+/* Barra fixa de trabalho; o preenchimento inferior do conteúdo evita sobreposição. */
 .continuidade-barra { height: 66px; position: fixed; left: 0; right: 0; bottom: 0; z-index: 31; border-top: 1px solid #39403f; background: rgba(14,18,20,.97); backdrop-filter: blur(10px); display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 0 max(28px, calc((100vw - 1260px)/2)); }
 .atual-trabalho { display: flex; align-items: center; gap: 10px; min-width: 0; border: 0; background: transparent; text-align: left; cursor: pointer; }
 .atual-trabalho > span:first-child { width: 30px; height: 30px; display: grid; place-items: center; border: 1px solid #68573f; border-radius: 5px; color: var(--bronze); background: #181d20; }
@@ -145,6 +156,7 @@ button:disabled { cursor: not-allowed; opacity: .46; }
 .continuidade-acoes button { height: 35px; border: 1px solid var(--linha); border-radius: 5px; background: var(--superficie); color: var(--atenuado); padding: 0 11px; cursor: pointer; font-size: .72rem; }
 .continuidade-acoes button:hover { background: var(--superficie-2); color: var(--textoExibido); }
 
+/* Base dos painéis auxiliares; a folha compacta adapta o contêiner ao diálogo nativo. */
 .lateral-folha { width: min(410px, 94vw); position: fixed; top: 126px; right: 0; bottom: 66px; z-index: 50; overflow-y: auto; padding: 20px; border-left: 1px solid var(--linha); background: #151a1d; box-shadow: -22px 0 55px rgba(0,0,0,.35); }
 .lateral-folha .destaque-titulo { font-size: 2rem; margin-bottom: 18px; }
 .folha-fechar { float: right; width: 34px; height: 34px; border: 1px solid var(--linha); background: var(--superficie-2); }
@@ -155,6 +167,7 @@ button:disabled { cursor: not-allowed; opacity: .46; }
 .jornada-secao > span { color: var(--atenuado); font-size: .62rem; letter-spacing: .12em; }
 .jornada-secao p { margin: 0; color: var(--atenuado); font-size: .78rem; }
 
+/* Abas internas e apresentação de personagem, equipamentos e habilidades. */
 .subnavegacao { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 18px; }
 .subnavegacao button { border: 1px solid var(--linha); border-radius: 5px; background: transparent; color: var(--atenuado); padding: 8px 10px; cursor: pointer; }
 .subnavegacao button.ativo { background: var(--superficie-2); color: var(--textoExibido); border-color: #555c60; }
@@ -189,6 +202,7 @@ button:disabled { cursor: not-allowed; opacity: .46; }
 .inventario-bloco strong, .inventario-bloco span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .inventario-bloco strong { font-size: .72rem; }.inventario-bloco span { color: var(--atenuado); font-size: .68rem; }
 
+/* Árvore de prestígio: resumo, confirmação, ramos, requisitos e estados dos nós. */
 .prestigio-telaDoJogo { display: grid; gap: 14px; }
 .prestigio-resumo { display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; }
 .prestigio-resumo h2 { margin: 3px 0 7px; }
@@ -232,6 +246,7 @@ button.prestigio-no:hover:not(:disabled) { border-color: #756244; background: #1
 .prestigio-hibrido-caminho { display: grid; gap: 6px; min-width: 0; }
 .prestigio-hibrido-caminho h4 { margin: 0 0 2px; color: #c4a377; font-size: .75rem; font-weight: 700; letter-spacing: .04em; }
 
+/* Profissões, cenas e receitas; os controles encaminham ações ao React. */
 .atividade-atual-cartao { display: grid; grid-template-columns: auto 1fr auto; gap: 12px; align-items: center; padding: 13px 15px; border: 1px solid #5c4d39; border-radius: var(--raio); background: rgba(169,133,85,.05); }
 .atividade-atual-cartao strong { font-size: .82rem; }
 .atividade-atual-cartao small { color: var(--atenuado); }
@@ -258,6 +273,7 @@ button.prestigio-no:hover:not(:disabled) { border-color: #756244; background: #1
 .ingrediente-listar > div { display: flex; justify-content: space-between; gap: 12px; padding: 8px 0; border-bottom: 1px solid var(--linha); font-size: .74rem; }
 .ingrediente-listar span { color: var(--atenuado); }
 
+/* Destinos de aventura, serviços da cidade e ofertas de mercado. */
 .aventura-gradeVisual, .masmorra-entrada-gradeVisual { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 .aventura-cartao h2 { margin: 4px 0 8px; }
 .risco-painel { border-color: #5c443f; }
@@ -271,6 +287,7 @@ button.prestigio-no:hover:not(:disabled) { border-color: #756244; background: #1
 .mercado-gradeVisual { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 10px; }
 .moedaCorrente-selo { border-radius: 5px; }.moedaCorrente-selo small { color: var(--atenuado); }
 
+/* Preparação anterior ao risco e caixas de confirmação de ações. */
 .preparacao-disposicao { display: grid; grid-template-columns: 1.3fr .7fr; gap: 16px; }
 .preparacao-resumo h3 { margin-top: 4px; }
 .risco-nota, .risco-texto { margin: 13px 0; padding: 10px 11px; border-left: 2px solid var(--perigo); background: rgba(158,85,80,.07); color: #ccb1ad; font-size: .76rem; }
@@ -279,6 +296,7 @@ button.prestigio-no:hover:not(:disabled) { border-color: #756244; background: #1
 .confirmar-painel, .chefe-confirmar, .masmorra-conclusao-painel { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 18px; border: 1px solid #655239; border-radius: var(--raio); background: rgba(169,133,85,.055); }
 .confirmar-painel h3, .chefe-confirmar h3, .masmorra-conclusao-painel h3 { margin: 4px 0; }.confirmar-painel ul, .risco-painel ul { color: var(--atenuado); font-size: .76rem; padding-left: 18px; }
 
+/* Apresentação dos combatentes, recursos, avisos de ataque e histórico da luta. */
 .combate-contexto-linha { display: flex; justify-content: space-between; gap: 16px; margin-bottom: 10px; color: var(--atenuado); font-size: .68rem; }.combate-contexto-linha strong { color: var(--perigo-textoExibido); letter-spacing: .09em; }
 .combate-gradeVisual { display: grid; grid-template-columns: .8fr 1.25fr .8fr; gap: 10px; }
 .combate-combatente h3 { margin: 3px 0 12px; }.inimigo-painel { border-color: #4c3937; }
@@ -290,6 +308,7 @@ button.prestigio-no:hover:not(:disabled) { border-color: #756244; background: #1
 .combate-resultado { margin-top: 14px; padding: 13px; border-left: 2px solid var(--bronze); background: rgba(169,133,85,.06); }.combate-resultado.derrota { border-color: var(--perigo); }.combate-resultado h3 { margin: 3px 0; }
 .consumivel-gradeVisual { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 
+/* Sala atual, caminhos, bolsa temporária e percurso da expedição. */
 .masmorra-execucao-cabecalho { display: flex; justify-content: space-between; align-items: end; gap: 18px; margin-bottom: 18px; }
 .masmorra-execucao-gradeVisual { display: grid; grid-template-columns: 1.45fr .65fr; gap: 14px; }.masmorra-lateral { display: grid; align-content: start; gap: 12px; }.sala-painel { margin-top: 12px; }
 .masmorra-recurso-gradeVisual { display: grid; grid-template-columns: repeat(3,1fr); gap: 7px; margin: 15px 0; }.masmorra-recurso-gradeVisual > div { display: grid; gap: 4px; padding: 9px; border: 1px solid var(--linha); background: #121719; }.masmorra-recurso-gradeVisual span { color: var(--atenuado); font-size: .6rem; }.masmorra-recurso-gradeVisual strong { font-size: .78rem; }
@@ -299,6 +318,7 @@ button.prestigio-no:hover:not(:disabled) { border-color: #756244; background: #1
 .rota-percurso { display: grid; gap: 8px; }.rota-percurso > div { display: grid; grid-template-columns: 24px 1fr; gap: 8px; align-items: center; }.rota-percurso span { width: 22px; height: 22px; display: grid; place-items: center; border: 1px solid #5b4d3a; border-radius: 50%; color: #c4a377; font-size: .6rem; }.rota-percurso strong { font-size: .7rem; }
 .encontro-resultado { margin-top: 10px; }.encontro-resultado.derrota { border-color: #65413e; }
 
+/* Adaptações iniciais por largura; folhas posteriores completam os pontos de quebra. */
 @media (max-width: 980px) {
   .jogo-barraSuperior { padding-inline: 14px; }
   .global-recursos { gap: 7px; }
@@ -360,11 +380,13 @@ button.prestigio-no:hover:not(:disabled) { border-color: #756244; background: #1
   .continuidade-acoes button:nth-child(2) { max-width: 110px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 }
 
+/* Reduz transições e animações globais conforme a preferência do sistema. */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
 }
 
 
+/* Capacidades e transferências lado a lado; no celular as colunas são empilhadas. */
 .banco-capacidade-gradeVisual { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 10px; }
 .banco-capacidade-gradeVisual .painel { display: grid; gap: 4px; }
 .banco-capacidade-gradeVisual strong { font-size: 1.1rem; }

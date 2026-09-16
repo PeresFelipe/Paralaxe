@@ -1,3 +1,8 @@
+/**
+ * @file Distribuição de pontos com rascunho e prévia das consequências.
+ * Os botões alteram somente o rascunho local; confirmar envia a distribuição ao domínio
+ * e à persistência. A prévia reutiliza as fórmulas reais de combate.
+ */
 import { useMemo, useState } from "react";
 import {
   obterDefinicaoDeHabilidadeDeCombate,
@@ -35,6 +40,7 @@ type PropriedadesDePainelDeAtributos = {
   aoDistribuirAtributos: (distribuicao: DistribuicaoDeAtributos) => Promise<void>;
 };
 
+/** Combina atributos persistidos com a proposta temporária para mostrar valores antes e depois. */
 export default function PainelDeAtributos({
   partida,
   aoDistribuirAtributos,
@@ -55,6 +61,7 @@ export default function PainelDeAtributos({
     () => derivarEstatisticasDeCombateDoJogador(partida, combateCatalogo),
     [partida],
   );
+  // Deriva estatísticas de uma cópia com os atributos propostos; a partida original permanece intacta.
   const previaEstatisticas = useMemo(() => {
     const atributos = { ...partida.personagem.atributos };
     for (const chave of CHAVES_DOS_ATRIBUTOS) atributos[chave] += rascunho[chave] ?? 0;
@@ -64,6 +71,7 @@ export default function PainelDeAtributos({
     );
   }, [rascunho, partida]);
 
+  /** Limita o rascunho aos pontos disponíveis e permite retirar apenas pontos ainda não confirmados. */
   function alteracaoAtributo(chave: ChaveDeAtributo, diferenca: number) {
     const atual = rascunho[chave] ?? 0;
     if (diferenca > 0 && faltamPontos <= 0) return;
@@ -71,6 +79,7 @@ export default function PainelDeAtributos({
     definirRascunho((atualRascunho) => ({ ...atualRascunho, [chave]: proximo }));
   }
 
+  /** Envia a proposta uma vez e a limpa somente após sucesso; o finally sempre libera os controles. */
   async function confirmar() {
     if (pendentePontos <= 0 || ehSalvando) return;
     definirEhSalvando(true);
@@ -82,6 +91,7 @@ export default function PainelDeAtributos({
     }
   }
 
+  /** Resume os recursos máximos afetados diretamente por Vitalidade, Mente e Vigor. */
   function recursoPrevia(chave: ChaveDeAtributo) {
     if (chave === "vitalidade")
       return `Vida máxima ${atualEstatisticas.vidaMaxima} → ${previaEstatisticas.vidaMaxima}`;

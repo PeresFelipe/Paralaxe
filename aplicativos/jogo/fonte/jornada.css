@@ -1,3 +1,6 @@
+/* Arquivo: Estilos das metas, ingredientes, comparação de equipamento e avisos de conquista.
+   As classes refletem o estado calculado no domínio; não determinam a conclusão de metas. */
+/* O resumo inteiro funciona como acionador; seus textos podem quebrar sem comprimir o ícone. */
 .jornada-meta-resumo {
   display: flex; align-items: center; gap: 14px; width: 100%; min-width: 0;
   padding: 14px 16px; margin: 0 0 22px; text-align: left;
@@ -18,6 +21,7 @@
 .jornada-meta-titulo .jogo-icone { flex-shrink: 0; }
 .jornada-meta progress { width: 100%; height: 8px; accent-color: #c0a25c; }
 .jornada-progresso-rotulo { color: #c4c7b4; font-size: .75rem; margin: 6px 0 14px; }
+/* A lista combina estoque, necessidade e acesso à fonte do material. */
 .jornada-ingredientes { list-style: none; margin: 0 0 16px; padding: 0; }
 .jornada-ingredientes li { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 12px; padding: 10px 0; border-bottom: 1px solid #434c39; }
 .jornada-ingredientes li > div { display: grid; gap: 4px; min-width: 0; font-size: .82rem; }
@@ -34,6 +38,7 @@
 .jornada-conclusao-texto p { font-size: .8rem; line-height: 1.6; }
 .jornada-fabricar-registros { margin-top: 16px; color: #bfbea7; font-size: .78rem; line-height: 1.8; }
 .jornada-fabricar-registros summary { cursor: pointer; padding: 10px 0; }
+/* Os números tabulares mantêm alinhadas as diferenças entre a peça atual e a prevista. */
 .equipamento-comparacao { padding: 12px; margin: 12px 0; border: 1px solid #4e5941; background: #1d251b; font-size: .75rem; line-height: 1.6; min-width: 0; }
 .equipamento-comparacao p { margin: 0 0 8px; color: #b8bdaa; overflow-wrap: anywhere; }
 .equipamento-comparacao dl { display: grid; gap: 5px; margin: 0; }
@@ -41,6 +46,7 @@
 .equipamento-comparacao dd { margin: 0; font-variant-numeric: tabular-nums; }
 .equipamento-comparacao dd strong { color: #dfd8b7; }
 .equipamento-comparacao dd span { color: #bac2a5; }
+/* Destaque temporário reutilizado pelo aviso de uma conquista já registrada. */
 .jogo-aviso--conquista { border-color: #cfb573; background: #323a25; box-shadow: 0 0 0 2px #71613a, 0 12px 35px #0006; animation: jornada-revelacao .35s ease-out; }
 .jogo-aviso--conquista p { color: #efe0b8; }
 .jogo-aviso--conquista > img { flex-shrink: 0; }
@@ -58,7 +64,9 @@
   .jornada-meta-acoes > button { min-height: 44px; }
   .ausente-meta-resultado { padding: 12px; align-items: flex-start; }
 }
+/* Respeita a preferência do sistema ao remover a animação de revelação. */
 @media (prefers-reduced-motion: reduce) { .jogo-aviso--conquista { animation: none; } }
+/* Bordas com cores do sistema preservam os limites dos controles em alto contraste. */
 @media (forced-colors: active) {
   .jornada-meta-resumo, .jornada-receita-escolha, .equipamento-comparacao, .jogo-aviso--conquista { border: 1px solid CanvasText; }
 }

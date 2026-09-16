@@ -1,3 +1,8 @@
+/**
+ * @file Testes da conversão de tempo em coleta e experiência de profissão.
+ * Incluem resto de ciclo, passagem de nível e descarte do tempo além do limite ausente.
+ * Datas fixas tornam os resultados independentes do relógio da máquina.
+ */
 import { describe, expect, it } from 'vitest'
 import { criarPartidaLocal, type DefinicaoDeClasseDoPersonagem, type DefinicaoDePresente } from './personagem'
 import {
@@ -42,6 +47,7 @@ const mineracaoAtividade: DefinicaoDeAtividadeOciosa = {
   xpDeProfissaoPorAcao: 8,
 }
 
+/** Cria um estado novo com identidade e horário fixos, isolando as alterações de cada caso. */
 function criarPartida() {
   return criarPartidaLocal({
     idDaPartida: "partida-ocioso",
@@ -71,6 +77,7 @@ describe("progresso ocioso", () => {
     const segundo = processarProgressoOcioso(primeiro.partida, mineracaoAtividade, '2026-09-09T12:00:05.000Z')
 
     expect(primeiro.acoesConcluidas).toBe(0)
+    // Apesar do nome, segundosRestantes guarda tempo já acumulado do ciclo incompleto.
     expect(primeiro.partida.ocioso.atividadeAtiva?.segundosRestantes).toBe(3)
     expect(segundo.acoesConcluidas).toBe(1)
     expect(segundo.partida.ocioso.atividadeAtiva?.segundosRestantes).toBe(1)

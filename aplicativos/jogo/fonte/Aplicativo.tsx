@@ -1,3 +1,8 @@
+/**
+ * @file Coordenação principal da aplicação: carregar, criar, selecionar e salvar partidas.
+ * Conecta intenções da interface às regras puras do domínio e serializa as gravações
+ * no repositório. Estados de navegação, mensagens e formulários ficam somente no React.
+ */
 import {
   CLASSES_DE_PERSONAGEM,
   VERSAO_DO_CONTEUDO,
@@ -39,13 +44,16 @@ import IconeDoJogo from "./IconeDoJogo";
 import EstruturaDoJogo from "./EstruturaDoJogo";
 import EstadoDoJogoWeb from "./EstadoDoJogoWeb";
 
+/** Relaciona a classe ao arquivo servido por publico. Os caminhos da URL começam em /arte, sem o prefixo publico. */
 const GIFS_DAS_CLASSES: Partial<Record<IdDaClasseDoPersonagem, string>> = {
   guerreiro: "/arte/classes/guerreiro/MattzArt/guerreiro.gif",
   mago: "/arte/classes/mago/LuizMelo/mago.gif",
 };
 
+/** Uma fábrica fora do componente mantém a mesma interface de armazenamento entre renderizações. */
 const repositorioDePartidas = criarRepositorioDePartidasIndexedDb();
 
+/** Estados de entrada da aplicação; a navegação interna da partida pertence a EstruturaDoJogo. */
 type Tela = "carregando" | "partida-listar" | "criar" | "jogo" | "erro";
 type ResumoDoPeriodoAusente = {
   duracao: string;
@@ -67,12 +75,14 @@ function obterNomeDoPresente(idDoPresente: IdDoPresente) {
   );
 }
 
+/** Substitui a versão de uma partida já listada pelo mesmo ID, sem adicionar duplicatas. */
 function atualizarPartidaNaLista(partidas: PartidaLocal[], partida: PartidaLocal) {
   return partidas.map((atual) =>
     atual.idDaPartida === partida.idDaPartida ? partida : atual,
   );
 }
 
+/** Prefere UUID do navegador e oferece uma alternativa para ambientes que não expõem essa API. */
 function criarIdDaPartida() {
   if (
     typeof crypto !== "undefined" &&
@@ -84,6 +94,7 @@ function criarIdDaPartida() {
   return `partida-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
 }
 
+/** Converte a duração total da ausência em um resumo legível, independentemente do limite de progresso concedido. */
 function formatarAusencia(milissegundos: number) {
   const segundos = Math.max(0, Math.floor(milissegundos / 1000));
   const horas = Math.floor(segundos / 3600);
@@ -93,6 +104,10 @@ function formatarAusencia(milissegundos: number) {
   return `${segundos}s`;
 }
 
+/**
+ * Resolve o catálogo da coleta ou receita selecionada e calcula seu progresso até o horário recebido.
+ * Também produz a mensagem de ganhos ou interrupção; este auxiliar ainda não persiste o resultado.
+ */
 function processarTrabalhoAtual(partida: PartidaLocal, agora: string) {
   // A masmorra ativa é um estado de risco persistido. O trabalho ocioso selecionado
   // permanece como referência de continuidade, sem acumular tempo durante a expedição.
@@ -156,6 +171,7 @@ function processarTrabalhoAtual(partida: PartidaLocal, agora: string) {
   return { partida, textoExibido: null };
 }
 
+/** Mantém a partida ativa e distribui callbacks para as telas; cada alteração persistida passa pela fila de gravação. */
 function Aplicativo() {
   const [tela, definirTela] = useState<Tela>("carregando");
   const [partidas, definirPartidas] = useState<PartidaLocal[]>([]);
@@ -176,6 +192,7 @@ function Aplicativo() {
   );
   const [ehSalvando, definirEhSalvando] = useState(false);
   const [riscoAtivo, definirRiscoAtivo] = useState(false);
+  // A referência permite consultar a versão corrente dentro de Promises e intervalos, sem capturar uma renderização antiga.
   const referenciaDaPartidaAtiva = useRef<PartidaLocal | null>(null);
   const gravarFila = useRef<Promise<void>>(Promise.resolve());
 
@@ -183,6 +200,7 @@ function Aplicativo() {
     definirAviso(textoExibido ? { textoExibido, tipo: "informacao" } : null);
   }
 
+  /** Atualiza a referência síncrona e o estado de renderização juntos para ações assíncronas enxergarem a mesma partida. */
   function selecionarPartidaAtiva(partida: PartidaLocal | null) {
     referenciaDaPartidaAtiva.current = partida;
     definirAtivoPartida(partida);
@@ -190,6 +208,10 @@ function Aplicativo() {
 
   // O processamento e as ações partem da última partida salva, em ordem.
   // Selecionar uma meta durante um ciclo não pode sobrescrever ingredientes ou conquistas.
+  /**
+   * Enfileira uma transformação sobre a versão mais recente da partida e só atualiza a tela após salvar.
+   * Confere o ID capturado para uma ação antiga não atingir outro personagem selecionado depois.
+   */
   function aplicarAlteracaoNaPartidaAtiva(
     atualizar: (atual: PartidaLocal) => PartidaLocal,
     textoExibido?: string | (() => string | undefined),
@@ -212,6 +234,7 @@ function Aplicativo() {
       }
       return proximo;
     });
+    // Uma falha deve chegar ao solicitante, mas não pode deixar a fila rejeitada e bloquear todas as próximas gravações.
     gravarFila.current = tarefa.then(
       () => undefined,
       () => undefined,
@@ -219,6 +242,7 @@ function Aplicativo() {
     return tarefa;
   }
 
+  // A carga inicial escolhe a lista de partidas ou o assistente. A limpeza impede atualizar uma montagem já cancelada.
   useEffect(() => {
     let cancelado = false;
 
@@ -244,6 +268,7 @@ function Aplicativo() {
     };
   }, []);
 
+  // O intervalo apenas solicita atualização a cada cinco segundos; as regras usam horários, não a quantidade de disparos.
   useEffect(() => {
     if (tela !== "jogo" || !partidaAtiva) return;
     if (riscoAtivo || partidaAtiva.masmorra.expedicaoAtiva) return;
@@ -279,6 +304,7 @@ function Aplicativo() {
     return () => window.clearInterval(temporizador);
   }, [tela, partidaAtiva, riscoAtivo]);
 
+  /** Recebe uma partida calculada por uma bancada e preserva a jornada atual mantida pela fila central. */
   async function persistirPartidaAtiva(partida: PartidaLocal, textoExibido?: string) {
     await aplicarAlteracaoNaPartidaAtiva(
       (atual) => ({ ...partida, jornada: atual.jornada }),
@@ -286,6 +312,10 @@ function Aplicativo() {
     );
   }
 
+  /**
+   * Bloqueia o processamento periódico, credita o trabalho pendente e congela seu relógio antes do encontro.
+   * Se a gravação falhar, remove o bloqueio e propaga o erro ao componente que iniciou a ação.
+   */
   async function prepararRisco() {
     if (!partidaAtiva) throw new Error("Nenhum personagem ativo.");
     definirRiscoAtivo(true);
@@ -303,6 +333,7 @@ function Aplicativo() {
     }
   }
 
+  /** Resolve classe e presente pelo catálogo, constrói a partida no domínio e só entra no jogo após salvá-la. */
   async function tratarCriarPartida() {
     const classeDoPersonagem = CLASSES_DE_PERSONAGEM.find(
       (definicao) => definicao.id === idDaClasseSelecionada,
@@ -342,6 +373,10 @@ function Aplicativo() {
     }
   }
 
+  /**
+   * Espera gravações anteriores, relê a partida e processa a ausência antes de mostrar o resumo.
+   * Expedições em andamento retomam seu estado persistido sem gerar trabalho seguro durante a ausência.
+   */
   async function tratarCarregarPartida(idDaPartida: string) {
     definirMensagem(null);
     definirAusenteResumo(null);
@@ -374,6 +409,7 @@ function Aplicativo() {
       definirRiscoAtivo(false);
       definirTela("jogo");
 
+      // Os ganhos já foram gravados acima. O botão Continuar do resumo apenas fecha a apresentação, sem concedê-los novamente.
       if (resultado.textoExibido && ausencia >= 60_000) {
         definirAusenteResumo({
           duracao: formatarAusencia(ausencia),
@@ -397,6 +433,7 @@ function Aplicativo() {
     }
   }
 
+  /** Credita o trabalho anterior até agora, encerra sua seleção e inicia a nova coleta na mesma atualização. */
   async function tratarIniciarAtividade(idDaDefinicaoDaAtividade: string) {
     if (!partidaAtiva) return;
     const atividade = obterDefinicaoDeAtividadeOciosa(idDaDefinicaoDaAtividade);
@@ -419,6 +456,7 @@ function Aplicativo() {
     }
   }
 
+  /** Troca o trabalho atual por uma receita, preservando o progresso já acumulado e repassando o alvo de reforço. */
   async function tratarIniciarReceita(
     idDaDefinicaoDaReceita: string,
     idDaInstanciaDoEquipamentoAlvo: string | null = null,
@@ -449,6 +487,7 @@ function Aplicativo() {
     }
   }
 
+  /** Processa os ciclos completos pendentes antes de limpar a coleta ou receita selecionada. */
   async function tratarPararTrabalho() {
     if (!partidaAtiva) return;
     await aplicarAlteracaoNaPartidaAtiva((atual) => {
@@ -460,6 +499,7 @@ function Aplicativo() {
     }, "Atividade interrompida.");
   }
 
+  /** Valida a receita e registra o acompanhamento após atualizar o trabalho; escolher a meta não o substitui. */
   async function tratarEscolherJornadaMeta(idDaReceita: string | null) {
     if (riscoAtivo)
       throw new Error("Escolha sua meta após retornar a um lugar seguro.");
@@ -475,6 +515,7 @@ function Aplicativo() {
     });
   }
 
+  /** Resolve a definição da instância selecionada e aplica a troca pelo domínio, exibindo sucesso ou erro. */
   async function tratarEquipar(idDaInstancia: string) {
     if (!partidaAtiva) return;
     const instancia = partidaAtiva.personagem.itensDeEquipamento.find(
@@ -504,6 +545,7 @@ function Aplicativo() {
     }
   }
 
+  /** Confirma a proposta no domínio e na persistência; propaga falhas para o painel conservar sua proposta. */
   async function tratarDistribuirAtributos(distribuicao: DistribuicaoDeAtributos) {
     if (!partidaAtiva) return;
 
@@ -527,6 +569,7 @@ function Aplicativo() {
     }
   }
 
+  /** Executa a compra do nó com as validações e custos definidos pelo domínio. */
   async function tratarDesbloquearPrestigioNo(noId: string) {
     if (!partidaAtiva) return;
 
@@ -549,6 +592,7 @@ function Aplicativo() {
     }
   }
 
+  /** Busca os atributos originais da classe para o reinício de prestígio e persiste a nova etapa. */
   async function tratarRealizarPersonagemPrestigio() {
     if (!partidaAtiva) return;
 
@@ -581,6 +625,7 @@ function Aplicativo() {
     }
   }
 
+  /** Encaminha o depósito pela fila central, preservando consistência com coletas que também alteram o inventário. */
   async function tratarDepositarBancoPilha(
     idDaDefinicao: string,
     quantidade: number,
@@ -606,6 +651,7 @@ function Aplicativo() {
     }
   }
 
+  /** Solicita retirada de uma quantidade; o domínio valida estoque e capacidade antes da gravação. */
   async function tratarRetirarBancoPilha(
     idDaDefinicao: string,
     quantidade: number,
@@ -631,6 +677,7 @@ function Aplicativo() {
     }
   }
 
+  /** Encaminha o ID da instância para guardar exatamente a peça escolhida, com seus afixos e reforço. */
   async function tratarDepositarBancoEquipamento(idDaInstancia: string) {
     if (!partidaAtiva) return;
     try {
@@ -648,6 +695,7 @@ function Aplicativo() {
     }
   }
 
+  /** Move a instância do banco para a mochila através da mesma fila usada pelas demais alterações. */
   async function tratarRetirarBancoEquipamento(idDaInstancia: string) {
     if (!partidaAtiva) return;
     try {
@@ -669,6 +717,7 @@ function Aplicativo() {
     }
   }
 
+  /** Limpa somente as escolhas transitórias do assistente; criar outro personagem não remove partidas existentes. */
   function iniciarNovoPartida() {
     definirPersonagemNome("");
     definirIdDaClasseSelecionada(null);
@@ -680,6 +729,7 @@ function Aplicativo() {
     definirTela("criar");
   }
 
+  /** Sai da seleção atual e retorna à lista, limpando mensagens e contexto transitório de risco. */
   function alternarPartida() {
     selecionarPartidaAtiva(null);
     definirUltimoTrabalhoResultado(null);
@@ -689,6 +739,7 @@ function Aplicativo() {
     definirTela("partida-listar");
   }
 
+  // A renderização segue a máquina de telas: inicialização/erro, partida ativa, lista e, por último, criação.
   if (tela === "carregando") {
     return (
       <main className="entrada-estrutura entrada-centralizado">
@@ -859,6 +910,7 @@ function Aplicativo() {
           ))}
         </div>
 
+        {/* Assistente de cinco etapas: modo, nome, classe, presente e confirmação. As escolhas ainda não criam a partida. */}
         {criacaoPasso === 0 ? (
           <div className="criacao-foco">
             <p className="secao-chamada">Modo</p>
@@ -911,6 +963,7 @@ function Aplicativo() {
           </div>
         ) : null}
 
+        {/* O GIF é decorativo; a escolha e sua identificação acessível continuam no botão da classe. */}
         {criacaoPasso === 2 ? (
           <div className="criacao-foco amplo">
             <p className="secao-chamada">Classe inicial</p>
@@ -998,6 +1051,7 @@ function Aplicativo() {
           </div>
         ) : null}
 
+        {/* Somente esta confirmação chama o domínio e grava o personagem; ehSalvando bloqueia novos envios durante a operação. */}
         {criacaoPasso === 4 ? (
           <div className="criacao-foco">
             <p className="secao-chamada">Confirmar</p>

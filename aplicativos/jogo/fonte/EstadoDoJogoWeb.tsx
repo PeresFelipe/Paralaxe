@@ -1,10 +1,16 @@
+/**
+ * @file Avisos de disponibilidade sem conexão, atualização e instalação do aplicativo web.
+ * O armazenamento em cache dos arquivos é independente das partidas salvas no IndexedDB.
+ */
 import { useEffect, useState } from 'react'
 import { useRegisterSW } from 'virtual:pwa-register/react'
 
+/** Evento específico de navegadores que oferecem instalação; o pedido exige uma ação do usuário. */
 type SolicitacaoDeInstalacao = Event & {
   prompt: () => Promise<{ outcome: 'accepted' | 'dismissed' }>
 }
 
+/** Exibe ações do aplicativo web somente quando o componente pai permite atualizar a tela. */
 export default function EstadoDoJogoWeb({ podeAtualizar }: { podeAtualizar: boolean }) {
   const [instalarSolicitacao, definirInstalarSolicitacao] = useState<SolicitacaoDeInstalacao | null>(null)
   const [erro, definirErro] = useState<string | null>(null)
@@ -15,6 +21,7 @@ export default function EstadoDoJogoWeb({ podeAtualizar }: { podeAtualizar: bool
 
   useEffect(() => {
     const oferecerInstalar = (evento: Event) => {
+      // Adia a oferta automática de instalação para o botão do próprio jogo.
       evento.preventDefault()
       definirInstalarSolicitacao(evento as SolicitacaoDeInstalacao)
     }
@@ -22,11 +29,13 @@ export default function EstadoDoJogoWeb({ podeAtualizar }: { podeAtualizar: bool
     window.addEventListener('beforeinstallprompt', oferecerInstalar)
     window.addEventListener('appinstalled', instalado)
     return () => {
+      // Remove os mesmos ouvintes ao desmontar, inclusive nas verificações do StrictMode.
       window.removeEventListener('beforeinstallprompt', oferecerInstalar)
       window.removeEventListener('appinstalled', instalado)
     }
   }, [])
 
+  // A autorização do pai evita oferecer uma recarga no meio de um fluxo sensível.
   if (!podeAtualizar || (!ausentePronto && !precisaAtualizarExibicao && !instalarSolicitacao && !erro)) return null
 
   return <div className="web-jogo-situacao">

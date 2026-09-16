@@ -1,6 +1,12 @@
+/**
+ * @file Apresenta a previsão de uma peça fabricada em relação ao equipamento em uso.
+ * Os cálculos vêm de conteudo/jornada.ts e reutilizam as regras reais do combate;
+ * aqui são formatados apenas rótulos, valores e diferenças.
+ */
 import { obterComparacaoDeEquipamentoDaFabricacao } from "@greywake/conteudo";
 import type { PartidaLocal } from "@greywake/dominio";
 
+/** Não renderiza para receitas sem equipamento; para peças válidas, mostra a substituição prevista no nível de reforço +0. */
 export default function ComparacaoDeEquipamento({
   partida,
   idDaReceita,
@@ -10,6 +16,7 @@ export default function ComparacaoDeEquipamento({
 }) {
   const comparacao = obterComparacaoDeEquipamentoDaFabricacao(partida, idDaReceita);
   if (!comparacao) return null;
+  // Chance crítica é uma fração e precisa virar porcentagem; os demais números usam separadores de pt-BR.
   const formato = (valor: number, chave: string) =>
     chave === "chanceDeCritico"
       ? `${Number((valor * 100).toFixed(1))}%`

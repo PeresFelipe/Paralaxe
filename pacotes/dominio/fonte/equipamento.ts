@@ -1,5 +1,11 @@
+/**
+ * @file Definições e instâncias de equipamento.
+ * Uma definição descreve o modelo do item; uma instância identifica a cópia do jogador,
+ * com reforço, raridade e afixos próprios. As operações devolvem novos estados.
+ */
 import type { ChaveDeAtributo, PartidaLocal } from './personagem'
 
+/** Lista canônica de espaços, também usada para criar os equipamentos em ordem estável. */
 export const ESPACOS_DE_EQUIPAMENTO = [
   "cabeca",
   "peitoral",
@@ -35,6 +41,7 @@ export interface PerfilDeCombateDaArma {
   escalonamento: Partial<Record<ChaveDeAtributo, GrauDeEscalonamento>>
 }
 
+/** Modelo compartilhado pelo catálogo; não recebe progresso individual do jogador. */
 export interface DefinicaoDeEquipamento {
   id: string
   nome: string
@@ -48,6 +55,7 @@ export interface DefinicaoDeEquipamento {
   }
 }
 
+/** Cópia possuída pelo jogador. O ID da instância continua o mesmo ao equipar ou guardar no banco. */
 export interface InstanciaDeEquipamento {
   idDaInstancia: string
   idDaDefinicao: string
@@ -62,6 +70,7 @@ export interface EstadoDosEquipamentosIniciais {
   proximaSequenciaDeEquipamento: number
 }
 
+/** Materializa o conjunto da classe em instâncias eq-N e associa cada uma ao seu espaço. */
 export function criarEstadoDosEquipamentosIniciais(
   conjunto: ConjuntoDeEquipamentosIniciais,
 ): EstadoDosEquipamentosIniciais {
@@ -82,6 +91,7 @@ export function criarEstadoDosEquipamentosIniciais(
   return { equipado, itensDeEquipamento, proximaSequenciaDeEquipamento }
 }
 
+/** Aplica a regra atual do reforço +1: aumento de 15%, arredondado para cima; ausência de estatística retorna null. */
 export function obterValorPrincipalDoEquipamento(
   definicao: DefinicaoDeEquipamento,
   nivelDeReforco: NivelDeReforcoDoEquipamento,
@@ -94,6 +104,10 @@ export function obterValorPrincipalDoEquipamento(
   return Math.ceil(baseValor * 1.15)
 }
 
+/**
+ * Confere a posse e a definição antes de trocar a referência do espaço correspondente.
+ * A instância continua em itensDeEquipamento; a contagem de capacidade distingue itens equipados e guardados.
+ */
 export function equiparItem(
   partida: PartidaLocal,
   idDaInstancia: string,

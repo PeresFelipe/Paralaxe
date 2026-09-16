@@ -1,3 +1,8 @@
+/**
+ * @file Regras da expedição de Dún Liath: rota, salas, decisões, combate e extração.
+ * O saque permanece separado do inventário seguro até a extração. Uma derrota descarta
+ * a expedição, mas pode preservar a decisão narrativa sobre o Protetor.
+ */
 import type { CatalogoDeConteudoDeCombate, EntradaDoRegistroDeCombate, ResultadoDeCombate, RecursosDeCombate } from './combate'
 import { aplicarResultadoDeCombate, simularCombate } from './combate'
 import type { InstanciaDeEquipamento, RaridadeDoEquipamento } from './equipamento'
@@ -34,12 +39,14 @@ export interface PilhaDaExpedicao {
   quantidade: number
 }
 
+/** Saque provisório com raridade e afixos; recebe um ID de instância permanente somente na extração. */
 export interface EquipamentoDaExpedicao {
   idDaDefinicao: string
   raridade: RaridadeDoEquipamento
   idsDosAfixos: string[]
 }
 
+/** Estado retomável da viagem: semente, caminho escolhido, salas resolvidas, recursos e saque em risco. */
 export interface ExpedicaoNaMasmorra {
   idDaDefinicaoDaMasmorra: string
   dificuldade: "facil"
@@ -90,6 +97,7 @@ const IDS_DOS_AFIXOS = [
   "afixo.defesa-2",
 ] as const
 
+/** Produz sorteios reproduzíveis a partir da semente derivada da expedição e da sala. */
 function criarGeradorAleatorio(semente: number) {
   let estado = semente >>> 0
   return () => {
@@ -98,6 +106,7 @@ function criarGeradorAleatorio(semente: number) {
   }
 }
 
+/** Acumula um recurso na bolsa provisória sem concedê-lo ainda ao inventário seguro. */
 function adicionarPilha(pilhas: PilhaDaExpedicao[], idDaDefinicao: string, quantidade = 1) {
   const existente = pilhas.find((pilha) => pilha.idDaDefinicao === idDaDefinicao)
   if (!existente) return [...pilhas, { idDaDefinicao, quantidade }]
@@ -109,6 +118,7 @@ function adicionarPilha(pilhas: PilhaDaExpedicao[], idDaDefinicao: string, quant
   )
 }
 
+/** Soma uma recompensa ao inventário; a verificação de capacidade é feita pelo fluxo que chama a função. */
 function adicionarInventarioPilha(
   inventario: PartidaLocal["personagem"]["inventario"],
   idDaDefinicao: string,
@@ -124,6 +134,7 @@ function adicionarInventarioPilha(
   )
 }
 
+/** Consolida por definição o consumo de fases diferentes para aplicar o débito combinado uma única vez. */
 function mesclarConsumidoItens(primeiro: ResultadoDeCombate["itensConsumidos"], segundo: ResultadoDeCombate["itensConsumidos"]) {
   const quantidades = new Map<string, number>()
   for (const pilha of [...primeiro, ...segundo]) {
@@ -132,6 +143,7 @@ function mesclarConsumidoItens(primeiro: ResultadoDeCombate["itensConsumidos"], 
   return [...quantidades.entries()].map(([idDaDefinicao, quantidade]) => ({ idDaDefinicao, quantidade }))
 }
 
+/** Valores de apoio derivados só dos atributos; o chamador pode fornecer máximos completos com bônus de equipamento. */
 function criarRecursosIniciais(partida: PartidaLocal): RecursosDeCombate {
   const { vitalidade, mente, vigor } = partida.personagem.atributos
   const vidaMaxima = 100 + vitalidade * 12
@@ -148,6 +160,7 @@ function criarRecursosIniciais(partida: PartidaLocal): RecursosDeCombate {
   }
 }
 
+/** Desloca os instantes de uma segunda fase para formar uma linha de tempo contínua. */
 function deslocamentoRegistro(registro: EntradaDoRegistroDeCombate[], deslocamento: number) {
   return registro.map((entrada) => ({
     ...entrada,
@@ -155,6 +168,10 @@ function deslocamentoRegistro(registro: EntradaDoRegistroDeCombate[], deslocamen
   }))
 }
 
+/**
+ * Resolve duas fases do chefe, carregando recursos e estoque consumido entre elas.
+ * A segunda fase usa uma semente derivada; o retorno consolida duração, consumos e registro.
+ */
 function simularFairtheoirEncontro(
   partida: PartidaLocal,
   catalogo: CatalogoDeConteudoDeCombate,
@@ -210,6 +227,7 @@ function simularFairtheoirEncontro(
   }
 }
 
+/** Usa faixas cumulativas: comum, depois incomum; o restante da probabilidade resulta em raro. */
 function sortearRaridade(aleatorio: () => number, comum: number, incomum: number): RaridadeDoEquipamento {
   const valor = aleatorio()
   if (valor < comum) return "comum"
@@ -217,10 +235,12 @@ function sortearRaridade(aleatorio: () => number, comum: number, incomum: number
   return "raro"
 }
 
+/** A raridade determina quantos afixos distintos o equipamento sorteado recebe. */
 function afixoContagem(raridade: RaridadeDoEquipamento) {
   return raridade === "comum" ? 1 : raridade === "incomum" ? 2 : 3
 }
 
+/** Retira cada afixo do conjunto após o sorteio para não repeti-lo na mesma peça. */
 function sortearAfixos(aleatorio: () => number, contagem: number) {
   const conjuntoDeSorteio = [...IDS_DOS_AFIXOS]
   const resultado: string[] = []
@@ -234,6 +254,7 @@ function sortearAfixos(aleatorio: () => number, contagem: number) {
   return resultado
 }
 
+/** Escolhe uma definição do conjunto da sala e compõe raridade e afixos do saque provisório. */
 function sortearEquipamento(
   aleatorio: () => number,
   definicaoIds: readonly string[],
@@ -250,6 +271,7 @@ function sortearEquipamento(
   }
 }
 
+/** Entrega suprimentos uma única vez, após conferir espaço; repetir um contrato aceito não duplica a recompensa. */
 export function aceitarContratoDeDunLiath(partida: PartidaLocal, agora: string): PartidaLocal {
   if (partida.masmorra.contratoAceito) return partida
   if (partida.masmorra.contratoConcluido) return partida
@@ -270,6 +292,7 @@ export function aceitarContratoDeDunLiath(partida: PartidaLocal, agora: string):
   }
 }
 
+/** Inicializa a rota na entrada e herda uma decisão narrativa anterior, quando já existir. */
 export function criarExpedicaoNaMasmorra(
   partida: PartidaLocal,
   masmorra: DefinicaoDeMasmorra,
@@ -298,6 +321,7 @@ export function criarExpedicaoNaMasmorra(
   }
 }
 
+/** Exige contrato e ausência de outra expedição ou trabalho ativo antes de criar o estado da viagem. */
 export function iniciarMasmorra(
   partida: PartidaLocal,
   masmorra: DefinicaoDeMasmorra,
@@ -324,6 +348,7 @@ export function iniciarMasmorra(
   }
 }
 
+/** Só avança por uma saída da sala resolvida e impede revisitar salas, tornando a ramificação irreversível. */
 export function escolherCaminhoNaMasmorra(
   partida: PartidaLocal,
   masmorra: DefinicaoDeMasmorra,
@@ -364,6 +389,10 @@ export function escolherCaminhoNaMasmorra(
   }
 }
 
+/**
+ * Preserva os recursos entre encontros, aplica o resultado e acrescenta saques específicos do inimigo.
+ * Em derrota ou tempo esgotado, encerra a expedição antes de marcar a sala como resolvida.
+ */
 function resolverCombateSala(
   partida: PartidaLocal,
   masmorra: DefinicaoDeMasmorra,
@@ -375,6 +404,7 @@ function resolverCombateSala(
 ): { partida: PartidaLocal; execucao: ExpedicaoNaMasmorra; resultadoDeCombate: ResultadoDeCombate } {
   if (!sala.idDaDefinicaoDoInimigo) throw new Error('Sala não possui inimigo.')
 
+  // Derivar a semente da viagem e do avanço da rota mantém o encontro reproduzível ao recarregar.
   const encontroSemente = (execucao.semente + execucao.idsDasSalasVisitadas.length * 7919) >>> 0
   const ehFairtheoir = sala.id === "sala.fairtheoir"
   const resultadoDeCombate = ehFairtheoir
@@ -465,6 +495,10 @@ function resolverCombateSala(
   return { partida: proximoPartida, execucao: proximoExecucao, resultadoDeCombate }
 }
 
+/**
+ * Resolve a sala atual uma única vez, despachando combate, evento, tesouro ou recuperação.
+ * A marcação em idsDasSalasResolvidas impede reabrir recompensas da mesma sala.
+ */
 export function resolverSalaDaMasmorra(
   partida: PartidaLocal,
   masmorra: DefinicaoDeMasmorra,
@@ -481,6 +515,7 @@ export function resolverSalaDaMasmorra(
     throw new Error('Escolha Matar ou Poupar antes de resolver esse evento.')
   }
 
+  // Os sorteios de saque usam a mesma posição da rota; não dependem da hora real em que a sala é aberta.
   const aleatorio = criarGeradorAleatorio((execucao.semente ^ execucao.idsDasSalasVisitadas.length * 2654435761) >>> 0)
   let proximoPartida = partida
   let proximoExecucao = execucao
@@ -535,6 +570,7 @@ export function resolverSalaDaMasmorra(
     }
   }
 
+  // O ponto de recuperação restaura recursos e libera a retirada segura dos saques já obtidos.
   if (sala.tipo === "recuperacao") {
     proximoExecucao = {
       ...proximoExecucao,
@@ -569,6 +605,7 @@ export function resolverSalaDaMasmorra(
   return resultadoDeCombate ? { partida: resolvidoPartida, resultadoDeCombate } : { partida: resolvidoPartida }
 }
 
+/** Registra uma escolha única na sala apropriada; a resolução da sala exige que ela já tenha sido tomada. */
 export function decidirDestinoDoProtetor(
   partida: PartidaLocal,
   decisao: "morto" | "poupado",
@@ -591,6 +628,7 @@ export function decidirDestinoDoProtetor(
   }
 }
 
+/** Transforma os saques em instâncias eq-N, mantendo raridade e afixos e avançando a sequência da partida. */
 function materializarExpedicaoEquipamento(
   partida: PartidaLocal,
   saque: EquipamentoDaExpedicao[],
@@ -607,6 +645,10 @@ function materializarExpedicaoEquipamento(
   return { criado, proximaSequencia }
 }
 
+/**
+ * Confere espaço para todo o saque antes de concluir a transferência.
+ * Concede recompensas de contrato e primeira conclusão apenas quando suas condições ainda não foram registradas.
+ */
 export function extrairExpedicaoDaMasmorra(partida: PartidaLocal, agora: string): PartidaLocal {
   const execucao = partida.masmorra.expedicaoAtiva
   if (!execucao) throw new Error("Nenhuma Expedição na Masmorra ativa.")
@@ -624,6 +666,7 @@ export function extrairExpedicaoDaMasmorra(partida: PartidaLocal, agora: string)
     inventario = adicionarInventarioPilha(inventario, pilha.idDaDefinicao, pilha.quantidade)
   }
 
+  // A prévia já contém as pilhas extraídas, pois elas também consomem espaços que os equipamentos disputam.
   const equipamentoPrevia: PartidaLocal = {
     ...partida,
     personagem: { ...partida.personagem, inventario },
@@ -632,6 +675,7 @@ export function extrairExpedicaoDaMasmorra(partida: PartidaLocal, agora: string)
     verificarCapacidadeParaEquipamentoNoInventario(equipamentoPrevia, execucao.equipamentosDaExpedicao.length)
   }
   const equipamento = materializarExpedicaoEquipamento(partida, execucao.equipamentosDaExpedicao)
+  // Flags permanentes separam a conclusão desta viagem das recompensas que só podem ser concedidas uma vez.
   const primeiroConcluir = execucao.concluido && !partida.masmorra.dunLiathFacilConquistado
   const jaPossuiRegistroDeDados = inventario.some(
     (pilha) =>
@@ -668,6 +712,7 @@ export function extrairExpedicaoDaMasmorra(partida: PartidaLocal, agora: string)
   }
 }
 
+/** Apaga a viagem e seus saques provisórios, retorna à cidade e conserva a decisão narrativa já tomada. */
 export function encerrarExpedicaoComDerrota(partida: PartidaLocal, agora: string): PartidaLocal {
   const execucao = partida.masmorra.expedicaoAtiva
 

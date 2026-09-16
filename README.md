@@ -40,6 +40,7 @@ Os nomes dos pacotes são `@greywake/jogo`, `@greywake/dominio`, `@greywake/cont
 
 ## Documentação
 
+- [Guia do código](documentacao/implementacao/GUIA-DO-CODIGO.md): leitura por arquivo, fluxos, comentários e configurações JSON.
 - [GDD](documentacao/GDD.md): regras canônicas do jogo.
 - [GDD de experiência do usuário](documentacao/UX-GDD.md): navegação e interação.
 - [Plano de validação da versão 0.1](documentacao/versoes/0.1-plano-de-validacao.md).

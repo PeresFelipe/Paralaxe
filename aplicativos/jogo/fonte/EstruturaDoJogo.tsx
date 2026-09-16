@@ -1,3 +1,8 @@
+/**
+ * @file Estrutura visual da partida e navegação entre Personagem, Atividades, Aventura e Cidade.
+ * Recebe a partida persistida e callbacks de Aplicativo; suas abas e painéis são estado
+ * transitório de apresentação. Consultar outra tela não inicia nem cancela um trabalho.
+ */
 import { useMemo, useState } from "react";
 import {
   CLASSES_DE_PERSONAGEM,
@@ -51,6 +56,7 @@ type TelaDaCidade =
   | "relicario";
 type PainelRapidoAtivo = "jornada" | "inventario" | null;
 
+/** Contrato entre a coordenação da partida e suas telas. Alterações são enviadas pelos callbacks, não ao IndexedDB. */
 type PropriedadesDeEstruturaDoJogo = {
   partida: PartidaLocal;
   mensagem: string | null;
@@ -89,6 +95,7 @@ const combateCatalogo = {
   obterDefinicaoDeConsumivel: obterDefinicaoDeConsumivelDeCombate,
 };
 
+/** Resume a coleta ou receita efetivamente selecionada na partida, independentemente da tela em consulta. */
 function ativoTrabalho(partida: PartidaLocal) {
   if (partida.ocioso.atividadeAtiva) {
     const atividade = ATIVIDADES_OCIOSAS_INICIAIS.find(
@@ -119,6 +126,7 @@ function ativoTrabalho(partida: PartidaLocal) {
   return null;
 }
 
+/** Compõe cabeçalho, navegação, conteúdo, resumo lateral e barra contínua do trabalho ativo. */
 export default function EstruturaDoJogo({
   partida,
   mensagem,
@@ -143,6 +151,7 @@ export default function EstruturaDoJogo({
   aoDepositarEquipamentoNoBanco,
   aoRetirarEquipamentoDoBanco,
 }: PropriedadesDeEstruturaDoJogo) {
+  // Uma expedição persistida reabre diretamente em Aventura; as demais partidas começam na visão do personagem.
   const [destino, definirDestino] = useState<DestinoPrincipal>(
     partida.masmorra.expedicaoAtiva ? "aventura" : "personagem",
   );
@@ -165,8 +174,10 @@ export default function EstruturaDoJogo({
   const trabalho = ativoTrabalho(partida);
   const jornada = obterHistoriaDaJornada(partida);
   const masmorraAtivo = Boolean(partida.masmorra.expedicaoAtiva);
+  // O risco temporário do combate e a expedição persistida bloqueiam a navegação e pausam a barra de trabalho.
   const focadoRisco = riscoAtivo || masmorraAtivo;
 
+  /** Muda o destino principal em contexto seguro e fecha consultas rápidas para evitar painéis fora de contexto. */
   function ir(proximo: DestinoPrincipal) {
     if (focadoRisco) return;
     definirDestino(proximo);
@@ -175,30 +186,35 @@ export default function EstruturaDoJogo({
     if (proximo === "cidade") definirCidadeTelaDoJogo("visaoGeral");
   }
 
+  /** Direciona para uma bancada específica de Aventura e fecha a consulta rápida que originou a navegação. */
   function abrirAventura(telaDoJogo: TelaDeAventura) {
     definirDestino("aventura");
     definirAventuraTelaDoJogo(telaDoJogo);
     definirRapidoPainel(null);
   }
 
+  /** Sai do resumo da bolsa para a aba completa de inventário, mantendo a mesma partida. */
   function abrirCompletoInventario() {
     definirDestino("personagem");
     definirPersonagemAba("inventario");
     definirRapidoPainel(null);
   }
 
+  /** Abre uma profissão para consulta; a troca de trabalho depende de um comando separado de início. */
   function abrirProfissao(profissao: IdDaProfissao) {
     if (focadoRisco) return;
     definirSelecionadoProfissao(profissao);
     ir("atividades");
   }
 
+  /** Atalho seguro da jornada para inspecionar ou equipar o resultado de uma fabricação. */
   function abrirEquipamento() {
     if (focadoRisco) return;
     definirPersonagemAba("equipamento");
     ir("personagem");
   }
 
+  /** Abre o contexto de Brann na Cidade após fechar a consulta rápida da jornada. */
   function abrirTaverna() {
     if (focadoRisco) return;
     ir("cidade");
@@ -345,6 +361,7 @@ export default function EstruturaDoJogo({
             />
           ) : null}
 
+          {/* As telas recebem intenções de alteração; a coordenação superior mantém a ordem das gravações. */}
           {destino === "personagem" ? (
             <TelaDoPersonagem
               partida={partida}
@@ -404,6 +421,7 @@ export default function EstruturaDoJogo({
             <CreditosDosRecursos />
           </div>
         </main>
+        {/* Resumo para telas amplas; a disposição compacta oferece os mesmos acessos em outros pontos da estrutura. */}
         <aside className="jogo-companheiro" aria-label="Resumo da jornada">
           <section className="companheiro-secao">
             <div className="companheiro-tituloDaSecao">
@@ -437,6 +455,7 @@ export default function EstruturaDoJogo({
         </aside>
       </div>
 
+      {/* O trabalho continua visível ao navegar; clicar no resumo retorna à profissão realmente em execução. */}
       <footer className="continuidade-barra">
         <button
           disabled={focadoRisco}
@@ -496,6 +515,7 @@ export default function EstruturaDoJogo({
         </div>
       ) : null}
 
+      {/* Consultas rápidas são diálogos de contexto seguro e não criam outra cópia da partida. */}
       {rapidoPainel === "inventario" && !focadoRisco ? (
         <PainelRapido
           rotulo="Inventário rápido"
@@ -573,6 +593,7 @@ export default function EstruturaDoJogo({
   );
 }
 
+/** Distribui abas de atributos, equipamentos, técnicas, inventário e prestígio usando os mesmos dados da partida. */
 function TelaDoPersonagem({
   partida,
   aba,
@@ -831,6 +852,7 @@ function TelaDoPersonagem({
   );
 }
 
+/** Alterna a visão geral e as bancadas de serviço ou masmorra; cada bancada controla sua preparação e resolução. */
 function ComponenteDaTelaDeAventura({
   partida,
   telaDoJogo,
@@ -939,6 +961,7 @@ function ComponenteDaTelaDeAventura({
   );
 }
 
+/** Encaminha os serviços implementados e apresenta o contexto dos locais ainda sem mecânica funcional. */
 function ComponenteDaTelaDaCidade({
   partida,
   telaDoJogo,
@@ -1035,6 +1058,7 @@ function ComponenteDaTelaDaCidade({
     );
   }
 
+  // Ferreiro e Relicário possuem apresentação contextual, mas não executam novos serviços nesta versão.
   if (telaDoJogo !== "visaoGeral") {
     const texto: Record<
       Exclude<TelaDaCidade, "visaoGeral" | "taverna" | "mercado" | "banco">,

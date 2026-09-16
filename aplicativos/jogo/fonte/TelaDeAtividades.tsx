@@ -1,3 +1,8 @@
+/**
+ * @file Consulta de profissões e comandos de coleta, produção e acompanhamento de receitas.
+ * Distingue a profissão aberta da profissão realmente ativa. Apenas os callbacks de
+ * iniciar/parar alteram o trabalho; navegar ou consultar ingredientes mantém a atividade em andamento.
+ */
 import { useState } from 'react'
 import { RECEITAS_INICIAIS_DE_FABRICACAO, ATIVIDADES_OCIOSAS_INICIAIS } from '@greywake/conteudo'
 import { obterXpDeProfissaoParaProximoNivel, type PartidaLocal, type IdDaProfissao } from '@greywake/dominio'
@@ -18,17 +23,20 @@ type PropriedadesDeTelaDeAtividades = {
   aoTrilhaReceita: (idDaReceita: string) => Promise<void>
 }
 
+/** Filtra o catálogo pela profissão selecionada e combina requisitos com o inventário para explicar as ações disponíveis. */
 export default function TelaDeAtividades({ partida, ultimoResultadoDoTrabalho, profissaoSelecionada, aoSelecionarProfissao, aoIniciarAtividade, aoIniciarReceita, aoPararTrabalho, aoTrilhaReceita }: PropriedadesDeTelaDeAtividades) {
   const [pendente, definirPendente] = useState(false)
   const [acaoErro, definirAcaoErro] = useState<string | null>(null)
   const progresso = partida.profissoes[profissaoSelecionada]
   const proximoNivelXp = obterXpDeProfissaoParaProximoNivel(progresso.nivel)
   const atividades = ATIVIDADES_OCIOSAS_INICIAIS.filter((atividade) => atividade.idDaProfissao === profissaoSelecionada)
+  // Reforço precisa de uma instância escolhida; sua entrada permanece em Personagem → Equipamento.
   const receitas = RECEITAS_INICIAIS_DE_FABRICACAO.filter((receita) => receita.idDaProfissao === profissaoSelecionada && receita.saida.tipo !== "equipamento-reforco")
   const ocioso = ATIVIDADES_OCIOSAS_INICIAIS.find((atividade) => atividade.id === partida.ocioso.atividadeAtiva?.idDaDefinicaoDaAtividade)
   const fabricar = RECEITAS_INICIAIS_DE_FABRICACAO.find((receita) => receita.id === partida.fabricacao.receitaAtiva?.idDaDefinicaoDaReceita)
   const trabalho = ocioso?.nomeDoResultado ?? fabricar?.nome
   const ativoProfissao = ocioso?.idDaProfissao ?? fabricar?.idDaProfissao
+  // Cada profissão tem GIF e imagem estática; o picture usa movimento só para o trabalho ativo e quando permitido pelo usuário.
   const animadoArte = profissaoSelecionada === "pesca"
     ? { movimento: '/arte/atividades/pesca.gif?v=3', estatico: '/arte/atividades/pesca-estatico.png?v=2' }
     : profissaoSelecionada === "mineracao"
@@ -46,6 +54,7 @@ export default function TelaDeAtividades({ partida, ultimoResultadoDoTrabalho, p
       : null
   const possuido = (id: string) => partida.personagem.inventario.find((pilha) => pilha.idDaDefinicao === id)?.quantidade ?? 0
 
+  /** Bloqueia repetição enquanto a Promise está pendente, apresenta a falha local e libera os controles no finally. */
   async function agir(acao: () => Promise<void>) {
     if (pendente) return
     definirPendente(true)
@@ -55,6 +64,7 @@ export default function TelaDeAtividades({ partida, ultimoResultadoDoTrabalho, p
     finally { definirPendente(false) }
   }
 
+  /** Troca a consulta e limpa o erro anterior, sem chamar início, parada ou persistência de atividade. */
   function escolherProfissao(profissao: IdDaProfissao) {
     definirAcaoErro(null)
     aoSelecionarProfissao(profissao)
@@ -131,6 +141,7 @@ export default function TelaDeAtividades({ partida, ultimoResultadoDoTrabalho, p
             })}
             {receitas.map((receita) => {
               const ativo = fabricar?.id === receita.id
+              // Esta verificação orienta os botões. O domínio revalida os ingredientes ao executar a operação sobre o estado atual.
               const suficiente = receita.ingredientes.every((ingrediente) => possuido(ingrediente.idDaDefinicao) >= ingrediente.quantidade)
               const desbloqueado = progresso.nivel >= receita.nivelExigidoDaProfissao
               return <article className={`atividade-opcao painel ${ativo ? "selecionado-cartao" : ''}`} key={receita.id}>
@@ -143,6 +154,7 @@ export default function TelaDeAtividades({ partida, ultimoResultadoDoTrabalho, p
                     {receita.ingredientes.map((ingrediente) => {
                       const quantidade = possuido(ingrediente.idDaDefinicao)
                       const faltante = Math.max(0, ingrediente.quantidade - quantidade)
+                      // Os atalhos de materiais procuram tanto coleta direta quanto uma receita intermediária que produza o ingrediente.
                       const origem = ATIVIDADES_OCIOSAS_INICIAIS.find((atividade) => atividade.idDaDefinicaoDoItemProduzido === ingrediente.idDaDefinicao)
                       const producaoOrigem = RECEITAS_INICIAIS_DE_FABRICACAO.find((candidato) => candidato.saida.tipo === 'item' && candidato.saida.idDaDefinicao === ingrediente.idDaDefinicao)
                       const origemProfissao = origem?.idDaProfissao ?? producaoOrigem?.idDaProfissao

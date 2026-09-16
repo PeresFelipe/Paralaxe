@@ -1,3 +1,8 @@
+/**
+ * @file Testes da conservação do trabalho selecionado durante situações de risco.
+ * Verificam a referência temporal antes/depois da pausa e a entrada na masmorra;
+ * não executam o combate nem a coordenação completa dos temporizadores da interface.
+ */
 import { describe, expect, it } from 'vitest'
 import { criarPartidaLocal, type DefinicaoDeClasseDoPersonagem, type DefinicaoDePresente } from './personagem'
 import { aceitarContratoDeDunLiath, type DefinicaoDeMasmorra } from './masmorra'
@@ -45,6 +50,7 @@ const masmorra: DefinicaoDeMasmorra = {
   ],
 }
 
+/** Cria um estado novo com identidade e horário fixos, isolando as alterações de cada caso. */
 function criarPartida() {
   return criarPartidaLocal({
     idDaPartida: "partida-continuidade",
@@ -56,6 +62,7 @@ function criarPartida() {
   })
 }
 
+/** Prepara contrato aceito e coleta selecionada para testar sua continuidade na entrada. */
 function criarTrabalhandoAceitoPartida() {
   let partida = criarPartida()
   partida = aceitarContratoDeDunLiath(partida, '2026-09-10T10:00:01.000Z')

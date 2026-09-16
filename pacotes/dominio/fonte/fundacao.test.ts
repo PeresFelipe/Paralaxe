@@ -1,3 +1,6 @@
+/**
+ * @file Teste do contrato público que identifica esta fase como jogo com partidas locais.
+ */
 import { describe, expect, it } from 'vitest'
 import { FASE_DA_VERSAO, MODO_DA_PARTIDA } from './indice'
 

@@ -1,3 +1,9 @@
+/**
+ * @file Matriz de viabilidade de combate: seis classes combinadas com quatro preparações.
+ * Simula uma sequência de referência com conteúdo real e sementes fixas. A preparação
+ * é montada diretamente: isto não é um teste da interface nem da obtenção dos materiais.
+ * Cada combinação precisa de pelo menos uma conclusão nas oito sementes avaliadas.
+ */
 import { describe, expect, it } from 'vitest'
 import {
   aceitarContratoDeDunLiath,
@@ -29,6 +35,7 @@ const catalogo = {
 const rotas = ["mineracao", "lenhador", "pesca", "herbologia"] as const
 type IdDaRota = (typeof rotas)[number]
 
+/** Resumo da etapa alcançada; aparece na falha para ajudar a localizar a dificuldade. */
 type DiagnosticoDaRota = {
   conclusao: boolean
   etapa: string
@@ -36,10 +43,12 @@ type DiagnosticoDaRota = {
   preparadosDeCampo: number
 }
 
+/** Lê o estoque restante de consumíveis no cenário de teste. */
 function itemQuantidade(partida: PartidaLocal, idDaDefinicao: string) {
   return partida.personagem.inventario.find((item) => item.idDaDefinicao === idDaDefinicao)?.quantidade ?? 0
 }
 
+/** Injeta suprimentos de preparação sem simular a coleta ou a compra. */
 function adicionarItem(partida: PartidaLocal, idDaDefinicao: string, quantidade: number) {
   const existente = partida.personagem.inventario.find((item) => item.idDaDefinicao === idDaDefinicao)
   const inventario = existente
@@ -50,6 +59,7 @@ function adicionarItem(partida: PartidaLocal, idDaDefinicao: string, quantidade:
   return { ...partida, personagem: { ...partida.personagem, inventario } }
 }
 
+/** Cria uma peça exclusiva e a equipa para representar a preparação esperada na rota. */
 function adicionarEEquipar(partida: PartidaLocal, idDaDefinicao: string, espaco: "luvas" | "botas") {
   const idDaInstancia = `eq-${partida.personagem.proximaSequenciaDeEquipamento}`
   return {
@@ -66,6 +76,7 @@ function adicionarEEquipar(partida: PartidaLocal, idDaDefinicao: string, espaco:
   }
 }
 
+/** Configura nível, habilidades, armadura e a vantagem específica de cada profissão. */
 function prepararRota(partida: PartidaLocal, rota: IdDaRota) {
   const magoUsosPrimeiroPonto = partida.personagem.idDaClasse === "mago"
   let preparado: PartidaLocal = {
@@ -130,6 +141,7 @@ function prepararRota(partida: PartidaLocal, rota: IdDaRota) {
   return configurarEspacoDeConsumivelDeCombate(preparado, 1, "item.consumivel.campo-preparacao", "vida", 70, '2026-09-09T12:01:02.000Z')
 }
 
+/** Recalcula os máximos do personagem equipado e representa uma recuperação completa. */
 function completoRecursos(partida: PartidaLocal): RecursosDeCombate {
   const estatisticas = derivarEstatisticasDeCombateDoJogador(partida, catalogo)
   return {
@@ -142,11 +154,13 @@ function completoRecursos(partida: PartidaLocal): RecursosDeCombate {
   }
 }
 
+/** Executa e aplica um combate determinístico, carregando os recursos recebidos da luta anterior. */
 function luta(partida: PartidaLocal, inimigoId: string, semente: number, recursos: RecursosDeCombate) {
   const resultado = simularCombate(partida, catalogo, inimigoId, semente, 180, recursos)
   return { resultado, partida: aplicarResultadoDeCombate(partida, inimigoId, resultado, '2026-09-09T12:30:00.000Z') }
 }
 
+/** Representa o elmo obtido na sequência de referência, mantendo a identidade das peças. */
 function equiparGarantidoElmo(partida: PartidaLocal) {
   const idDaInstancia = `eq-${partida.personagem.proximaSequenciaDeEquipamento}`
   return {
@@ -163,6 +177,7 @@ function equiparGarantidoElmo(partida: PartidaLocal) {
   }
 }
 
+/** Registra onde a tentativa falhou, a vida restante e os preparados ainda disponíveis. */
 function diagnostico(partida: PartidaLocal, etapa: string, vida: number): DiagnosticoDaRota {
   return {
     conclusao: false,
@@ -172,6 +187,7 @@ function diagnostico(partida: PartidaLocal, etapa: string, vida: number): Diagno
   }
 }
 
+/** Encadeia inimigos e duas fases do chefe; só restaura recursos no ponto seguro previsto. */
 function execucaoReferenciaBaseRota(partida: PartidaLocal, sementeBase: number): DiagnosticoDaRota {
   let atual = partida
   let recursos = completoRecursos(atual)
@@ -230,6 +246,7 @@ describe("Versão 0.1 — matriz de 6 classes × 4 rotas", () => {
         )
 
         expect(
+          // Este critério prova uma rota possível; não exige vitória garantida em todas as sementes.
           tentativas.some((tentativa) => tentativa.conclusao),
           `Falhas: ${JSON.stringify(tentativas)}`,
         ).toBe(true)

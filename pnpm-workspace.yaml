@@ -1,3 +1,5 @@
+# Os padrões incluem cada subpasta que contém package.json.
+# Dependências workspace:* são resolvidas entre estes pacotes, sem publicação externa.
 packages:
   - aplicativos/*
   - pacotes/*

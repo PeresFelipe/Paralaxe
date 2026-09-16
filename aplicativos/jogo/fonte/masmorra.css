@@ -1,3 +1,6 @@
+/* Arquivo: Estilos da bancada de masmorra original.
+   Não é importado pela entrada atual principal.tsx; consulte as folhas ativas
+   estilos.css, disposicao-compacta.css e tema-do-jogo.css ao alterar a interface publicada. */
 .masmorra-bancada {
   width: min(1180px, calc(100% - 40px));
   margin: 0 auto 72px;
@@ -26,6 +29,7 @@
   gap: 28px;
 }
 
+/* Separa a rota principal da bolsa da expedição, reservando largura mínima à lateral. */
 .masmorra-gradeVisual {
   display: grid;
   grid-template-columns: minmax(0, 1.35fr) minmax(280px, 0.65fr);
@@ -37,6 +41,7 @@
   min-height: 420px;
 }
 
+/* Vida, mana e fôlego são apresentados lado a lado. */
 .masmorra-recurso-gradeVisual {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -72,6 +77,7 @@
   letter-spacing: 0.045em;
 }
 
+/* As decisões podem quebrar linha conforme a quantidade de caminhos disponíveis. */
 .protetor-escolha,
 .masmorra-caminhos {
   display: flex;
@@ -115,6 +121,7 @@
   max-height: 250px;
 }
 
+/* Remove a coluna lateral em telas estreitas; as regras seguintes adaptam também o cabeçalho. */
 @media (max-width: 900px) {
   .masmorra-gradeVisual {
     grid-template-columns: 1fr;

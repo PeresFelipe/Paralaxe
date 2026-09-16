@@ -1,9 +1,15 @@
+/**
+ * @file Apresentação contextual das metas e da história a partir do estado da partida.
+ * Produz avisos, comparações e falas sem salvar ou iniciar atividades. As flags de
+ * combate e masmorra determinam o estágio narrativo, incluindo a memória do Protetor.
+ */
 import { derivarEstatisticasDeCombateDoJogador, obterProgressoDaMetaDaJornada, type PartidaLocal } from '@greywake/dominio'
 import { obterDefinicaoDeReceitaDeFabricacao } from './receitasDeFabricacao'
 import { obterDefinicaoDeEquipamento } from './equipamento'
 
 type PartidaDaHistoria = Pick<PartidaLocal, "combate" | "masmorra">
 
+/** Compara antes e depois para anunciar somente uma nova fabricação ou uma meta recém-concluída. */
 export function obterAvisoDeFabricacaoDaJornada(antes: PartidaLocal, apos: PartidaLocal): string | null {
   const primeiroId = apos.jornada.idsDasReceitasFabricadas.find((id) => !antes.jornada.idsDasReceitasFabricadas.includes(id))
   const meta = apos.jornada.meta
@@ -15,6 +21,10 @@ export function obterAvisoDeFabricacaoDaJornada(antes: PartidaLocal, apos: Parti
     : `Meta concluída: ${receita.nome}. Escolha seu próximo passo na Jornada.`
 }
 
+/**
+ * Monta uma cópia de previsão com o item da receita equipado e deriva as diferenças reais de atributos.
+ * O ID jornada-previa existe só nessa cópia e nunca é persistido na partida do jogador.
+ */
 export function obterComparacaoDeEquipamentoDaFabricacao(partida: PartidaLocal, idDaReceita: string) {
   const receita = obterDefinicaoDeReceitaDeFabricacao(idDaReceita)
   if (!receita || receita.saida.tipo !== "equipamento") return null
@@ -25,6 +35,7 @@ export function obterComparacaoDeEquipamentoDaFabricacao(partida: PartidaLocal, 
   const atualDefinicao = equipado ? obterDefinicaoDeEquipamento(equipado.idDaDefinicao) : null
   const catalogo = { obterDefinicaoDeEquipamento }
   const antes = derivarEstatisticasDeCombateDoJogador(partida, catalogo)
+  // A comparação usa o mesmo cálculo de combate do jogo, evitando uma estimativa visual com fórmulas diferentes.
   const previa = {
     ...partida,
     personagem: {
@@ -48,6 +59,7 @@ export function obterComparacaoDeEquipamentoDaFabricacao(partida: PartidaLocal, 
   }
 }
 
+/** Explica o avanço da meta durante a ausência, distinguindo materiais reunidos de fabricação concluída. */
 export function obterResumoDeRetornoDaJornada(antes: PartidaLocal, apos: PartidaLocal): string | null {
   const meta = apos.jornada.meta
   if (!meta || antes.jornada.meta?.concluidoEm) return null
@@ -61,6 +73,7 @@ export function obterResumoDeRetornoDaJornada(antes: PartidaLocal, apos: Partida
   return null
 }
 
+/** Prioriza expedição ativa, contrato concluído, contrato aceito e vitória na estrada para orientar o próximo passo. */
 export function obterHistoriaDaJornada(partida: PartidaDaHistoria) {
   if (partida.masmorra.expedicaoAtiva) return {
     rotulo: 'Em expedição', titulo: 'Expedição em Dún Liath',
@@ -84,6 +97,7 @@ export function obterHistoriaDaJornada(partida: PartidaDaHistoria) {
   }
 }
 
+/** Seleciona a fala e a ação do PNJ e acrescenta a lembrança da escolha sobre o Protetor, quando registrada. */
 export function obterDialogoDeBrann(partida: PartidaDaHistoria) {
   const lembranca = partida.masmorra.dunLiathProtetor === "poupado"
     ? 'Você deixou o Protetor viver. Há decisões que continuam conosco depois que os portões se fecham.'

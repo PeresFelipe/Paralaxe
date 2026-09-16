@@ -1,3 +1,8 @@
+/**
+ * @file Testes do simulador com um catálogo pequeno e controlado.
+ * Usam sementes e recursos explícitos para verificar repetibilidade, consumo automático,
+ * efeitos, equipamento e aplicação das recompensas ou penalidades.
+ */
 import { describe, expect, it } from 'vitest'
 import { criarPartidaLocal, type DefinicaoDeClasseDoPersonagem, type DefinicaoDePresente, type PartidaLocal } from './personagem'
 import {
@@ -62,6 +67,7 @@ const estradaLobo: DefinicaoDeInimigo = {
   recompensaDeXp: 35,
 }
 
+/** Inimigo durável com aplicação frequente de sangramento para exercitar o limiar do efeito. */
 const acumuloBoneco: DefinicaoDeInimigo = {
   id: "inimigo.acumulo-boneco", nome: "Boneco de Acúmulo", nivelDeCombate: 1, vidaMaxima: 999, defesa: 0,
   evasao: 95, precisao: 200, poder: 1, intervaloDeAcaoEmSegundos: 1, tipoDeDanoBasico: "impacto",
@@ -69,6 +75,7 @@ const acumuloBoneco: DefinicaoDeInimigo = {
   recompensaDeXp: 0,
 }
 
+/** Inimigo com redução temporária do dano recebido para observar eventos de postura. */
 const posturaBoneco: DefinicaoDeInimigo = {
   id: "inimigo.postura-boneco", nome: "Boneco de Postura", nivelDeCombate: 1, vidaMaxima: 999, defesa: 0,
   evasao: 95, precisao: 100, poder: 1, intervaloDeAcaoEmSegundos: 1, tipoDeDanoBasico: "impacto",
@@ -76,6 +83,7 @@ const posturaBoneco: DefinicaoDeInimigo = {
   recompensaDeXp: 0,
 }
 
+/** Adaptador mínimo: retorna só as definições necessárias a estes cenários. */
 const catalogo = {
   obterDefinicaoDeEquipamento(idDaDefinicao: string) {
     return equipamento.find((definicao) => definicao.id === idDaDefinicao) ?? null
@@ -93,6 +101,7 @@ const catalogo = {
   },
 }
 
+/** Cria um estado novo com identidade e horário fixos, isolando as alterações de cada caso. */
 function criarPartida() {
   return criarPartidaLocal({
     idDaPartida: "combate-partida", criadoEm: '2026-09-09T12:00:00.000Z', versaoDoConteudo: '0.1.0-dev',
@@ -111,6 +120,7 @@ describe("motor de combate", () => {
   })
 
   it("repete o resultado com a mesma semente e o mesmo estado inicial", () => {
+    // Compara o resultado completo, incluindo a ordem dos eventos, para detectar aleatoriedade não controlada.
     const primeiro = simularCombate(criarPartida(), catalogo, estradaLobo.id, 123456)
     const segundo = simularCombate(criarPartida(), catalogo, estradaLobo.id, 123456)
     expect(segundo).toEqual(primeiro)

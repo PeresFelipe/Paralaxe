@@ -1,5 +1,10 @@
+/**
+ * @file Imagem padronizada do catálogo de ícones: endereço, tamanho e acessibilidade.
+ * A aparência pixelada é definida no CSS; não há lógica de jogo neste componente.
+ */
 import { obterCaminhoDoIconeShikashi, type NomeDoIconeShikashi } from "./iconesDosRecursos";
 
+/** O texto alternativo é opcional: ícones ao lado de um rótulo visível são decorativos. */
 type PropriedadesDeIconeDoJogo = {
   icone: NomeDoIconeShikashi | null | undefined;
   tamanho?: number;
@@ -7,6 +12,7 @@ type PropriedadesDeIconeDoJogo = {
   alt?: string;
 };
 
+/** Omite ícones sem mapeamento e reserva largura e altura antes de carregar a imagem. */
 export default function IconeDoJogo({
   icone,
   tamanho = 32,

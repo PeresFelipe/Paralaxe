@@ -1,5 +1,10 @@
+/**
+ * @file Progressão geral e distribuição confirmada de atributos.
+ * A experiência geral é acumulada ao longo da partida; cada nível ganho concede um ponto.
+ */
 import { CHAVES_DOS_ATRIBUTOS, type ChaveDeAtributo, type PartidaLocal } from './personagem'
 
+/** Custos de cada transição, do nível 1 ao 10; não são totais acumulados. */
 export const XP_GERAL_PARA_PROXIMO_NIVEL = [
   100,
   150,
@@ -16,6 +21,7 @@ export const NIVEL_GERAL_MAXIMO_V01 = 10
 
 export type DistribuicaoDeAtributos = Partial<Record<ChaveDeAtributo, number>>
 
+/** Soma os custos até localizar o nível correspondente à experiência total, respeitando o teto da versão. */
 export function obterNivelGeralPorXp(totalXp: number) {
   let nivel = 1
   let acumulado = 0
@@ -29,6 +35,10 @@ export function obterNivelGeralPorXp(totalXp: number) {
   return Math.min(nivel, NIVEL_GERAL_MAXIMO_V01)
 }
 
+/**
+ * Concede experiência não negativa e contabiliza todos os níveis atravessados de uma vez.
+ * Preserva níveis de partidas já avançadas, mesmo se a tabela de experiência mudar.
+ */
 export function concederXpGeral(
   partida: PartidaLocal,
   quantidadeTotal: number,
@@ -56,6 +66,7 @@ export function concederXpGeral(
   }
 }
 
+/** Valida toda a proposta antes de devolver os atributos alterados e descontar os pontos usados. */
 export function distribuirPontosDeAtributo(
   partida: PartidaLocal,
   distribuicao: DistribuicaoDeAtributos,

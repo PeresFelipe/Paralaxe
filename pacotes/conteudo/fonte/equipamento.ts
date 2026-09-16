@@ -1,5 +1,11 @@
+/**
+ * @file Definições dos equipamentos iniciais, fabricáveis, compráveis e obtidos na masmorra.
+ * Este catálogo descreve o modelo; reforço, raridade e afixos pertencem às instâncias
+ * do jogador. Os valores aqui alimentam a derivação de estatísticas no domínio.
+ */
 import type { DefinicaoDeEquipamento } from '@greywake/dominio'
 
+/** Armas definem dano, cadência e escalonamento; armaduras fornecem defesa e acessórios podem aumentar recursos. */
 export const DEFINICOES_DE_EQUIPAMENTO = [
   { id: "arma.milicia-espada", nome: 'Espada de Milícia', espaco: "maoPrincipal", estatisticaPrincipal: { tipo: "ataque", valor: 14 }, combateDaArma: { tipoDeDano: "corte", intervaloDeAcaoEmSegundos: 2.1, escalonamento: { forca: 'B', destreza: 'C' } } },
   { id: "escudo.milicia-escudo", nome: 'Escudo de Milícia', espaco: "maoSecundaria", estatisticaPrincipal: { tipo: "defesa", valor: 8 } },
@@ -20,6 +26,7 @@ export const DEFINICOES_DE_EQUIPAMENTO = [
   { id: "armadura.giuis-bracadeiras", nome: 'Braçadeiras de Giúis', espaco: "luvas", estatisticaPrincipal: { tipo: "defesa", valor: 6 } },
   { id: "item.equipamento.viajante-anel", nome: 'Anel do Viajante', espaco: "anel1", bonusDeRecursos: { vidaMaxima: 8, manaMaxima: 5, folegoMaximo: 8 } },
 
+  // A partir daqui ficam as peças dos conjuntos de saque de Dún Liath, referenciadas pelo motor da masmorra.
   { id: "armadura.guarnicao-elmo", nome: 'Capacete da Guarnição', espaco: "cabeca", estatisticaPrincipal: { tipo: "defesa", valor: 7 } },
   { id: "armadura.guarnicao-luvas", nome: 'Luvas da Guarnição', espaco: "luvas", estatisticaPrincipal: { tipo: "defesa", valor: 7 } },
   { id: "armadura.guarnicao-perneiras", nome: 'Perneiras da Guarnição', espaco: 'pernas', estatisticaPrincipal: { tipo: "defesa", valor: 10 } },
@@ -32,6 +39,7 @@ export const DEFINICOES_DE_EQUIPAMENTO = [
   { id: "escudo.vigia-escudo", nome: 'Escudo do Vigia', espaco: "maoSecundaria", estatisticaPrincipal: { tipo: "defesa", valor: 11 } },
 ] as const satisfies readonly DefinicaoDeEquipamento[]
 
+/** Retorna a definição compartilhada ou null; os consumidores não devem mutar os dados do catálogo. */
 export function obterDefinicaoDeEquipamento(idDaDefinicao: string): DefinicaoDeEquipamento | null {
   return DEFINICOES_DE_EQUIPAMENTO.find((definicao) => definicao.id === idDaDefinicao) ?? null
 }

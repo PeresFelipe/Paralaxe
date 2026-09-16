@@ -1,3 +1,8 @@
+/**
+ * @file Motor de coleta e experiência das profissões.
+ * O progresso é calculado pela diferença entre horários, permitindo o mesmo processamento
+ * com a página aberta ou após uma ausência. Nenhum temporizador é criado neste módulo.
+ */
 import type { PilhaDoInventario, PartidaLocal } from './personagem'
 import { obterEspacoParaPilhaNoInventario } from './armazenamento'
 
@@ -32,6 +37,7 @@ export interface DefinicaoDeAtividadeOciosa {
   xpDeProfissaoPorAcao: number
 }
 
+/** Referência persistida do trabalho. segundosRestantes guarda o tempo já acumulado de uma ação incompleta. */
 export interface AtividadeOciosaAtiva {
   idDaDefinicaoDaAtividade: string
   iniciadoEm: string
@@ -43,6 +49,7 @@ export interface EstadoOcioso {
   atividadeAtiva: AtividadeOciosaAtiva | null
 }
 
+/** Combina a nova partida com um resumo usado nas mensagens de retorno e interrupção. */
 export interface ResultadoDoProgressoOcioso {
   partida: PartidaLocal
   acoesConcluidas: number
@@ -59,16 +66,19 @@ const XP_DE_PROFISSAO_PARA_PROXIMO_NIVEL = [40, 60, 80, 110, 140, 180, 220, 270,
 const LIMITE_BASE_DE_AUSENCIA_EM_SEGUNDOS = 4 * 60 * 60
 const BONUS_DE_AUSENCIA_POR_DEZ_NIVEIS_EM_SEGUNDOS = 2 * 60 * 60
 
+/** Retorna o custo do próximo nível; null indica que a tabela não possui outra transição. */
 export function obterXpDeProfissaoParaProximoNivel(nivel: number): number | null {
   return XP_DE_PROFISSAO_PARA_PROXIMO_NIVEL[nivel - 1] ?? null
 }
 
+/** Cria objetos independentes para as sete profissões, todas inicialmente no nível 1. */
 export function criarProgressoInicialDasProfissoes(): ProgressoDeProfissaoPorId {
   return Object.fromEntries(
     IDS_DAS_PROFISSOES.map((idDaProfissao) => [idDaProfissao, { nivel: 1, xp: 0, prestigio: 0 }]),
   ) as ProgressoDeProfissaoPorId
 }
 
+/** Limite de quatro horas, acrescido de duas horas a cada dez níveis gerais completos. */
 export function obterLimiteDeAusenciaEmSegundos(personagemNivel: number) {
   const obtidoBonusAdicionais = Math.floor(Math.max(0, personagemNivel) / 10)
   return LIMITE_BASE_DE_AUSENCIA_EM_SEGUNDOS + obtidoBonusAdicionais * BONUS_DE_AUSENCIA_POR_DEZ_NIVEIS_EM_SEGUNDOS
@@ -88,6 +98,7 @@ function adicionarInventarioItem(inventario: PilhaDoInventario[], idDaDefinicao:
   return [...inventario, { idDaDefinicao, quantidade }]
 }
 
+/** Consome o custo de cada nível e transporta o excedente; a XP da profissão é relativa ao nível atual. */
 export function aplicarXpDeProfissao(progresso: ProgressoDeProfissao, ganhoXp: number) {
   let nivel = progresso.nivel
   let xp = progresso.xp + ganhoXp
@@ -109,6 +120,7 @@ export function aplicarXpDeProfissao(progresso: ProgressoDeProfissao, ganhoXp: n
   }
 }
 
+/** Exige nível, espaço para o recurso e ausência de fabricação ativa antes de registrar o horário inicial. */
 export function iniciarAtividadeOciosa(
   partida: PartidaLocal,
   atividade: DefinicaoDeAtividadeOciosa,
@@ -141,6 +153,7 @@ export function iniciarAtividadeOciosa(
   }
 }
 
+/** Remove a atividade selecionada; o chamador deve processar o tempo pendente antes, se desejar creditá-lo. */
 export function interromperAtividadeOciosa(partida: PartidaLocal, agora: string): PartidaLocal {
   return {
     ...partida,
@@ -149,6 +162,10 @@ export function interromperAtividadeOciosa(partida: PartidaLocal, agora: string)
   }
 }
 
+/**
+ * Converte segundos válidos em ações completas, limitadas pela ausência permitida e pela capacidade.
+ * Não modifica a entrada; devolve a partida e os ganhos para a aplicação persistir.
+ */
 export function processarProgressoOcioso(
   partida: PartidaLocal,
   atividade: DefinicaoDeAtividadeOciosa,
@@ -187,14 +204,17 @@ export function processarProgressoOcioso(
     }
   }
 
+  // Só segundos inteiros entram na conta. Horários inválidos ou anteriores já foram descartados acima.
   const decorridoSegundos = Math.floor((agoraMs - ultimoProcessadoMs) / 1000)
   const ausenteLimite = obterLimiteDeAusenciaEmSegundos(partida.personagem.nivel)
   const segundosProcessados = Math.min(decorridoSegundos, ausenteLimite)
   const segundosLimitados = Math.max(0, decorridoSegundos - segundosProcessados)
+  // Soma o saldo de uma ação incompleta; ignorá-lo faria o jogador perder progresso a cada atualização.
   const totalSegundos = ativo.segundosRestantes + segundosProcessados
   const tempoAcoes = Math.floor(totalSegundos / atividade.segundosPorAcao)
   const inventarioSala = obterEspacoParaPilhaNoInventario(partida, atividade.idDaDefinicaoDoItemProduzido)
   const acoesConcluidas = Math.min(tempoAcoes, inventarioSala)
+  // Ao atingir o limite da pilha ou dos espaços, encerra o trabalho em vez de acumular ganhos impossíveis.
   const interrompidoPorCapacidade =
     (inventarioSala === 0 && tempoAcoes > 0) ||
     (inventarioSala > 0 && acoesConcluidas === inventarioSala)
@@ -203,6 +223,8 @@ export function processarProgressoOcioso(
   const profissaoXp = acoesConcluidas * atividade.xpDeProfissaoPorAcao
   const atualProfissao = partida.profissoes[atividade.idDaProfissao]
   const profissaoResultado = aplicarXpDeProfissao(atualProfissao, profissaoXp)
+  // Cada nível de profissão concede 5 XP gerais. Aqui só o total de XP é somado,
+  // sem recalcular o nível geral; esse cálculo pertence a progressao.ts.
   const geralXp = profissaoResultado.niveisGanhos * 5
 
   const proximoPartida: PartidaLocal = {

@@ -1,3 +1,8 @@
+/**
+ * @file Modelo da partida local e criação do personagem.
+ * Reúne o estado persistível dos sistemas; recebe horário, identificadores e conteúdo
+ * do chamador, sem acessar React, relógio global ou armazenamento do navegador.
+ */
 import { criarEspacosPadraoDeConsumiveis, type EstadoDeCombate } from './combate'
 import { type EstadoDeFabricacao } from './fabricacao'
 import { type EstadoDeProgressoDaMasmorra } from './masmorra'
@@ -11,6 +16,7 @@ import {
 import { criarProgressoInicialDasProfissoes, type EstadoOcioso, type ProgressoDeProfissaoPorId } from './ocioso'
 import { criarJornadaInicial, type EstadoDaJornada } from './jornada'
 
+/** Ordem comum à criação, distribuição de pontos e validação dos sete atributos. */
 export const CHAVES_DOS_ATRIBUTOS = [
   "vitalidade",
   "mente",
@@ -39,6 +45,7 @@ export interface EstadoDePrestigioDoPersonagem {
   idsDosNosDesbloqueados: string[]
 }
 
+/** Cria o progresso permanente ainda sem níveis, pontos ou nós comprados. */
 export function criarPrestigioInicialDoPersonagem(): EstadoDePrestigioDoPersonagem {
   return {
     nivel: 0,
@@ -64,6 +71,7 @@ export type IdDoPresente =
   | "sobrevivencia-estojo"
   | "nenhum"
 
+/** Dados de catálogo: a classe define o começo da partida, não uma cópia do personagem atual. */
 export interface DefinicaoDeClasseDoPersonagem {
   id: IdDaClasseDoPersonagem
   nome: string
@@ -73,6 +81,7 @@ export interface DefinicaoDeClasseDoPersonagem {
   idDaHabilidadeInicial: string
 }
 
+/** Distingue moedas, pilhas e equipamentos para aplicar cada presente sem misturar suas regras. */
 export type ConcessaoInicial =
   | {
       tipo: "ouro"
@@ -106,6 +115,7 @@ export interface EstadoDoBanco {
   itensDeEquipamento: InstanciaDeEquipamento[]
 }
 
+/** Estado individual: equipamento guarda IDs de instâncias; itensDeEquipamento guarda os objetos correspondentes. */
 export interface EstadoDoPersonagem {
   nome: string
   idDaClasse: IdDaClasseDoPersonagem
@@ -126,8 +136,10 @@ export interface EstadoDoPersonagem {
   prestigio: EstadoDePrestigioDoPersonagem
 }
 
+/** Versão estrutural usada pelas migrações. Traduzir nomes internos não exige mudar o formato persistido. */
 export const VERSAO_DO_ESQUEMA_DA_PARTIDA = 10 as const
 
+/** Agregado salvo como uma unidade: personagem, trabalhos, combate, expedição e metas da jornada. */
 export interface PartidaLocal {
   idDaPartida: string
   modoDaPartida: "LOCAL"
@@ -158,6 +170,7 @@ function atributoTotal(atributos: AtributosDoPersonagem) {
   return CHAVES_DOS_ATRIBUTOS.reduce((total, chave) => total + atributos[chave], 0)
 }
 
+/** Recusa atributos fracionários ou negativos e exige o orçamento inicial de 35 pontos. */
 function validarPersonagemClasse(definicao: DefinicaoDeClasseDoPersonagem) {
   for (const chave of CHAVES_DOS_ATRIBUTOS) {
     const valor = definicao.atributos[chave]
@@ -172,6 +185,7 @@ function validarPersonagemClasse(definicao: DefinicaoDeClasseDoPersonagem) {
   }
 }
 
+/** Agrupa itens iguais em pilhas e separa equipamentos para receberem IDs únicos na criação. */
 function versaoPresenteEstado(presente: DefinicaoDePresente) {
   const inventarioPorDefinicao = new Map<string, number>()
   const equipamentosConcedidos: Array<{ idDaDefinicao: string; espacoParaEquipar?: EspacoDeEquipamento }> = []
@@ -210,6 +224,10 @@ function versaoPresenteEstado(presente: DefinicaoDePresente) {
   return { ouro, inventario, equipamentosConcedidos }
 }
 
+/**
+ * Valida as escolhas e constrói todos os estados iniciais.
+ * Copia os atributos do catálogo e devolve uma partida nova; a gravação é responsabilidade da aplicação.
+ */
 export function criarPartidaLocal(entradaDeDados: ParametrosDeCriacaoDaPartidaLocal): PartidaLocal {
   const nomeDoPersonagem = entradaDeDados.nomeDoPersonagem.trim()
 
@@ -222,12 +240,14 @@ export function criarPartidaLocal(entradaDeDados: ParametrosDeCriacaoDaPartidaLo
   const presenteEstado = versaoPresenteEstado(entradaDeDados.presente)
   const idDaHabilidadeInicial = entradaDeDados.classeDoPersonagem.idDaHabilidadeInicial
   const equipamentosIniciais = criarEstadoDosEquipamentosIniciais(entradaDeDados.classeDoPersonagem.equipamentosIniciais)
+  // A sequência começa após os equipamentos da classe para não repetir IDs do tipo eq-N.
   const presenteEquipamentoItens: InstanciaDeEquipamento[] = presenteEstado.equipamentosConcedidos.map((conceder, indice) => ({
     idDaInstancia: `eq-${equipamentosIniciais.proximaSequenciaDeEquipamento + indice}`,
     idDaDefinicao: conceder.idDaDefinicao,
     nivelDeReforco: 0,
   }))
   const equipado = { ...equipamentosIniciais.equipado }
+  // Um presente só ocupa um espaço vazio; a escolha da classe mantém prioridade no equipamento inicial.
   presenteEstado.equipamentosConcedidos.forEach((conceder, indice) => {
     const instancia = presenteEquipamentoItens[indice]
     if (conceder.espacoParaEquipar && instancia && !equipado[conceder.espacoParaEquipar]) {

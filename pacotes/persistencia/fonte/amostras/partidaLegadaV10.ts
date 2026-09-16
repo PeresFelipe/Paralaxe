@@ -1,4 +1,10 @@
+/**
+ * @file Amostra fixa do formato publicado antes da tradução do código.
+ * Os nomes e valores em inglês são dados intencionais do teste de compatibilidade.
+ * Não traduzir as chaves nem regenerar a amostra a partir do conversor que ela testa.
+ */
 // Amostra criada pela API da main 3a251bf antes da tradução. Preservar o formato.
+/** Combina personagem, banco, trabalho, meta e expedição para exercitar estruturas aninhadas. */
 export const partidaLegadaV10 = {
   "saveId": "warrior",
   "saveMode": "OFFLINE",
@@ -8,6 +14,7 @@ export const partidaLegadaV10 = {
   "updatedAt": "2026-09-15T12:00:00.000Z",
   "playtimeSeconds": 0,
   "character": {
+    // O nome livre coincide com um ID de classe de propósito: apenas classId deve ser traduzido.
     "name": "warrior",
     "classId": "warrior",
     "giftId": "traveller-ring",
@@ -173,6 +180,7 @@ export const partidaLegadaV10 = {
     "wolfDefeated": true
   },
   "dungeon": {
+    // Expedição em andamento: semente, escolhas e recursos precisam sobreviver à conversão.
     "activeRun": {
       "dungeonDefinitionId": "dungeon.dun-liath.easy",
       "difficulty": "easy",

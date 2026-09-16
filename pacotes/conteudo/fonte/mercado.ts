@@ -1,5 +1,11 @@
+/**
+ * @file Ofertas fixas do mercado PNJ da versão inicial.
+ * Cada preço é por compra da oferta inteira. O domínio verifica moedas e espaço
+ * antes de materializar o produto no inventário.
+ */
 import type { OfertaDoMercadoDePnj } from '@greywake/dominio'
 
+/** As ofertas apontam para definições existentes; equipamentos comprados recebem uma nova instância por compra. */
 export const OFERTAS_INICIAIS_DO_MERCADO_DE_PNJ = [
   {
     id: "mercado.campo-preparacao",
@@ -33,6 +39,7 @@ export const OFERTAS_INICIAIS_DO_MERCADO_DE_PNJ = [
   },
 ] as const satisfies readonly OfertaDoMercadoDePnj[]
 
+/** Resolve o ID escolhido na tela sem confiar em preço ou produto enviados pelo componente. */
 export function obterOfertaDoMercadoDePnj(ofertaId: string): OfertaDoMercadoDePnj | null {
   return OFERTAS_INICIAIS_DO_MERCADO_DE_PNJ.find((oferta) => oferta.id === ofertaId) ?? null
 }

@@ -1,3 +1,8 @@
+/**
+ * @file Entrada pública do pacote de domínio.
+ * Exporta regras e tipos usados pela aplicação, pelo conteúdo e pela persistência.
+ * A fase e o modo explicitam que esta versão funciona com partidas locais.
+ */
 export const FASE_DA_VERSAO = "fase-1-local" as const
 export const MODO_DA_PARTIDA = "LOCAL" as const
 

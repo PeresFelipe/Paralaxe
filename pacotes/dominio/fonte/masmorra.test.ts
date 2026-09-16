@@ -1,3 +1,8 @@
+/**
+ * @file Testes de transições da expedição usando um mapa mínimo com uma bifurcação.
+ * Cobrem contrato, ordem das salas, extração, derrota e recompensas de conclusão;
+ * os combates com o conteúdo real são exercitados na matriz do pacote conteudo.
+ */
 import { describe, expect, it } from 'vitest'
 import { criarPartidaLocal, type DefinicaoDeClasseDoPersonagem, type DefinicaoDePresente } from './personagem'
 import {
@@ -41,6 +46,7 @@ const masmorra: DefinicaoDeMasmorra = {
   ],
 }
 
+/** O mapa só usa entrada, eventos e recuperação; não são necessárias definições de combate. */
 const catalogo: CatalogoDeConteudoDaMasmorra = {
   obterDefinicaoDeMasmorra: () => masmorra,
   obterDefinicaoDeHabilidade: () => null,
@@ -48,6 +54,7 @@ const catalogo: CatalogoDeConteudoDaMasmorra = {
   obterDefinicaoDeEquipamento: () => null,
 }
 
+/** Cria um estado novo com identidade e horário fixos, isolando as alterações de cada caso. */
 function criarPartida() {
   return criarPartidaLocal({
     idDaPartida: "partida-masmorra",
@@ -59,6 +66,7 @@ function criarPartida() {
   })
 }
 
+/** Satisfaz o contrato exigido para iniciar a expedição, sem depender da tela da taverna. */
 function criarAceitoPartida() {
   return aceitarContratoDeDunLiath(criarPartida(), '2026-09-09T11:59:00.000Z')
 }

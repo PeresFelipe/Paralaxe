@@ -1,3 +1,8 @@
+/**
+ * @file Teste de integração do Anel do Viajante com os catálogos reais.
+ * Garante que o presente vira equipamento individual e participa das estatísticas,
+ * em vez de permanecer como uma pilha sem efeito no inventário.
+ */
 import { describe, expect, it } from 'vitest'
 import { criarPartidaLocal, derivarEstatisticasDeCombateDoJogador } from '@greywake/dominio'
 import { CLASSES_DE_PERSONAGEM, PRESENTES_INICIAIS } from './criacaoDePersonagem'

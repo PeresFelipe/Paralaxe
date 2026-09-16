@@ -1,3 +1,8 @@
+/**
+ * @file Testes de gravação, reabertura e migração usando IndexedDB em memória.
+ * Verificam expedições interrompidas e a introdução de equipamentos, prestígio e jornada
+ * em partidas antigas. Não dependem de um navegador nem acessam partidas reais.
+ */
 import { beforeEach, describe, expect, it } from 'vitest'
 import { indexedDB } from 'fake-indexeddb'
 import {
@@ -52,6 +57,7 @@ const masmorra: DefinicaoDeMasmorra = {
   ],
 }
 
+/** Solicita a limpeza do banco simulado entre os cenários de gravação e migração. */
 function excluirBancoDeDados() {
   return new Promise<void>((resolver, rejeitar) => {
     const requisicao = indexedDB.deleteDatabase('greywake')
@@ -103,6 +109,7 @@ describe("repositório de partidas em IndexedDB", () => {
     const repositorioAntesFechar = criarRepositorioDePartidasIndexedDb()
     await repositorioAntesFechar.salvar(partida)
 
+    // Uma nova fachada de repositório deve recuperar o mesmo estado salvo antes do fechamento.
     const repositorioAposRecarregar = criarRepositorioDePartidasIndexedDb()
     const carregado = await repositorioAposRecarregar.obter(partida.idDaPartida)
 

@@ -1,3 +1,8 @@
+/**
+ * @file Catálogo da árvore de prestígio e regras de desbloqueio do personagem.
+ * Controla requisitos, custos e reinício de nível/atributos, preservando os nós comprados.
+ * As descrições dos nós não aplicam efeitos por si: o motor de cada sistema precisa interpretá-los.
+ */
 import type { AtributosDoPersonagem, EstadoDePrestigioDoPersonagem, PartidaLocal } from './personagem'
 
 export const NIVEL_MAXIMO_DE_PRESTIGIO_DO_PERSONAGEM = 3
@@ -27,6 +32,7 @@ export interface DefinicaoDeNoDePrestigio {
   caminhoHibrido?: string
 }
 
+/** Monta um nó de um único ramo com custo, ordem de apresentação e pré-requisitos explícitos. */
 const puroNo = (
   grupo: RamoPuroDePrestigio,
   id: string,
@@ -46,6 +52,7 @@ const puroNo = (
   preRequisitos,
 })
 
+/** Monta um nó que combina ramos, incluindo a quantidade mínima de nós puros de cada origem. */
 const hibridoNo = (
   id: string,
   caminhoHibrido: string,
@@ -68,6 +75,7 @@ const hibridoNo = (
   requisitosDeRamo,
 })
 
+/** Árvore declarativa: IDs persistidos conectam pré-requisitos e escolhas já gravadas. */
 export const NOS_DE_PRESTIGIO: readonly DefinicaoDeNoDePrestigio[] = [
   puroNo("corpo", "prestigio.corpo.constituicao", 'Constituição', 'Aumenta a Vida máxima.', 1, 1, []),
   puroNo("corpo", "prestigio.corpo.folego-de-guerra", 'Fôlego de Guerra', "Aumenta o Fôlego máximo e sua recuperação.", 1, 2, ["prestigio.corpo.constituicao"]),
@@ -123,14 +131,17 @@ export const ROTULOS_DOS_HIBRIDOS_DE_PRESTIGIO: Record<string, string> = {
   "tecnica-espirito": 'Técnica + Espírito',
 }
 
+/** Localiza a definição pelo ID persistido; IDs desconhecidos permanecem sem definição. */
 export function obterNoDePrestigio(noId: string) {
   return NOS_DE_PRESTIGIO.find((no) => no.id === noId)
 }
 
+/** A condição atual exige ao menos Prestígio I em todas as profissões. */
 export function personagemPodeRealizarPrestigio(partida: PartidaLocal) {
   return Object.values(partida.profissoes).every((profissao) => profissao.prestigio >= 1)
 }
 
+/** Resume quantas profissões cumprem a condição para a interface explicar o bloqueio. */
 export function obterProntidaoParaPrestigioDoPersonagem(partida: PartidaLocal) {
   const totalDeProfissoes = Object.keys(partida.profissoes).length
   const profissoesProntas = Object.values(partida.profissoes).filter((profissao) => profissao.prestigio >= 1).length
@@ -159,6 +170,7 @@ function formatoNoNomes(noIds: readonly string[]) {
 
 export type SituacaoDoNoDePrestigio = "bloqueado" | "disponivel" | "desbloqueado"
 
+/** Centraliza a decisão de compra e o motivo do bloqueio: profissão, nível, pontos, nós e ramos. */
 export function obterDisponibilidadeDoNoDePrestigio(
   partida: PartidaLocal,
   noId: string,
@@ -191,6 +203,7 @@ export function obterDisponibilidadeDoNoDePrestigio(
   return { situacao: "disponivel" }
 }
 
+/** Revalida os requisitos no momento da compra, desconta o custo e registra o ID do nó. */
 export function desbloquearNoDePrestigioDoPersonagem(
   partida: PartidaLocal,
   noId: string,
@@ -218,6 +231,10 @@ export function desbloquearNoDePrestigioDoPersonagem(
   }
 }
 
+/**
+ * Eleva o prestígio e acrescenta pontos, reiniciando nível, XP e atributos para a base da classe.
+ * Os demais campos são preservados pelo espalhamento do estado; trabalhos ativos impedem a operação.
+ */
 export function realizarPrestigioDoPersonagem(
   partida: PartidaLocal,
   baseAtributos: AtributosDoPersonagem,

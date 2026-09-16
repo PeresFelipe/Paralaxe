@@ -1,5 +1,10 @@
+/**
+ * @file Rótulos e agrupamentos usados na apresentação de profissões e itens.
+ * Os IDs continuam sendo as chaves do domínio; estes textos não definem receitas nem recompensas.
+ */
 import type { IdDaProfissao } from "@greywake/dominio";
 
+/** Nomes legíveis com acentuação para todas as profissões. */
 export const rotulosDasProfissoes: Record<IdDaProfissao, string> = {
   mineracao: "Mineração",
   lenhador: "Lenhador",
@@ -10,18 +15,21 @@ export const rotulosDasProfissoes: Record<IdDaProfissao, string> = {
   culinaria: "Culinária",
 };
 
+/** Ordem das profissões de obtenção de matéria-prima na navegação. */
 export const coletaProfissoes: IdDaProfissao[] = [
   "mineracao",
   "lenhador",
   "pesca",
   "herbologia",
 ];
+/** Ordem das profissões que transformam ingredientes por meio de receitas. */
 export const producaoProfissoes: IdDaProfissao[] = [
   "metalurgia",
   "forja",
   "culinaria",
 ];
 
+/** Tradução visual dos IDs de itens, incluindo recompensas de missões e masmorra. */
 export const rotulosDosItens: Record<string, string> = {
   "material.cloch": "Cloch",
   "material.giuis": "Giúis",

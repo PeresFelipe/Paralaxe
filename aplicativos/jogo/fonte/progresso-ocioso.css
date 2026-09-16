@@ -1,3 +1,5 @@
+/* Arquivo: Estrutura visual do IndicadorDeProgressoOcioso.
+   A fração de preenchimento vem do componente; este CSS não calcula recompensas ou tempo salvo. */
 .ocioso-progresso {
   width: 100%;
   display: grid;
@@ -24,6 +26,7 @@
   letter-spacing: 0.09em;
 }
 
+/* O título longo recebe reticências; os detalhes continuam disponíveis na tela da atividade. */
 .ocioso-progressoTituloDaSecao strong {
   overflow: hidden;
   text-overflow: ellipsis;
@@ -48,6 +51,7 @@
   background: #0e1214;
 }
 
+/* O componente atualiza scaleX; a origem à esquerda mantém o início da barra fixo. */
 .ocioso-progressoPreenchimento {
   display: block;
   height: 100%;
@@ -84,6 +88,7 @@
   font-weight: 600;
 }
 
+/* Variação usada na barra persistente de trabalho, com menos espaço vertical. */
 .ocioso-progresso--compacto {
   min-width: 0;
   gap: 6px;
@@ -98,6 +103,7 @@
   color: var(--atenuado);
 }
 
+/* A cor neutra acompanha a indicação textual de pausa. */
 .ocioso-progresso--pausado .ocioso-progressoPreenchimento {
   background: #596064;
 }
@@ -113,6 +119,7 @@
   width: 100%;
 }
 
+/* Os detalhes passam para uma coluna quando a largura fica restrita. */
 @media (max-width: 760px) {
   .ocioso-progressoDetalhes {
     grid-template-columns: 1fr;

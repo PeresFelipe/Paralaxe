@@ -1,9 +1,11 @@
 <!doctype html>
+<!-- Protótipo navegável independente. Dados ilustrativos em memória, sem conexão com o domínio ou IndexedDB do jogo. -->
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Greywake — Fluxo Alta fidelidade v0.1</title>
+<!-- Regras locais do protótipo; não são importadas pela aplicação React. -->
 <style>
 :root{--fundo:#101315;--s:#171c1f;--s2:#20262a;--linha:#343b3f;--textoExibido:#e5e1d8;--atenuado:#a9aaa5;--ferro:#c4c7c5;--bronze:#a98555;--bronze2:#725a3c;--mana:#718c95;--positivo:#788a72;--aviso:#b99255;--perigo:#9e5550;--r:6px;--sombra:0 18px 52px rgba(0,0,0,.28)}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--fundo);color:var(--textoExibido)}body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}.aplicativo{min-height:100vh;background:radial-gradient(circle at 82% -12%,rgba(169,133,85,.07),transparent 34rem),linear-gradient(#121719,var(--fundo) 36%)}button{font:inherit}button:focus-visible{outline:2px solid var(--ferro);outline-offset:2px}.destaque{font-family:Spectral,Georgia,serif;letter-spacing:.045em}.atenuado{color:var(--atenuado)}.maiusculas{text-transform:uppercase;letter-spacing:.15em;font-size:10px;color:var(--atenuado)}.destaque{color:var(--bronze)}
@@ -31,6 +33,7 @@ main{width:min(1260px,calc(100% - 56px));margin:auto;padding:30px 0 102px}.tela{
 </header>
 <nav class="navegacao" id="navegacaoPrincipal"><button data-tela="personagem">Personagem</button><button class="ativo" data-tela="mineracao">Atividades</button><button data-tela="aventura">Aventura</button><button data-tela="cidade">Cidade</button></nav>
 <div class="risco-superior"><div class="maiusculas">Estado de risco</div><div class="mini" id="riscoContexto">Dún Liath</div></div>
+<!-- Cada seção representa uma tela; o script alterna a classe ativo para simular a navegação. -->
 <main>
 <section class="tela ativo" id="mineracao">
   <div class="localizacao">Atividades · Coleta</div><div class="barraDoTitulo"><h1 class="destaque">Mineração</h1><p>Escolha um recurso para iniciar ou alterar a atividade.</p></div>
@@ -89,12 +92,16 @@ main{width:min(1260px,calc(100% - 56px));margin:auto;padding:30px 0 102px}.tela{
 
 <div class="proto"><small>Navegação do protótipo</small><select id="atalho"><option value="mineracao">Mineração</option><option value="producao">Produção</option><option value="personagem">Personagem</option><option value="cidade">Cidade</option><option value="taverna">Taverna</option><option value="aventura">Aventura</option><option value="preparacao">Preparação</option><option value="combate">Combate</option><option value="masmorra">Masmorra</option><option value="ausente">Retorno sem conexão</option></select></div>
 </div>
+<!-- Interação demonstrativa: altera elementos do documento sem conceder itens ou experiência. -->
 <script>
 const aplicativo=document.getElementById("aplicativo");
 const telas=[...document.querySelectorAll(".tela")];
 const navegacaoBotoes=[...document.querySelectorAll("#navegacaoPrincipal [data-tela]")];
+// Seleciona a tela, adapta a indicação de risco, sincroniza a navegação e fecha painéis auxiliares.
 function mostrar(id){const alvo=document.getElementById(id);if(!alvo)return;telas.forEach(s=>s.classList.toggle("ativo",s===alvo));const modo=alvo.dataset.modo||"seguro";aplicativo.classList.toggle("preparacao-estrutura",modo==="preparacao");aplicativo.classList.toggle("risco-estrutura",modo==="risco");aplicativo.classList.toggle("foco-estrutura",modo==="foco");document.getElementById("riscoContexto").textContent=modo==="preparacao"?"Preparação · A atividade continua":"Dún Liath · Atividade pausada";navegacaoBotoes.forEach(b=>b.classList.toggle("ativo",b.dataset.tela===id||(id==="producao"&&b.dataset.tela==="mineracao")||(id==="taverna"&&b.dataset.tela==="cidade")));document.getElementById("atalho").value=id;document.querySelectorAll(".folha").forEach(s=>s.classList.remove("abrir"));window.scrollTo({top:0,behavior:'instant'});}
+// Delegação de cliques: os atributos data-* nos elementos indicam a ação demonstrada.
 document.addEventListener('click',e=>{const b=e.target.closest('[data-tela]');if(b)mostrar(b.dataset.tela);const abrir=e.target.closest('[data-abrir-folha]');if(abrir)document.getElementById(abrir.dataset.abrirFolha)?.classList.add("abrir");if(e.target.closest('[data-fechar-folha]'))document.querySelectorAll(".folha").forEach(s=>s.classList.remove("abrir"));});
+// O seletor de revisão permite visitar diretamente estados que ainda não têm fluxo completo.
 document.getElementById("atalho").addEventListener('change',e=>mostrar(e.target.value));
 </script>
 </body>

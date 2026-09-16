@@ -1,3 +1,8 @@
+/**
+ * @file Testes de ida e volta entre o formato anterior em inglês e o modelo atual em PT-BR.
+ * Usam IndexedDB simulado e uma amostra independente para detectar perdas silenciosas,
+ * tradução indevida de texto livre e regravação inesperada durante a leitura.
+ */
 import { beforeEach, describe, expect, it } from 'vitest'
 import { indexedDB } from 'fake-indexeddb'
 import type { PartidaLocal } from '@greywake/dominio'
@@ -5,8 +10,10 @@ import { criarRepositorioDePartidasIndexedDb } from './repositorioDePartidasInde
 import { gravarFormatoLegado, lerFormatoLegado } from './formatoLegado'
 import { partidaLegadaV10 } from './amostras/partidaLegadaV10'
 
+// Substitui somente a API do ambiente de teste; o repositório executa suas operações normais.
 Object.defineProperty(globalThis, 'indexedDB', { configurable: true, value: indexedDB })
 
+/** Abre diretamente o esquema publicado antes da tradução, preservando saves e saveId. */
 function abrirBanco(): Promise<IDBDatabase> {
   return new Promise((resolver, rejeitar) => {
     const requisicao = indexedDB.open('greywake', 1)
@@ -16,6 +23,7 @@ function abrirBanco(): Promise<IDBDatabase> {
   })
 }
 
+/** Grava sem passar pelo adaptador atual, evitando que ele produza sua própria entrada de teste. */
 async function inserirPartidaAntiga(partida: unknown) {
   const banco = await abrirBanco()
   try {
@@ -28,6 +36,7 @@ async function inserirPartidaAntiga(partida: unknown) {
   } finally { banco.close() }
 }
 
+/** Lê o registro persistido sem conversão para comparar o formato exato armazenado. */
 async function lerGravacaoBruta() {
   const banco = await abrirBanco()
   try {
@@ -40,6 +49,7 @@ async function lerGravacaoBruta() {
 }
 
 describe('compatibilidade com a main anterior à tradução', () => {
+  // Cada caso recebe um banco vazio para não aproveitar gravações feitas pelo caso anterior.
   beforeEach(async () => {
     await new Promise<void>((resolver, rejeitar) => {
       const requisicao = indexedDB.deleteDatabase('greywake')

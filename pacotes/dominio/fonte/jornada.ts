@@ -1,3 +1,8 @@
+/**
+ * @file Metas voluntárias e memória das primeiras fabricações.
+ * O acompanhamento observa as regras de produção, mas escolher uma meta não executa
+ * trabalho. A conclusão depende de fabricar a receita, não apenas de possuir seu produto.
+ */
 import type { PartidaLocal } from './personagem'
 import type { DefinicaoDeReceitaDeFabricacao } from './fabricacao'
 
@@ -7,11 +12,13 @@ export interface MetaDaJornada {
   concluidoEm: string | null
 }
 
+/** Guarda a meta atual e as receitas já fabricadas para evitar repetir celebrações após recarregar a partida. */
 export interface EstadoDaJornada {
   meta: MetaDaJornada | null
   idsDasReceitasFabricadas: string[]
 }
 
+/** Cria a jornada sem meta escolhida e sem presumir fabricações anteriores. */
 export function criarJornadaInicial(): EstadoDaJornada {
   return { meta: null, idsDasReceitasFabricadas: [] }
 }
@@ -62,6 +69,7 @@ export function obterProgressoDaMetaDaJornada(partida: PartidaLocal, receita: De
   const pronto = ingredientes.every((ingrediente) => ingrediente.faltante === 0)
   const fabricacao = partida.fabricacao.receitaAtiva?.idDaDefinicaoDaReceita === receita.id
   const exigido = ingredientes.reduce((soma, ingrediente) => soma + ingrediente.quantidade, 0)
+  // Limita cada contribuição à quantidade exigida para o total não passar de 100% com materiais excedentes.
   const coletado = ingredientes.reduce((soma, ingrediente) => soma + Math.min(ingrediente.possuido, ingrediente.quantidade), 0)
   return { ingredientes, concluido, pronto, fabricacao, exigido, coletado }
 }

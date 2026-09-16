@@ -1,3 +1,8 @@
+/**
+ * @file Coordena a continuidade do trabalho seguro ao entrar e sair de situações de risco.
+ * Mantém a seleção de coleta ou receita, mas desloca sua referência de tempo para que
+ * o período passado em combate ou masmorra não gere produção paralela.
+ */
 import type { RecursosDeCombate } from './combate'
 import type { PartidaLocal } from './personagem'
 import { iniciarMasmorra, type DefinicaoDeMasmorra } from './masmorra'
@@ -37,6 +42,7 @@ export function iniciarMasmorraComContinuidade(
   recursosIniciais?: RecursosDeCombate,
 ): PartidaLocal {
   const pausado = pausarTrabalhoAtualDuranteRisco(partida, agora)
+  // A validação de iniciarMasmorra exige trabalho inativo; a retirada é temporária e só nesta chamada.
   const desvinculado: PartidaLocal = {
     ...pausado,
     ocioso: { atividadeAtiva: null },

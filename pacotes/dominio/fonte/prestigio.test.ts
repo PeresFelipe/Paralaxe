@@ -1,3 +1,8 @@
+/**
+ * @file Testes de elegibilidade, custo e dependências da árvore de prestígio.
+ * As partidas preparadas antecipam requisitos para isolar o desbloqueio e o reinício;
+ * esses testes não comprovam a aplicação dos efeitos de cada nó no combate.
+ */
 import { describe, expect, it } from 'vitest'
 import { criarPartidaLocal, type PartidaLocal } from './personagem'
 import {
@@ -35,6 +40,7 @@ const presente = {
   concessoes: [],
 }
 
+/** Cria um estado novo com identidade e horário fixos, isolando as alterações de cada caso. */
 function criarPartida() {
   return criarPartidaLocal({
     idDaPartida: "prestigio-test",
@@ -46,6 +52,7 @@ function criarPartida() {
   })
 }
 
+/** Monta profissões com Prestígio I e saldo configurável para testar requisitos da árvore. */
 function prontoPartida(pontos = 5): PartidaLocal {
   const partida = criarPartida()
 
