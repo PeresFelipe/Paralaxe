@@ -2123,3 +2123,97 @@ button.equipado-espaco {
 .criacao-classe-texto strong {
   color: var(--textoExibido);
 }
+
+/* A visão da Cidade usa cartões visuais e uma cena ampla, inspirados em interfaces de jogo mobile. */
+.cidade-visaoGeral-disposicao {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 18px;
+}
+
+.cidade-visaoGeral-disposicao > .contexto-arte {
+  width: 100%;
+  max-width: none;
+  aspect-ratio: 3.2 / 1;
+  border: 1px solid #756644;
+  border-radius: 12px;
+  box-shadow: inset 0 0 0 1px #fff2, 0 12px 28px #0005;
+}
+
+.cidade-visaoGeral-disposicao .cidade-localDoJogo-gradeVisual {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.cidade-visaoGeral-disposicao .cidade-localDoJogo-gradeVisual > button:first-child {
+  grid-column: span 2;
+  min-height: 168px;
+}
+
+.cidade-localDoJogo-gradeVisual button {
+  position: relative;
+  min-height: 142px;
+  align-content: space-between;
+  gap: 12px;
+  padding: 16px;
+  overflow: hidden;
+  border: 1px solid #586348;
+  border-radius: 12px;
+  background:
+    radial-gradient(ellipse at 100% 0%, #a0ad6324, transparent 52%),
+    linear-gradient(145deg, #303b27, #20291d 72%);
+  box-shadow: inset 0 1px #ffffff0a, 0 5px 14px #0003;
+  transition: transform 240ms cubic-bezier(.2, .8, .2, 1), border-color 240ms ease, box-shadow 240ms ease, background-color 240ms ease;
+}
+
+.cidade-localDoJogo-gradeVisual button .jogo-icone {
+  width: 42px;
+  height: 42px;
+  margin: 0;
+  object-fit: contain;
+  filter: drop-shadow(0 3px 5px #0008);
+  transition: transform 300ms cubic-bezier(.2, .8, .2, 1), background-color 240ms ease;
+}
+
+.cidade-localDoJogo-gradeVisual button:hover {
+  transform: translateY(-4px);
+  border-color: #c7ad70;
+  background:
+    radial-gradient(ellipse at 100% 0%, #b8c87338, transparent 58%),
+    linear-gradient(145deg, #3a482c, #252f20 72%);
+  box-shadow: inset 0 1px #ffffff12, 0 12px 24px #0005;
+}
+
+.cidade-localDoJogo-gradeVisual button:hover .jogo-icone {
+  transform: scale(1.08) rotate(-3deg);
+  background: #594c2a;
+}
+
+.cidade-localDoJogo-gradeVisual button strong {
+  font-size: 1.08rem;
+}
+
+.cidade-localDoJogo-gradeVisual button span {
+  font-size: .78rem;
+  line-height: 1.4;
+}
+
+@media (max-width: 720px) {
+  .cidade-visaoGeral-disposicao > .contexto-arte {
+    aspect-ratio: 1.8 / 1;
+  }
+
+  .cidade-visaoGeral-disposicao .cidade-localDoJogo-gradeVisual {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .cidade-visaoGeral-disposicao .cidade-localDoJogo-gradeVisual > button:first-child {
+    grid-column: span 2;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cidade-localDoJogo-gradeVisual button,
+  .cidade-localDoJogo-gradeVisual button .jogo-icone {
+    transition: none;
+  }
+}

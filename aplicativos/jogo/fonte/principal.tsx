@@ -15,6 +15,7 @@ import './tipografia.css'
 import './tema-do-jogo.css'
 import './jornada.css'
 import './creditos.css'
+import './interface-do-jogo.css'
 
 const raizElemento = document.getElementById("raiz")
 
