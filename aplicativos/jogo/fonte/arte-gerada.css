@@ -72,6 +72,12 @@
 .combate-telaDoJogo .contexto-arte--combate {
   background-position: 66.6667% 100%;
 }
+.contexto-arte.contexto-arte--aventura {
+  background-image: url("/arte/cena-aventura.png?v=1") !important;
+  background-size: cover !important;
+  background-repeat: no-repeat !important;
+  background-position: center 55% !important;
+}
 .contexto-arte--masmorra,
 .preparacao-telaDoJogo .contexto-arte--risco {
   background-position: 100% 100%;
@@ -110,6 +116,11 @@
   background-size: 200% 100% !important;
   background-repeat: no-repeat !important;
   background-position: 0 0 !important;
+}
+.retrato-marcador:not(.retrato-marcador--pnj) {
+  background-image: url("/arte/retrato-guerreiro.png?v=1") !important;
+  background-size: cover !important;
+  background-position: center 35% !important;
 }
 .retrato-marcador--pnj {
   background-position: 100% 0 !important;

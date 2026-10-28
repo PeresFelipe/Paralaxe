@@ -752,31 +752,31 @@ body {
 .partida-cartao-emExecucao > strong { color: #2f4934; }
 .partida-cartao-emExecucao > em { color: #54714d; }
 
-/* Paleta final compartilhada: uma base sage, texto verde-carvão, ação verde e ouro só como acento. */
+/* Paleta final compartilhada: superfícies marfim, texto carvão e bronze nos estados ativos. */
 :root {
-  --fundo: #d7dece;
-  --superficie: #e1e9d9;
-  --superficie-2: #d9e3d2;
-  --superficie-3: #cbdac6;
-  --linha: #c4cebd;
-  --textoExibido: #314432;
-  --atenuado: #596957;
+  --fundo: #eeece3;
+  --superficie: #fbfaf5;
+  --superficie-2: #f1f0e8;
+  --superficie-3: #e7e5db;
+  --linha: #d6d3c5;
+  --textoExibido: #34382f;
+  --atenuado: #707267;
   --bronze: #947442;
-  --cor-acao: #3c6143;
-  --cor-acao-hover: #365a3d;
-  --cor-acao-suave: #c4d6c0;
-  --cor-acao-texto: #f6f4e9;
-  --sombra-cartao: #34452a12;
+  --cor-acao: #705b3c;
+  --cor-acao-hover: #5d4b32;
+  --cor-acao-suave: #f0eadb;
+  --cor-acao-texto: #fbf9f1;
+  --sombra-cartao: #34352a12;
 }
 
 body {
   color: var(--textoExibido);
   background:
-    radial-gradient(ellipse at 50% 0%, #c9d7c2 0, transparent 55%),
+    radial-gradient(ellipse at 50% 0%, #e5e1d5 0, transparent 55%),
     var(--fundo);
 }
 
-.jogo-barraSuperior { background: #d7e0d1ed; }
+.jogo-barraSuperior { background: #fbfaf5ed; }
 .global-recursos > div,
 .global-recursos > .icone-botao { border-color: var(--linha); background: var(--superficie); }
 .jogador-nome,
@@ -826,7 +826,7 @@ body {
 .principal-navegacao button.ativo { color: var(--cor-acao); background: var(--cor-acao-suave); }
 .principal-navegacao button:hover:not(:disabled) { background: var(--superficie-2); }
 .principal-navegacao,
-.continuidade-barra { border-color: var(--linha); background: #e1e9d9ed; }
+.continuidade-barra { border-color: var(--linha); background: #fbfaf5ed; }
 .continuidade-acoes button { color: var(--atenuado); }
 .continuidade-acoes button:hover { background: var(--superficie-2); }
 
@@ -860,3 +860,142 @@ body {
 .jornada-meta-resumo span > span { color: var(--atenuado); }
 .jogo-conteudo :where(button, input, select, summary, a):focus-visible,
 .pular-ligacao:focus-visible { outline-color: var(--bronze); }
+
+/* Corrige fundos escuros do tema medieval que escapavam da paleta clara nas abas internas. */
+.atributo-listar > div,
+.tecnica-linhaDeDados,
+.banco-item-linhaDeDados {
+  border-color: var(--linha);
+  background: var(--superficie);
+  color: var(--textoExibido);
+}
+
+.atributo-listar > div strong,
+.atributo-listar > div span,
+.tecnica-linhaDeDados strong,
+.tecnica-linhaDeDados span,
+.banco-item-linhaDeDados strong,
+.banco-item-linhaDeDados span { color: var(--textoExibido); }
+
+.tecnica-linhaDeDados small { color: var(--atenuado); }
+.prioridade-indice,
+.prestigio-noCamada { border-color: var(--linha); color: var(--bronze); }
+
+.prestigio-no {
+  border-color: var(--linha);
+  color: var(--textoExibido);
+  background: var(--superficie);
+}
+
+button.prestigio-no:hover:not(:disabled) {
+  border-color: #bcb59f;
+  background: var(--superficie-2);
+}
+
+.prestigio-no--disponivel { border-color: #c3ad7a; background: #f5f0e2; }
+.prestigio-no--desbloqueado { border-color: #b8c7b2; background: #edf1e8; }
+.prestigio-no--desbloqueado .prestigio-noCamada { border-color: #b8c7b2; color: var(--cor-acao); }
+.prestigio-noTexto small,
+.prestigio-noDetalhesAdicionais,
+.prestigio-no--bloqueado .prestigio-noDetalhesAdicionais,
+.prestigio-no--desbloqueado .prestigio-noDetalhesAdicionais { color: var(--atenuado); }
+
+.jogador-nome,
+.global-recursos strong,
+.entrada-estrutura .entrada-marca,
+.entrada-estrutura .destaque-titulo,
+.funcionalidade-telaDoJogo .destaque-titulo,
+.funcionalidade-telaDoJogo h2,
+.funcionalidade-telaDoJogo h3 { color: var(--textoExibido); }
+
+.jogador-identidade span,
+.global-recursos small,
+.funcionalidade-telaDoJogo .atenuado,
+.funcionalidade-telaDoJogo p:not(.atividade-cena-legenda) { color: var(--atenuado); }
+
+.jogo-estrutura--risco .continuidade-barra,
+.jogo-estrutura--risco .principal-navegacao {
+  border-color: var(--linha);
+  background: #fbfaf5ed;
+}
+
+/* Em telas largas, as duas barras ocupam os cantos inferiores, sem mudar o formato. */
+@media (min-width: 980px) {
+  .continuidade-barra,
+  .jogo-estrutura--risco .continuidade-barra {
+    inset: auto auto 14px 18px;
+    width: min(500px, calc(50vw - 30px));
+    transform: none;
+  }
+
+  .principal-navegacao,
+  .jogo-estrutura--risco .principal-navegacao {
+    inset: auto 18px 14px auto;
+    width: min(500px, calc(50vw - 30px));
+    transform: none;
+  }
+}
+
+/* Em desktop, os controles viram colunas nas laterais da área de jogo. */
+@media (min-width: 1100px) {
+  .continuidade-barra,
+  .jogo-estrutura--risco .continuidade-barra {
+    inset: 50% auto auto 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: center;
+    gap: 8px;
+    width: min(230px, calc((100vw - 760px) / 2 - 24px));
+    height: auto;
+    min-height: 0;
+    padding: 12px;
+    transform: translateY(-50%);
+  }
+
+  .atual-trabalho { width: 100%; }
+
+  .continuidade-acoes {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .continuidade-acoes button {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+    min-height: 38px;
+    padding-inline: 8px;
+    text-align: left;
+  }
+
+  .principal-navegacao,
+  .jogo-estrutura--risco .principal-navegacao {
+    inset: 50% 16px auto auto;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: center;
+    gap: 4px;
+    width: min(230px, calc((100vw - 760px) / 2 - 24px));
+    height: auto;
+    min-height: 0;
+    padding: 8px;
+    transform: translateY(-50%);
+  }
+
+  .principal-navegacao button {
+    flex: 0 0 auto;
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 10px;
+    min-height: 54px;
+    padding: 8px 10px;
+    text-align: left;
+  }
+
+  .principal-navegacao button > span {
+    text-align: left;
+  }
+}
