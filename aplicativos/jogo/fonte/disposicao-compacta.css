@@ -10,15 +10,15 @@
   --toque-alvo: 44px;
 }
 .jogo-estrutura {
-  padding-bottom: 0;
+  padding-bottom:var(--ui-space-0);
 }
 .jogo-barraSuperior {
   min-height: var(--estrutura-cabecalho);
-  gap: 16px;
-  padding: 8px 24px;
+  gap:var(--ui-space-4);
+  padding:var(--ui-space-2) var(--ui-space-6);
 }
 .jogador-identidade {
-  gap: 9px;
+  gap:var(--ui-space-2-25);
   min-width: 0;
 }
 .jogador-identidade > div:last-child {
@@ -31,10 +31,10 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  font-size: 1rem;
+  font-size: var(--ui-font-size-md);
 }
 .jogador-identidade span {
-  font-size: 0.75rem;
+  font-size: var(--ui-font-size-xs);
 }
 .avatar-marcador {
   width: 36px;
@@ -42,120 +42,89 @@
   flex-shrink: 0;
 }
 .global-recursos {
-  gap: 14px;
+  gap:var(--ui-space-3-5);
 }
 .global-recursos small {
-  font-size: 0.75rem;
+  font-size: var(--ui-font-size-xs);
   text-transform: none;
 }
 .global-recursos strong {
-  font-size: 0.875rem;
+  font-size: var(--ui-font-size-sm);
   font-variant-numeric: tabular-nums;
-}
-.global-recursos > .icone-botao {
-  display: block;
-  width: 44px;
-  height: 44px;
-  flex-shrink: 0;
 }
 .principal-navegacao {
   min-height: 44px;
   height: auto;
   top: var(--estrutura-cabecalho);
-  padding-inline: 24px;
-}
-.principal-navegacao button {
-  min-height: 44px;
-  padding: 8px 20px;
-  font-size: 0.875rem;
-  letter-spacing: 0.035em;
-  text-transform: none;
+  padding-inline:var(--ui-space-6);
 }
 .risco-estado-faixa,
 .preparacao-estado-faixa {
   min-height: 40px;
   height: auto;
-  padding: 8px 24px;
+  padding:var(--ui-space-2) var(--ui-space-6);
 }
 .jogo-conteudo {
   width: min(var(--compacto-conteudo-largura), calc(100% - 40px));
-  padding: 18px 0 calc(var(--estrutura-rodape) + 20px);
+  padding:var(--ui-space-4-5) var(--ui-space-0) calc(var(--estrutura-rodape) + var(--ui-space-5));
 }
 .jogo-estrutura--risco .jogo-conteudo {
-  padding-bottom: 24px;
+  padding-bottom:var(--ui-space-6);
 }
 .destaque-titulo {
-  font-size: clamp(1.6rem, 2.2vw, 2rem);
-  line-height: 1.15;
+  font-size: var(--ui-font-size-page-title);
+  line-height: var(--ui-line-height-compact);
   overflow-wrap: anywhere;
 }
 .secao-chamada {
-  margin-bottom: 4px;
-  font-size: 0.75rem;
-  letter-spacing: 0.08em;
+  margin-bottom:var(--ui-space-1);
+  font-size: var(--ui-font-size-xs);
+  letter-spacing: var(--ui-letter-spacing-narrow);
 }
 .telaDoJogo-tituloDaSecao {
   align-items: center;
-  gap: 12px;
-  margin-bottom: 14px;
+  gap:var(--ui-space-3);
+  margin-bottom:var(--ui-space-3-5);
 }
 .telaDoJogo-tituloDaSecao p:last-child {
-  font-size: 0.875rem;
+  font-size: var(--ui-font-size-sm);
 }
 .telaDoJogo-tituloDaSecao .atenuado {
-  margin-block: 6px 0;
+  margin-block:var(--ui-space-1-5) 0;
 }
 .secao-espacamento {
-  margin-top: 14px;
-}
-.painel {
-  padding: 14px;
-  box-shadow: none;
+  margin-top:var(--ui-space-3-5);
 }
 .painel-tituloDaSecao {
-  gap: 12px;
-  margin-bottom: 12px;
+  gap:var(--ui-space-3);
+  margin-bottom:var(--ui-space-3);
 }
 .funcionalidade-telaDoJogo h2 {
-  font-size: 1.125rem;
+  font-size: var(--ui-font-size-lg);
 }
 .funcionalidade-telaDoJogo h3 {
-  font-size: 1rem;
+  font-size: var(--ui-font-size-md);
 }
 .funcionalidade-telaDoJogo h2.destaque-titulo {
-  font-size: clamp(1.6rem, 2.2vw, 2rem);
-}
-/* Os controles principais mantêm uma área mínima de toque de 44 pixels. */
-.principal-botao,
-.principal-botao.compacto,
-.discreto-botao {
-  min-height: var(--toque-alvo);
-  padding: 8px 12px;
-  font-size: 0.875rem;
-}
-.principal-botao {
-  background: #725635;
-  border-color: #b79564;
-  color: #fff8eb;
+  font-size: var(--ui-font-size-page-title);
 }
 .botao-linhaDeDados {
-  gap: 8px;
+  gap:var(--ui-space-2);
   flex-wrap: wrap;
 }
 .pequeno-texto,
 .informacao-alerta {
-  font-size: 0.8125rem;
+  font-size: var(--ui-font-size-body-large);
 }
 .situacao-selo {
-  font-size: 0.75rem;
-  letter-spacing: 0.04em;
+  font-size: var(--ui-font-size-xs);
+  letter-spacing: var(--ui-letter-spacing-compact);
 }
-.jogo-conteudo :where(button, input, select, summary, a):focus-visible,
+.jogo-conteudo :where(input, select, summary, a):focus-visible,
 .pular-ligacao:focus-visible {
-  outline: 2px solid #dbc393;
-  outline-offset: 3px;
+  outline: var(--ui-size-focus-ring) solid var(--ui-color-focus);
+  outline-offset: var(--ui-space-1);
 }
-button,
 select,
 a,
 summary {
@@ -167,15 +136,15 @@ summary {
   left: 16px;
   top: -100px;
   z-index: 100;
-  background: var(--superficie);
-  color: var(--textoExibido);
-  padding: 12px;
+  background: var(--ui-color-surface);
+  color: var(--ui-color-text);
+  padding:var(--ui-space-3);
 }
 .pular-ligacao:focus {
   top: 8px;
 }
 #jogo-conteudo {
-  scroll-margin-top: 120px;
+  scroll-margin-top: var(--ui-space-30);
 }
 #jogo-conteudo:focus {
   outline: none;
@@ -184,35 +153,11 @@ summary {
 /* Reserva dimensões previsíveis para o trabalho atual e seus atalhos. */
 .continuidade-barra {
   height: var(--estrutura-rodape);
-  gap: 14px;
-  padding: 8px max(24px, calc((100vw - var(--compacto-conteudo-largura)) / 2));
-}
-.atual-trabalho {
-  flex: 1;
-  min-width: 0;
-  max-width: 550px;
-  gap: 8px;
-  min-height: 44px;
-}
-.atual-trabalho > span:first-child {
-  width: 28px;
-  height: 28px;
-  flex-shrink: 0;
-}
-.atual-trabalho strong {
-  font-size: 0.875rem;
-}
-.atual-trabalho small,
-.atual-trabalho em {
-  font-size: 0.75rem;
+  gap:var(--ui-space-3-5);
+  padding:var(--ui-space-2) max(var(--ui-space-6), calc((var(--ui-size-viewport-width) - var(--compacto-conteudo-largura)) / 2));
 }
 .continuidade-acoes {
   flex-shrink: 0;
-}
-.continuidade-acoes button {
-  height: 44px;
-  padding-inline: 12px;
-  font-size: 0.8125rem;
 }
 /* O aviso flutua acima do rodapé para não cobrir os comandos persistentes. */
 .jogo-aviso {
@@ -222,246 +167,111 @@ summary {
   z-index: 45;
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap:var(--ui-space-3);
   width: min(440px, calc(100% - 40px));
-  padding: 8px 8px 8px 14px;
-  border: 1px solid #8e7755;
-  border-radius: 6px;
-  background: #22282a;
-  box-shadow: 0 8px 30px #0006;
+  padding:var(--ui-space-2) var(--ui-space-2) var(--ui-space-2) var(--ui-space-3-5);
+  border: var(--ui-size-border) solid var(--ui-color-warning);
+  border-radius:var(--ui-radius-lg);
+  background: var(--ui-color-warning-surface);
+  box-shadow: var(--ui-shadow-lg);
+  color: var(--ui-color-warning-text);
 }
 .jogo-aviso p {
-  margin: 0;
-  font-size: 0.875rem;
+  margin:var(--ui-space-0);
+  font-size: var(--ui-font-size-sm);
   overflow-wrap: anywhere;
-}
-.jogo-aviso button {
-  min-width: 44px;
-  height: 44px;
-  margin-left: auto;
-  border: 0;
-  background: transparent;
-  cursor: pointer;
-  font-size: 1.25rem;
 }
 .jogo-estrutura--risco .jogo-aviso {
   bottom: 12px;
 }
-/* O diálogo ocupa a altura dinâmica do navegador e contém sua própria rolagem. */
-.lateral-folha {
-  inset: 0 0 0 auto;
-  width: min(410px, 100%);
-  max-width: 100%;
-  height: 100dvh;
-  max-height: 100dvh;
-  margin: 0;
-  padding: 22px;
-  border: 0;
-  border-left: 1px solid var(--linha);
-  color: var(--textoExibido);
-  overscroll-behavior: contain;
-}
-.lateral-folha::backdrop {
-  background: #070b0db3;
-  animation: jornada-fundo-entrar 260ms ease-out both;
-}
-.lateral-folha[open] {
-  animation: jornada-painel-entrar 560ms cubic-bezier(.16, 1, .3, 1) both;
-  transform-origin: right center;
-}
-.lateral-folha[open] > * {
-  animation: jornada-conteudo-entrar 460ms cubic-bezier(.16, 1, .3, 1) both;
-}
-.lateral-folha[open] > *:nth-child(1) { animation-delay: 80ms; }
-.lateral-folha[open] > *:nth-child(2) { animation-delay: 140ms; }
-.lateral-folha[open] > *:nth-child(3) { animation-delay: 200ms; }
-.lateral-folha[open] > *:nth-child(n + 4) { animation-delay: 250ms; }
-.lateral-folha[open] .jornada-meta > * {
-  animation: jornada-conteudo-entrar 440ms cubic-bezier(.16, 1, .3, 1) both;
-}
-.lateral-folha[open] .jornada-meta > *:nth-child(1) { animation-delay: 180ms; }
-.lateral-folha[open] .jornada-meta > *:nth-child(2) { animation-delay: 240ms; }
-.lateral-folha[open] .jornada-meta > *:nth-child(3) { animation-delay: 300ms; }
-@keyframes jornada-painel-entrar {
-  from { opacity: 0; transform: translateX(64px) scale(.975); }
-  to { opacity: 1; transform: translateX(0) scale(1); }
-}
-@keyframes jornada-conteudo-entrar {
-  from { opacity: 0; transform: translateY(16px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-@keyframes jornada-fundo-entrar {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
 .lateral-folha .destaque-titulo {
-  font-size: 1.65rem;
-  margin-bottom: 18px;
-}
-.folha-fechar {
-  min-width: 44px;
-  min-height: 44px;
-}
-.folha-linhaDeDados {
-  padding: 10px 0;
-  font-size: 0.875rem;
+  font-size: var(--ui-font-size-title-large);
+  margin-bottom:var(--ui-space-4-5);
 }
 .jornada-secao {
-  padding: 14px 0;
+  padding:var(--ui-space-3-5) var(--ui-space-0);
 }
 .subnavegacao {
-  gap: 6px;
-  margin-bottom: 14px;
-}
-.subnavegacao button {
-  min-height: 44px;
-  padding: 8px 12px;
-  font-size: 0.875rem;
+  gap:var(--ui-space-1-5);
+  margin-bottom:var(--ui-space-3-5);
 }
 /* Reduz o retrato e deixa a coluna de dados encolher usando minmax(0, 1fr). */
 .personagem-disposicao {
   grid-template-columns: 180px minmax(0, 1fr);
-  gap: 14px;
+  gap:var(--ui-space-3-5);
 }
 .personagem-disposicao > .retrato-marcador {
   width: 180px;
   max-width: 100%;
 }
 .visaoGeral-pilha {
-  gap: 10px;
+  gap:var(--ui-space-2-5);
 }
 .informacoes-gradeVisual {
-  gap: 8px;
-  margin-top: 10px;
+  gap:var(--ui-space-2);
+  margin-top:var(--ui-space-2-5);
 }
 .informacoes-gradeVisual > div {
-  gap: 3px;
-  padding: 8px;
+  gap:var(--ui-space-0-75);
+  padding:var(--ui-space-2);
 }
 .informacoes-gradeVisual span {
-  font-size: 0.8125rem;
+  font-size: var(--ui-font-size-body-large);
 }
 .informacoes-gradeVisual strong {
-  font-size: 0.875rem;
+  font-size: var(--ui-font-size-sm);
 }
 .profissao-resumo-gradeVisual {
-  gap: 6px;
+  gap:var(--ui-space-1-5);
 }
 .profissao-resumo-gradeVisual > div {
-  gap: 8px;
-  padding: 8px;
-  font-size: 0.875rem;
-}
-.atributo-listar {
-  gap: 6px;
-}
-.atributo-listar > div {
-  padding: 9px 10px;
+  gap:var(--ui-space-2);
+  padding:var(--ui-space-2);
+  font-size: var(--ui-font-size-sm);
 }
 .equipamento-gradeVisual-emExecucao {
-  gap: 10px;
+  gap:var(--ui-space-2-5);
 }
 .item-cartao {
   grid-template-columns: 56px minmax(0, 1fr);
-  gap: 10px;
-  padding: 12px;
+  gap:var(--ui-space-2-5);
+  padding:var(--ui-space-3);
 }
 .item-miniatura {
-  font-size: 1.2rem;
+  font-size: var(--ui-font-size-display-large);
 }
 .item-cartaoCorpo h3 {
-  margin: 1px 0 5px;
+  margin:var(--ui-space-pixel) var(--ui-space-0) var(--ui-space-1-25);
 }
 .item-cartaoCorpo p {
-  margin-bottom: 8px;
-  font-size: 0.875rem;
+  margin-bottom:var(--ui-space-2);
+  font-size: var(--ui-font-size-sm);
 }
 .tecnica-linhaDeDados {
   grid-template-columns: 28px 1fr;
-  gap: 8px;
-  padding: 8px 0;
+  gap:var(--ui-space-2);
+  padding:var(--ui-space-2) var(--ui-space-0);
 }
 .prioridade-indice {
   width: 28px;
   height: 28px;
-  font-size: 0.8125rem;
+  font-size: var(--ui-font-size-body-large);
 }
 .tecnica-linhaDeDados small {
-  font-size: 0.8125rem;
-}
-.prestigio-no {
-  min-height: 44px;
-  padding: 8px;
-}
-.prestigio-noTexto strong {
-  font-size: 0.8125rem;
-}
-.prestigio-noTexto small,
-.prestigio-noDetalhesAdicionais {
-  font-size: 0.75rem;
-}
-.inventario-gradeVisual-emExecucao {
-  gap: 8px;
-}
-.inventario-bloco {
-  gap: 4px;
-}
-.inventario-bloco strong,
-.inventario-bloco span {
-  font-size: 0.8125rem;
-}
-
-/* Atividade selecionada, resultado e controles de início e parada compartilham a mesma área. */
-.atividade-regra {
-  text-align: right;
+  font-size: var(--ui-font-size-body-large);
 }
 /* Trilho de profissões à esquerda e área de trabalho à direita; a opção móvel é alternativa visual. */
 .atividades-disposicao {
   display: grid;
   grid-template-columns: 184px minmax(0, 1fr);
-  gap: 16px;
+  gap:var(--ui-space-4);
   align-items: start;
 }
 .atividades-profissao-trilho {
   position: sticky;
   top: 120px;
   display: grid;
-  gap: 16px;
-}
-.atividade-profissao-grupo .secao-titulo-emExecucao {
-  margin: 0 0 8px;
-  font-family: inherit;
-  font-size: 0.75rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--atenuado);
-}
-.atividade-profissao-grupo .profissao-cartao-gradeVisual {
-  grid-template-columns: 1fr;
-  gap: 5px;
-}
-.atividade-profissao-grupo .profissao-cartao {
-  min-height: 46px;
-  padding: 8px 10px;
-  gap: 6px;
-  align-items: center;
-  border-radius: 5px;
-}
-.atividade-profissao-grupo .profissao-cartao span {
-  font-size: 0.875rem;
-}
-.atividade-profissao-grupo .profissao-cartao strong {
-  font-size: 0.75rem;
-  white-space: nowrap;
-  font-weight: 500;
-}
-.profissao-cartao.ativo span {
-  color: var(--textoExibido);
-}
-.profissao-executando {
-  display: block;
-  font-size: 0.75rem;
-  color: #cfb783;
+  gap:var(--ui-space-4);
 }
 .movel-profissao-seletor {
   display: none;
@@ -474,7 +284,7 @@ summary {
 .atividade-etapa {
   display: grid;
   grid-template-columns: minmax(0, var(--atividade-cena-largura)) minmax(0, 1fr);
-  gap: 12px;
+  gap:var(--ui-space-3);
   align-items: stretch;
 }
 .atividade-cena {
@@ -497,70 +307,68 @@ summary {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  gap: 12px;
-  border-color: #574b39;
-  background: #1c2223;
+  gap:var(--ui-space-3);
 }
 .atividade-atualizado .ocioso-progressoTituloDaSecao {
   align-items: start;
 }
 .atividade-atualizado .ocioso-progressoTituloDaSecao strong {
   white-space: normal;
-  font-size: 0.9375rem;
+  font-size: var(--ui-font-size-sm);
 }
 .atividade-atualizado .ocioso-progressoDetalhes {
   grid-template-columns: 1fr;
-  gap: 8px;
+  gap:var(--ui-space-2);
 }
 .atividade-atualizado .ocioso-progressoDetalhes > span:last-child {
   display: none;
 }
 .atividade-atualizado .ocioso-progressoDetalhes strong {
-  font-size: 0.875rem;
+  font-size: var(--ui-font-size-sm);
 }
 .atividade-atualizado-acoes {
   display: flex;
   justify-content: flex-end;
-  font-size: 0.875rem;
+  font-size: var(--ui-font-size-sm);
 }
 /* A barra nativa progress recebe ajustes separados para os motores WebKit e Gecko. */
 .profissao-nivel-faixa {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 8px 12px;
-  padding: 12px 0;
-  border-bottom: 1px solid var(--linha);
-  font-size: 0.8125rem;
+  gap:var(--ui-space-2) var(--ui-space-3);
+  padding:var(--ui-space-3) var(--ui-space-0);
+  border-bottom: var(--ui-size-border) solid var(--ui-color-border);
+  font-size: var(--ui-font-size-body-large);
 }
 .profissao-nivel-faixa strong {
-  font-size: 0.875rem;
+  font-size: var(--ui-font-size-sm);
 }
 .profissao-nivel-faixa progress {
   flex: 1;
   min-width: 80px;
   max-width: 240px;
   height: 6px;
-  accent-color: var(--bronze);
+  accent-color: var(--ui-color-warning);
   border: 0;
-  border-radius: 3px;
+  border-radius:var(--ui-radius-2xs);
   overflow: hidden;
 }
 progress::-webkit-progress-bar {
-  background: var(--superficie-3);
+  background: var(--ui-color-surface-sunken);
 }
 progress::-webkit-progress-value {
-  background: var(--bronze);
+  background: var(--ui-color-warning);
 }
 progress::-moz-progress-bar {
-  background: var(--bronze);
+  background: var(--ui-color-warning);
 }
 .profissao-nivel-faixa > span {
-  color: var(--atenuado);
+  color: var(--ui-color-text-muted);
   font-variant-numeric: tabular-nums;
 }
 .profissao-nivel-faixa details {
-  margin-left: auto;
+  margin-left:auto;
   max-width: 100%;
 }
 .profissao-nivel-faixa summary {
@@ -568,100 +376,11 @@ progress::-moz-progress-bar {
   min-height: 32px;
   display: list-item;
   width: fit-content;
-  padding-block: 5px;
-  color: var(--atenuado);
+  padding-block:var(--ui-space-1-25);
+  color: var(--ui-color-text-muted);
 }
 .profissao-nivel-faixa details p {
-  margin: 4px 0;
-}
-.trabalho-resultado {
-  display: grid;
-  gap: 3px;
-  min-height: 62px;
-  margin: 0;
-  padding-block: 10px;
-}
-.trabalho-resultado span {
-  font-size: 0.75rem;
-  color: var(--atenuado);
-}
-.trabalho-resultado strong {
-  font-size: 0.8125rem;
-  font-weight: 500;
-}
-/* Receitas ocupam uma coluna; título, rendimento e ingredientes permitem quebra de linha. */
-.atividade-opcoes {
-  grid-template-columns: 1fr;
-  gap: 10px;
-}
-.atividade-opcao {
-  grid-template-columns: 48px minmax(0, 1fr);
-  gap: 12px;
-  padding: 12px;
-}
-.atividade-opcao .item-miniatura {
-  width: 48px;
-}
-.atividade-opcao-corpo {
-  min-width: 0;
-}
-.atividade-opcao-titulo {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 8px;
-  justify-content: space-between;
-}
-.atividade-opcao-titulo > span {
-  font-size: 0.8125rem;
-  color: var(--atenuado);
-}
-.atividade-opcao h2 {
-  margin: 0;
-  font-size: 1.125rem;
-}
-.atividade-rendimento {
-  font-size: 0.875rem;
-  color: var(--atenuado);
-  margin: 4px 0 10px;
-}
-.atividade-substituicao {
-  margin: 6px 0;
-  font-size: 0.8125rem;
-  color: #cfb783;
-}
-.ingrediente-listar {
-  margin: 6px 0 10px;
-}
-.ingrediente-listar > div {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 4px 12px;
-  padding: 5px 0;
-  font-size: 0.875rem;
-}
-.ingrediente-listar > div > span {
-  flex: 1;
-}
-.ingrediente-listar strong {
-  margin-left: 6px;
-  font-variant-numeric: tabular-nums;
-}
-.ingrediente-listar small {
-  display: block;
-  font-size: 0.75rem;
-  color: #d1ac72;
-}
-.material-origem {
-  min-height: 44px;
-  padding: 6px 8px;
-  background: transparent;
-  border: 1px solid var(--linha);
-  border-radius: 4px;
-  font-size: 0.8125rem;
-  color: #dcc499;
-  cursor: pointer;
+  margin:var(--ui-space-1) var(--ui-space-0);
 }
 
 /* Mantém a identidade visual em janelas estreitas e com ampliação. */
@@ -669,15 +388,15 @@ progress::-moz-progress-bar {
   box-shadow: none;
 }
 .informacao-linhaDeDados {
-  padding: 8px 0;
-  font-size: 0.875rem;
+  padding:var(--ui-space-2) var(--ui-space-0);
+  font-size: var(--ui-font-size-sm);
 }
 /* Organiza cenas e destinos sem forçar a mesma altura entre as duas colunas. */
 .aventura-visaoGeral-disposicao,
 .cidade-visaoGeral-disposicao {
   display: grid;
   grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
-  gap: 14px;
+  gap:var(--ui-space-3-5);
   align-items: start;
 }
 .aventura-visaoGeral-disposicao > .contexto-arte,
@@ -685,48 +404,34 @@ progress::-moz-progress-bar {
   width: 100%;
 }
 .aventura-gradeVisual,
-.masmorra-entrada-gradeVisual {
-  gap: 10px;
-}
 .aventura-visaoGeral-disposicao .aventura-gradeVisual {
   grid-template-columns: 1fr;
-  margin-top: 0;
+  margin-top:var(--ui-space-0);
 }
 .aventura-cartao h2 {
-  margin: 2px 0 6px;
+  margin:var(--ui-space-0-5) var(--ui-space-0) var(--ui-space-1-5);
 }
 .aventura-cartao p {
-  font-size: 0.875rem;
+  font-size: var(--ui-font-size-sm);
 }
 .funcionalidade-telaDoJogo > .contexto-arte--aventura,
 .funcionalidade-telaDoJogo > .contexto-arte--cidade {
   width: min(100%, 580px);
 }
 .cidade-localDoJogo-gradeVisual {
-  gap: 8px;
+  gap:var(--ui-space-2);
 }
 .cidade-visaoGeral-disposicao .cidade-localDoJogo-gradeVisual {
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  margin-top: 0;
-}
-.cidade-localDoJogo-gradeVisual button {
-  min-height: 84px;
-  gap: 5px;
-  padding: 12px;
-}
-.cidade-localDoJogo-gradeVisual strong {
-  font-size: 1rem;
-}
-.cidade-localDoJogo-gradeVisual span {
-  font-size: 0.8125rem;
+  margin-top:var(--ui-space-0);
 }
 .cidade-contexto-disposicao {
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: 14px;
+  gap:var(--ui-space-3-5);
   align-items: start;
 }
 .pnj-cartao {
-  gap: 12px;
+  gap:var(--ui-space-3);
 }
 .retrato-marcador--pnj {
   width: 112px;
@@ -734,72 +439,33 @@ progress::-moz-progress-bar {
 }
 .preparacao-disposicao {
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: 14px;
+  gap:var(--ui-space-3-5);
 }
 .preparacao-cartoes {
-  gap: 8px;
+  gap:var(--ui-space-2);
 }
 .preparacao-cartoes p:last-child {
-  font-size: 0.8125rem;
+  font-size: var(--ui-font-size-body-large);
 }
-.confirmar-painel,
-.chefe-confirmar,
-.masmorra-conclusao-painel {
-  gap: 16px;
-  padding: 14px;
-}
-.combate-gradeVisual {
-  gap: 10px;
-}
-.combate-combatente h3 {
-  margin: 2px 0 9px;
-}
-.recurso-pilha {
-  gap: 6px;
-}
-.recurso-pilha > div {
-  padding: 8px;
-}
-.masmorra-execucao-gradeVisual {
-  gap: 12px;
-}
-.masmorra-lateral {
-  gap: 10px;
-}
-/* Avisos de atualização e instalação aceitam quebra dos botões conforme o espaço. */
-.web-jogo-situacao {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-  flex-wrap: wrap;
-  padding: 12px;
-  margin-bottom: 16px;
-  border: 1px solid var(--linha);
-  border-radius: 6px;
-  font-size: 0.875rem;
-}
-.web-jogo-situacao p {
-  flex: 1;
-  margin: 0;
-  min-width: 180px;
-  color: var(--atenuado);
+.confirmar-painel {
+  gap:var(--ui-space-4);
 }
 
 /* Reduz larguras e margens intermediárias antes de trocar para a disposição móvel. */
 @media (max-width: 980px) {
   .jogo-barraSuperior,
   .principal-navegacao {
-    padding-inline: 16px;
+    padding-inline:var(--ui-space-4);
   }
   .global-recursos {
-    gap: 8px;
+    gap:var(--ui-space-2);
   }
   .jogo-conteudo {
     width: calc(100% - 32px);
   }
   .atividades-disposicao {
     grid-template-columns: 166px minmax(0, 1fr);
-    gap: 12px;
+    gap:var(--ui-space-3);
   }
   .atividades-areaDeTrabalho {
     --atividade-cena-largura: 192px;
@@ -815,7 +481,7 @@ progress::-moz-progress-bar {
     grid-template-columns: 1fr;
   }
   .continuidade-barra {
-    padding-inline: 16px;
+    padding-inline:var(--ui-space-4);
   }
 }
 /* Usa seletor de profissão, navegação inferior e espaço seguro dos aparelhos móveis. */
@@ -825,14 +491,14 @@ progress::-moz-progress-bar {
     --estrutura-cabecalho: 64px;
   }
   .jogo-estrutura {
-    padding-bottom: 0;
+    padding-bottom:var(--ui-space-0);
   }
   .jogo-barraSuperior {
     min-height: var(--estrutura-cabecalho);
     align-items: center;
     flex-wrap: wrap;
-    gap: 6px 12px;
-    padding: 8px 12px;
+    gap:var(--ui-space-1-5) var(--ui-space-3);
+    padding:var(--ui-space-2) var(--ui-space-3);
   }
   .jogador-identidade {
     flex: 1;
@@ -842,20 +508,17 @@ progress::-moz-progress-bar {
   }
   .global-recursos {
     display: flex;
-    gap: 8px;
+    gap:var(--ui-space-2);
   }
   .global-recursos > div {
     display: flex;
-    gap: 4px;
+    gap:var(--ui-space-1);
   }
   .global-recursos > div:nth-child(4) {
     display: flex;
   }
   .global-recursos strong {
-    font-size: 0.8125rem;
-  }
-  .global-recursos > .icone-botao {
-    display: block;
+    font-size: var(--ui-font-size-body-large);
   }
   .global-recursos small {
     display: none;
@@ -863,30 +526,21 @@ progress::-moz-progress-bar {
   .principal-navegacao {
     top: auto;
     height: calc(56px + env(safe-area-inset-bottom));
-    padding: 0 4px env(safe-area-inset-bottom);
-  }
-  .principal-navegacao button {
-    min-width: 0;
-    font-size: 0.8125rem;
-    letter-spacing: 0;
-    padding: 4px;
+    padding:var(--ui-space-0) var(--ui-space-1) env(safe-area-inset-bottom);
   }
   .jogo-conteudo {
     width: calc(100% - 24px);
-    padding: 14px 0
-      calc(var(--estrutura-rodape) + 76px + env(safe-area-inset-bottom));
+    padding:var(--ui-space-3-5) var(--ui-space-0)
+      calc(var(--estrutura-rodape) + var(--ui-space-19) + env(safe-area-inset-bottom));
   }
   .telaDoJogo-tituloDaSecao {
     flex-direction: column;
     align-items: flex-start;
-    gap: 4px;
-  }
-  .atividade-regra {
-    text-align: left;
+    gap:var(--ui-space-1);
   }
   .atividades-disposicao {
     grid-template-columns: 1fr;
-    gap: 12px;
+    gap:var(--ui-space-3);
   }
   .atividades-profissao-trilho {
     display: none;
@@ -894,33 +548,30 @@ progress::-moz-progress-bar {
   .movel-profissao-seletor {
     display: flex;
     align-items: center;
-    gap: 12px;
-    font-size: 0.875rem;
-    color: var(--atenuado);
+    gap:var(--ui-space-3);
+    font-size: var(--ui-font-size-sm);
+    color: var(--ui-color-text-muted);
   }
   .movel-profissao-seletor select {
     min-width: 0;
     flex: 1;
     min-height: 44px;
-    padding: 8px;
-    color: var(--textoExibido);
-    background: var(--superficie);
-    border: 1px solid var(--linha);
-    border-radius: 5px;
-    font-size: 1rem;
+    padding:var(--ui-space-2);
+    color: var(--ui-color-text);
+    background: var(--ui-color-surface);
+    border: var(--ui-size-border) solid var(--ui-color-border);
+    border-radius:var(--ui-radius-control);
+    font-size: var(--ui-font-size-md);
   }
   .atividades-areaDeTrabalho {
     --atividade-cena-largura: 160px;
   }
   .atividade-etapa {
-    gap: 10px;
-  }
-  .atividade-atualizado {
-    padding: 10px;
+    gap:var(--ui-space-2-5);
   }
   .atividade-atualizado .ocioso-progressoTituloDaSecao {
     flex-wrap: wrap;
-    gap: 3px;
+    gap:var(--ui-space-0-75);
   }
   .atividade-atualizado .ocioso-progressoTituloDaSecao em {
     display: block;
@@ -936,48 +587,16 @@ progress::-moz-progress-bar {
   .continuidade-barra {
     bottom: calc(56px + env(safe-area-inset-bottom));
     height: var(--estrutura-rodape);
-    padding-inline: 12px;
-    gap: 8px;
-  }
-  .atual-trabalho > span:first-child {
-    display: none;
-  }
-  .atual-trabalho .ocioso-progressoTituloDaSecao {
-    gap: 4px;
-    flex-wrap: wrap;
-  }
-  .atual-trabalho em {
-    display: inline;
-  }
-  .atual-trabalho strong {
-    font-size: 0.8125rem;
-  }
-  .atual-trabalho small {
-    display: none;
+    padding-inline:var(--ui-space-3);
+    gap:var(--ui-space-2);
   }
   .continuidade-acoes {
-    gap: 5px;
-  }
-  .continuidade-acoes button,
-  .continuidade-acoes button:first-child {
-    font-size: 0.75rem;
-    padding-inline: 8px;
-  }
-  .continuidade-acoes button:first-child::after {
-    content: none;
-  }
-  .continuidade-acoes button:nth-child(2) {
-    max-width: none;
+    gap:var(--ui-space-1-25);
   }
   .jogo-aviso {
     right: 12px;
     width: calc(100% - 24px);
     bottom: calc(var(--estrutura-rodape) + 68px + env(safe-area-inset-bottom));
-  }
-  .lateral-folha {
-    inset: 0 0 0 auto;
-    padding-top: max(20px, env(safe-area-inset-top));
-    padding-bottom: max(20px, env(safe-area-inset-bottom));
   }
   .cidade-visaoGeral-disposicao .cidade-localDoJogo-gradeVisual {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -991,7 +610,7 @@ progress::-moz-progress-bar {
   .jogador-identidade > div:last-child {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap:var(--ui-space-2-5);
   }
   .avatar-marcador {
     width: 28px;
@@ -1008,7 +627,7 @@ progress::-moz-progress-bar {
     --atividade-cena-largura: 128px;
   }
   .atividade-atualizado {
-    gap: 8px;
+    gap:var(--ui-space-2);
   }
   .atividade-atualizado .ocioso-progressoTituloDaSecao {
     flex-wrap: nowrap;
@@ -1020,17 +639,10 @@ progress::-moz-progress-bar {
     justify-content: flex-start;
   }
   .profissao-nivel-faixa {
-    gap: 6px 8px;
+    gap:var(--ui-space-1-5) var(--ui-space-2);
   }
   .profissao-nivel-faixa progress {
     max-width: 90px;
-  }
-  .atividade-opcao {
-    grid-template-columns: 36px minmax(0, 1fr);
-    gap: 8px;
-  }
-  .atividade-opcao .item-miniatura {
-    width: 36px;
   }
 }
 @media (prefers-reduced-motion: reduce) {

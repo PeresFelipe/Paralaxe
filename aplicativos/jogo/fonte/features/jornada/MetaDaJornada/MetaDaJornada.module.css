@@ -1,0 +1,119 @@
+.meta {
+  min-width: 0;
+  padding: var(--ui-space-5) 0;
+  border-top: var(--ui-size-border) solid var(--ui-color-border-strong);
+}
+
+.meta h3 {
+  margin: 0;
+  color: var(--ui-color-text);
+  font: var(--ui-font-size-lg)/var(--ui-line-height-normal) var(--ui-font-family-display);
+  overflow-wrap: anywhere;
+}
+
+.meta .muted {
+  margin: var(--ui-space-3) 0;
+  font-size: var(--ui-font-size-sm);
+  line-height: var(--ui-line-height-relaxed);
+}
+
+.title {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-3);
+}
+
+.title :global(.jogo-icone) {
+  flex-shrink: 0;
+}
+
+.meta progress {
+  width: 100%;
+  height: var(--ui-space-2);
+  accent-color: var(--ui-color-primary);
+}
+
+.progressLabel {
+  margin: var(--ui-space-1-5) 0 var(--ui-space-3-5);
+  color: var(--ui-color-text-muted);
+  font-size: var(--ui-font-size-xs);
+}
+
+.ingredients {
+  margin: 0 0 var(--ui-space-4);
+  padding: 0;
+  list-style: none;
+}
+
+.ingredients li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ui-space-2) var(--ui-space-3);
+  padding: var(--ui-space-2-5) 0;
+  border-bottom: var(--ui-size-border) solid var(--ui-color-border);
+}
+
+.ingredients li > div {
+  display: grid;
+  min-width: 0;
+  gap: var(--ui-space-1);
+  font-size: var(--ui-font-size-sm);
+}
+
+.ingredients li span {
+  color: var(--ui-color-text-muted);
+  font-size: var(--ui-font-size-xs);
+  overflow-wrap: anywhere;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ui-space-2) var(--ui-space-3);
+  margin: var(--ui-space-4) 0;
+}
+
+.options {
+  display: grid;
+  gap: var(--ui-space-2-5);
+  margin-top: var(--ui-space-4);
+}
+
+.completion {
+  padding: var(--ui-space-3-5);
+  border-left: var(--ui-size-border-emphasis) solid var(--ui-color-success);
+  background: var(--ui-color-success-surface);
+  color: var(--ui-color-success);
+}
+
+.completion p {
+  font-size: var(--ui-font-size-sm);
+  line-height: var(--ui-line-height-relaxed);
+}
+
+.records {
+  margin-top: var(--ui-space-4);
+  color: var(--ui-color-text-muted);
+  font-size: var(--ui-font-size-xs);
+  line-height: var(--ui-line-height-loose);
+}
+
+.records summary {
+  padding: var(--ui-space-2-5) 0;
+  cursor: pointer;
+}
+
+@media (max-width: 720px) {
+  .meta h3 {
+    font-size: var(--ui-font-size-md);
+  }
+}
+
+@media (forced-colors: active) {
+  .options :global([data-variant='recipe']) {
+    border: var(--ui-size-border) solid CanvasText;
+  }
+}

@@ -56,9 +56,9 @@ As tabelas de `formatoLegado.ts` e a amostra `amostras/partidaLegadaV10.ts` mant
 
 ### Estilos e recursos visuais
 
-A ordem de importação em `principal.tsx` é: `estilos.css`, `progresso-ocioso.css`, `arte-gerada.css`, `disposicao-compacta.css`, `tipografia.css`, `tema-do-jogo.css`, `jornada.css` e `creditos.css`. Regras posteriores e seletores mais específicos podem prevalecer sobre a base.
+`principal.tsx` importa primeiro os tokens de `styles/tokens.css`, depois as folhas globais na ordem necessária: `estilos.css`, `arte-gerada.css`, `disposicao-compacta.css`, `tipografia.css`, `tema-do-jogo.css`, `jornada.css` e `interface-do-jogo.css`. Essas folhas cuidam do reset, do shell, do tema transversal e da responsividade compartilhada; estilos locais de componentes ficam em CSS Modules. Créditos, indicador de progresso e as demais áreas extraídas mantêm seus módulos junto dos componentes.
 
-`combate.css` e `masmorra.css` são folhas antigas mantidas no repositório, mas não são importadas pela entrada atual. Os protótipos HTML também são independentes da aplicação e não participam da compilação.
+As bancadas de combate e masmorra mantêm seus estilos específicos em CSS Modules junto dos componentes; apenas regras transversais de tema e estrutura permanecem globais. Os protótipos HTML são independentes da aplicação e não participam da compilação.
 
 Os caminhos públicos começam na raiz da URL: um arquivo em `aplicativos/jogo/publico/arte/...` é referenciado como `/arte/...`. O catálogo de créditos associa arquivos a suas contribuições; os mapas de ícones e classes associam esses recursos à apresentação do jogo.
 
@@ -139,33 +139,30 @@ Os caminhos abaixo são links para os arquivos reais do repositório. Cada descr
 
 | Arquivo | Responsabilidade |
 | --- | --- |
-| [aplicativos/jogo/fonte/Aplicativo.tsx](../../aplicativos/jogo/fonte/Aplicativo.tsx) | Coordenação principal da aplicação: carregar, criar, selecionar e salvar partidas. |
-| [aplicativos/jogo/fonte/BancadaDaMasmorra.tsx](../../aplicativos/jogo/fonte/BancadaDaMasmorra.tsx) | Fluxo de Dún Liath: contrato, preparação segura, expedição por salas e retorno. |
-| [aplicativos/jogo/fonte/BancadaDeCombate.tsx](../../aplicativos/jogo/fonte/BancadaDeCombate.tsx) | Preparação, apresentação e confirmação do serviço contra o lobo da estrada. |
-| [aplicativos/jogo/fonte/BancadaDoMercado.tsx](../../aplicativos/jogo/fonte/BancadaDoMercado.tsx) | Interface das compras no mercado PNJ. |
-| [aplicativos/jogo/fonte/ComparacaoDeEquipamento.tsx](../../aplicativos/jogo/fonte/ComparacaoDeEquipamento.tsx) | Apresenta a previsão de uma peça fabricada em relação ao equipamento em uso. |
-| [aplicativos/jogo/fonte/CreditosDosRecursos.tsx](../../aplicativos/jogo/fonte/CreditosDosRecursos.tsx) | Créditos apresentados a partir do catálogo único de recursos. |
-| [aplicativos/jogo/fonte/EstadoDoJogoWeb.tsx](../../aplicativos/jogo/fonte/EstadoDoJogoWeb.tsx) | Avisos de disponibilidade sem conexão, atualização e instalação do aplicativo web. |
+| [aplicativos/jogo/fonte/Aplicativo.tsx](../../aplicativos/jogo/fonte/Aplicativo.tsx) | Composição das telas de entrada e da partida. |
+| [aplicativos/jogo/fonte/hooks/useAplicativoDaPartida.ts](../../aplicativos/jogo/fonte/hooks/useAplicativoDaPartida.ts) | Estado de aplicação e fluxos de carregar, criar, selecionar e salvar partidas. |
+| [aplicativos/jogo/fonte/features/aventura/BancadaDaMasmorra](../../aplicativos/jogo/fonte/features/aventura/BancadaDaMasmorra) | Fluxo de Dún Liath: contrato, preparação segura, expedição por salas e retorno. |
+| [aplicativos/jogo/fonte/features/aventura/BancadaDeCombate](../../aplicativos/jogo/fonte/features/aventura/BancadaDeCombate) | Preparação, apresentação e confirmação do serviço contra o lobo da estrada. |
+| [aplicativos/jogo/fonte/features/cidade/BancadaDoMercado](../../aplicativos/jogo/fonte/features/cidade/BancadaDoMercado) | Interface das compras no mercado PNJ. |
+| [aplicativos/jogo/fonte/components/jogo/ComparacaoDeEquipamento](../../aplicativos/jogo/fonte/components/jogo/ComparacaoDeEquipamento) | Apresenta a previsão de uma peça fabricada em relação ao equipamento em uso. |
+| [aplicativos/jogo/fonte/components/jogo/CreditosDosRecursos](../../aplicativos/jogo/fonte/components/jogo/CreditosDosRecursos) | Créditos apresentados a partir do catálogo único de recursos. |
+| [aplicativos/jogo/fonte/features/aplicativo-web/EstadoDoJogoWeb](../../aplicativos/jogo/fonte/features/aplicativo-web/EstadoDoJogoWeb) | Avisos de disponibilidade sem conexão, atualização e instalação do aplicativo web. |
 | [aplicativos/jogo/fonte/EstruturaDoJogo.tsx](../../aplicativos/jogo/fonte/EstruturaDoJogo.tsx) | Estrutura visual da partida e navegação entre Personagem, Atividades, Aventura e Cidade. |
-| [aplicativos/jogo/fonte/GradeDoInventario.tsx](../../aplicativos/jogo/fonte/GradeDoInventario.tsx) | Grade reutilizada pela bolsa completa e pelos resumos compactos. |
-| [aplicativos/jogo/fonte/IconeDoJogo.tsx](../../aplicativos/jogo/fonte/IconeDoJogo.tsx) | Imagem padronizada do catálogo de ícones: endereço, tamanho e acessibilidade. |
-| [aplicativos/jogo/fonte/IndicadorDeProgressoOcioso.tsx](../../aplicativos/jogo/fonte/IndicadorDeProgressoOcioso.tsx) | Indicador visual do ciclo atual de coleta ou fabricação. |
-| [aplicativos/jogo/fonte/MetaDaJornada.tsx](../../aplicativos/jogo/fonte/MetaDaJornada.tsx) | Escolha, acompanhamento e histórico de metas de fabricação. |
-| [aplicativos/jogo/fonte/PainelDeAtributos.tsx](../../aplicativos/jogo/fonte/PainelDeAtributos.tsx) | Distribuição de pontos com rascunho e prévia das consequências. |
-| [aplicativos/jogo/fonte/PainelDePrestigio.tsx](../../aplicativos/jogo/fonte/PainelDePrestigio.tsx) | Apresentação da árvore de prestígio e confirmação de reinício do personagem. |
-| [aplicativos/jogo/fonte/PainelDoBanco.tsx](../../aplicativos/jogo/fonte/PainelDoBanco.tsx) | Consulta e transferência entre mochila e banco da Cidade Livre. |
-| [aplicativos/jogo/fonte/PainelRapido.tsx](../../aplicativos/jogo/fonte/PainelRapido.tsx) | Contêiner modal reutilizado pelos painéis laterais da partida. |
-| [aplicativos/jogo/fonte/TelaDeAtividades.tsx](../../aplicativos/jogo/fonte/TelaDeAtividades.tsx) | Consulta de profissões e comandos de coleta, produção e acompanhamento de receitas. |
+| [aplicativos/jogo/fonte/features/inventario/GradeDoInventario](../../aplicativos/jogo/fonte/features/inventario/GradeDoInventario) | Grade reutilizada pela bolsa completa e pelos resumos compactos. |
+| [aplicativos/jogo/fonte/components/jogo/IconeDoJogo](../../aplicativos/jogo/fonte/components/jogo/IconeDoJogo) | Imagem padronizada do catálogo de ícones: endereço, tamanho e acessibilidade. |
+| [aplicativos/jogo/fonte/features/atividades/IndicadorDeProgressoOcioso](../../aplicativos/jogo/fonte/features/atividades/IndicadorDeProgressoOcioso) | Indicador visual do ciclo atual de coleta ou fabricação. |
+| [aplicativos/jogo/fonte/features/jornada/MetaDaJornada](../../aplicativos/jogo/fonte/features/jornada/MetaDaJornada) | Escolha, acompanhamento e histórico de metas de fabricação. |
+| [aplicativos/jogo/fonte/features/personagem/PainelDeAtributos](../../aplicativos/jogo/fonte/features/personagem/PainelDeAtributos) | Distribuição de pontos com rascunho e prévia das consequências. |
+| [aplicativos/jogo/fonte/features/personagem/PainelDePrestigio](../../aplicativos/jogo/fonte/features/personagem/PainelDePrestigio) | Apresentação da árvore de prestígio e confirmação de reinício do personagem. |
+| [aplicativos/jogo/fonte/features/cidade/PainelDoBanco](../../aplicativos/jogo/fonte/features/cidade/PainelDoBanco) | Consulta e transferência entre mochila e banco da Cidade Livre. |
+| [aplicativos/jogo/fonte/features/navegacao/PainelRapido](../../aplicativos/jogo/fonte/features/navegacao/PainelRapido) | Contêiner modal reutilizado pelos painéis laterais da partida. |
+| [aplicativos/jogo/fonte/features/atividades/TelaDeAtividades](../../aplicativos/jogo/fonte/features/atividades/TelaDeAtividades) | Consulta de profissões e comandos de coleta, produção e acompanhamento de receitas. |
 | [aplicativos/jogo/fonte/arte-gerada.css](../../aplicativos/jogo/fonte/arte-gerada.css) | Recortes das folhas de cenas e retratos e suporte à arte individual das atividades. |
-| [aplicativos/jogo/fonte/combate.css](../../aplicativos/jogo/fonte/combate.css) | Estilos da bancada de combate original. |
-| [aplicativos/jogo/fonte/creditos.css](../../aplicativos/jogo/fonte/creditos.css) | Apresentação da janela de créditos e do botão que a abre. |
 | [aplicativos/jogo/fonte/disposicao-compacta.css](../../aplicativos/jogo/fonte/disposicao-compacta.css) | Ajustes de densidade, alvos de toque e comportamento responsivo sobre estilos.css. |
 | [aplicativos/jogo/fonte/estilos.css](../../aplicativos/jogo/fonte/estilos.css) | Base global e estrutura inicial de todas as telas. |
 | [aplicativos/jogo/fonte/iconesDosRecursos.ts](../../aplicativos/jogo/fonte/iconesDosRecursos.ts) | Mapeamento entre identificadores do jogo e os ícones de Shikashi. |
-| [aplicativos/jogo/fonte/jornada.css](../../aplicativos/jogo/fonte/jornada.css) | Estilos das metas, ingredientes, comparação de equipamento e avisos de conquista. |
-| [aplicativos/jogo/fonte/masmorra.css](../../aplicativos/jogo/fonte/masmorra.css) | Estilos da bancada de masmorra original. |
+| [aplicativos/jogo/fonte/jornada.css](../../aplicativos/jogo/fonte/jornada.css) | Estilos globais compartilhados para avisos e memórias da Jornada. |
 | [aplicativos/jogo/fonte/principal.tsx](../../aplicativos/jogo/fonte/principal.tsx) | Entrada do navegador: carrega estilos e monta a aplicação React no HTML. |
-| [aplicativos/jogo/fonte/progresso-ocioso.css](../../aplicativos/jogo/fonte/progresso-ocioso.css) | Estrutura visual do IndicadorDeProgressoOcioso. |
 | [aplicativos/jogo/fonte/rotulosDoJogo.ts](../../aplicativos/jogo/fonte/rotulosDoJogo.ts) | Rótulos e agrupamentos usados na apresentação de profissões e itens. |
 | [aplicativos/jogo/fonte/tema-do-jogo.css](../../aplicativos/jogo/fonte/tema-do-jogo.css) | Tema medieval atual, aplicado sobre a base e os ajustes compactos. |
 | [aplicativos/jogo/fonte/tipografia.css](../../aplicativos/jogo/fonte/tipografia.css) | Carregamento da fonte licenciada Antiquity Print e estilos tipográficos básicos. |

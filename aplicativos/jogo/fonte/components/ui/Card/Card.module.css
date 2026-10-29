@@ -1,0 +1,9 @@
+.card {
+  min-width: 0;
+  padding:var(--ui-space-4);
+  border: var(--ui-size-border) solid var(--ui-color-border);
+  border-radius:var(--ui-radius-xl);
+  background: var(--ui-color-surface);
+  color: var(--ui-color-text);
+  box-shadow: var(--ui-shadow-md);
+}

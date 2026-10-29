@@ -1,0 +1,212 @@
+.screen {
+  display: grid;
+  gap: var(--ui-space-3-5);
+}
+
+.summary {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--ui-space-6);
+}
+
+.summary h2 {
+  margin: var(--ui-space-0-75) 0 var(--ui-space-1-75);
+}
+
+.summary p:last-child {
+  margin-bottom: 0;
+}
+
+.total {
+  display: grid;
+  min-width: var(--ui-size-prestige-summary-min);
+  gap: var(--ui-space-0-5);
+  padding: var(--ui-space-2-75) var(--ui-space-3-25);
+  border: var(--ui-size-border) solid var(--ui-color-border-strong);
+  border-radius: var(--ui-radius-md);
+  background: var(--ui-color-warning-surface);
+  text-align: right;
+}
+
+.total strong {
+  color: var(--ui-color-warning-text);
+  font: var(--ui-font-weight-semibold) var(--ui-font-size-2xl)/var(--ui-line-height-dense) var(--ui-font-family-display);
+}
+
+.total span {
+  color: var(--ui-color-text);
+  font-size: var(--ui-font-size-2xs);
+}
+
+.total small {
+  color: var(--ui-color-text-muted);
+  font-size: var(--ui-font-size-3xs);
+}
+
+.gate {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ui-space-4-5);
+  border-color: var(--ui-color-border-strong);
+  background: var(--ui-color-warning-surface);
+}
+
+.gateReady {
+  border-color: var(--ui-color-success-border);
+  background: var(--ui-color-success-surface);
+}
+
+.gateMain {
+  min-width: 0;
+}
+
+.gateActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--ui-space-2-5);
+}
+
+.gate h3 {
+  margin: var(--ui-space-0-5) 0 var(--ui-space-1-25);
+}
+
+.gate p:last-child {
+  margin-bottom: 0;
+}
+
+.readiness {
+  flex-shrink: 0;
+  color: var(--ui-color-success);
+  font-size: var(--ui-font-size-xs);
+}
+
+.confirmation {
+  display: grid;
+  grid-column: 1 / -1;
+  gap: var(--ui-space-2-25);
+  padding-top: var(--ui-space-2-75);
+  border-top: var(--ui-size-border) solid var(--ui-color-border);
+}
+
+.confirmation p {
+  max-width: var(--ui-size-prestige-confirmation-max);
+  margin: 0;
+  color: var(--ui-color-text-muted);
+  font-size: var(--ui-font-size-xs);
+  line-height: var(--ui-line-height-normal);
+}
+
+.confirmation :global(.botao-linhaDeDados) {
+  justify-content: flex-end;
+}
+
+.branchGrid,
+.hybridGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--ui-space-2-5);
+  align-items: start;
+}
+
+.branch {
+  display: grid;
+  min-width: 0;
+  gap: var(--ui-space-2-5);
+  padding: var(--ui-space-3-5);
+}
+
+.branchHeading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--ui-space-2);
+  padding-bottom: var(--ui-space-2-25);
+  border-bottom: var(--ui-size-border) solid var(--ui-color-border);
+}
+
+.branchHeading h3 {
+  margin: var(--ui-space-0-5) 0 0;
+}
+
+.branchHeading > span {
+  color: var(--ui-color-warning-text);
+  font-size: var(--ui-font-size-2xs);
+  font-variant-numeric: tabular-nums;
+}
+
+.nodeList {
+  display: grid;
+  gap: var(--ui-space-1-5);
+}
+
+.hybridPanel {
+  display: grid;
+  gap: var(--ui-space-2-5);
+}
+
+.hybridPanel :global(.painel-tituloDaSecao) {
+  margin-bottom: 0;
+}
+
+.hybridGrid {
+  align-items: stretch;
+}
+
+.hybridPath {
+  display: grid;
+  min-width: 0;
+  gap: var(--ui-space-1-5);
+}
+
+.hybridPath h4 {
+  margin: 0 0 var(--ui-space-0-5);
+  color: var(--ui-color-warning-text);
+  font-size: var(--ui-font-size-xs);
+  font-weight: var(--ui-font-weight-bold);
+  letter-spacing: var(--ui-letter-spacing-compact);
+}
+
+@media (max-width: 980px) {
+  .branchGrid,
+  .hybridGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 720px) {
+  .summary {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--ui-space-3);
+  }
+
+  .gate {
+    grid-template-columns: 1fr;
+    align-items: stretch;
+    gap: var(--ui-space-3);
+  }
+
+  .gateActions {
+    justify-content: flex-start;
+    align-items: flex-start;
+  }
+
+  .total {
+    min-width: 0;
+    text-align: left;
+  }
+
+  .readiness {
+    align-self: flex-start;
+  }
+
+  .branchGrid,
+  .hybridGrid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -6,7 +6,7 @@ Aplicação React/Vite da versão 0.1. Apresenta o estado, recebe as ações do 
 - Recursos estáticos: `publico/`.
 - Entrada: `fonte/principal.tsx`.
 - Criação de personagem e animações das classes: `fonte/Aplicativo.tsx`, constante `GIFS_DAS_CLASSES`.
-- Créditos exibidos: `fonte/CreditosDosRecursos.tsx`.
+- Créditos exibidos: `fonte/components/jogo/CreditosDosRecursos/`.
 
 Para adicionar uma animação de classe, coloque o arquivo em `publico/arte/classes/<classe>/<autor>/` e use a URL `/arte/classes/<classe>/<autor>/<arquivo>.gif` no mapa de classes. As chaves são `guerreiro`, `mago`, `cacador`, `acolito`, `ladino` e `errante`.
 

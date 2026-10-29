@@ -6,58 +6,19 @@
   font-family: 'Antiquity Print';
   src: url('/fontes/antiquity-print.ttf') format('truetype');
   font-style: normal;
-  font-weight: 400;
+  font-weight: normal;
   font-display: swap;
   /* A fonte original cobre o latim básico e as aspas curvas, sem letras acentuadas. */
   unicode-range: U+0020-007E, U+2018-2019, U+201C-201D;
-}
-
-/* Georgia e Times oferecem alternativas, inclusive para caracteres fora da cobertura da fonte. */
-:root {
-  --fonte-destaque: 'Antiquity Print', Georgia, 'Times New Roman', serif;
 }
 
 .destaque-titulo,
 .entrada-marca,
 .jogador-nome,
 .funcionalidade-telaDoJogo h2,
-.funcionalidade-telaDoJogo h3,
-.partida-cartao-emExecucao > strong,
-.criacao-escolha strong,
-.cidade-localDoJogo-gradeVisual strong,
-.principal-navegacao button {
-  font-family: var(--fonte-destaque);
-  font-weight: 400;
+.funcionalidade-telaDoJogo h3 {
+  font-family: var(--ui-font-family-display);
+  font-weight: var(--ui-font-weight-regular);
   /* Maiúsculas e descendentes ocupam juntas 1,46 em na fonte fornecida. */
-  line-height: 1.6;
-}
-
-/* Estilos compartilhados do contêiner de créditos; creditos.css detalha a janela atual. */
-.recursoVisual-creditos {
-  margin-top: 16px;
-  color: var(--atenuado);
-  font-size: .875rem;
-  line-height: 1.5;
-}
-
-.recursoVisual-creditos summary {
-  width: fit-content;
-  min-height: 44px;
-  padding-block: 11px;
-  cursor: pointer;
-}
-
-.recursoVisual-creditos p {
-  margin: 4px 0 8px;
-  overflow-wrap: anywhere;
-}
-
-.recursoVisual-creditos a {
-  color: #dcc499;
-  text-underline-offset: 3px;
-}
-
-.recursoVisual-creditos :is(summary, a):focus-visible {
-  outline: 2px solid #dbc393;
-  outline-offset: 3px;
+  line-height: var(--ui-line-height-relaxed);
 }

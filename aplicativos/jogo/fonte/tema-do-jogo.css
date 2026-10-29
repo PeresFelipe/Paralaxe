@@ -5,91 +5,64 @@
    A estrutura temática compartilha o estado, o conteúdo e a persistência existentes. */
 /* Cores e medidas finais do tema; as URLs das molduras são recursos públicos licenciados. */
 :root {
-  --fundo: #10130f;
-  --superficie: #1a1f19;
-  --superficie-2: #252b23;
-  --superficie-3: #30362c;
-  --linha: #444a3c;
-  --textoExibido: #e6e0ce;
-  --atenuado: #b1b4a3;
-  --ferro: #c6c9b9;
-  --bronze: #d0b477;
-  --bronze-escuro: #826b3b;
-  --positivo: #91ac81;
-  --mana: #88a9bb;
-  --perigo-textoExibido: #e0a398;
-  --raio: 0px;
-  --fonte-destaque: Georgia, "Times New Roman", serif;
   --jogo-trilho: 188px;
   --estrutura-rodape: 76px;
-  --moldura-ouro: url("/arte/interface/dark-ages/frame-gold.png");
-  --moldura-escuro: url("/arte/interface/dark-ages/frame-dark.png");
-  --espaco-moldura: url("/arte/interface/dark-ages/slot-iron.png");
-  color-scheme: dark;
 }
 
 body {
   background:
-    radial-gradient(ellipse at 45% 0%, #293023 0%, transparent 55%),
-    repeating-linear-gradient(93deg, #ffffff02 0 1px, transparent 1px 5px),
-    #10130f;
+    radial-gradient(ellipse at 45% 0%, var(--ui-color-background-glow) 0%, transparent 55%),
+    repeating-linear-gradient(93deg, color-mix(in srgb, var(--ui-color-border) 2%, transparent) 0 1px, transparent 1px 5px),
+    var(--ui-color-background);
 }
 
-button,
 a,
 summary {
   -webkit-tap-highlight-color: transparent;
 }
 
-button:disabled {
-  opacity: 0.55;
-}
-
-button:focus-visible,
 a:focus-visible,
 summary:focus-visible,
-.jogo-conteudo :where(button, input, select, summary, a):focus-visible {
-  outline: 2px solid #f0d798;
-  outline-offset: 4px;
+.jogo-conteudo :where(input, select, summary, a):focus-visible {
+  outline: var(--ui-size-focus-ring) solid var(--ui-color-focus);
+  outline-offset: var(--ui-space-1);
 }
 
 .destaque-titulo,
 .funcionalidade-telaDoJogo h2,
 .funcionalidade-telaDoJogo h3,
 .jogador-nome,
-.criacao-escolha strong,
-.partida-cartao-emExecucao > strong,
 .cidade-localDoJogo-gradeVisual strong {
-  font-family: var(--fonte-destaque);
-  font-weight: 400;
-  line-height: 1.3;
+  font-family: var(--ui-font-family-display);
+  font-weight: var(--ui-font-weight-regular);
+  line-height: var(--ui-line-height-reading);
 }
 
 .destaque-titulo {
-  font-size: clamp(1.65rem, 2.2vw, 2.15rem);
-  color: #e6d6ad;
+  font-size: var(--ui-font-size-section-title);
+  color: var(--ui-color-text);
 }
 
 .secao-chamada {
-  font-size: 0.7rem;
-  letter-spacing: 0.13em;
-  color: #bca77d;
+  font-size: var(--ui-font-size-compact);
+  letter-spacing: var(--ui-letter-spacing-extra-wide);
+  color: var(--ui-color-warning-text);
 }
 
 .funcionalidade-telaDoJogo h2 {
-  font-size: 1.15rem;
+  font-size: var(--ui-font-size-display-medium);
 }
 
 .funcionalidade-telaDoJogo h3 {
-  font-size: 1rem;
+  font-size: var(--ui-font-size-md);
 }
 
 .telaDoJogo-tituloDaSecao {
   align-items: center;
   flex-wrap: wrap;
-  padding: 4px 2px 16px;
-  margin-bottom: 18px;
-  border-bottom: 1px solid #665639;
+  padding:var(--ui-space-1) var(--ui-space-0-5) var(--ui-space-4);
+  margin-bottom:var(--ui-space-4-5);
+  border-bottom: var(--ui-size-border) solid var(--ui-color-border);
 }
 
 .telaDoJogo-tituloDaSecao > div {
@@ -100,25 +73,21 @@ summary:focus-visible,
 .telaDoJogo-tituloDaSecao .destaque-titulo {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap:var(--ui-space-3);
 }
 
 .telaDoJogo-tituloDaSecao .destaque-titulo .jogo-icone {
-  filter: drop-shadow(0 2px 2px #000);
+  filter: drop-shadow(0 2px 2px var(--ui-color-card-shadow));
 }
 
 .telaDoJogo-tituloDaSecao p:last-child {
-  font-size: 0.8125rem;
+  font-size: var(--ui-font-size-body-large);
 }
 
 /* Permite que filhos de grades e textos longos encolham sem causar rolagem horizontal. */
 :where(
-  .painel,
   .companheiro-secao,
-  .inventario-grade,
-  .item-cartaoCorpo,
-  .criacao-escolha,
-  .partida-cartao-emExecucao
+  .item-cartaoCorpo
 ) {
   min-width: 0;
   overflow-wrap: anywhere;
@@ -127,7 +96,7 @@ summary:focus-visible,
 /* Moldura fixa do jogo, com destinos persistentes e situação do trabalho. */
 .jogo-estrutura {
   min-height: 100dvh;
-  padding-bottom: var(--estrutura-rodape);
+  padding-bottom:var(--estrutura-rodape);
 }
 
 .jogo-barraLateral {
@@ -137,14 +106,14 @@ summary:focus-visible,
   width: var(--jogo-trilho);
   display: flex;
   flex-direction: column;
-  padding: 24px 12px 18px;
-  border-right: 1px solid #645434;
+  padding:var(--ui-space-6) var(--ui-space-3) var(--ui-space-4-5);
+  border-right: var(--ui-size-border) solid var(--ui-color-border);
   background:
-    repeating-linear-gradient(0deg, #ffffff02 0 1px, transparent 1px 4px),
-    #131810;
+    repeating-linear-gradient(0deg, color-mix(in srgb, var(--ui-color-border) 2%, transparent) 0 1px, transparent 1px 4px),
+    var(--ui-color-surface);
   box-shadow:
-    6px 0 22px #0005,
-    inset -3px 0 #242c20;
+    var(--ui-shadow-md),
+    var(--ui-shadow-inset-navigation-edge);
   overflow-y: auto;
   overscroll-behavior: contain;
   scrollbar-width: thin;
@@ -157,8 +126,8 @@ summary:focus-visible,
 .jogo-marca {
   display: grid;
   justify-items: center;
-  gap: 12px;
-  padding: 0 0 25px;
+  gap:var(--ui-space-3);
+  padding:var(--ui-space-0) var(--ui-space-0) var(--ui-space-6-25);
   text-align: center;
 }
 
@@ -169,30 +138,27 @@ summary:focus-visible,
   display: grid;
   place-items: center;
   border: 12px solid transparent;
-  border-image: var(--moldura-ouro) 24 / 12px stretch;
-  background: #282e22;
+  border-image: var(--ui-frame-gold) 24 / 12px stretch;
+  background: var(--ui-color-surface-raised);
 }
 
 .marca-simbolo .jogo-icone {
-  filter: drop-shadow(2px 3px 0 #0008);
+  filter: drop-shadow(2px 3px 0 var(--ui-color-inventory-icon-shadow));
 }
 
 .jogo-marca strong {
   max-width: 100%;
-  color: #e6c87f;
-  font:
-    1.0625rem/1.6 "Antiquity Print",
-    Georgia,
-    serif;
-  letter-spacing: 0.04em;
+  color: var(--ui-color-warning-text);
+  font: var(--ui-font-size-md)/var(--ui-line-height-normal) var(--ui-font-family-display);
+  letter-spacing: var(--ui-letter-spacing-compact);
   white-space: nowrap;
 }
 
 .jogo-marca small {
-  color: #b1b49f;
-  font-size: 0.54rem;
-  letter-spacing: 0.15em;
-  line-height: 1.6;
+  color: var(--ui-color-text-muted);
+  font-size: var(--ui-font-size-2xs);
+  letter-spacing: var(--ui-letter-spacing-caps);
+  line-height: var(--ui-line-height-spacious);
 }
 
 .marca-ornamento {
@@ -207,184 +173,135 @@ summary:focus-visible,
   position: static;
   display: flex;
   flex-direction: column;
-  gap: 9px;
+  gap:var(--ui-space-2-25);
   height: auto;
-  padding: 0;
+  padding:var(--ui-space-0);
   border: 0;
   background: transparent;
 }
 
-.principal-navegacao button {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  min-height: 68px;
-  width: 100%;
-  padding: 9px 10px;
-  border: 1px solid transparent;
-  background: transparent;
-  color: var(--atenuado);
-  font:
-    0.94rem/1.3 Georgia,
-    serif;
-  letter-spacing: 0.01em;
-  text-align: left;
-  text-transform: none;
-}
-
-.principal-navegacao button > span {
-  display: grid;
-  gap: 6px;
-  min-width: 0;
-}
-
-.principal-navegacao button small {
-  color: #a6ac98;
-  font:
-    0.65rem/1.25 ui-sans-serif,
-    sans-serif;
-}
-
-.principal-navegacao button.ativo {
-  color: #f0dfae;
-  border-color: #796137;
-  background: linear-gradient(90deg, #3b3522, #262d20);
-  box-shadow:
-    inset 3px 0 #d0b477,
-    0 2px 5px #0005;
-}
-
-.principal-navegacao button.ativo::after {
-  display: none;
-}
-
-.principal-navegacao button:hover:not(:disabled) {
-  background-color: #2b3324;
-  border-color: #777452;
-}
 
 .reino-situacao {
-  margin-top: auto;
-  padding: 28px 8px 12px;
+  margin-top:auto;
+  padding:var(--ui-space-7) var(--ui-space-2) var(--ui-space-3);
   display: grid;
   grid-template-columns: 8px 1fr;
-  gap: 7px 8px;
+  gap:var(--ui-space-1-75) var(--ui-space-2);
 }
 
 .reino-situacao strong {
-  color: #c1cba9;
-  font-size: 0.75rem;
-  font-weight: 500;
+  color: var(--ui-color-text);
+  font-size: var(--ui-font-size-xs);
+  font-weight: var(--ui-font-weight-medium);
 }
 
 .reino-situacao small {
   grid-column: 2;
-  color: var(--atenuado);
-  font-size: 0.65rem;
+  color: var(--ui-color-text-muted);
+  font-size: var(--ui-font-size-caption);
 }
 
 .reino-leve {
   align-self: center;
   width: 6px;
   height: 6px;
-  background: #9eb780;
-  box-shadow: 0 0 8px #9eb78055;
+  background: var(--ui-color-success);
+  box-shadow: var(--ui-shadow-success-glow);
   transform: rotate(45deg);
 }
 
 .reino-situacao--risco .reino-leve {
-  background: #d38978;
+  background: var(--ui-color-danger);
 }
 
 .barraLateral-notaDeRodape {
-  border-top: 1px solid #343d2c;
-  margin: 4px 8px 0;
-  padding-top: 12px;
-  color: #9ca18d;
+  border-top: var(--ui-size-border) solid var(--ui-color-border);
+  margin:var(--ui-space-1) var(--ui-space-2) var(--ui-space-0);
+  padding-top:var(--ui-space-3);
+  color: var(--ui-color-text-muted);
   font:
-    italic 0.7rem/1.7 Georgia,
-    serif;
+    italic var(--ui-font-size-compact)/var(--ui-line-height-airy) var(--ui-font-family-display);
 }
 
 /* O deslocamento à esquerda acompanha a largura do trilho de navegação. */
 .jogo-barraSuperior {
   min-height: 80px;
-  margin-left: var(--jogo-trilho);
-  padding: 13px 26px;
-  gap: 12px 20px;
+  margin-left:var(--jogo-trilho);
+  padding:var(--ui-space-3-25) var(--ui-space-6-5);
+  gap:var(--ui-space-3) var(--ui-space-5);
   flex-wrap: wrap;
-  background: #171d14;
-  border-bottom: 3px double #645535;
-  box-shadow: 0 5px 16px #0004;
+  background: var(--ui-color-surface);
+  border-bottom: var(--ui-size-border) solid var(--ui-color-border);
+  box-shadow: var(--ui-shadow-sm);
   backdrop-filter: none;
 }
 
 .avatar-marcador {
   width: 48px;
   height: 48px;
-  border-radius: 0;
+  border-radius:var(--ui-radius-none);
   border: 5px solid transparent;
-  border-image: var(--espaco-moldura) 8 / 8px stretch;
-  background: #2a3023;
+  border-image: var(--ui-frame-inventory) 8 / 8px stretch;
+  background: var(--ui-color-surface-raised);
 }
 
 .jogador-identidade {
-  gap: 12px;
+  gap:var(--ui-space-3);
 }
 
 .jogador-nome {
-  color: #e2d3ad;
-  font-size: 1rem;
-  letter-spacing: 0.03em;
+  color: var(--ui-color-text);
+  font-size: var(--ui-font-size-md);
+  letter-spacing: var(--ui-letter-spacing-tight);
   text-transform: none;
 }
 
 .jogador-identidade span {
-  margin-top: 3px;
-  color: var(--atenuado);
-  font-size: 0.72rem;
+  margin-top:var(--ui-space-0-75);
+  color: var(--ui-color-text-muted);
+  font-size: var(--ui-font-size-compact-large);
 }
 
 .global-recursos {
-  gap: 20px;
+  gap:var(--ui-space-5);
 }
 
 .global-recursos > div {
   min-width: 73px;
   position: relative;
-  padding-bottom: 7px;
-  border-bottom: 2px solid #8f6559;
+  padding-bottom:var(--ui-space-1-75);
+  border-bottom: var(--ui-size-border-emphasis) solid var(--ui-color-resource-health);
 }
 
 .global-recursos > div:nth-child(2) {
-  border-bottom-color: #6f8f9c;
+  border-bottom-color: var(--ui-color-resource-mana);
 }
 
 .global-recursos > div:nth-child(3) {
-  border-bottom-color: #83966b;
+  border-bottom-color: var(--ui-color-success);
 }
 
 .global-recursos > div:nth-child(4) {
-  border-bottom-color: #aa8e54;
+  border-bottom-color: var(--ui-color-warning);
 }
 
 .global-recursos small {
   display: block;
-  font-size: 0.64rem;
+  font-size: var(--ui-font-size-2xs-large);
 }
 
 .global-recursos strong {
-  font-size: 0.94rem;
-  font-weight: 500;
-  color: #eee5cc;
+  font-size: var(--ui-font-size-body-3xl);
+  font-weight: var(--ui-font-weight-medium);
+  color: var(--ui-color-text);
 }
 
 .recurso-simbolo {
-  padding: 0;
+  padding:var(--ui-space-0);
   border: 0;
   width: 24px;
   height: 24px;
-  border-radius: 0;
+  border-radius:var(--ui-radius-none);
 }
 
 .recurso-simbolo .jogo-icone {
@@ -392,208 +309,113 @@ summary:focus-visible,
   height: 24px;
 }
 
-.icone-botao {
-  border-radius: 0;
-  background: #242b1e;
-  border-color: #625639;
-}
 
 /* No computador, a área central divide espaço com o painel auxiliar; minmax permite encolher o conteúdo. */
 .jogo-disposicao {
-  margin-left: var(--jogo-trilho);
+  margin-left:var(--jogo-trilho);
   display: grid;
   grid-template-columns: minmax(0, 1fr) 240px;
   align-items: start;
-  gap: 20px;
-  padding: 24px;
+  gap:var(--ui-space-5);
+  padding:var(--ui-space-6);
 }
 
 .jogo-conteudo {
   width: 100%;
   min-width: 0;
-  margin: 0;
-  padding: 20px;
+  margin:var(--ui-space-0);
+  padding:var(--ui-space-5);
   min-height: 560px;
   border: 14px solid transparent;
-  border-image: var(--moldura-ouro) 24 / 14px stretch;
+  border-image: var(--ui-frame-gold) 24 / 14px stretch;
   background:
-    repeating-linear-gradient(0deg, #ffffff01 0 1px, transparent 1px 4px),
-    #1b2118;
-  box-shadow: 0 10px 25px #0005;
+    repeating-linear-gradient(0deg, color-mix(in srgb, var(--ui-color-border) 1%, transparent) 0 1px, transparent 1px 4px),
+    var(--ui-color-surface);
+  box-shadow: var(--ui-shadow-md);
 }
 
 #jogo-conteudo {
-  scroll-margin-top: 100px;
+  scroll-margin-top: var(--ui-space-25);
 }
 
 .jogo-companheiro {
   display: grid;
-  gap: 20px;
+  gap:var(--ui-space-5);
 }
 
 .companheiro-secao {
-  padding: 15px 12px;
+  padding:var(--ui-space-3-75) var(--ui-space-3);
   border: 8px solid transparent;
-  border-image: var(--moldura-escuro) 12 / 12px stretch;
-  background: #252b21;
+  border-image: var(--ui-frame-dark) 12 / 12px stretch;
+  background: var(--ui-color-surface);
   min-width: 0;
 }
 
 .companheiro-tituloDaSecao {
   display: flex;
-  gap: 10px;
+  gap:var(--ui-space-2-5);
   align-items: center;
-  padding-bottom: 12px;
-  margin-bottom: 15px;
-  border-bottom: 1px solid #4b513f;
+  padding-bottom:var(--ui-space-3);
+  margin-bottom:var(--ui-space-3-75);
+  border-bottom: var(--ui-size-border) solid var(--ui-color-border);
 }
 
 .companheiro-tituloDaSecao h2 {
-  margin: 0;
-  color: #decda3;
-  font:
-    1.12rem Georgia,
-    serif;
+  margin:var(--ui-space-0);
+  color: var(--ui-color-text);
+  font: var(--ui-font-size-lg) var(--ui-font-family-display);
 }
 
 .companheiro-secao h3 {
-  margin: 6px 0 10px;
+  margin:var(--ui-space-1-5) var(--ui-space-0) var(--ui-space-2-5);
   font:
-    1rem/1.45 Georgia,
-    serif;
-  color: #e1d6bb;
+    var(--ui-font-size-md)/var(--ui-line-height-caption-relaxed) var(--ui-font-family-display);
+  color: var(--ui-color-text);
 }
 
 .companheiro-secao .secao-chamada {
-  font-size: 0.6rem;
+  font-size: var(--ui-font-size-3xs);
 }
 
 .companheiro-texto {
-  color: var(--atenuado);
-  font-size: 0.75rem;
-  line-height: 1.7;
-  margin-bottom: 16px;
+  color: var(--ui-color-text-muted);
+  font-size: var(--ui-font-size-xs);
+  line-height: var(--ui-line-height-airy);
+  margin-bottom:var(--ui-space-4);
 }
 
-.companheiro-secao > .discreto-botao {
-  margin-top: 12px;
-  font-size: 0.72rem;
-}
-
-.jogo-companheiro .recursoVisual-creditos {
-  padding: 0 6px;
-  margin: 0;
-  font-size: 0.7rem;
-}
 
 /* O acesso alternativo aos créditos aparece quando a coluna auxiliar é ocultada. */
 .movel-creditos {
   display: none;
 }
 
-/* Painéis com moldura e controles rebaixados usam os recursos visuais licenciados. */
-.painel {
-  padding: 14px;
-  border: 8px solid transparent;
-  border-image: var(--moldura-escuro) 12 / 10px stretch;
-  border-radius: 0;
-  background: #242b20;
-  box-shadow: 0 3px 7px #0003;
-}
-
-.principal-botao,
-.principal-botao.compacto,
-.discreto-botao {
-  border-radius: 0;
-  min-height: 44px;
-  padding: 9px 14px;
-  font-size: 0.8125rem;
-  min-width: 0;
-  max-width: 100%;
-  white-space: normal;
-  overflow-wrap: anywhere;
-  line-height: 1.4;
-  box-shadow:
-    inset 0 1px #ffffff0c,
-    inset 0 -3px #0004,
-    0 2px 4px #0003;
-}
-
-.principal-botao,
-.principal-botao.compacto {
-  color: #fff2cf;
-  border: 1px solid #c1a262;
-  background: linear-gradient(#625332, #423c25);
-}
-
-.principal-botao:hover:not(:disabled) {
-  background: #74613a;
-  filter: none;
-  border-color: #f1d38e;
-}
-
-.discreto-botao {
-  color: #d5d7c3;
-  border: 1px solid #667054;
-  background: #303928;
-}
-
-.discreto-botao:hover:not(:disabled) {
-  background: #3d472f;
-}
-
-.situacao-selo,
-.risco-selo,
-.moedaCorrente-selo {
-  border-radius: 0;
-  background: #282b1e;
-  font-size: 0.7rem;
-}
 
 .selecionado-cartao {
-  border-image-source: var(--moldura-ouro);
-  border-image-slice: 24;
-  background: #2b3022;
+  border-color: var(--ui-color-primary);
+  border-image: none;
+  background: var(--ui-color-primary-soft);
+  box-shadow: var(--ui-shadow-inset-focus);
 }
 
 .subnavegacao {
-  border-bottom: 1px solid #4c523f;
-  padding-bottom: 10px;
-  gap: 4px;
+  border-bottom: var(--ui-size-border) solid var(--ui-color-border);
+  padding-bottom:var(--ui-space-2-5);
+  gap:var(--ui-space-1);
 }
 
-.subnavegacao button {
-  border-radius: 0;
-  border: 0;
-  border-bottom: 2px solid transparent;
-  padding: 10px;
-  background: transparent;
-  color: #b4b9a5;
-  font-size: 0.8rem;
-}
-
-.subnavegacao button.ativo {
-  border-color: #d0b477;
-  color: #f0dfb4;
-  background: #343927;
-}
-
-.subnavegacao button:hover:not(:disabled) {
-  color: var(--textoExibido);
-  background: #2c3324;
-}
 
 .contexto-arte {
-  border-radius: 0;
-  border-color: #61563c;
+  border-radius:var(--ui-radius-none);
+  border-color: var(--ui-color-border);
   image-rendering: pixelated;
-  box-shadow: inset 0 0 0 4px #0008;
+  box-shadow: var(--ui-shadow-inset-card);
 }
 
 /* A profissão consultada e a tarefa em execução têm indicações distintas. */
 .atividades-disposicao {
   grid-template-columns: 156px minmax(0, 1fr);
-  gap: 20px;
+  gap:var(--ui-space-5);
 }
 
 /* A consulta de contêiner adapta a atividade pela largura disponível dentro do painel, não só da janela. */
@@ -603,61 +425,7 @@ summary:focus-visible,
 
 .atividades-profissao-trilho {
   position: static;
-  gap: 22px;
-}
-
-.atividade-profissao-grupo .secao-titulo-emExecucao {
-  color: #bdad86;
-  font-size: 0.65rem;
-  letter-spacing: 0.13em;
-  padding-left: 8px;
-}
-
-.atividade-profissao-grupo .profissao-cartao-gradeVisual {
-  gap: 6px;
-}
-
-.atividade-profissao-grupo .profissao-cartao {
-  min-height: 58px;
-  border: 1px solid #3f4835;
-  border-radius: 0;
-  padding: 7px;
-  background: #1e271b;
-}
-
-.atividade-profissao-grupo .profissao-cartao span {
-  font-size: 0.75rem;
-}
-
-.atividade-profissao-grupo .profissao-cartao strong {
-  color: #d0b477;
-  font:
-    0.85rem Georgia,
-    serif;
-}
-
-.atividade-profissao-grupo .profissao-cartao.ativo {
-  background: #373a25;
-  border-color: #9d8550;
-  box-shadow: inset 2px 0 #cfb477;
-}
-
-.atividade-profissao-grupo .profissao-cartao:hover {
-  border-color: #b19e6b;
-}
-
-.profissao-cartaoRotulo {
-  gap: 8px;
-}
-
-.profissao-cartaoRotulo .jogo-icone {
-  width: 32px;
-  height: 32px;
-}
-
-.profissao-executando {
-  color: #b5cea0;
-  font-size: 0.6rem;
+  gap:var(--ui-space-5-5);
 }
 
 /* Este selo distingue trabalho em execução da profissão apenas consultada. */
@@ -665,45 +433,45 @@ summary:focus-visible,
   flex-shrink: 0;
   display: inline-flex;
   align-items: center;
-  gap: 7px;
-  padding: 8px 10px;
-  border: 1px solid #596047;
-  color: #bdc4ad;
-  font-size: 0.6rem;
-  letter-spacing: 0.08em;
+  gap:var(--ui-space-1-75);
+  padding:var(--ui-space-2) var(--ui-space-2-5);
+  border: var(--ui-size-border) solid var(--ui-color-border);
+  color: var(--ui-color-text-muted);
+  font-size: var(--ui-font-size-3xs);
+  letter-spacing: var(--ui-letter-spacing-narrow);
 }
 
 .atividade-estado::before {
   content: "";
   width: 5px;
   height: 5px;
-  background: #a8af93;
+  background: var(--ui-color-text-muted);
   transform: rotate(45deg);
 }
 
 .atividade-estado--executando {
-  color: #c0d7a8;
-  border-color: #72885a;
-  background: #2e3922;
+  color: var(--ui-color-primary);
+  border-color: var(--ui-color-border-strong);
+  background: var(--ui-color-primary-soft);
 }
 
 .atividade-estado--executando::before {
-  background: #b9d891;
-  box-shadow: 0 0 6px #b9d89155;
+  background: var(--ui-color-primary);
+  box-shadow: var(--ui-shadow-action-glow);
 }
 
 .atividade-etapa {
   grid-template-columns: minmax(0, var(--atividade-cena-largura)) minmax(0, 1fr);
-  gap: 14px;
+  gap:var(--ui-space-3-5);
 }
 
 .atividade-cena-envoltorio {
   min-width: 0;
   align-self: start;
-  padding: 7px;
-  border: 1px solid #665737;
-  background: #10160e;
-  box-shadow: 0 3px 8px #0005;
+  padding:var(--ui-space-1-75);
+  border: var(--ui-size-border) solid var(--ui-color-border);
+  background: var(--ui-color-surface-sunken);
+  box-shadow: var(--ui-shadow-sm);
 }
 
 .atividade-cena {
@@ -712,31 +480,23 @@ summary:focus-visible,
 }
 
 .atividade-cena-legenda {
-  color: #c1bc9e;
+  color: var(--ui-color-text-muted);
   text-align: center;
   font:
-    italic 0.7rem/1.5 Georgia,
-    serif;
-  margin: 9px 0 3px;
+    italic var(--ui-font-size-compact)/var(--ui-line-height-normal) var(--ui-font-family-display);
+  margin:var(--ui-space-2-25) var(--ui-space-0) var(--ui-space-0-75);
 }
 
-.atividade-atualizado {
-  background: #283021;
-  min-width: 0;
-  gap: 12px;
-  padding: 8px;
-}
+.atividade-atualizado { min-width: 0; }
 
 .atividade-atualizado .ocioso-progressoTituloDaSecao strong {
-  font:
-    1rem/1.35 Georgia,
-    serif;
-  color: #e5d2a1;
+  font: var(--ui-font-size-md)/var(--ui-line-height-normal) var(--ui-font-family-display);
+  color: var(--ui-color-warning);
 }
 
 .atividade-atualizado .ocioso-progressoTituloDaSecao {
   flex-wrap: wrap;
-  gap: 6px 10px;
+  gap:var(--ui-space-2) var(--ui-space-3);
 }
 
 .atividade-atualizado .ocioso-progressoTituloDaSecao > span {
@@ -744,56 +504,48 @@ summary:focus-visible,
 }
 
 .atividade-pronto h2 {
-  font-size: 1rem;
-  margin: 6px 0 8px;
-  color: #e5d7b6;
+  font-size: var(--ui-font-size-md);
+  margin:var(--ui-space-1-5) var(--ui-space-0) var(--ui-space-2);
+  color: var(--ui-color-text);
 }
 
 .atividade-pronto > p:not(.secao-chamada) {
-  font-size: 0.75rem;
-  line-height: 1.6;
-  color: var(--atenuado);
-  margin: 0;
+  font-size: var(--ui-font-size-xs);
+  line-height: var(--ui-line-height-spacious);
+  color: var(--ui-color-text-muted);
+  margin:var(--ui-space-0);
 }
 
-.atividade-pronto .material-origem {
-  margin-top: 10px;
-}
 
 .atividade-atualizado-acoes:empty {
   display: none;
 }
 
-.atividade-atualizado-acoes .discreto-botao {
-  min-height: 44px;
-  padding: 7px 12px;
-  font-size: 0.75rem;
-}
 
 .profissao-nivel-faixa {
-  padding: 17px 0;
-  gap: 8px;
-  border-bottom: 1px solid #4a513b;
+  padding:var(--ui-space-4-25) var(--ui-space-0);
+  gap:var(--ui-space-2);
+  border-bottom: var(--ui-size-border) solid var(--ui-color-border);
 }
 
 .profissao-nivel-faixa > strong {
-  font-size: 0.76rem;
+  font-size: var(--ui-font-size-body-compact);
 }
 
 .profissao-nivel-faixa > span {
-  font-size: 0.7rem;
+  font-size: var(--ui-font-size-compact);
 }
 
 .profissao-nivel-faixa progress {
   height: 8px;
-  border-radius: 0;
+  border-radius:var(--ui-radius-none);
   min-width: 70px;
 }
 
 .profissao-nivel-faixa summary {
   min-height: 44px;
-  padding-block: 12px;
-  font-size: 0.7rem;
+  padding-block:var(--ui-space-3);
+  font-size: var(--ui-font-size-compact);
 }
 
 .profissao-nivel-faixa details {
@@ -801,290 +553,23 @@ summary:focus-visible,
 }
 
 .profissao-nivel-faixa details p {
-  color: var(--textoExibido);
-  font-size: 0.75rem;
+  color: var(--ui-color-text);
+  font-size: var(--ui-font-size-xs);
   max-width: 36ch;
 }
 
-.atividade-opcoes {
-  margin-top: 18px;
-  display: grid;
-  gap: 12px;
-}
-
-.atividade-opcoes-tituloDaSecao {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  grid-column: 1 / -1;
-}
-
-.atividade-opcoes-tituloDaSecao h2 {
-  margin: 0;
-  font-size: 1rem;
-  color: #cabc97;
-}
-
-.atividade-opcoes-tituloDaSecao > span {
-  color: #b0b59f;
-  font-size: 0.65rem;
-}
-
-.atividade-opcao {
-  display: grid;
-  grid-template-columns: 52px minmax(0, 1fr);
-  gap: 13px;
-}
-
-.atividade-opcao .item-miniatura {
-  width: 52px;
-  height: 52px;
-}
-
-.atividade-opcao .item-miniatura .jogo-icone {
-  width: 32px;
-  height: 32px;
-}
-
-.atividade-opcao h2 {
-  margin: 0;
-  color: #e8d9b4;
-}
-
-.atividade-opcao-titulo > span {
-  font-size: 0.7rem;
-}
-
-.atividade-opcao-titulo > span strong {
-  color: #d0b477;
-}
-
-.atividade-rendimento {
-  color: #c4ceae;
-  font-size: 0.8rem;
-}
-
-.atividade-substituicao {
-  color: var(--atenuado);
-  font-size: 0.75rem;
-}
-
-.ingrediente-listar > div {
-  border-color: #4a513c;
-  background: #1c2418;
-}
-
-.ingrediente-listar > div > span {
-  min-width: 0;
-  flex-basis: 130px;
-}
-
-.material-origem {
-  color: #e0c888;
-  font-size: 0.75rem;
-  min-height: 44px;
-  max-width: 100%;
-  white-space: normal;
-  overflow-wrap: anywhere;
-}
-
-.trabalho-resultado {
-  border-top: 1px solid #4c513c;
-  padding: 14px 0 0;
-  margin-top: 18px;
-}
-
-.trabalho-resultado > span {
-  color: #b1b798;
-  font-size: 0.66rem;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
-
-.trabalho-resultado > strong {
-  color: #d1d9bd;
-  font-size: 0.78rem;
-}
-
-/* O inventário apresenta uma grade de itens, com capacidade e inspeção explícitas. */
-.inventario-legenda {
-  display: flex;
-  justify-content: space-between;
-  gap: 10px;
-  align-items: center;
-  margin-bottom: 14px;
-  font:
-    1.15rem Georgia,
-    serif;
-  color: #dac99e;
-}
-
-.inventario-legenda > strong {
-  flex-shrink: 0;
-  white-space: nowrap;
-  font:
-    0.75rem ui-sans-serif,
-    sans-serif;
-  color: #c4c7b0;
-}
-
-.inventario-filtros {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 5px;
-  margin-bottom: 16px;
-}
-
-.inventario-filtros button {
-  min-height: 44px;
-  padding: 8px 12px;
-  border: 1px solid #515b43;
-  background: #1b2317;
-  color: var(--atenuado);
-  cursor: pointer;
-  font-size: 0.75rem;
-}
-
-.inventario-filtros button[aria-pressed="true"] {
-  border-color: #cfb477;
-  color: #ebd9ac;
-  background: #353b25;
-}
-
-/* Os espaços exibidos são células visuais; o cálculo da capacidade continua no domínio. */
-.inventario-espacos {
-  display: grid;
-  grid-template-columns: repeat(6, minmax(44px, 64px));
-  gap: 10px;
-  justify-content: start;
-}
-
-.inventario-espaco,
-.equipado-espaco {
-  min-width: 0;
-  min-height: 52px;
-  padding: 0;
-  aspect-ratio: 1;
-  position: relative;
-  display: grid;
-  place-items: center;
-  border: 7px solid transparent;
-  border-image: var(--espaco-moldura) 8 / 8px stretch;
-  background: radial-gradient(ellipse at 50% 40%, #3e4731, #181f14 85%);
-  color: #f0e4c9;
-}
-
-button.inventario-espaco,
-button.equipado-espaco {
-  cursor: pointer;
-}
-
-.inventario-espaco .jogo-icone,
-.equipado-espaco .jogo-icone {
-  width: 32px;
-  max-width: 100%;
-  height: auto;
-  aspect-ratio: 1;
-  filter: drop-shadow(1px 3px 2px #0008);
-}
-
-.inventario-espaco:hover,
-.equipado-espaco:hover {
-  background-color: #455033;
-  box-shadow: 0 0 0 1px #9b8e5e;
-}
-
-.inventario-espaco--selecionado {
-  outline: 2px solid #d0b477;
-  outline-offset: 1px;
-  background: #414831;
-}
-
-.inventario-espaco--vazio {
-  background: #171f15;
-  opacity: 0.65;
-}
-
-.inventario-espaco--vazio:hover {
-  box-shadow: none;
-}
-
-/* Sobrepõe a quantidade no canto sem deslocar a imagem central do item. */
-.espaco-quantidade {
-  position: absolute;
-  bottom: -2px;
-  right: 0;
-  font-size: 0.65rem;
-  line-height: 1.2;
-  font-variant-numeric: tabular-nums;
-  background: #11190ddb;
-  padding: 1px 3px;
-  text-shadow: 1px 1px #000;
-}
-
-.inventario-inspecao {
-  padding: 15px 12px;
-  border-left: 2px solid #d0b477;
-  background: #1b2317;
-  margin-top: 18px;
-}
-
-.inventario-inspecao > strong {
-  color: #e4d4ad;
-  font:
-    1rem Georgia,
-    serif;
-}
-
-.inventario-inspecao p,
-.inventario-dica {
-  color: var(--atenuado);
-  font-size: 0.8rem;
-  line-height: 1.6;
-}
-
-.inventario-grade--compacto .inventario-legenda {
-  font-size: 1rem;
-}
-
-/* O resumo reduz o número de colunas e a moldura, preservando o tamanho mínimo dos controles. */
-.inventario-grade--compacto .inventario-espacos {
-  grid-template-columns: repeat(4, minmax(44px, 56px));
-  gap: 5px;
-}
-
-.inventario-grade--compacto .inventario-espaco {
-  min-height: 44px;
-  border-width: 4px;
-  border-image-width: 5px;
-}
-
-.inventario-grade--compacto .inventario-inspecao {
-  padding: 10px 8px;
-  margin-top: 12px;
-}
-
-.inventario-grade--compacto .inventario-inspecao p,
-.inventario-grade--compacto > .atenuado {
-  font-size: 0.7rem;
-}
-
-.lateral-folha .inventario-grade--compacto .inventario-espacos {
-  gap: 10px;
-}
-
+/* Moldura de miniaturas em cartões de equipamento e profissões. */
 .item-miniatura {
-  border-radius: 0;
-  background: #28321f;
+  border-radius:var(--ui-radius-none);
+  background: var(--ui-color-inventory-slot-raised);
   border: 6px solid transparent;
-  border-image: var(--espaco-moldura) 8 / 8px stretch;
+  border-image: var(--ui-frame-inventory) 8 / 8px stretch;
 }
 
 .item-cartao {
-  border: 1px solid #586344;
-  border-radius: 0;
-  background: #242d1d;
+  border: var(--ui-size-border) solid var(--ui-color-border);
+  border-radius:var(--ui-radius-xl);
+  background: var(--ui-color-surface);
 }
 
 .item-cartao .item-miniatura .jogo-icone {
@@ -1094,45 +579,39 @@ button.equipado-espaco {
 
 .personagem-disposicao {
   grid-template-columns: 180px minmax(0, 1fr);
-  gap: 20px;
+  gap:var(--ui-space-5);
 }
 
 /* Agrupa o retrato com os atalhos para as peças atualmente equipadas. */
 .personagem-efigie {
   min-width: 0;
-  padding: 10px;
-  border: 1px solid #6e5b36;
-  background: #141c10;
+  padding:var(--ui-space-2-5);
+  border: var(--ui-size-border) solid var(--ui-color-border-strong);
+  background: var(--ui-color-inventory-slot);
 }
 
 .personagem-efigie .retrato-marcador {
   width: 100%;
-  border-radius: 0;
-  border: 1px solid #5d654a;
+  border-radius:var(--ui-radius-none);
+  border: var(--ui-size-border) solid var(--ui-color-border-strong);
 }
 
 .efigie-rotulo {
-  margin: 15px 0 9px;
+  margin:var(--ui-space-3-75) var(--ui-space-0) var(--ui-space-2-25);
   text-align: center;
-  color: #b4b99d;
-  font-size: 0.56rem;
-  letter-spacing: 0.1em;
+  color: var(--ui-color-text-muted);
+  font-size: var(--ui-font-size-3xs-small);
+  letter-spacing: var(--ui-letter-spacing-spacious);
 }
 
 .equipado-suporte {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(44px, 1fr));
-  gap: 5px;
-}
-
-.equipado-espaco {
-  min-height: 44px;
-  border-width: 4px;
-  border-image-width: 5px;
+  gap:var(--ui-space-1-25);
 }
 
 .visaoGeral-pilha {
-  gap: 16px;
+  gap:var(--ui-space-4);
 }
 
 .informacoes-gradeVisual {
@@ -1141,9 +620,9 @@ button.equipado-espaco {
 
 .informacoes-gradeVisual > div {
   border: 0;
-  border-left: 1px solid #5e6349;
+  border-left: var(--ui-size-border) solid var(--ui-color-border-strong);
   background: transparent;
-  padding: 5px 10px;
+  padding:var(--ui-space-1-25) var(--ui-space-2-5);
 }
 
 .informacoes-gradeVisual > div,
@@ -1154,87 +633,52 @@ button.equipado-espaco {
 }
 
 .informacoes-gradeVisual span {
-  color: #b5baa3;
-  font-size: 0.66rem;
+  color: var(--ui-color-text-muted);
+  font-size: var(--ui-font-size-caption-large);
   text-transform: none;
-  letter-spacing: 0;
+  letter-spacing: var(--ui-letter-spacing-none);
 }
 
 .informacoes-gradeVisual strong {
-  color: #e3d3a6;
-  font:
-    1.3rem Georgia,
-    serif;
+  color: var(--ui-color-text);
+  font: var(--ui-font-size-xl) var(--ui-font-family-display);
 }
 
 .profissao-resumo-gradeVisual {
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 5px;
+  gap:var(--ui-space-1-25);
 }
 
 .profissao-resumo-gradeVisual > div {
-  font-size: 0.72rem;
-  padding: 10px 3px;
+  font-size: var(--ui-font-size-compact-large);
+  padding:var(--ui-space-2-5) var(--ui-space-0-75);
 }
 
 .profissao-resumo-gradeVisual strong {
   white-space: nowrap;
-  color: #d1b577;
-  font-size: 0.65rem;
-  font-weight: 500;
+  color: var(--ui-color-warning-text);
+  font-size: var(--ui-font-size-caption);
+  font-weight: var(--ui-font-weight-medium);
 }
 
-.atributo-listar > div,
-.tecnica-linhaDeDados,
-.banco-item-linhaDeDados {
-  background-color: #1e2819;
-  border-color: #444f37;
+.tecnica-linhaDeDados {
+  background-color: var(--ui-color-surface);
+  border-color: var(--ui-color-border);
 }
 
-.cidade-localDoJogo-gradeVisual button {
-  align-content: start;
-  text-align: left;
-  border-radius: 0;
-  border-color: #606546;
-  background: #29341f;
-}
-
-.cidade-localDoJogo-gradeVisual button .jogo-icone {
-  margin-bottom: 7px;
-}
-
-.cidade-localDoJogo-gradeVisual button:hover {
-  background: #38452a;
-  border-color: #c1ab70;
-}
 
 .cidade-visaoGeral-disposicao,
 .aventura-visaoGeral-disposicao {
   grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
-  gap: 20px;
+  gap:var(--ui-space-5);
 }
 
 .cidade-localDoJogo-gradeVisual strong {
-  color: #e1d0a5;
+  color: var(--ui-color-text);
 }
 
 .cidade-localDoJogo-gradeVisual span {
-  color: #b9c1a7;
-}
-
-.recurso-pilha > div {
-  background: #20291b;
-  border-color: #46523a;
-}
-
-.combate-combatente,
-.masmorra-lateral .painel {
-  border-color: #665e42;
-}
-
-.combate-registro,
-.masmorra-registro {
-  background: #121a0f;
+  color: var(--ui-color-text-muted);
 }
 
 /* Painel ocioso persistente: animação e cor acompanham outros indicadores de estado. */
@@ -1245,100 +689,47 @@ button.equipado-espaco {
   right: 0;
   bottom: 0;
   height: var(--estrutura-rodape);
-  padding: 10px 26px;
-  background: #1b2316;
-  border-top: 3px double #806b42;
-  box-shadow: 0 -5px 18px #0005;
+  padding:var(--ui-space-2-5) var(--ui-space-6-5);
+  background: var(--ui-color-surface);
+  border-top: var(--ui-size-border) solid var(--ui-color-border);
+  box-shadow: var(--ui-shadow-md);
   backdrop-filter: none;
-}
-
-.atual-trabalho {
-  max-width: 570px;
-  gap: 12px;
-}
-
-.atual-trabalho .ocioso-progressoTituloDaSecao {
-  gap: 6px;
-}
-
-.atual-trabalho .ocioso-progressoTituloDaSecao > span {
-  flex: 1;
-}
-
-.atual-trabalho .ocioso-progressoTituloDaSecao em {
-  max-width: 45%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.atual-trabalho > span:first-child {
-  width: 42px;
-  height: 42px;
-  border: 0;
-  border-radius: 0;
-  background: #293420;
-}
-
-.atual-trabalho small {
-  font-size: 0.6rem;
-  color: #b4bb9e;
-}
-
-.atual-trabalho strong {
-  font-size: 0.8rem;
-  color: #e4d7b6;
-}
-
-.atual-trabalho:disabled {
-  opacity: 1;
 }
 
 .ocioso-progressoTrilha,
 .ocioso-progresso--compacto .ocioso-progressoTrilha {
   height: 10px;
-  border: 1px solid #897547;
-  border-radius: 0;
-  background: #10170c;
-  box-shadow: inset 0 1px 2px #000;
+  border: var(--ui-size-border) solid var(--ui-color-border);
+  border-radius:var(--ui-radius-pill);
+  background: var(--ui-color-surface-sunken);
+  box-shadow: var(--ui-shadow-inset-progress);
 }
 
 .ocioso-progressoPreenchimento {
-  background: linear-gradient(#bc9b56, #897442);
+  background: linear-gradient(var(--ui-color-primary), var(--ui-color-primary-hover));
 }
 
 .ocioso-progressoTituloDaSecao em {
-  padding: 3px 5px;
-  border: 1px solid #4f5c3e;
-  background: #1b2614;
-  color: #d9d3b8;
+  padding:var(--ui-space-0-75) var(--ui-space-1-25);
+  border: var(--ui-size-border) solid var(--ui-color-border);
+  background: var(--ui-color-primary-soft);
+  color: var(--ui-color-primary);
 }
 
 .ocioso-progressoDetalhes small {
-  color: #b7bda4;
-  font-size: 0.62rem;
+  color: var(--ui-color-text-muted);
+  font-size: var(--ui-font-size-3xs-large);
 }
 
 .ocioso-progressoDetalhes strong {
-  font-size: 0.8rem;
-  line-height: 1.5;
+  font-size: var(--ui-font-size-xs);
+  line-height: var(--ui-line-height-normal);
 }
 
 .continuidade-acoes {
-  gap: 8px;
+  gap:var(--ui-space-2);
 }
 
-.continuidade-acoes button {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-  min-height: 44px;
-  padding: 8px 12px;
-  border-radius: 0;
-  border: 1px solid #64734e;
-  background: #2d3a22;
-  color: #d5dcc4;
-}
 
 /* O tema mantém a navegação visível durante risco; a disponibilidade das ações é controlada no React. */
 .jogo-estrutura--risco .principal-navegacao {
@@ -1352,20 +743,20 @@ button.equipado-espaco {
 
 .risco-estado-faixa,
 .preparacao-estado-faixa {
-  margin-left: var(--jogo-trilho);
-  border-bottom: 1px solid #8c654c;
-  padding: 12px 26px;
+  margin-left:var(--jogo-trilho);
+  border-bottom: var(--ui-size-border) solid var(--ui-color-border-strong);
+  padding:var(--ui-space-3) var(--ui-space-6-5);
   height: auto;
-  background: #342920;
+  background: var(--ui-color-danger-surface);
   flex-wrap: wrap;
 }
 
 .preparacao-estado-faixa {
-  background: #302e1e;
+  background: var(--ui-color-warning-surface);
 }
 
 .jogo-estrutura--risco .jogo-conteudo {
-  padding: 20px;
+  padding:var(--ui-space-5);
 }
 
 .jogo-estrutura--risco .jogo-aviso {
@@ -1373,37 +764,14 @@ button.equipado-espaco {
 }
 
 .jogo-aviso {
-  border-radius: 0;
-  background: #2d3525;
-  border-color: #ab935d;
-}
-
-.lateral-folha {
-  background: #202b19;
-  border-left: 3px double #b7995f;
-  padding: 26px 20px;
-}
-
-.lateral-folha::backdrop {
-  background: #070d06c9;
-}
-
-.folha-fechar {
-  border-radius: 0;
-  color: #e4d5ad;
-  background: #303d23;
+  border-radius:var(--ui-radius-lg);
+  background: var(--ui-color-warning-surface);
+  border-color: var(--ui-color-warning);
+  color: var(--ui-color-warning-text);
 }
 
 .jornada-secao {
-  border-color: #5b6648;
-}
-
-.recursoVisual-creditos summary {
-  color: #adb79c;
-}
-
-.recursoVisual-creditos a {
-  color: #dfc586;
+  border-color: var(--ui-color-border);
 }
 
 /* A criação de personagem compartilha os materiais e o tom do jogo. */
@@ -1415,14 +783,14 @@ button.equipado-espaco {
   display: block;
   max-width: 100%;
   overflow-wrap: anywhere;
-  color: #e1c788;
-  font-family: "Antiquity Print", Georgia, serif;
+  color: var(--ui-color-text);
+  font-family: var(--ui-font-family-antiquity);
 }
 
 .entrada-cabecalho {
-  border-bottom: 3px double #6d5c3b;
+  border-bottom: var(--ui-size-border) solid var(--ui-color-border);
   flex-wrap: wrap;
-  gap: 12px 20px;
+  gap:var(--ui-space-3) var(--ui-space-5);
 }
 
 .entrada-cabecalho > div {
@@ -1431,55 +799,28 @@ button.equipado-espaco {
 }
 
 .criacao-foco {
-  padding: 24px;
-  border: 16px solid transparent;
-  border-image: var(--moldura-ouro) 24 / 18px stretch;
-  background: #1d2817;
+  padding:var(--ui-space-6);
+  border: var(--ui-size-border) solid var(--ui-color-border);
+  background: var(--ui-color-surface);
 }
 
 .criacao-progresso span {
-  border-radius: 0;
-  border-color: #5c6d46;
-  background: #192411;
+  border-radius:var(--ui-radius-pill);
+  border-color: var(--ui-color-border);
+  background: var(--ui-color-surface-raised);
 }
 
 .criacao-progresso span.ativo {
-  border-color: #d0b477;
-  color: #f1dfb0;
-  background: #4a4529;
-}
-
-.criacao-escolha,
-.partida-cartao-emExecucao {
-  border-radius: 0;
-  background: #25331d;
-  border-color: #576743;
-}
-
-.criacao-escolha.selecionado,
-.partida-cartao-emExecucao:hover {
-  border-color: #d0b477;
-  background: #3b4028;
-}
-
-.nome-entradaDeDados {
-  border-radius: 0;
-  background: #111b0c;
-  border-color: #6f7958;
-}
-
-.ausente-retorno-cartao {
-  border-radius: 0;
-  border: 16px solid transparent;
-  border-image: var(--moldura-ouro) 24 / 18px stretch;
-  background: #1f2a19;
+  border-color: var(--ui-color-primary);
+  color: var(--ui-color-primary-text);
+  background: var(--ui-color-primary);
 }
 
 /* Remove o painel auxiliar para priorizar a área de jogo e oferece o acesso alternativo aos créditos. */
 @media (max-width: 1250px) {
   .jogo-disposicao {
     grid-template-columns: minmax(0, 1fr);
-    padding: 20px;
+    padding:var(--ui-space-5);
   }
 
   .jogo-companheiro {
@@ -1488,7 +829,7 @@ button.equipado-espaco {
 
   .movel-creditos {
     display: block;
-    margin-top: 24px;
+    margin-top:var(--ui-space-6);
   }
 
   .jogo-conteudo {
@@ -1503,11 +844,11 @@ button.equipado-espaco {
   }
 
   .jogo-barraLateral {
-    padding: 20px 9px;
+    padding:var(--ui-space-5) var(--ui-space-2-25);
   }
 
   .jogo-marca {
-    padding-bottom: 22px;
+    padding-bottom:var(--ui-space-5-5);
   }
 
   .marca-simbolo {
@@ -1526,33 +867,22 @@ button.equipado-espaco {
 
   .jogo-marca small,
   .marca-ornamento,
-  .principal-navegacao button small,
   .reino-situacao,
   .barraLateral-notaDeRodape {
     display: none;
   }
 
-  .principal-navegacao button {
-    flex-direction: column;
-    justify-content: center;
-    gap: 8px;
-    padding: 8px 0;
-    font:
-      0.65rem ui-sans-serif,
-      sans-serif;
-  }
-
   .jogo-barraSuperior {
-    padding-inline: 18px;
+    padding-inline:var(--ui-space-4-5);
   }
 
   .global-recursos {
-    gap: 12px;
+    gap:var(--ui-space-3);
   }
 
   .atividades-disposicao {
     grid-template-columns: 148px minmax(0, 1fr);
-    gap: 14px;
+    gap:var(--ui-space-3-5);
   }
 
   .atividade-etapa {
@@ -1568,12 +898,12 @@ button.equipado-espaco {
   }
 
   .jogo-estrutura {
-    padding-bottom: calc(146px + env(safe-area-inset-bottom));
+    padding-bottom:calc(var(--ui-space-36-5) + env(safe-area-inset-bottom));
   }
 
   .jogo-barraLateral {
     position: static;
-    padding: 0;
+    padding:var(--ui-space-0);
     border: 0;
     box-shadow: none;
     width: auto;
@@ -1593,37 +923,11 @@ button.equipado-espaco {
     inset: auto 0 0;
     width: 100%;
     height: calc(66px + env(safe-area-inset-bottom));
-    padding: 3px 5px env(safe-area-inset-bottom);
-    gap: 4px;
-    border-top: 1px solid #71633d;
-    background: #151e10;
+    padding:var(--ui-space-0-75) var(--ui-space-1-25) env(safe-area-inset-bottom);
+    gap:var(--ui-space-1);
+    border-top: var(--ui-size-border) solid var(--ui-color-border);
+    background: var(--ui-color-surface);
     z-index: 40;
-  }
-
-  .principal-navegacao button {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    gap: 4px;
-    min-height: 60px;
-    padding: 4px 1px;
-    text-align: center;
-    font:
-      0.65rem ui-sans-serif,
-      sans-serif;
-  }
-
-  .principal-navegacao button .jogo-icone {
-    width: 24px;
-    height: 24px;
-  }
-
-  .principal-navegacao button small {
-    display: none;
-  }
-
-  .principal-navegacao button.ativo {
-    box-shadow: inset 0 2px #d0b477;
   }
 
   .jogo-barraSuperior {
@@ -1631,26 +935,26 @@ button.equipado-espaco {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
     min-height: 76px;
-    padding: 10px 12px;
-    gap: 10px;
+    padding:var(--ui-space-2-5) var(--ui-space-3);
+    gap:var(--ui-space-2-5);
   }
 
   #jogo-conteudo {
-    scroll-margin-top: 136px;
+    scroll-margin-top: var(--ui-space-34);
   }
 
   .jogador-identidade {
     flex: 1;
-    gap: 8px;
+    gap:var(--ui-space-2);
   }
 
   .jogador-nome {
     max-width: 24ch;
-    font-size: 0.9rem;
+    font-size: var(--ui-font-size-body-2xl);
   }
 
   .jogador-identidade span {
-    font-size: 0.65rem;
+    font-size: var(--ui-font-size-caption);
   }
 
   .avatar-marcador {
@@ -1666,7 +970,7 @@ button.equipado-espaco {
   .global-recursos {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr)) 44px;
-    gap: 8px;
+    gap:var(--ui-space-2);
     width: 100%;
   }
 
@@ -1675,8 +979,8 @@ button.equipado-espaco {
     grid-template-columns: 16px minmax(0, 1fr);
     grid-template-areas: "sig label" "value value";
     min-width: 0;
-    padding-bottom: 4px;
-    gap: 2px 4px;
+    padding-bottom:var(--ui-space-1);
+    gap:var(--ui-space-0-5) var(--ui-space-1);
   }
 
   .global-recursos > div:nth-child(4) {
@@ -1685,12 +989,12 @@ button.equipado-espaco {
 
   .global-recursos small {
     display: block;
-    font-size: 0.6rem;
+    font-size: var(--ui-font-size-3xs);
     overflow-wrap: anywhere;
   }
 
   .global-recursos strong {
-    font-size: 0.8rem;
+    font-size: var(--ui-font-size-xs);
     overflow-wrap: anywhere;
   }
 
@@ -1701,20 +1005,14 @@ button.equipado-espaco {
     height: 16px;
   }
 
-  .global-recursos > .icone-botao {
-    position: static;
-    width: 44px;
-    align-self: center;
-  }
-
   .jogo-disposicao {
-    padding: 12px;
-    gap: 0;
+    padding:var(--ui-space-3);
+    gap:var(--ui-space-0);
   }
 
   .jogo-conteudo,
   .jogo-estrutura--risco .jogo-conteudo {
-    padding: 10px;
+    padding:var(--ui-space-2-5);
     border-width: 8px;
     border-image-width: 10px;
     width: 100%;
@@ -1723,8 +1021,8 @@ button.equipado-espaco {
   .telaDoJogo-tituloDaSecao {
     flex-direction: row;
     align-items: center;
-    padding-bottom: 14px;
-    margin-bottom: 12px;
+    padding-bottom:var(--ui-space-3-5);
+    margin-bottom:var(--ui-space-3);
   }
 
   .telaDoJogo-tituloDaSecao {
@@ -1732,26 +1030,26 @@ button.equipado-espaco {
   }
 
   .telaDoJogo-tituloDaSecao .destaque-titulo {
-    font-size: 1.55rem;
-    gap: 8px;
+    font-size: var(--ui-font-size-title-small);
+    gap:var(--ui-space-2);
   }
 
   .telaDoJogo-tituloDaSecao p:last-child {
-    font-size: 0.72rem;
+    font-size: var(--ui-font-size-compact-large);
   }
 
   .telaDoJogo-tituloDaSecao .secao-chamada {
-    font-size: 0.58rem;
+    font-size: var(--ui-font-size-2xs-small);
   }
 
   .atividade-estado {
-    padding: 6px;
-    font-size: 0.625rem;
+    padding:var(--ui-space-1-5);
+    font-size: var(--ui-font-size-3xs);
   }
 
   .atividades-disposicao {
     grid-template-columns: 1fr;
-    gap: 14px;
+    gap:var(--ui-space-3-5);
   }
 
   .atividades-profissao-trilho {
@@ -1763,68 +1061,51 @@ button.equipado-espaco {
   }
 
   .movel-profissao-seletor select {
-    border-radius: 0;
-    border-color: #7d7650;
-    background: #27341e;
+    border-radius:var(--ui-radius-none);
+    border-color: var(--ui-color-border);
+    background: var(--ui-color-surface);
   }
 
   .atividade-etapa {
     grid-template-columns: minmax(0, 160px) minmax(0, 1fr);
-    gap: 10px;
+    gap:var(--ui-space-2-5);
   }
 
   .atividade-cena-envoltorio {
-    padding: 4px;
+    padding:var(--ui-space-1);
   }
 
   .atividade-cena-legenda {
-    font-size: 0.62rem;
+    font-size: var(--ui-font-size-3xs-large);
   }
 
   .atividade-atualizado {
-    border-width: 5px;
-    border-image-width: 7px;
-    padding: 6px;
+    gap:var(--ui-space-2);
   }
 
   .atividade-pronto h2 {
-    font-size: 0.87rem;
+    font-size: var(--ui-font-size-body-xl);
   }
 
   .atividade-pronto > p:not(.secao-chamada) {
-    font-size: 0.75rem;
+    font-size: var(--ui-font-size-xs);
   }
 
   .atividade-atualizado .ocioso-progressoTituloDaSecao strong {
-    font-size: 0.88rem;
+    font-size: var(--ui-font-size-sm);
   }
 
   .atividade-atualizado .ocioso-progressoDetalhes strong {
-    font-size: 0.7rem;
-  }
-
-  .atividade-opcoes-tituloDaSecao > span {
-    display: none;
-  }
-
-  .atividade-opcao {
-    grid-template-columns: 44px minmax(0, 1fr);
-    gap: 10px;
-    padding: 10px;
-  }
-
-  .atividade-opcao .item-miniatura {
-    width: 44px;
-    height: 44px;
+    font-size: var(--ui-font-size-xs);
   }
 
   .personagem-disposicao {
     grid-template-columns: 124px minmax(0, 1fr);
-    gap: 12px;
+    gap:var(--ui-space-3);
   }
 
   .personagem-efigie {
-    padding: 6px;
+    padding:var(--ui-space-1-5);
   }
 
   .profissao-resumo-gradeVisual {
@@ -1832,39 +1113,23 @@ button.equipado-espaco {
   }
 
   .informacoes-gradeVisual {
-    gap: 10px;
+    gap:var(--ui-space-2-5);
   }
 
   .informacoes-gradeVisual > div {
-    padding: 3px 6px;
+    padding:var(--ui-space-0-75) var(--ui-space-1-5);
   }
 
   .informacoes-gradeVisual span {
-    font-size: 0.6rem;
+    font-size: var(--ui-font-size-3xs);
   }
 
   .informacoes-gradeVisual strong {
-    font-size: 1.1rem;
-  }
-
-  .painel {
-    padding: 10px;
-    border-width: 6px;
-    border-image-width: 8px;
-  }
-
-  .inventario-espacos {
-    grid-template-columns: repeat(4, minmax(44px, 64px));
-    gap: 8px;
+    font-size: var(--ui-font-size-display-small);
   }
 
   .subnavegacao {
-    gap: 2px;
-  }
-
-  .subnavegacao button {
-    padding-inline: 8px;
-    font-size: 0.72rem;
+    gap:var(--ui-space-0-5);
   }
 
   .cidade-visaoGeral-disposicao,
@@ -1888,47 +1153,8 @@ button.equipado-espaco {
   .jogo-estrutura--risco .continuidade-barra {
     bottom: calc(66px + env(safe-area-inset-bottom));
     height: var(--estrutura-rodape);
-    padding: 8px 12px;
-    gap: 8px;
-  }
-
-  .atual-trabalho {
-    gap: 7px;
-  }
-
-  .atual-trabalho .ocioso-progressoTituloDaSecao {
-    flex-wrap: nowrap;
-  }
-
-  .atual-trabalho > span:first-child {
-    display: none;
-  }
-
-  .atual-trabalho strong {
-    font-size: 0.74rem;
-  }
-
-  .atual-trabalho .ocioso-progressoTituloDaSecao em {
-    font-size: 0.6rem;
-  }
-
-  .continuidade-acoes button {
-    flex-direction: column;
-    justify-content: center;
-    gap: 3px;
-    padding: 4px 8px;
-    font-size: 0.52rem;
-    min-width: 48px;
-    height: 52px;
-  }
-
-  .continuidade-acoes button:first-child {
-    font-size: 0.52rem;
-  }
-
-  .continuidade-acoes button .jogo-icone {
-    width: 20px;
-    height: 20px;
+    padding:var(--ui-space-2) var(--ui-space-3);
+    gap:var(--ui-space-2);
   }
 
   .jogo-aviso,
@@ -1940,13 +1166,13 @@ button.equipado-espaco {
 
   .risco-estado-faixa,
   .preparacao-estado-faixa {
-    padding-inline: 12px;
-    font-size: 0.64rem;
-    gap: 10px;
+    padding-inline:var(--ui-space-3);
+    font-size: var(--ui-font-size-2xs-large);
+    gap:var(--ui-space-2-5);
   }
 
   .criacao-foco {
-    padding: 14px;
+    padding:var(--ui-space-3-5);
     border-width: 10px;
     border-image-width: 12px;
   }
@@ -1955,20 +1181,20 @@ button.equipado-espaco {
 /* Empilha os blocos mais largos e redistribui o retrato para a menor faixa de largura. */
 @media (max-width: 440px) {
   .jogo-barraSuperior {
-    gap: 7px;
+    gap:var(--ui-space-1-75);
   }
 
   .jogador-identidade > div:last-child {
     display: grid;
-    gap: 0;
+    gap:var(--ui-space-0);
   }
 
   .global-recursos {
-    gap: 6px;
+    gap:var(--ui-space-1-5);
   }
 
   .jogo-disposicao {
-    padding: 8px;
+    padding:var(--ui-space-2);
   }
 
   .atividade-etapa {
@@ -1980,26 +1206,15 @@ button.equipado-espaco {
   }
 
   .atividade-estado {
-    gap: 4px;
+    gap:var(--ui-space-1);
   }
 
   .atividade-pronto h2 {
-    font-size: 0.8rem;
+    font-size: var(--ui-font-size-xs);
   }
 
   .atividade-pronto > p:not(.secao-chamada) {
-    font-size: 0.75rem;
-  }
-
-  .atividade-atualizado-acoes .discreto-botao {
-    font-size: 0.75rem;
-    padding: 6px;
-  }
-
-  .atividade-opcao-titulo {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 5px;
+    font-size: var(--ui-font-size-xs);
   }
 
   .personagem-disposicao {
@@ -2010,8 +1225,8 @@ button.equipado-espaco {
     display: grid;
     grid-template-columns: 100px minmax(0, 1fr);
     align-items: center;
-    gap: 12px;
-    padding: 10px;
+    gap:var(--ui-space-3);
+    padding:var(--ui-space-2-5);
   }
 
   .personagem-efigie .retrato-marcador {
@@ -2019,13 +1234,9 @@ button.equipado-espaco {
   }
 
   .efigie-rotulo {
-    margin: 0;
+    margin:var(--ui-space-0);
   }
 
-  .inventario-filtros button {
-    flex: 1;
-    padding: 8px 5px;
-  }
 }
 
 /* Mesmo numa janela larga, um painel estreito precisa empilhar cena e controles. */
@@ -2042,8 +1253,8 @@ button.equipado-espaco {
 /* Encurta ornamentos do trilho em monitores baixos sem retirar destinos de navegação. */
 @media (max-height: 740px) and (min-width: 981px) {
   .jogo-marca {
-    gap: 8px;
-    padding-bottom: 16px;
+    gap:var(--ui-space-2);
+    padding-bottom:var(--ui-space-4);
   }
 
   .marca-simbolo {
@@ -2062,7 +1273,7 @@ button.equipado-espaco {
   }
 
   .reino-situacao {
-    padding-top: 18px;
+    padding-top:var(--ui-space-4-5);
   }
 }
 
@@ -2073,37 +1284,25 @@ button.equipado-espaco {
     scroll-behavior: auto !important;
   }
 
-  button {
-    transition: none !important;
-  }
 }
 
 /* Substitui molduras por bordas do sistema e mantém a seleção perceptível em alto contraste. */
 @media (forced-colors: active) {
   .jogo-conteudo,
-  .painel,
-  .inventario-espaco,
-  .equipado-espaco,
+  [data-ui='card'],
   .companheiro-secao,
   .criacao-foco {
     border-image: none;
-    border: 1px solid CanvasText;
+    border: var(--ui-size-border) solid CanvasText;
   }
 
-  .principal-navegacao button.ativo,
-  .inventario-espaco--selecionado {
+  [data-variant='inventory'][aria-pressed='true'],
+  [data-variant='filter'][aria-pressed='true'] {
     outline: 2px solid Highlight;
   }
 }
 
 /* Reserva a coluna da animação de classe; o texto ocupa o espaço restante e pode quebrar. */
-.criacao-escolha.criacao-classe-escolha {
-  grid-template-columns: 160px minmax(0, 1fr);
-  align-items: center;
-  align-content: center;
-  gap: 14px;
-}
-
 /* width e height controlam a área exibida; contain preserva a proporção e pixelated evita suavização. */
 .criacao-classe-gif {
   display: block;
@@ -2113,88 +1312,24 @@ button.equipado-espaco {
   image-rendering: pixelated;
 }
 
-.criacao-classe-texto {
-  display: grid;
-  gap: 7px;
-  min-width: 0;
-  overflow-wrap: anywhere;
-}
-
-.criacao-classe-texto strong {
-  color: var(--textoExibido);
-}
-
-/* A visão da Cidade usa cartões visuais e uma cena ampla, inspirados em interfaces de jogo mobile. */
+/* Cartões da Cidade permanecem uma composição de tela; a apresentação dos controles vem de Button. */
 .cidade-visaoGeral-disposicao {
   grid-template-columns: minmax(0, 1fr);
-  gap: 18px;
+  gap:var(--ui-space-4-5);
 }
 
 .cidade-visaoGeral-disposicao > .contexto-arte {
   width: 100%;
   max-width: none;
   aspect-ratio: 3.2 / 1;
-  border: 1px solid #756644;
-  border-radius: 12px;
-  box-shadow: inset 0 0 0 1px #fff2, 0 12px 28px #0005;
+  border: var(--ui-size-border) solid var(--ui-color-border);
+  border-radius:var(--ui-radius-lg);
+  box-shadow: var(--ui-shadow-inset-overlay);
 }
 
 .cidade-visaoGeral-disposicao .cidade-localDoJogo-gradeVisual {
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 12px;
-}
-
-.cidade-visaoGeral-disposicao .cidade-localDoJogo-gradeVisual > button:first-child {
-  grid-column: span 2;
-  min-height: 168px;
-}
-
-.cidade-localDoJogo-gradeVisual button {
-  position: relative;
-  min-height: 142px;
-  align-content: space-between;
-  gap: 12px;
-  padding: 16px;
-  overflow: hidden;
-  border: 1px solid #586348;
-  border-radius: 12px;
-  background:
-    radial-gradient(ellipse at 100% 0%, #a0ad6324, transparent 52%),
-    linear-gradient(145deg, #303b27, #20291d 72%);
-  box-shadow: inset 0 1px #ffffff0a, 0 5px 14px #0003;
-  transition: transform 240ms cubic-bezier(.2, .8, .2, 1), border-color 240ms ease, box-shadow 240ms ease, background-color 240ms ease;
-}
-
-.cidade-localDoJogo-gradeVisual button .jogo-icone {
-  width: 42px;
-  height: 42px;
-  margin: 0;
-  object-fit: contain;
-  filter: drop-shadow(0 3px 5px #0008);
-  transition: transform 300ms cubic-bezier(.2, .8, .2, 1), background-color 240ms ease;
-}
-
-.cidade-localDoJogo-gradeVisual button:hover {
-  transform: translateY(-4px);
-  border-color: #c7ad70;
-  background:
-    radial-gradient(ellipse at 100% 0%, #b8c87338, transparent 58%),
-    linear-gradient(145deg, #3a482c, #252f20 72%);
-  box-shadow: inset 0 1px #ffffff12, 0 12px 24px #0005;
-}
-
-.cidade-localDoJogo-gradeVisual button:hover .jogo-icone {
-  transform: scale(1.08) rotate(-3deg);
-  background: #594c2a;
-}
-
-.cidade-localDoJogo-gradeVisual button strong {
-  font-size: 1.08rem;
-}
-
-.cidade-localDoJogo-gradeVisual button span {
-  font-size: .78rem;
-  line-height: 1.4;
+  gap:var(--ui-space-3);
 }
 
 @media (max-width: 720px) {
@@ -2206,14 +1341,4 @@ button.equipado-espaco {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .cidade-visaoGeral-disposicao .cidade-localDoJogo-gradeVisual > button:first-child {
-    grid-column: span 2;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .cidade-localDoJogo-gradeVisual button,
-  .cidade-localDoJogo-gradeVisual button .jogo-icone {
-    transition: none;
-  }
 }

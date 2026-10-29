@@ -22,21 +22,22 @@ import {
   type PartidaLocal,
   type IdDaProfissao,
 } from "@greywake/dominio";
-import BancadaDeCombate from "./BancadaDeCombate";
-import BancadaDaMasmorra from "./BancadaDaMasmorra";
-import BancadaDoMercado from "./BancadaDoMercado";
-import PainelDeAtributos from "./PainelDeAtributos";
-import PainelDoBanco from "./PainelDoBanco";
-import IndicadorDeProgressoOcioso from "./IndicadorDeProgressoOcioso";
-import TelaDeAtividades from "./TelaDeAtividades";
-import PainelDePrestigio from "./PainelDePrestigio";
-import PainelRapido from "./PainelRapido";
-import CreditosDosRecursos from "./CreditosDosRecursos";
-import IconeDoJogo from "./IconeDoJogo";
-import GradeDoInventario from "./GradeDoInventario";
-import MetaDaJornada, { ResumoDaMetaDaJornada } from "./MetaDaJornada";
+import BancadaDeCombate from "./features/aventura/BancadaDeCombate";
+import BancadaDaMasmorra from "./features/aventura/BancadaDaMasmorra";
+import BancadaDoMercado from "./features/cidade/BancadaDoMercado";
+import PainelDeAtributos from "./features/personagem/PainelDeAtributos";
+import PainelDoBanco from "./features/cidade/PainelDoBanco";
+import IndicadorDeProgressoOcioso from "./features/atividades/IndicadorDeProgressoOcioso";
+import TelaDeAtividades from "./features/atividades/TelaDeAtividades";
+import PainelDePrestigio from "./features/personagem/PainelDePrestigio";
+import PainelRapido from "./features/navegacao/PainelRapido";
+import CreditosDosRecursos from "./components/jogo/CreditosDosRecursos";
+import { IconeDoJogo } from "./components/jogo";
+import GradeDoInventario from "./features/inventario/GradeDoInventario";
+import MetaDaJornada, { ResumoDaMetaDaJornada } from "./features/jornada/MetaDaJornada";
 import { obterIconeDoEquipamento, iconeDoPainelPorId, iconeDeProfissaoPorId } from "./iconesDosRecursos";
 import { rotulosDasProfissoes } from "./rotulosDoJogo";
+import { Button, Card } from "./components/ui";
 
 type DestinoPrincipal = "personagem" | "atividades" | "aventura" | "cidade";
 type AbaDoPersonagem =
@@ -272,16 +273,15 @@ export default function EstruturaDoJogo({
             <small>Moeda</small>
             <strong>{partida.personagem.ouro}</strong>
           </div>
-          <button
-            className="icone-botao"
-            type="button"
+          <Button
+            variant="icon"
             onClick={aoAlternarPartida}
             disabled={focadoRisco}
             aria-label="Trocar personagem"
             title="Trocar personagem"
           >
             ⋯
-          </button>
+          </Button>
         </div>
       </header>
 
@@ -303,20 +303,19 @@ export default function EstruturaDoJogo({
               ["cidade", "Cidade", "livro-abrir", "Abrigo e comércio"],
             ] as const
           ).map(([id, rotulo, icone, detalhe]) => (
-            <button
+            <Button
+              variant="navigation"
+              icon={<IconeDoJogo icone={icone} tamanho={32} />}
               key={id}
-              type="button"
-              className={destino === id ? "ativo" : ""}
               disabled={focadoRisco}
               aria-current={destino === id ? "page" : undefined}
               onClick={() => ir(id)}
             >
-              <IconeDoJogo icone={icone} tamanho={32} />
               <span>
                 {rotulo}
                 <small>{detalhe}</small>
               </span>
-            </button>
+            </Button>
           ))}
         </nav>
         <div
@@ -431,25 +430,25 @@ export default function EstruturaDoJogo({
             <p className="secao-chamada">{jornada.rotulo}</p>
             <h3>{jornada.titulo}</h3>
             <p className="companheiro-texto">{jornada.corpo}</p>
-            <button
-              className="discreto-botao completo-largura"
-              type="button"
+            <Button
+              variant="secondary"
+              fullWidth
               disabled={focadoRisco}
               onClick={() => definirRapidoPainel("jornada")}
             >
               Consultar jornada
-            </button>
+            </Button>
           </section>
           <section className="companheiro-secao">
             <GradeDoInventario partida={partida} compacto />
-            <button
-              className="discreto-botao completo-largura"
-              type="button"
+            <Button
+              variant="secondary"
+              fullWidth
               disabled={focadoRisco}
               onClick={abrirCompletoInventario}
             >
               Abrir bolsa
-            </button>
+            </Button>
           </section>
           <CreditosDosRecursos />
         </aside>
@@ -457,9 +456,10 @@ export default function EstruturaDoJogo({
 
       {/* O trabalho continua visível ao navegar; clicar no resumo retorna à profissão realmente em execução. */}
       <footer className="continuidade-barra">
-        <button
+        <Button
+          variant="activity"
+          icon={<IconeDoJogo icone={trabalho ? iconeDeProfissaoPorId[trabalho.idDaProfissao] : "picareta"} tamanho={32} />}
           disabled={focadoRisco}
-          className="atual-trabalho"
           type="button"
           onClick={() => {
             definirDestino("atividades");
@@ -467,33 +467,27 @@ export default function EstruturaDoJogo({
             if (trabalho) definirSelecionadoProfissao(trabalho.idDaProfissao);
           }}
         >
-          <span aria-hidden="true">
-            <IconeDoJogo
-              icone={trabalho ? iconeDeProfissaoPorId[trabalho.idDaProfissao] : "picareta"}
-              tamanho={32}
-            />
-          </span>
           <IndicadorDeProgressoOcioso partida={partida} compacto pausado={focadoRisco} />
-        </button>
+        </Button>
         <div className="continuidade-acoes">
-          <button
-            type="button"
+          <Button
+            variant="hud"
+            icon={<IconeDoJogo icone="armadura-sobreposta" tamanho={24} />}
             disabled={focadoRisco}
             aria-haspopup="dialog"
             onClick={() => definirRapidoPainel("inventario")}
           >
-            <IconeDoJogo icone="armadura-sobreposta" tamanho={24} />
-            <span>Inventário</span>
-          </button>
-          <button
-            type="button"
+            Inventário
+          </Button>
+          <Button
+            variant="hud"
+            icon={<IconeDoJogo icone="livro-abrir" tamanho={24} />}
             disabled={focadoRisco}
             aria-haspopup="dialog"
             onClick={() => definirRapidoPainel("jornada")}
           >
-            <IconeDoJogo icone="livro-abrir" tamanho={24} />
-            <span>Jornada</span>
-          </button>
+            Jornada
+          </Button>
         </div>
       </footer>
 
@@ -505,13 +499,13 @@ export default function EstruturaDoJogo({
             <IconeDoJogo icone="ferreiro" tamanho={32} />
           ) : null}
           <p role="status">{mensagem}</p>
-          <button
-            type="button"
+          <Button
+            variant="icon"
             onClick={aoDispensarMensagem}
             aria-label="Dispensar mensagem"
           >
             ×
-          </button>
+          </Button>
         </div>
       ) : null}
 
@@ -521,37 +515,35 @@ export default function EstruturaDoJogo({
           rotulo="Inventário rápido"
           aoFechar={() => definirRapidoPainel(null)}
         >
-          <button
-            className="folha-fechar"
-            type="button"
+          <Button
+            variant="icon"
             onClick={() => definirRapidoPainel(null)}
             aria-label="Fechar"
           >
             ×
-          </button>
+          </Button>
           <p className="secao-chamada">Consulta rápida</p>
           <h2 className="destaque-titulo">Inventário</h2>
           <GradeDoInventario partida={partida} compacto aoEquipar={aoEquipar} />
-          <button
-            className="discreto-botao completo-largura"
-            type="button"
+          <Button
+            variant="secondary"
+            fullWidth
             onClick={abrirCompletoInventario}
           >
             Abrir Inventário completo
-          </button>
+          </Button>
         </PainelRapido>
       ) : null}
 
       {rapidoPainel === "jornada" && !focadoRisco ? (
         <PainelRapido rotulo="Jornada" aoFechar={() => definirRapidoPainel(null)}>
-          <button
-            className="folha-fechar"
-            type="button"
+          <Button
+            variant="icon"
             onClick={() => definirRapidoPainel(null)}
             aria-label="Fechar"
           >
             ×
-          </button>
+          </Button>
           <p className="secao-chamada">Continuidade</p>
           <h2 className="destaque-titulo">Jornada</h2>
           <MetaDaJornada
@@ -570,23 +562,23 @@ export default function EstruturaDoJogo({
             <p>{jornada.corpo}</p>
           </div>
           {partida.combate.loboDerrotado || partida.masmorra.contratoConcluido ? (
-            <button
-              className="discreto-botao completo-largura"
-              type="button"
+            <Button
+              variant="secondary"
+              fullWidth
               onClick={abrirTaverna}
             >
               Conversar com Brann
-            </button>
+            </Button>
           ) : null}
-          <button
-            className="discreto-botao completo-largura"
-            type="button"
+          <Button
+            variant="secondary"
+            fullWidth
             onClick={() =>
               abrirAventura(partida.masmorra.expedicaoAtiva ? "masmorra" : "visaoGeral")
             }
           >
             Ver em Aventura
-          </button>
+          </Button>
         </PainelRapido>
       ) : null}
     </div>
@@ -640,15 +632,14 @@ function TelaDoPersonagem({
             ["prestigio", "Prestígio"],
           ] as const
         ).map(([id, rotulo]) => (
-          <button
+          <Button
+            variant="tab"
             key={id}
-            type="button"
-            className={aba === id ? "ativo" : ""}
             aria-pressed={aba === id}
             onClick={() => aoAba(id)}
           >
             {rotulo}
-          </button>
+          </Button>
         ))}
       </div>
 
@@ -665,9 +656,8 @@ function TelaDoPersonagem({
                   ),
                 )
                 .map((item) => (
-                  <button
-                    type="button"
-                    className="equipado-espaco"
+                  <Button
+                    variant="inventory"
                     key={item.idDaInstancia}
                     title={obterDefinicaoDeEquipamento(item.idDaDefinicao)?.nome}
                     aria-label={`Ver ${obterDefinicaoDeEquipamento(item.idDaDefinicao)?.nome ?? "equipamento"}`}
@@ -677,12 +667,12 @@ function TelaDoPersonagem({
                       icone={obterIconeDoEquipamento(item.idDaDefinicao)}
                       tamanho={32}
                     />
-                  </button>
+                  </Button>
                 ))}
             </div>
           </div>
           <div className="visaoGeral-pilha">
-            <article className="painel">
+            <Card>
               <p className="secao-chamada">Seu legado</p>
               <h2>
                 {partida.personagem.nome} · Nível {partida.personagem.nivel}
@@ -705,8 +695,8 @@ function TelaDoPersonagem({
                   <strong>{partida.personagem.idsDasHabilidadesConhecidas.length}</strong>
                 </div>
               </div>
-            </article>
-            <article className="painel">
+            </Card>
+            <Card>
               <p className="secao-chamada">Domínio dos ofícios</p>
               <div className="profissao-resumo-gradeVisual">
                 {Object.entries(partida.profissoes).map(([idDaProfissao, progresso]) => (
@@ -722,7 +712,7 @@ function TelaDoPersonagem({
                   </div>
                 ))}
               </div>
-            </article>
+            </Card>
           </div>
         </div>
       ) : null}
@@ -768,20 +758,20 @@ function TelaDoPersonagem({
                       : "Sem valor primário"}
                   </p>
                   <div className="botao-linhaDeDados">
-                    <button
-                      className="discreto-botao"
-                      type="button"
+                    <Button
+                      variant="secondary"
+                      size="sm"
                       disabled={equipado}
                       onClick={() => void aoEquipar(instancia.idDaInstancia)}
                     >
                       {equipado ? "Equipado" : "Equipar"}
-                    </button>
+                    </Button>
                     {reforcoReceita &&
                     instancia.nivelDeReforco === 0 &&
                     definicao.estatisticaPrincipal ? (
-                      <button
-                        className="discreto-botao"
-                        type="button"
+                      <Button
+                        variant="secondary"
+                        size="sm"
                         onClick={() =>
                           void aoIniciarReceita(
                             reforcoReceita.id,
@@ -790,7 +780,7 @@ function TelaDoPersonagem({
                         }
                       >
                         Reforçar +1
-                      </button>
+                      </Button>
                     ) : null}
                   </div>
                 </div>
@@ -801,7 +791,7 @@ function TelaDoPersonagem({
       ) : null}
 
       {aba === "tecnicas" ? (
-        <article className="painel dense-painel">
+        <Card className="dense-painel">
           <div className="painel-tituloDaSecao">
             <div>
               <p className="secao-chamada">Estilo</p>
@@ -832,13 +822,13 @@ function TelaDoPersonagem({
               );
             })}
           </div>
-        </article>
+        </Card>
       ) : null}
 
       {aba === "inventario" ? (
-        <article className="painel inventario-painel">
+        <Card className="inventario-painel">
           <GradeDoInventario partida={partida} aoEquipar={aoEquipar} />
-        </article>
+        </Card>
       ) : null}
 
       {aba === "prestigio" ? (
@@ -911,7 +901,7 @@ function ComponenteDaTelaDeAventura({
           <span>ARTE 16:9 · AVENTURA</span>
         </div>
         <div className="aventura-gradeVisual">
-          <article className="aventura-cartao painel">
+          <Card className="aventura-cartao">
             <p className="secao-chamada">Serviço</p>
             <h2>Estrada Baixa</h2>
             <p className="atenuado">
@@ -925,15 +915,15 @@ function ComponenteDaTelaDeAventura({
                   : "Disponível"}
               </strong>
             </div>
-            <button
-              className="discreto-botao"
-              type="button"
+            <Button
+              variant="secondary"
+              size="sm"
               onClick={() => aoTelaDoJogo("servico")}
             >
               Preparar serviço
-            </button>
-          </article>
-          <article className="aventura-cartao painel risco-painel">
+            </Button>
+          </Card>
+          <Card className="aventura-cartao risco-painel">
             <p className="secao-chamada">Masmorra</p>
             <h2>Dún Liath</h2>
             <p className="atenuado">
@@ -947,14 +937,14 @@ function ComponenteDaTelaDeAventura({
                   : "Ainda não aceito"}
               </strong>
             </div>
-            <button
-              className="principal-botao compacto"
-              type="button"
+            <Button
+              variant="primary"
+              size="sm"
               onClick={() => aoTelaDoJogo("masmorra")}
             >
               {partida.masmorra.expedicaoAtiva ? "Retomar expedição" : "Ver Dún Liath"}
-            </button>
-          </article>
+            </Button>
+          </Card>
         </div>
       </div>
     </section>
@@ -1011,19 +1001,19 @@ function ComponenteDaTelaDaCidade({
             <h1 className="destaque-titulo">Taverna</h1>
             <p className="atenuado">Conversas e contratos.</p>
           </div>
-          <button
-            className="discreto-botao"
-            type="button"
+          <Button
+            variant="secondary"
+            size="sm"
             onClick={() => aoTelaDoJogo("visaoGeral")}
           >
             Voltar à Cidade
-          </button>
+          </Button>
         </div>
         <div className="cidade-contexto-disposicao">
           <div className="contexto-arte contexto-arte--cidade" aria-hidden="true">
             <span>ARTE 16:9 · TAVERNA</span>
           </div>
-          <article className="painel pnj-cartao">
+          <Card className="pnj-cartao">
             <div
               className="retrato-marcador retrato-marcador--pnj"
               aria-hidden="true"
@@ -1043,16 +1033,16 @@ function ComponenteDaTelaDaCidade({
                 </blockquote>
               ) : null}
               {dialogo.acao ? (
-                <button
-                  className="principal-botao compacto"
-                  type="button"
+                <Button
+                  variant="primary"
+                  size="sm"
                   onClick={aoAbrirAventura}
                 >
                   {dialogo.acao}
-                </button>
+                </Button>
               ) : null}
             </div>
-          </article>
+          </Card>
         </div>
       </section>
     );
@@ -1082,13 +1072,13 @@ function ComponenteDaTelaDaCidade({
             <h1 className="destaque-titulo">{atual.titulo}</h1>
             <p className="atenuado">{atual.corpo}</p>
           </div>
-          <button
-            className="discreto-botao"
-            type="button"
+          <Button
+            variant="secondary"
+            size="sm"
             onClick={() => aoTelaDoJogo("visaoGeral")}
           >
             Voltar à Cidade
-          </button>
+          </Button>
         </div>
         <div className="contexto-arte contexto-arte--cidade" aria-hidden="true">
           <span>ARTE 16:9 · {atual.titulo.toUpperCase()}</span>
@@ -1113,31 +1103,26 @@ function ComponenteDaTelaDaCidade({
           <span>ARTE 16:9 · CIDADE LIVRE</span>
         </div>
         <div className="cidade-localDoJogo-gradeVisual">
-          <button type="button" onClick={() => aoTelaDoJogo("taverna")}>
-            <IconeDoJogo icone="livro-abrir" tamanho={32} />
+          <Button variant="location" icon={<IconeDoJogo icone="livro-abrir" tamanho={32} />} onClick={() => aoTelaDoJogo("taverna")}>
             <strong>Taverna</strong>
             <span>Contratos e conversas</span>
-          </button>
-          <button type="button" onClick={() => aoTelaDoJogo("mercado")}>
-            <IconeDoJogo icone="coroa-moeda" tamanho={32} />
+          </Button>
+          <Button variant="location" icon={<IconeDoJogo icone="coroa-moeda" tamanho={32} />} onClick={() => aoTelaDoJogo("mercado")}>
             <strong>Mercado</strong>
             <span>Compra e venda</span>
-          </button>
-          <button type="button" onClick={() => aoTelaDoJogo("ferreiro")}>
-            <IconeDoJogo icone="ferreiro" tamanho={32} />
+          </Button>
+          <Button variant="location" icon={<IconeDoJogo icone="ferreiro" tamanho={32} />} onClick={() => aoTelaDoJogo("ferreiro")}>
             <strong>Ferreiro</strong>
             <span>Serviços de equipamento</span>
-          </button>
-          <button type="button" onClick={() => aoTelaDoJogo("banco")}>
-            <IconeDoJogo icone="chave" tamanho={32} />
+          </Button>
+          <Button variant="location" icon={<IconeDoJogo icone="chave" tamanho={32} />} onClick={() => aoTelaDoJogo("banco")}>
             <strong>Banco</strong>
             <span>Armazenamento seguro</span>
-          </button>
-          <button type="button" onClick={() => aoTelaDoJogo("relicario")}>
-            <IconeDoJogo icone="pedraRunica" tamanho={32} />
+          </Button>
+          <Button variant="location" icon={<IconeDoJogo icone="pedraRunica" tamanho={32} />} onClick={() => aoTelaDoJogo("relicario")}>
             <strong>Relicário</strong>
             <span>Relíquias e memória</span>
-          </button>
+          </Button>
         </div>
       </div>
     </section>

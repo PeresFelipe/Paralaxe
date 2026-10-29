@@ -1,0 +1,159 @@
+.entradaGrade {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--ui-space-2-5);
+}
+
+.execucaoCabecalho {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: var(--ui-space-4-5);
+  margin-bottom: var(--ui-space-4-5);
+}
+
+.execucaoGrade {
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(0, 0.65fr);
+  gap: var(--ui-space-3-5);
+}
+
+.lateral {
+  display: grid;
+  align-content: start;
+  gap: var(--ui-space-3);
+}
+
+.salaPainel {
+  margin-top: var(--ui-space-3);
+}
+
+.recursoGrade {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--ui-space-1-75);
+  margin: var(--ui-space-3-75) 0;
+}
+
+.recursoGrade > div {
+  display: grid;
+  gap: var(--ui-space-1);
+  padding: var(--ui-space-2-25);
+  border: var(--ui-size-border) solid var(--ui-color-border);
+  background: var(--ui-color-surface-sunken);
+}
+
+.recursoGrade span {
+  color: var(--ui-color-text-muted);
+  font-size: var(--ui-font-size-3xs);
+}
+
+.recursoGrade strong {
+  font-size: var(--ui-font-size-body-small);
+}
+
+.escolhaNarrativa {
+  margin: var(--ui-space-3-5) 0;
+  padding: var(--ui-space-3-5);
+  border: var(--ui-size-border) solid var(--ui-color-border);
+  background: var(--ui-color-surface-sunken);
+}
+
+.escolhaNarrativa p {
+  color: var(--ui-color-text-muted);
+  font-size: var(--ui-font-size-body-compact-readable);
+}
+
+.caminhos {
+  display: grid;
+  gap: var(--ui-space-2);
+  margin-top: var(--ui-space-3);
+}
+
+.caminhosRamo {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.confirmarChefe,
+.painelConclusao {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--ui-space-6);
+  margin-top: var(--ui-space-3);
+}
+
+.confirmarChefe h3,
+.painelConclusao h3 {
+  margin: var(--ui-space-1) 0;
+}
+
+.linhaSaque {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--ui-space-3);
+  padding: var(--ui-space-2) 0;
+  border-bottom: var(--ui-size-border) solid var(--ui-color-border);
+  font-size: var(--ui-font-size-xs);
+}
+
+.linhaSaque span {
+  color: var(--ui-color-text-muted);
+}
+
+.percurso {
+  display: grid;
+  gap: var(--ui-space-2);
+}
+
+.percurso > div {
+  display: grid;
+  grid-template-columns: var(--ui-size-control-sm) minmax(0, 1fr);
+  gap: var(--ui-space-2);
+  align-items: center;
+}
+
+.percurso span {
+  width: var(--ui-size-control-sm);
+  height: var(--ui-size-control-sm);
+  display: grid;
+  place-items: center;
+  border: var(--ui-size-border) solid var(--ui-color-border-strong);
+  border-radius: var(--ui-radius-pill);
+  color: var(--ui-color-warning-text);
+  font-size: var(--ui-font-size-3xs);
+}
+
+.percurso strong {
+  font-size: var(--ui-font-size-compact);
+}
+
+.resultadoEncontro {
+  margin-top: var(--ui-space-2-5);
+}
+
+.derrota {
+  border-color: var(--ui-color-danger-border);
+}
+
+@media (max-width: 980px) {
+  .entradaGrade,
+  .execucaoGrade {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .lateral {
+    gap: var(--ui-space-2-5);
+  }
+
+  .confirmarChefe,
+  .painelConclusao {
+    align-items: stretch;
+    flex-direction: column;
+    gap: var(--ui-space-4);
+  }
+
+  .caminhosRamo {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

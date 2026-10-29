@@ -1,0 +1,101 @@
+.grid {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.legend {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ui-space-2-5);
+  margin-bottom: var(--ui-space-3-5);
+  color: var(--ui-color-text);
+  font: var(--ui-font-size-display-medium)/var(--ui-line-height-normal) var(--ui-font-family-display);
+}
+
+.legend > strong {
+  flex-shrink: 0;
+  color: var(--ui-color-warning-text);
+  font: var(--ui-font-size-xs)/var(--ui-line-height-normal) var(--ui-font-family-body);
+  white-space: nowrap;
+}
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ui-space-1-25);
+  margin-bottom: var(--ui-space-4);
+}
+
+.spaces {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(44px, 64px));
+  justify-content: start;
+  gap: var(--ui-space-2-5);
+}
+
+.emptySlot {
+  min-width: 0;
+  min-height: var(--ui-size-inventory-slot-min-height);
+  aspect-ratio: 1;
+  border: var(--ui-size-inventory-frame-width) solid transparent;
+  border-image: var(--ui-frame-inventory) var(--ui-size-inventory-frame-slice) / var(--ui-size-inventory-frame-width) stretch;
+  background: var(--ui-color-inventory-slot);
+  opacity: 0.65;
+}
+
+.inspection {
+  margin-top: var(--ui-space-4-5);
+  padding: var(--ui-space-3-75) var(--ui-space-3);
+  border-left: var(--ui-size-border-emphasis) solid var(--ui-color-warning);
+  background: var(--ui-color-inventory-slot);
+}
+
+.inspection > strong {
+  color: var(--ui-color-inventory-text);
+  font: var(--ui-font-size-md)/var(--ui-line-height-normal) var(--ui-font-family-display);
+}
+
+.inspection p,
+.hint {
+  color: var(--ui-color-text-muted);
+  font-size: var(--ui-font-size-xs);
+  line-height: var(--ui-line-height-spacious);
+}
+
+.compact .legend {
+  font-size: var(--ui-font-size-md);
+}
+
+.compact .spaces {
+  grid-template-columns: repeat(4, minmax(44px, 56px));
+  gap: var(--ui-space-1-25);
+}
+
+.compact .inspection {
+  margin-top: var(--ui-space-3);
+  padding: var(--ui-space-2-5) var(--ui-space-2);
+}
+
+.compact .inspection p,
+.compact > :global(.atenuado) {
+  font-size: var(--ui-font-size-compact);
+}
+
+:global(.lateral-folha) .compact .spaces {
+  gap: var(--ui-space-2-5);
+}
+
+@media (max-width: 720px) {
+  .spaces {
+    grid-template-columns: repeat(4, minmax(44px, 64px));
+    gap: var(--ui-space-2);
+  }
+}
+
+@media (forced-colors: active) {
+  .emptySlot {
+    border-image: none;
+    border-color: CanvasText;
+  }
+}

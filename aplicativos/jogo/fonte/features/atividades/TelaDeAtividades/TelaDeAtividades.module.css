@@ -1,0 +1,205 @@
+.professionGroup {
+  flex: 0 0 auto;
+  min-width: 0;
+  padding: var(--ui-space-0);
+  border: 0;
+  border-radius: var(--ui-radius-none);
+  background: transparent;
+  box-shadow: none;
+}
+
+.professionHeading {
+  margin: var(--ui-space-0) var(--ui-space-0) var(--ui-space-2);
+  padding-left: var(--ui-space-2);
+  color: var(--ui-color-warning-text);
+  font-size: var(--ui-font-size-caption);
+  letter-spacing: var(--ui-letter-spacing-extra-wide);
+  text-transform: uppercase;
+}
+
+.professionGrid {
+  display: flex;
+  gap: var(--ui-space-1-5);
+}
+
+.professionLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ui-space-2);
+  min-width: 0;
+}
+
+.professionLabel > span:last-child {
+  min-width: 0;
+}
+
+.professionLabel :global(.jogo-icone) {
+  width: var(--ui-size-inventory-icon);
+  height: var(--ui-size-inventory-icon);
+}
+
+.executingBadge {
+  display: none;
+  color: var(--ui-color-warning-text);
+  font-size: var(--ui-font-size-3xs);
+}
+
+.options {
+  display: grid;
+  gap: var(--ui-space-3);
+  margin-top: var(--ui-space-4-5);
+}
+
+.optionsHeading {
+  display: flex;
+  grid-column: 1 / -1;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ui-space-3);
+}
+
+.optionsHeading h2 {
+  margin: 0;
+  color: var(--ui-color-text);
+  font-size: var(--ui-font-size-md);
+}
+
+.optionsHeading > span {
+  color: var(--ui-color-text-muted);
+  font-size: var(--ui-font-size-caption);
+}
+
+.option {
+  display: grid;
+  grid-template-columns: var(--ui-size-activity-option-icon) minmax(0, 1fr);
+  gap: var(--ui-space-3-25);
+  padding: var(--ui-space-3);
+}
+
+.option :global(.item-miniatura) {
+  width: var(--ui-size-activity-option-icon);
+  height: var(--ui-size-activity-option-icon);
+}
+
+.option :global(.item-miniatura) :global(.jogo-icone) {
+  width: var(--ui-size-activity-option-icon-inner);
+  height: var(--ui-size-activity-option-icon-inner);
+}
+
+.option h2 {
+  margin: 0;
+  color: var(--ui-color-text);
+}
+
+.optionBody {
+  min-width: 0;
+}
+
+.optionTitle {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ui-space-2);
+}
+
+.optionTitle > span {
+  color: var(--ui-color-text-muted);
+  font-size: var(--ui-font-size-compact);
+}
+
+.optionTitle > span strong {
+  color: var(--ui-color-warning-text);
+}
+
+.yield {
+  margin: var(--ui-space-1) 0 var(--ui-space-2-5);
+  color: var(--ui-color-text-muted);
+  font-size: var(--ui-font-size-xs);
+}
+
+.replacement {
+  margin: var(--ui-space-1-5) 0;
+  color: var(--ui-color-text-muted);
+  font-size: var(--ui-font-size-xs);
+}
+
+.ingredients {
+  margin: var(--ui-space-1-5) 0 var(--ui-space-2-5);
+}
+
+.ingredientRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ui-space-1) var(--ui-space-3);
+  padding: var(--ui-space-1-25) 0;
+  border-bottom: var(--ui-size-border) solid var(--ui-color-border);
+  background: var(--ui-color-surface-raised);
+  font-size: var(--ui-font-size-sm);
+}
+
+.ingredientRow > span {
+  flex: 1 1 var(--ui-size-ingredient-label-basis);
+  min-width: 0;
+  color: var(--ui-color-text-muted);
+  overflow-wrap: anywhere;
+}
+
+.ingredientRow strong {
+  margin-left: var(--ui-space-1-5);
+  font-variant-numeric: tabular-nums;
+}
+
+.ingredientRow small {
+  display: block;
+  color: var(--ui-color-warning-text);
+  font-size: var(--ui-font-size-xs);
+}
+
+.result {
+  display: grid;
+  min-height: var(--ui-size-work-result-min-height);
+  gap: var(--ui-space-0-75);
+  margin: var(--ui-space-4-5) 0 0;
+  padding: var(--ui-space-3-5) 0 var(--ui-space-0);
+  border-top: var(--ui-size-border) solid var(--ui-color-border);
+}
+
+.result > span {
+  color: var(--ui-color-text-muted);
+  font-size: var(--ui-font-size-caption-large);
+  letter-spacing: var(--ui-letter-spacing-relaxed);
+  text-transform: uppercase;
+}
+
+.result > strong {
+  color: var(--ui-color-text);
+  font-size: var(--ui-font-size-body-small);
+  font-weight: var(--ui-font-weight-medium);
+}
+
+@media (max-width: 720px) {
+  .optionsHeading > span {
+    display: none;
+  }
+
+  .option {
+    grid-template-columns: var(--ui-size-activity-option-icon-compact) minmax(0, 1fr);
+    gap: var(--ui-space-2-5);
+    padding: var(--ui-space-2-5);
+  }
+
+  .option :global(.item-miniatura) {
+    width: var(--ui-size-activity-option-icon-compact);
+    height: var(--ui-size-activity-option-icon-compact);
+  }
+}
+
+@media (max-width: 440px) {
+  .optionTitle {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--ui-space-1-25);
+  }
+}

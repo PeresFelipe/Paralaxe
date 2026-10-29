@@ -847,7 +847,7 @@
   "integracaoEmExecucao": {
     "estado": "integrado",
     "diretorioDosRecursos": "aplicativos/jogo/publico/arte/icones/shikashi",
-    "componente": "aplicativos/jogo/fonte/IconeDoJogo.tsx",
+    "componente": "aplicativos/jogo/fonte/components/jogo/IconeDoJogo/IconeDoJogo.tsx",
     "mapeamento": "aplicativos/jogo/fonte/iconesDosRecursos.ts",
     "quantidadeDeRecortes": 41,
     "idsDeDefinicoesEProfissoesMapeados": 49,

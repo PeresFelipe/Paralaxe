@@ -42,7 +42,7 @@ Os GIFs permanecem organizados por autor:
 - `aplicativos/jogo/publico/arte/classes/guerreiro/MattzArt/guerreiro.gif`.
 - `aplicativos/jogo/publico/arte/classes/mago/LuizMelo/mago.gif`.
 
-As URLs no aplicativo começam em `/arte/`. Os créditos continuam em `aplicativos/jogo/fonte/CreditosDosRecursos.tsx`. Os arquivos binários de arte são preservados; os caminhos próprios e suas referências foram atualizados.
+As URLs no aplicativo começam em `/arte/`. Os créditos ficam em `aplicativos/jogo/fonte/components/jogo/CreditosDosRecursos/`. Os arquivos binários de arte são preservados; os caminhos próprios e suas referências foram atualizados.
 
 ## Verificação
 

@@ -1,0 +1,41 @@
+.comparacao {
+  padding: var(--ui-space-3);
+  margin: var(--ui-space-3) 0;
+  border: var(--ui-size-border) solid var(--ui-color-border);
+  background: var(--ui-color-surface-raised);
+  font-size: var(--ui-font-size-xs);
+  line-height: var(--ui-line-height-normal);
+  min-width: 0;
+}
+
+.comparacao p {
+  margin: 0 0 var(--ui-space-2);
+  color: var(--ui-color-text-muted);
+  overflow-wrap: anywhere;
+}
+
+.comparacao dl {
+  display: grid;
+  gap: var(--ui-space-1);
+  margin: 0;
+}
+
+.comparacao dl > div {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--ui-space-1) var(--ui-space-3);
+}
+
+.comparacao dd {
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.comparacao dd strong {
+  color: var(--ui-color-text);
+}
+
+.comparacao dd span {
+  color: var(--ui-color-text-muted);
+}

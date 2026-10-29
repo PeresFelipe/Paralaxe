@@ -1,15 +1,9 @@
 /* Arquivo: Recortes das folhas de cenas e retratos e suporte à arte individual das atividades.
    É carregado após a base; as URLs apontam para a pasta publico. */
-/* As variáveis permitem substituir a folha inteira sem alterar cada seletor. */
-:root {
-  --gerada-cena-imagem: url("/arte/cenas-geradas.webp?v=6");
-  --gerada-retrato-imagem: url("/arte/retratos-gerados.webp?v=6");
-}
-
 /* Arte gerada do Greywake, isolada para permitir sua substituição por arte autoral. */
 /* O fundo de 400% por 200% amplia uma folha de quatro colunas e duas linhas; a posição escolhe o quadro. */
 .contexto-arte {
-  background-image: var(--gerada-cena-imagem) !important;
+  background-image: var(--ui-image-generated-scene) !important;
   background-size: 400% 200% !important;
   background-repeat: no-repeat !important;
   background-position: 0 0;
@@ -23,8 +17,8 @@
   pointer-events: none;
   background: linear-gradient(
     180deg,
-    rgba(8, 10, 11, 0.02) 35%,
-    rgba(8, 10, 11, 0.48)
+    transparent 35%,
+    var(--ui-color-scene-shadow)
   );
 }
 
@@ -34,30 +28,20 @@
 }
 
 /* Os seletores observam a profissão consultada; não iniciam nenhuma atividade no domínio. */
-.funcionalidade-telaDoJogo:has(
-    .profissao-cartao-gradeVisual:not(.producao-cartoes) .profissao-cartao:nth-child(1).ativo
-  )
-  .profissao-detalhe-disposicao
-  .contexto-arte {
+.funcionalidade-telaDoJogo:has([data-profissao="mineracao"][aria-current="true"])
+  .atividade-cena {
   background-position: 0 0;
 }
-.funcionalidade-telaDoJogo:has(
-    .profissao-cartao-gradeVisual:not(.producao-cartoes) .profissao-cartao:nth-child(2).ativo
-  )
-  .profissao-detalhe-disposicao
-  .contexto-arte {
+.funcionalidade-telaDoJogo:has([data-profissao="lenhador"][aria-current="true"])
+  .atividade-cena {
   background-position: 66.6667% 0;
 }
-.funcionalidade-telaDoJogo:has(
-    .profissao-cartao-gradeVisual:not(.producao-cartoes) .profissao-cartao:nth-child(4).ativo
-  )
-  .profissao-detalhe-disposicao
-  .contexto-arte {
+.funcionalidade-telaDoJogo:has([data-profissao="herbologia"][aria-current="true"])
+  .atividade-cena {
   background-position: 66.6667% 0;
 }
-.funcionalidade-telaDoJogo:has(.producao-cartoes .profissao-cartao.ativo)
-  .profissao-detalhe-disposicao
-  .contexto-arte {
+.funcionalidade-telaDoJogo:has([data-profissao="metalurgia"][aria-current="true"], [data-profissao="forja"][aria-current="true"], [data-profissao="culinaria"][aria-current="true"])
+  .atividade-cena {
   background-position: 100% 0;
 }
 .contexto-arte--cidade {
@@ -98,7 +82,7 @@
   inset: 0;
   display: grid;
   place-items: center;
-  background: #101315;
+  background: var(--ui-color-scene-deep);
 }
 
 .contexto-arte--individual img {
@@ -112,7 +96,7 @@
 
 /* A folha de retratos possui duas colunas: a posição horizontal seleciona jogador ou PNJ. */
 .retrato-marcador {
-  background-image: var(--gerada-retrato-imagem) !important;
+  background-image: var(--ui-image-generated-portrait) !important;
   background-size: 200% 100% !important;
   background-repeat: no-repeat !important;
   background-position: 0 0 !important;

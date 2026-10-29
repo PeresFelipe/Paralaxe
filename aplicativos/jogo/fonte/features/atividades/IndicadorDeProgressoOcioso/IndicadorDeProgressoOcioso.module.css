@@ -1,0 +1,120 @@
+.raiz {
+  width: 100%;
+  display: grid;
+  gap: var(--ui-space-2-5);
+}
+
+.titulo {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: var(--ui-space-3-5);
+}
+
+.titulo > span {
+  min-width: 0;
+  display: grid;
+}
+
+.titulo small,
+.detalhes small {
+  color: var(--ui-color-text-muted);
+  font-size: var(--ui-font-size-xs);
+  text-transform: uppercase;
+  letter-spacing: var(--ui-letter-spacing-wide);
+}
+
+.titulo strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: var(--ui-font-size-xs);
+}
+
+.titulo em {
+  flex: 0 0 auto;
+  color: var(--ui-color-border-strong);
+  font-size: var(--ui-font-size-xs);
+  font-style: normal;
+  font-variant-numeric: tabular-nums;
+}
+
+.trilha {
+  position: relative;
+  height: var(--ui-size-progress-track);
+  overflow: hidden;
+  border: var(--ui-size-border) solid var(--ui-color-border);
+  border-radius: var(--ui-radius-sm);
+  background: var(--ui-color-surface-sunken);
+}
+
+.preenchimento {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, var(--ui-color-primary-hover), var(--ui-color-warning));
+  width: 100%;
+  transform: scaleX(0);
+  transform-origin: left;
+}
+
+.preenchimento::after {
+  content: "";
+  float: right;
+  width: var(--ui-size-progress-marker);
+  height: 100%;
+  background: var(--ui-color-border-strong);
+  opacity: 0.65;
+}
+
+.detalhes {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  gap: var(--ui-space-3);
+}
+
+.detalhes > span {
+  min-width: 0;
+  display: grid;
+  gap: var(--ui-space-1);
+}
+
+.detalhes strong {
+  color: var(--ui-color-text);
+  font-size: var(--ui-font-size-xs);
+  font-weight: var(--ui-font-weight-semibold);
+}
+
+.compacto {
+  min-width: 0;
+  gap: var(--ui-space-1-5);
+}
+
+.compacto .trilha {
+  height: var(--ui-size-progress-track-compact);
+}
+
+.vazio .titulo em,
+.pausado .titulo em {
+  color: var(--ui-color-text-muted);
+}
+
+.pausado .preenchimento {
+  background: var(--ui-color-text-muted);
+}
+
+@media (max-width: 760px) {
+  .detalhes {
+    grid-template-columns: 1fr;
+  }
+
+  .compacto {
+    min-width: 0;
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .preenchimento {
+    transition: none;
+  }
+}

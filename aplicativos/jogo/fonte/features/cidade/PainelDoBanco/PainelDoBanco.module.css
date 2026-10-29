@@ -1,0 +1,82 @@
+.capacities {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--ui-space-2-5);
+}
+
+.capacity {
+  display: grid;
+  gap: var(--ui-space-1);
+}
+
+.capacities strong {
+  font-size: var(--ui-font-size-display-small);
+}
+
+.columns {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+  gap: var(--ui-space-3);
+}
+
+.listCard {
+  min-width: 0;
+}
+
+.list {
+  margin: var(--ui-space-3-5) 0 var(--ui-space-5-5);
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ui-space-3-5);
+  padding: var(--ui-space-2-75) 0;
+  border-bottom: var(--ui-size-border) solid var(--ui-color-border);
+}
+
+.row:last-child {
+  border-bottom: 0;
+}
+
+.row > div:first-child {
+  display: grid;
+  min-width: 0;
+}
+
+.row small {
+  color: var(--ui-color-text-muted);
+  font-size: var(--ui-font-size-caption-readable);
+}
+
+.itemLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ui-space-2);
+  min-width: 0;
+  overflow: hidden;
+}
+
+.itemLabel strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.row :global(.botao-linhaDeDados) {
+  justify-content: flex-end;
+}
+
+@media (max-width: 760px) {
+  .capacities,
+  .columns {
+    grid-template-columns: 1fr;
+  }
+
+  .row {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}

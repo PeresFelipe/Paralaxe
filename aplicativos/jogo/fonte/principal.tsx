@@ -7,14 +7,13 @@ import { createRoot } from 'react-dom/client'
 import Aplicativo from './Aplicativo'
 // A ordem das folhas importa: a base vem primeiro, seguida dos ajustes de disposição,
 // tipografia, tema e componentes. Regras posteriores podem sobrescrever as anteriores.
+import './styles/tokens.css'
 import './estilos.css'
-import './progresso-ocioso.css'
 import './arte-gerada.css'
 import './disposicao-compacta.css'
 import './tipografia.css'
 import './tema-do-jogo.css'
 import './jornada.css'
-import './creditos.css'
 import './interface-do-jogo.css'
 
 const raizElemento = document.getElementById("raiz")

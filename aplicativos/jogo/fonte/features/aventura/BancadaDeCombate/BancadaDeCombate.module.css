@@ -1,0 +1,153 @@
+.screen {
+  min-width: 0;
+}
+
+.combatContext {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--ui-space-4);
+  margin-bottom: var(--ui-space-2-5);
+  color: var(--ui-color-text-muted);
+  font-size: var(--ui-font-size-caption-readable);
+}
+
+.combatContext strong {
+  color: var(--ui-color-danger-text);
+  letter-spacing: var(--ui-letter-spacing-subtle);
+}
+
+.combatGrid {
+  display: grid;
+  grid-template-columns: .8fr 1.25fr .8fr;
+  gap: var(--ui-space-2-5);
+}
+
+.combatant h3 {
+  margin: var(--ui-space-0-5) 0 var(--ui-space-2-25);
+}
+
+.enemy {
+  border-color: var(--ui-color-danger);
+}
+
+.resourcePile {
+  display: grid;
+  gap: var(--ui-space-1-5);
+}
+
+.resourcePile > div {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--ui-space-3);
+  padding: var(--ui-space-2);
+  border: var(--ui-size-border) solid var(--ui-color-border);
+  border-radius: var(--ui-radius-xl);
+  background: var(--ui-color-surface-raised);
+}
+
+.resourcePile span {
+  color: var(--ui-color-text-muted);
+  font-size: var(--ui-font-size-3xs-large);
+}
+
+.resourcePile strong {
+  font-size: var(--ui-font-size-body-compact);
+}
+
+.progressTrack {
+  height: var(--ui-size-combat-progress-height);
+  overflow: hidden;
+  border: var(--ui-size-border) solid var(--ui-color-border);
+  border-radius: var(--ui-radius-pill);
+  background: var(--ui-color-surface-sunken);
+}
+
+.progressTrack span {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, var(--ui-color-primary-hover), var(--ui-color-primary));
+}
+
+.timingResources {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--ui-space-3);
+  margin: var(--ui-space-2) 0 var(--ui-space-3-75);
+  color: var(--ui-color-text-muted);
+  font-size: var(--ui-font-size-caption-readable);
+}
+
+.attackWarning {
+  display: grid;
+  gap: var(--ui-space-1-25);
+  margin: var(--ui-space-3-25) 0;
+  padding: var(--ui-space-3);
+  border: var(--ui-size-border) solid var(--ui-color-danger-border);
+  background: var(--ui-color-danger-surface);
+}
+
+.attackWarning strong {
+  color: var(--ui-color-danger-text);
+}
+
+.attackWarning small {
+  color: var(--ui-color-text-muted);
+}
+
+.combatResult {
+  margin-top: var(--ui-space-3-5);
+  padding: var(--ui-space-3-25);
+  border-left: var(--ui-size-border-emphasis) solid var(--ui-color-warning);
+  background: var(--ui-color-warning-surface);
+}
+
+.defeat {
+  border-color: var(--ui-color-danger);
+}
+
+.combatResult h3 {
+  margin: var(--ui-space-0-75) 0;
+}
+
+.combatLogSection {
+  margin-top: var(--ui-space-3);
+}
+
+.combatLog {
+  max-height: var(--ui-size-combat-log-max-height);
+  margin-top: var(--ui-space-2-5);
+  overflow-y: auto;
+  border-top: var(--ui-size-border) solid var(--ui-color-border);
+  background: var(--ui-color-surface-sunken);
+}
+
+.logEntry {
+  display: grid;
+  grid-template-columns: var(--ui-size-combat-log-time-column) 1fr;
+  gap: var(--ui-space-2-5);
+  padding: var(--ui-space-1-75) 0;
+  border-bottom: var(--ui-size-border) solid var(--ui-color-border);
+  font-size: var(--ui-font-size-compact);
+}
+
+.logEntry time {
+  color: var(--ui-color-text-muted);
+}
+
+.consumables {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--ui-space-2-5);
+}
+
+@media (max-width: 980px) {
+  .combatGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .consumables {
+    grid-template-columns: 1fr;
+  }
+}
