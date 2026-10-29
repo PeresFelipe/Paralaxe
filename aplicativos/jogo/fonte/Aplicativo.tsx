@@ -57,7 +57,7 @@ function Aplicativo({ repositorioDePartidas }: AplicativoProps) {
     definirMensagem, ultimoResultadoDoTrabalho,
     ausenteResumo, definirAusenteResumo, ehSalvando, riscoAtivo, definirRiscoAtivo,
     tratarCriarPartida, tratarCarregarPartida, tratarIniciarAtividade, tratarIniciarReceita,
-    tratarPararTrabalho, tratarEscolherJornadaMeta, tratarEquipar, tratarDistribuirAtributos,
+    tratarPararTrabalho, tratarPrestigiarProfissao, tratarEscolherJornadaMeta, tratarEquipar, tratarDistribuirAtributos,
     tratarDesbloquearPrestigioNo, tratarRealizarPersonagemPrestigio, tratarDepositarBancoPilha,
     tratarRetirarBancoPilha, tratarDepositarBancoEquipamento, tratarRetirarBancoEquipamento,
     persistirPartidaAtiva, prepararRisco,
@@ -139,6 +139,7 @@ function Aplicativo({ repositorioDePartidas }: AplicativoProps) {
           aoIniciarReceita={tratarIniciarReceita}
           aoEscolherMetaDaJornada={tratarEscolherJornadaMeta}
           aoPararTrabalho={tratarPararTrabalho}
+          aoPrestigiarProfissao={tratarPrestigiarProfissao}
           aoEquipar={tratarEquipar}
           aoDistribuirAtributos={tratarDistribuirAtributos}
           aoRealizarPrestigioDoPersonagem={tratarRealizarPersonagemPrestigio}

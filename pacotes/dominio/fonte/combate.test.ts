@@ -119,6 +119,26 @@ describe("motor de combate", () => {
     expect(estatisticas.precisao).toBe(110)
   })
 
+  it('aplica os bônus passivos dos nós de Prestígio às estatísticas derivadas', () => {
+    const partida = criarPartida()
+    const comPrestigio = {
+      ...partida,
+      personagem: { ...partida.personagem, prestigio: { nivel: 1, pontos: 0, idsDosNosDesbloqueados: ['prestigio.corpo.constituicao', 'prestigio.arcano.mental-reserva', 'prestigio.tecnica.firme-mao'] } },
+    }
+    const base = derivarEstatisticasDeCombateDoJogador(partida, catalogo)
+    const bonus = derivarEstatisticasDeCombateDoJogador(comPrestigio, catalogo)
+    expect(bonus.vidaMaxima).toBe(base.vidaMaxima + 48)
+    expect(bonus.manaMaxima).toBe(base.manaMaxima + 20)
+    expect(bonus.precisao).toBe(base.precisao + 10)
+  })
+
+  it('aciona Segundo Fôlego apenas quando o personagem sobrevive ao estado crítico', () => {
+    const partida = criarPartida()
+    const comNo = { ...partida, personagem: { ...partida.personagem, prestigio: { nivel: 1, pontos: 0, idsDosNosDesbloqueados: ['prestigio.corpo.segundo-folego'] } } }
+    const resultado = simularCombate(comNo, catalogo, estradaLobo.id, 4, 180, { vida: 45, vidaMaxima: 160, mana: 80, manaMaxima: 80, folego: 100, folegoMaximo: 100 })
+    expect(resultado.registro.some((entrada) => entrada.mensagem.includes('Segundo Fôlego restaura'))).toBe(true)
+  })
+
   it("repete o resultado com a mesma semente e o mesmo estado inicial", () => {
     // Compara o resultado completo, incluindo a ordem dos eventos, para detectar aleatoriedade não controlada.
     const primeiro = simularCombate(criarPartida(), catalogo, estradaLobo.id, 123456)

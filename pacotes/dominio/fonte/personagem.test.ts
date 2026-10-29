@@ -49,7 +49,7 @@ describe("criação de personagem", () => {
     })
 
     expect(partida.modoDaPartida).toBe("LOCAL")
-    expect(partida.versaoDoEsquemaDaPartida).toBe(10)
+    expect(partida.versaoDoEsquemaDaPartida).toBe(11)
     expect(partida.jornada).toEqual({ meta: null, idsDasReceitasFabricadas: [] })
     expect(partida.personagem.prestigio).toEqual({ nivel: 0, pontos: 0, idsDosNosDesbloqueados: [] })
     expect(partida.personagem.nome).toBe('Ailith')

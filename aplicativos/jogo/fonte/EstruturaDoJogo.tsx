@@ -30,6 +30,8 @@ import PainelDoBanco from "./features/cidade/PainelDoBanco";
 import IndicadorDeProgressoOcioso from "./features/atividades/IndicadorDeProgressoOcioso";
 import TelaDeAtividades from "./features/atividades/TelaDeAtividades";
 import PainelDePrestigio from "./features/personagem/PainelDePrestigio";
+import PainelDoCodice from "./features/cidade/PainelDoCodice";
+import PainelDeDesafios from "./features/aventura/PainelDeDesafios";
 import PainelRapido from "./features/navegacao/PainelRapido";
 import CreditosDosRecursos from "./components/jogo/CreditosDosRecursos";
 import { IconeDoJogo } from "./components/jogo";
@@ -48,14 +50,15 @@ type AbaDoPersonagem =
   | "tecnicas"
   | "inventario"
   | "prestigio";
-type TelaDeAventura = "visaoGeral" | "servico" | "masmorra";
+type TelaDeAventura = "visaoGeral" | "servico" | "masmorra" | "desafios";
 type TelaDaCidade =
   | "visaoGeral"
   | "taverna"
   | "mercado"
   | "ferreiro"
   | "banco"
-  | "relicario";
+  | "relicario"
+  | "codice";
 type PainelRapidoAtivo = "jornada" | "inventario" | null;
 
 /** Contrato entre a coordenação da partida e suas telas. Alterações são enviadas pelos callbacks, não ao IndexedDB. */
@@ -77,6 +80,7 @@ type PropriedadesDeEstruturaDoJogo = {
   ) => Promise<void>;
   aoEscolherMetaDaJornada: (idDaReceita: string | null) => Promise<void>;
   aoPararTrabalho: () => Promise<void>;
+  aoPrestigiarProfissao: (idDaProfissao: IdDaProfissao) => Promise<void>;
   aoEquipar: (idDaInstancia: string) => Promise<void>;
   aoDistribuirAtributos: (distribuicao: DistribuicaoDeAtributos) => Promise<void>;
   aoRealizarPrestigioDoPersonagem: () => Promise<void>;
@@ -144,6 +148,7 @@ export default function EstruturaDoJogo({
   aoIniciarReceita,
   aoEscolherMetaDaJornada,
   aoPararTrabalho,
+  aoPrestigiarProfissao,
   aoEquipar,
   aoDistribuirAtributos,
   aoRealizarPrestigioDoPersonagem,
@@ -384,6 +389,7 @@ export default function EstruturaDoJogo({
               aoIniciarAtividade={aoIniciarAtividade}
               aoIniciarReceita={aoIniciarReceita}
               aoPararTrabalho={aoPararTrabalho}
+              aoPrestigiarProfissao={aoPrestigiarProfissao}
               aoTrilhaReceita={async (idDaReceita) => {
                 if (partida.jornada.meta?.idDaDefinicaoDaReceita !== idDaReceita)
                   await aoEscolherMetaDaJornada(idDaReceita);
@@ -861,6 +867,9 @@ function ComponenteDaTelaDeAventura({
   aoAlterarEstadoDeRisco: (ativo: boolean) => void;
   aoAlterarEstadoDePreparacao: (ativo: boolean) => void;
 }) {
+  if (telaDoJogo === "desafios") {
+    return <PainelDeDesafios partida={partida} aoVoltar={() => aoTelaDoJogo("visaoGeral")} />;
+  }
   if (telaDoJogo === "servico") {
     return (
       <BancadaDeCombate
@@ -946,6 +955,13 @@ function ComponenteDaTelaDeAventura({
               {partida.masmorra.expedicaoAtiva ? "Retomar expedição" : "Ver Dún Liath"}
             </Button>
           </Card>
+          <Card className="aventura-cartao">
+            <p className="secao-chamada">Desafios</p>
+            <h2>Marcos da jornada</h2>
+            <p className="atenuado">Acompanhe contratos, descobertas e seu progresso.</p>
+            <div className="informacao-linhaDeDados"><span>Concluídos</span><strong>{partida.desafios.idsConcluidos.length}</strong></div>
+            <Button variant="secondary" size="sm" onClick={() => aoTelaDoJogo("desafios")}>Consultar desafios</Button>
+          </Card>
         </div>
       </div>
     </section>
@@ -977,6 +993,9 @@ function ComponenteDaTelaDaCidade({
   aoDepositarEquipamentoNoBanco: (idDaInstancia: string) => Promise<void>;
   aoRetirarEquipamentoDoBanco: (idDaInstancia: string) => Promise<void>;
 }) {
+  if (telaDoJogo === "codice") {
+    return <PainelDoCodice partida={partida} aoVoltar={() => aoTelaDoJogo("visaoGeral")} />;
+  }
   if (telaDoJogo === "mercado")
     return <BancadaDoMercado partida={partida} aoAlterarPartida={aoPersistir} />;
   if (telaDoJogo === "banco") {
@@ -1063,6 +1082,10 @@ function ComponenteDaTelaDaCidade({
         titulo: "Relicário",
         corpo: "Relíquias descobertas serão apresentadas aqui. O sistema funcional de Relicário ainda não está implementado nesta configuração.",
       },
+      codice: {
+        titulo: "Códice",
+        corpo: "Registro das descobertas do personagem.",
+      },
     };
     const atual = texto[telaDoJogo];
     return (
@@ -1123,6 +1146,10 @@ function ComponenteDaTelaDaCidade({
           <Button variant="location" icon={<IconeDoJogo icone="pedraRunica" tamanho={32} />} onClick={() => aoTelaDoJogo("relicario")}>
             <strong>Relicário</strong>
             <span>Relíquias e memória</span>
+          </Button>
+          <Button variant="location" icon={<IconeDoJogo icone="livro-abrir" tamanho={32} />} onClick={() => aoTelaDoJogo("codice")}>
+            <strong>Códice</strong>
+            <span>Descobertas e conhecimento</span>
           </Button>
         </div>
       </div>

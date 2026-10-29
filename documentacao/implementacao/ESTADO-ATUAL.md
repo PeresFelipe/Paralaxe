@@ -12,11 +12,13 @@
 
 **M6 — Versão 0.1 validável: ✅ FECHADO**
 
+Pacote seguinte em implementação nesta branch: Códice, Desafios e expansão funcional do Prestígio, descritos em [GAMIFICACAO-0.2.md](GAMIFICACAO-0.2.md).
+
 O M5.5 — Fundamentos de UX e o M6 — Versão 0.1 validável estão concluídos. A Versão 0.1 local possui fluxo integrado de criação de personagem, progresso automático durante a ausência, fabricação, equipamento, Mercado, Banco, combate, Serviço e Dún Liath — Fácil, usando o `EstruturaDoJogo` canônico.
 
 O primeiro pacote de gamificação foi autorizado e aplicado à Versão 0.1 em 15/09/2026: meta opcional de fabricação na Jornada, comparação de equipamento, primeira fabricação registrada, contexto de meta no retorno sem conexão e encerramento narrativo de Dún Liath. Detalhes em [GAMIFICACAO-0.1.md](GAMIFICACAO-0.1.md). O partida passa ao esquema 10 com migração das versões anteriores. Receitas, custos, tempos, recompensas e regras de risco permanecem os mesmos.
 
-Os próximos pacotes do plano (novas receitas, Códice, desafios e expansão de Prestígio) dependem da avaliação deste primeiro ciclo. Não adicionar sistemas Conectado ou novo conteúdo apenas para prolongar a Versão 0.1.
+O pacote 0.2 entrega Códice, desafios e efeitos funcionais de Prestígio. Não adicionar sistemas Conectado ou conteúdo fora deste escopo.
 
 O disposição compacto da Versão 0.1 está registrado como experimento visual reversível em `documentacao/implementacao/DISPOSICAO-COMPACTA-0.1.md`. O disposição anterior foi preservado em `backup/layout-0.1-740e1c5` antes da aplicação do passe.
 
@@ -106,13 +108,14 @@ M6 — Versão 0.1 validável                  ✅
 ## Esquema atual
 
 ```text
-versaoDoEsquemaDaPartida = 10
+versaoDoEsquemaDaPartida = 11
 ```
 
 - v7: Banco persistente;
 - v8: normalização/migração do Anel do Viajante como equipamento real;
 - v9: estado persistente da Árvore de Prestígio do personagem.
-- v10: meta e histórico de fabricação da Jornada; o formato de gravação é preservado pelo adaptador de compatibilidade.
+- v10: meta e histórico de fabricação da Jornada;
+- v11: descobertas do Códice e desafios concluídos; migrações preservam Jornada e restante da partida.
 
 ## Observação de validação qualitativa
 

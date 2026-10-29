@@ -1,7 +1,7 @@
 /**
  * @file Catálogo da árvore de prestígio e regras de desbloqueio do personagem.
  * Controla requisitos, custos e reinício de nível/atributos, preservando os nós comprados.
- * As descrições dos nós não aplicam efeitos por si: o motor de cada sistema precisa interpretá-los.
+ * Os bônus persistentes da árvore são interpretados pela derivação e simulação de combate.
  */
 import type { AtributosDoPersonagem, EstadoDePrestigioDoPersonagem, PartidaLocal } from './personagem'
 
@@ -77,42 +77,42 @@ const hibridoNo = (
 
 /** Árvore declarativa: IDs persistidos conectam pré-requisitos e escolhas já gravadas. */
 export const NOS_DE_PRESTIGIO: readonly DefinicaoDeNoDePrestigio[] = [
-  puroNo("corpo", "prestigio.corpo.constituicao", 'Constituição', 'Aumenta a Vida máxima.', 1, 1, []),
-  puroNo("corpo", "prestigio.corpo.folego-de-guerra", 'Fôlego de Guerra', "Aumenta o Fôlego máximo e sua recuperação.", 1, 2, ["prestigio.corpo.constituicao"]),
-  puroNo("corpo", "prestigio.corpo.impeto", 'Ímpeto', 'Física Agressiva concede eficiência física temporária.', 2, 3, ["prestigio.corpo.folego-de-guerra"]),
-  puroNo("corpo", "prestigio.corpo.inabalavel", 'Inabalável', 'Um golpe relevante concede redução temporária de dano.', 2, 4, ["prestigio.corpo.impeto"]),
-  puroNo("corpo", "prestigio.corpo.segundo-folego", 'Segundo Fôlego', "Uma vez por combate, uma condição crítica recupera Vida e Fôlego.", 2, 5, ["prestigio.corpo.inabalavel"]),
-  puroNo("corpo", "prestigio.corpo.ultimo-resistenciaFinal", 'Último Bastião', "Habilidade final: Vida baixa concede resistência e recuperação de Fôlego progressivas e limitadas.", 2, 6, ["prestigio.corpo.segundo-folego"]),
+  puroNo("corpo", "prestigio.corpo.constituicao", 'Constituição', 'Concede +2 Vitalidade e +24 de Vida máxima.', 1, 1, []),
+  puroNo("corpo", "prestigio.corpo.folego-de-guerra", 'Fôlego de Guerra', "Concede +16 Fôlego máximo e +2 de recuperação por segundo.", 1, 2, ["prestigio.corpo.constituicao"]),
+  puroNo("corpo", "prestigio.corpo.impeto", 'Ímpeto', '+1 Força.', 2, 3, ["prestigio.corpo.folego-de-guerra"]),
+  puroNo("corpo", "prestigio.corpo.inabalavel", 'Inabalável', '+8 Defesa e redução de 20% no primeiro golpe relevante recebido no combate.', 2, 4, ["prestigio.corpo.impeto"]),
+  puroNo("corpo", "prestigio.corpo.segundo-folego", 'Segundo Fôlego', "+1 Vitalidade. Uma vez por combate, sobreviver a um golpe com até 25% de Vida restaura 20% da Vida e do Fôlego máximos.", 2, 5, ["prestigio.corpo.inabalavel"]),
+  puroNo("corpo", "prestigio.corpo.ultimo-resistenciaFinal", 'Último Bastião', "+1 Vitalidade, +12 Defesa e +1 recuperação de Fôlego. A Defesa aumenta 25% abaixo de 35% de Vida.", 2, 6, ["prestigio.corpo.segundo-folego"]),
 
-  puroNo("arcano", "prestigio.arcano.mental-reserva", 'Reserva Mental', 'Aumenta a Mana máxima.', 1, 1, []),
-  puroNo("arcano", "prestigio.arcano.fluxo-arcano", 'Fluxo Arcano', 'Aumenta a regeneração de Mana.', 1, 2, ["prestigio.arcano.mental-reserva"]),
-  puroNo("arcano", "prestigio.arcano.canalizacao", 'Canalização', 'Magias diferentes em sequência fortalecem a eficiência da próxima.', 2, 3, ["prestigio.arcano.fluxo-arcano"]),
-  puroNo("arcano", "prestigio.arcano.ressonancia", 'Ressonância', 'Uma sequência diversa acumula Ressonância.', 2, 4, ["prestigio.arcano.canalizacao"]),
-  puroNo("arcano", "prestigio.arcano.arcano-reserva", 'Reserva Arcana', 'Uma vez por combate em Mana crítica, oferece recuperação e uma janela excepcional.', 2, 5, ["prestigio.arcano.ressonancia"]),
-  puroNo("arcano", "prestigio.arcano.sobrecarga", 'Sobrecarga', 'Habilidade final: Ressonância máxima permite uma Magia Sobrecarregada.', 2, 6, ["prestigio.arcano.arcano-reserva"]),
+  puroNo("arcano", "prestigio.arcano.mental-reserva", 'Reserva Mental', '+2 Mente e +20 Mana máxima.', 1, 1, []),
+  puroNo("arcano", "prestigio.arcano.fluxo-arcano", 'Fluxo Arcano', '+1,5 de regeneração de Mana por segundo.', 1, 2, ["prestigio.arcano.mental-reserva"]),
+  puroNo("arcano", "prestigio.arcano.canalizacao", 'Canalização', '+1 Inteligência.', 2, 3, ["prestigio.arcano.fluxo-arcano"]),
+  puroNo("arcano", "prestigio.arcano.ressonancia", 'Ressonância', '+1 Inteligência.', 2, 4, ["prestigio.arcano.canalizacao"]),
+  puroNo("arcano", "prestigio.arcano.arcano-reserva", 'Reserva Arcana', '+12 Mana máxima e +1 de regeneração de Mana por segundo.', 2, 5, ["prestigio.arcano.ressonancia"]),
+  puroNo("arcano", "prestigio.arcano.sobrecarga", 'Sobrecarga', '+2 Inteligência.', 2, 6, ["prestigio.arcano.arcano-reserva"]),
 
-  puroNo("espirito", "prestigio.espirito.conviccao", 'Convicção', 'Aumenta a Fé.', 1, 1, []),
-  puroNo("espirito", "prestigio.espirito.restauradora-graca", 'Graça Restauradora', 'Aumenta o efeito de cura realizada.', 1, 2, ["prestigio.espirito.conviccao"]),
-  puroNo("espirito", "prestigio.espirito.espiritual-resistencia", 'Resistência Espiritual', "Aumenta a resistência ao acúmulo dos cinco situação.", 2, 3, ["prestigio.espirito.restauradora-graca"]),
-  puroNo("espirito", "prestigio.espirito.intercessao", 'Intercessão', 'Converte parte do overheal em proteção temporária limitada.', 2, 4, ["prestigio.espirito.espiritual-resistencia"]),
-  puroNo("espirito", "prestigio.espirito.companhia-laco", 'Vínculo de Companhia', "O suporte pode beneficiar parcialmente outros membros da Grupo.", 2, 5, ["prestigio.espirito.intercessao"]),
-  puroNo("espirito", "prestigio.espirito.comunhao", 'Comunhão', 'Habilidade final: cura e proteção excedentes são parcialmente redirecionadas, com equivalente Solo.', 2, 6, ["prestigio.espirito.companhia-laco"]),
+  puroNo("espirito", "prestigio.espirito.conviccao", 'Convicção', '+2 Fé.', 1, 1, []),
+  puroNo("espirito", "prestigio.espirito.restauradora-graca", 'Graça Restauradora', '+1 Fé, ampliando efeitos que escalam com esse atributo.', 1, 2, ["prestigio.espirito.conviccao"]),
+  puroNo("espirito", "prestigio.espirito.espiritual-resistencia", 'Resistência Espiritual', '+1 Fé e redução de 20% no acúmulo recebido dos cinco estados de combate.', 2, 3, ["prestigio.espirito.restauradora-graca"]),
+  puroNo("espirito", "prestigio.espirito.intercessao", 'Intercessão', '+1 Vitalidade e +6 Defesa.', 2, 4, ["prestigio.espirito.espiritual-resistencia"]),
+  puroNo("espirito", "prestigio.espirito.companhia-laco", 'Vínculo de Companhia', '+1 Fé; o bônus funciona também na configuração solo atual.', 2, 5, ["prestigio.espirito.intercessao"]),
+  puroNo("espirito", "prestigio.espirito.comunhao", 'Comunhão', '+2 Fé e +4 Defesa; o bônus funciona também na configuração solo atual.', 2, 6, ["prestigio.espirito.companhia-laco"]),
 
-  puroNo("tecnica", "prestigio.tecnica.firme-mao", 'Mão Firme', 'Aumenta a Precisão.', 1, 1, []),
-  puroNo("tecnica", "prestigio.tecnica.preciso-golpe", 'Golpe Preciso', 'Aumenta o Crítico.', 1, 2, ["prestigio.tecnica.firme-mao"]),
-  puroNo("tecnica", "prestigio.tecnica.combate-ritmo", 'Ritmo de Combate', 'Ativos diferentes geram Ritmo.', 2, 3, ["prestigio.tecnica.preciso-golpe"]),
-  puroNo("tecnica", "prestigio.tecnica.oportunismo", 'Oportunismo', 'Críticos aceleram ou preservam Ritmo dentro de limites.', 2, 4, ["prestigio.tecnica.combate-ritmo"]),
-  puroNo("tecnica", "prestigio.tecnica.execucao", 'Execução', 'Crítico contra inimigos em Vida baixa recebe efeito adicional.', 2, 5, ["prestigio.tecnica.oportunismo"]),
-  puroNo("tecnica", "prestigio.tecnica.ritmo-mestre", 'Mestre do Ritmo', 'Habilidade final: Ritmo máximo fortalece o próximo ativo e é consumido.', 2, 6, ["prestigio.tecnica.execucao"]),
+  puroNo("tecnica", "prestigio.tecnica.firme-mao", 'Mão Firme', '+1 Destreza e +8 Precisão.', 1, 1, []),
+  puroNo("tecnica", "prestigio.tecnica.preciso-golpe", 'Golpe Preciso', '+1 Destreza e +3 pontos percentuais de chance crítica.', 1, 2, ["prestigio.tecnica.firme-mao"]),
+  puroNo("tecnica", "prestigio.tecnica.combate-ritmo", 'Ritmo de Combate', '+1 Destreza.', 2, 3, ["prestigio.tecnica.preciso-golpe"]),
+  puroNo("tecnica", "prestigio.tecnica.oportunismo", 'Oportunismo', '+1 Destreza e +2 pontos percentuais de chance crítica.', 2, 4, ["prestigio.tecnica.combate-ritmo"]),
+  puroNo("tecnica", "prestigio.tecnica.execucao", 'Execução', '+1 Destreza.', 2, 5, ["prestigio.tecnica.oportunismo"]),
+  puroNo("tecnica", "prestigio.tecnica.ritmo-mestre", 'Mestre do Ritmo', '+2 Destreza.', 2, 6, ["prestigio.tecnica.execucao"]),
 
-  hibridoNo("prestigio.hibrido.corpo-arcano.encantada-arma", "corpo-arcano", 'Arma Encantada', 'Física Agressiva fortalece a próxima Magia.', 1, 1, [], [{ ramo: "corpo", contagem: 3 }, { ramo: "arcano", contagem: 3 }]),
-  hibridoNo("prestigio.hibrido.corpo-arcano.arcano-guerreiro", "corpo-arcano", 'Guerreiro Arcano', 'Interação bidirecional entre Física e Magia.', 2, 2, ["prestigio.hibrido.corpo-arcano.encantada-arma"], [{ ramo: "corpo", contagem: 4 }, { ramo: "arcano", contagem: 4 }]),
-  hibridoNo("prestigio.hibrido.corpo-espirito.zelo", "corpo-espirito", 'Zelo', 'Habilidade Defensiva ligada a Fé fortalece a próxima ação Física apropriada.', 1, 1, [], [{ ramo: "corpo", contagem: 3 }, { ramo: "espirito", contagem: 3 }]),
-  hibridoNo("prestigio.hibrido.corpo-espirito.sagrado-bastiao", "corpo-espirito", 'Bastião Sagrado', 'Ações físicas geram Guarda; Milagre ou defesa consome Guarda para fortalecer proteção ou cura.', 2, 2, ["prestigio.hibrido.corpo-espirito.zelo"], [{ ramo: "corpo", contagem: 4 }, { ramo: "espirito", contagem: 4 }]),
-  hibridoNo("prestigio.hibrido.tecnica-arcano.arcano-lamina", "tecnica-arcano", 'Lâmina Arcana', 'Crítico físico fortalece a próxima Magia.', 1, 1, [], [{ ramo: "tecnica", contagem: 3 }, { ramo: "arcano", contagem: 3 }]),
-  hibridoNo("prestigio.hibrido.tecnica-arcano.rapido-conjuracao", "tecnica-arcano", 'Conjuração Rápida', 'Magia fortalecida abre uma janela para ação física precisa.', 2, 2, ["prestigio.hibrido.tecnica-arcano.arcano-lamina"], [{ ramo: "tecnica", contagem: 4 }, { ramo: "arcano", contagem: 4 }]),
-  hibridoNo("prestigio.hibrido.tecnica-espirito.conviccao-golpe", "tecnica-espirito", 'Golpe de Convicção', 'Crítico fortalece o próximo Milagre.', 1, 1, [], [{ ramo: "tecnica", contagem: 3 }, { ramo: "espirito", contagem: 3 }]),
-  hibridoNo("prestigio.hibrido.tecnica-espirito.inquisidor", "tecnica-espirito", 'Inquisidor', 'Milagre apropriado fortalece a próxima ação física precisa.', 2, 2, ["prestigio.hibrido.tecnica-espirito.conviccao-golpe"], [{ ramo: "tecnica", contagem: 4 }, { ramo: "espirito", contagem: 4 }]),
+  hibridoNo("prestigio.hibrido.corpo-arcano.encantada-arma", "corpo-arcano", 'Arma Encantada', '+1 Força e +1 Inteligência.', 1, 1, [], [{ ramo: "corpo", contagem: 3 }, { ramo: "arcano", contagem: 3 }]),
+  hibridoNo("prestigio.hibrido.corpo-arcano.arcano-guerreiro", "corpo-arcano", 'Guerreiro Arcano', '+1 Força e +1 Inteligência.', 2, 2, ["prestigio.hibrido.corpo-arcano.encantada-arma"], [{ ramo: "corpo", contagem: 4 }, { ramo: "arcano", contagem: 4 }]),
+  hibridoNo("prestigio.hibrido.corpo-espirito.zelo", "corpo-espirito", 'Zelo', '+1 Vitalidade e +1 Fé.', 1, 1, [], [{ ramo: "corpo", contagem: 3 }, { ramo: "espirito", contagem: 3 }]),
+  hibridoNo("prestigio.hibrido.corpo-espirito.sagrado-bastiao", "corpo-espirito", 'Bastião Sagrado', '+1 Vitalidade e +1 Fé.', 2, 2, ["prestigio.hibrido.corpo-espirito.zelo"], [{ ramo: "corpo", contagem: 4 }, { ramo: "espirito", contagem: 4 }]),
+  hibridoNo("prestigio.hibrido.tecnica-arcano.arcano-lamina", "tecnica-arcano", 'Lâmina Arcana', '+1 Destreza e +1 Inteligência.', 1, 1, [], [{ ramo: "tecnica", contagem: 3 }, { ramo: "arcano", contagem: 3 }]),
+  hibridoNo("prestigio.hibrido.tecnica-arcano.rapido-conjuracao", "tecnica-arcano", 'Conjuração Rápida', '+1 Destreza e +1 Inteligência.', 2, 2, ["prestigio.hibrido.tecnica-arcano.arcano-lamina"], [{ ramo: "tecnica", contagem: 4 }, { ramo: "arcano", contagem: 4 }]),
+  hibridoNo("prestigio.hibrido.tecnica-espirito.conviccao-golpe", "tecnica-espirito", 'Golpe de Convicção', '+1 Destreza e +1 Fé.', 1, 1, [], [{ ramo: "tecnica", contagem: 3 }, { ramo: "espirito", contagem: 3 }]),
+  hibridoNo("prestigio.hibrido.tecnica-espirito.inquisidor", "tecnica-espirito", 'Inquisidor', '+1 Destreza e +1 Fé.', 2, 2, ["prestigio.hibrido.tecnica-espirito.conviccao-golpe"], [{ ramo: "tecnica", contagem: 4 }, { ramo: "espirito", contagem: 4 }]),
 ] as const
 
 export type IdDoNoDePrestigio = (typeof NOS_DE_PRESTIGIO)[number]['id']

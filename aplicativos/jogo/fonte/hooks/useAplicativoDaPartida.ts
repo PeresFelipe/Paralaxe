@@ -7,6 +7,7 @@ import {
   obterDefinicaoDeAtividadeOciosa,
   obterAvisoDeFabricacaoDaJornada,
   obterResumoDeRetornoDaJornada,
+  atualizarCodiceEDesafios,
 } from "@greywake/conteudo";
 import {
   distribuirPontosDeAtributo,
@@ -19,6 +20,7 @@ import {
   realizarPrestigioDoPersonagem,
   iniciarReceitaDeFabricacao,
   iniciarAtividadeOciosa,
+  realizarPrestigioDaProfissao,
   interromperReceitaDeFabricacao,
   interromperAtividadeOciosa,
   desbloquearNoDePrestigioDoPersonagem,
@@ -27,6 +29,7 @@ import {
   type DistribuicaoDeAtributos,
   type IdDaClasseDoPersonagem,
   type IdDoPresente,
+  type IdDaProfissao,
   type PartidaLocal,
 } from "@greywake/dominio";
 import type { RepositorioDePartidasLocais } from "@greywake/interface";
@@ -96,7 +99,7 @@ export function useAplicativoDaPartida(repositorioDePartidas: RepositorioDeParti
       const atual = referenciaDaPartidaAtiva.current;
       if (!atual || atual.idDaPartida !== idDaPartida)
         throw new Error("O personagem ativo mudou. Tente novamente.");
-      const proximo = atualizar(atual);
+      const proximo = atualizarCodiceEDesafios(atualizar(atual));
       if (proximo === atual) return atual;
       await repositorioDePartidas.salvar(proximo);
       if (referenciaDaPartidaAtiva.current?.idDaPartida === idDaPartida) {
@@ -223,14 +226,14 @@ export function useAplicativoDaPartida(repositorioDePartidas: RepositorioDeParti
 
     try {
       const agora = new Date().toISOString();
-      const partida = criarPartidaLocal({
+      const partida = atualizarCodiceEDesafios(criarPartidaLocal({
         idDaPartida: criarIdDaPartida(),
         criadoEm: agora,
         versaoDoConteudo: VERSAO_DO_CONTEUDO,
         nomeDoPersonagem,
         classeDoPersonagem,
         presente,
-      });
+      }));
       await repositorioDePartidas.salvar(partida);
       definirPartidas((atual) => [partida, ...atual]);
       selecionarPartidaAtiva(partida);
@@ -258,13 +261,16 @@ export function useAplicativoDaPartida(repositorioDePartidas: RepositorioDeParti
     definirUltimoTrabalhoResultado(null);
     try {
       await gravarFila.current;
-      const armazenado = await repositorioDePartidas.obter(idDaPartida);
-      if (!armazenado) {
+      const partidaLida = await repositorioDePartidas.obter(idDaPartida);
+      if (!partidaLida) {
         definirMensagem("Esse partida não foi encontrado no armazenamento local.");
         return;
       }
 
+      const armazenado = atualizarCodiceEDesafios(partidaLida)
+
       if (armazenado.masmorra.expedicaoAtiva) {
+        if (armazenado !== partidaLida) await repositorioDePartidas.salvar(armazenado)
         selecionarPartidaAtiva(armazenado);
         definirPartidas((atual) => atualizarPartidaNaLista(atual, armazenado));
         definirRiscoAtivo(true);
@@ -278,9 +284,10 @@ export function useAplicativoDaPartida(repositorioDePartidas: RepositorioDeParti
       const agora = new Date().toISOString();
       const ausencia = Date.parse(agora) - Date.parse(armazenado.atualizadoEm);
       const resultado = processarTrabalhoAtual(armazenado, agora);
-      await repositorioDePartidas.salvar(resultado.partida);
-      definirPartidas((atual) => atualizarPartidaNaLista(atual, resultado.partida));
-      selecionarPartidaAtiva(resultado.partida);
+      const partidaProcessada = atualizarCodiceEDesafios(resultado.partida)
+      await repositorioDePartidas.salvar(partidaProcessada);
+      definirPartidas((atual) => atualizarPartidaNaLista(atual, partidaProcessada));
+      selecionarPartidaAtiva(partidaProcessada);
       definirRiscoAtivo(false);
       definirTela("jogo");
 
@@ -289,11 +296,11 @@ export function useAplicativoDaPartida(repositorioDePartidas: RepositorioDeParti
         definirAusenteResumo({
           duracao: formatarAusencia(ausencia),
           resultado: resultado.textoExibido,
-          meta: obterResumoDeRetornoDaJornada(armazenado, resultado.partida),
-          marco: obterAvisoDeFabricacaoDaJornada(armazenado, resultado.partida),
+          meta: obterResumoDeRetornoDaJornada(armazenado, partidaProcessada),
+          marco: obterAvisoDeFabricacaoDaJornada(armazenado, partidaProcessada),
         });
       } else if (resultado.textoExibido) {
-        const marco = obterAvisoDeFabricacaoDaJornada(armazenado, resultado.partida);
+        const marco = obterAvisoDeFabricacaoDaJornada(armazenado, partidaProcessada);
         definirAviso({
           textoExibido: marco ?? resultado.textoExibido,
           tipo: marco ? "conquista" : "informacao",
@@ -372,6 +379,10 @@ export function useAplicativoDaPartida(repositorioDePartidas: RepositorioDeParti
       if (partida.fabricacao.receitaAtiva) partida = interromperReceitaDeFabricacao(partida, agora);
       return partida;
     }, "Atividade interrompida.");
+  }
+
+  async function tratarPrestigiarProfissao(idDaProfissao: IdDaProfissao) {
+    await aplicarAlteracaoNaPartidaAtiva((atual) => realizarPrestigioDaProfissao(atual, idDaProfissao, new Date().toISOString()), 'Prestígio do ofício realizado; ele voltou ao nível 1.')
   }
 
   /** Valida a receita e registra o acompanhamento após atualizar o trabalho; escolher a meta não o substitui. */
@@ -645,6 +656,7 @@ export function useAplicativoDaPartida(repositorioDePartidas: RepositorioDeParti
     tratarIniciarAtividade,
     tratarIniciarReceita,
     tratarPararTrabalho,
+    tratarPrestigiarProfissao,
     tratarEscolherJornadaMeta,
     tratarEquipar,
     tratarDistribuirAtributos,

@@ -82,7 +82,7 @@ describe('compatibilidade com a main anterior à tradução', () => {
     const partida = await repositorio.obter('warrior')
     expect(partida).not.toBeNull()
     await repositorio.salvar(partida!)
-    expect(await lerGravacaoBruta()).toEqual(partidaLegadaV10)
+    expect(await lerGravacaoBruta()).toEqual({ ...partidaLegadaV10, saveSchemaVersion: 11, codex: { discoveredIds: ['classe.guerreiro'] }, challenges: { completedIds: [] } })
     expect(await criarRepositorioDePartidasIndexedDb().obter('warrior')).toEqual(partida)
   })
 
@@ -112,7 +112,7 @@ describe('compatibilidade com a main anterior à tradução', () => {
     expect(jornadaAntiga.craftedRecipeIds.length).toBeGreaterThan(0)
     await inserirPartidaAntiga({ ...legado, saveSchemaVersion: 9 })
     const partida = await criarRepositorioDePartidasIndexedDb().obter('warrior')
-    expect(partida?.versaoDoEsquemaDaPartida).toBe(10)
+    expect(partida?.versaoDoEsquemaDaPartida).toBe(11)
     expect(partida?.jornada).toEqual({ meta: null, idsDasReceitasFabricadas: [] })
     expect(partida?.personagem).toEqual((lerFormatoLegado(partidaLegadaV10) as PartidaLocal).personagem)
   })

@@ -113,7 +113,7 @@ describe("repositório de partidas em IndexedDB", () => {
     const repositorioAposRecarregar = criarRepositorioDePartidasIndexedDb()
     const carregado = await repositorioAposRecarregar.obter(partida.idDaPartida)
 
-    expect(carregado?.versaoDoEsquemaDaPartida).toBe(10)
+    expect(carregado?.versaoDoEsquemaDaPartida).toBe(11)
     expect(carregado?.personagem.prestigio).toEqual({ nivel: 0, pontos: 0, idsDosNosDesbloqueados: [] })
     expect(carregado?.personagem.banco).toEqual({ inventario: [], itensDeEquipamento: [] })
     expect(carregado?.masmorra.contratoAceito).toBe(true)
@@ -152,7 +152,7 @@ describe("repositório de partidas em IndexedDB", () => {
     const anelId = carregado?.personagem.equipamento.anel1
     const anel = carregado?.personagem.itensDeEquipamento.find((item) => item.idDaInstancia === anelId)
 
-    expect(carregado?.versaoDoEsquemaDaPartida).toBe(10)
+    expect(carregado?.versaoDoEsquemaDaPartida).toBe(11)
     expect(carregado?.personagem.prestigio).toEqual({ nivel: 0, pontos: 0, idsDosNosDesbloqueados: [] })
     expect(anel?.idDaDefinicao).toBe("item.equipamento.viajante-anel")
     expect(carregado?.personagem.inventario.some((pilha) => pilha.idDaDefinicao === "item.equipamento.viajante-anel")).toBe(false)
@@ -179,8 +179,20 @@ describe("repositório de partidas em IndexedDB", () => {
     await repositorio.salvar(legado as unknown as PartidaLocal)
     const carregado = await repositorio.obter("legado-prestigio")
 
-    expect(carregado?.versaoDoEsquemaDaPartida).toBe(10)
+    expect(carregado?.versaoDoEsquemaDaPartida).toBe(11)
     expect(carregado?.personagem.prestigio).toEqual({ nivel: 0, pontos: 0, idsDosNosDesbloqueados: [] })
+  })
+
+  it('migra a versão 10 sem apagar a Jornada e sem inventar registros novos', async () => {
+    const original = criarPartidaLocal({ idDaPartida: 'legado-v10', criadoEm: '2026-10-29T12:00:00.000Z', versaoDoConteudo: 'test', nomeDoPersonagem: 'Aedan', classeDoPersonagem, presente })
+    const legado = Object.fromEntries(Object.entries(original).filter(([chave]) => chave !== 'codice' && chave !== 'desafios'))
+    const repositorio = criarRepositorioDePartidasIndexedDb()
+    await repositorio.salvar({ ...legado, versaoDoEsquemaDaPartida: 10 } as unknown as PartidaLocal)
+    const migrado = await repositorio.obter(original.idDaPartida)
+    expect(migrado?.versaoDoEsquemaDaPartida).toBe(11)
+    expect(migrado?.jornada).toEqual(original.jornada)
+    expect(migrado?.codice).toEqual({ idsDescobertos: ['classe.errante'] })
+    expect(migrado?.desafios).toEqual({ idsConcluidos: [] })
   })
 
   it("migra a versão 9 sem inferir fabricações pelo inventário e preserva a meta após reabrir", async () => {
@@ -190,7 +202,7 @@ describe("repositório de partidas em IndexedDB", () => {
     const repositorio = criarRepositorioDePartidasIndexedDb()
     await repositorio.salvar({ ...legado, versaoDoEsquemaDaPartida: 9 } as unknown as PartidaLocal)
     const migrado = await repositorio.obter(original.idDaPartida)
-    expect(migrado?.versaoDoEsquemaDaPartida).toBe(10)
+    expect(migrado?.versaoDoEsquemaDaPartida).toBe(11)
     expect(migrado?.personagem).toEqual(original.personagem)
     expect(migrado?.jornada).toEqual({ meta: null, idsDasReceitasFabricadas: [] })
     if (!migrado) throw new Error("Partida ausente")

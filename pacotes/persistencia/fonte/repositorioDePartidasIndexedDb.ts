@@ -259,10 +259,20 @@ function migrarPartida(dadosArmazenados: unknown): PartidaLocal {
     return brutoPartida as PartidaLocal
   }
 
+  if (candidato.versaoDoEsquemaDaPartida === 10) {
+    const legado = brutoPartida as Omit<PartidaLocal, "codice" | "desafios" | "versaoDoEsquemaDaPartida">
+    return {
+      ...legado,
+      versaoDoEsquemaDaPartida: VERSAO_DO_ESQUEMA_DA_PARTIDA,
+      codice: { idsDescobertos: [`classe.${legado.personagem.idDaClasse}`] },
+      desafios: { idsConcluidos: [] },
+    }
+  }
+
   // A jornada começa vazia: possuir um item numa partida antiga não comprova que o jogador o fabricou.
   if (candidato.versaoDoEsquemaDaPartida === 9) {
     const legado = brutoPartida as Omit<PartidaLocal, "jornada" | "versaoDoEsquemaDaPartida">
-    return { ...legado, versaoDoEsquemaDaPartida: VERSAO_DO_ESQUEMA_DA_PARTIDA, jornada: criarJornadaInicial() }
+    return { ...legado, versaoDoEsquemaDaPartida: VERSAO_DO_ESQUEMA_DA_PARTIDA, jornada: criarJornadaInicial(), codice: { idsDescobertos: [`classe.${legado.personagem.idDaClasse}`] }, desafios: { idsConcluidos: [] } }
   }
 
   if (candidato.versaoDoEsquemaDaPartida === 8) {
@@ -271,6 +281,8 @@ function migrarPartida(dadosArmazenados: unknown): PartidaLocal {
       ...legado,
       versaoDoEsquemaDaPartida: VERSAO_DO_ESQUEMA_DA_PARTIDA,
       jornada: criarJornadaInicial(),
+      codice: { idsDescobertos: [`classe.${legado.personagem.idDaClasse}`] },
+      desafios: { idsConcluidos: [] },
       personagem: normalizarViajanteAnelPresente(comInicialPersonagemPrestigio(legado.personagem)),
     }
   }
@@ -281,6 +293,8 @@ function migrarPartida(dadosArmazenados: unknown): PartidaLocal {
       ...legado,
       versaoDoEsquemaDaPartida: VERSAO_DO_ESQUEMA_DA_PARTIDA,
       jornada: criarJornadaInicial(),
+      codice: { idsDescobertos: [`classe.${legado.personagem.idDaClasse}`] },
+      desafios: { idsConcluidos: [] },
       personagem: normalizarViajanteAnelPresente(comInicialPersonagemPrestigio(legado.personagem)),
     }
   }
@@ -291,6 +305,8 @@ function migrarPartida(dadosArmazenados: unknown): PartidaLocal {
       ...legado,
       versaoDoEsquemaDaPartida: VERSAO_DO_ESQUEMA_DA_PARTIDA,
       jornada: criarJornadaInicial(),
+      codice: { idsDescobertos: [`classe.${legado.personagem.idDaClasse}`] },
+      desafios: { idsConcluidos: [] },
       personagem: comVazioBanco(legado.personagem),
     }
   }
@@ -301,6 +317,8 @@ function migrarPartida(dadosArmazenados: unknown): PartidaLocal {
       ...legado,
       versaoDoEsquemaDaPartida: VERSAO_DO_ESQUEMA_DA_PARTIDA,
       jornada: criarJornadaInicial(),
+      codice: { idsDescobertos: [`classe.${legado.personagem.idDaClasse}`] },
+      desafios: { idsConcluidos: [] },
       personagem: comVazioBanco(legado.personagem),
       combate: migrarCombateEstado(legado.combate),
       masmorra: {
@@ -317,6 +335,8 @@ function migrarPartida(dadosArmazenados: unknown): PartidaLocal {
       ...legado,
       versaoDoEsquemaDaPartida: VERSAO_DO_ESQUEMA_DA_PARTIDA,
       jornada: criarJornadaInicial(),
+      codice: { idsDescobertos: [`classe.${legado.personagem.idDaClasse}`] },
+      desafios: { idsConcluidos: [] },
       personagem: comVazioBanco(legado.personagem),
       combate: migrarCombateEstado(legado.combate),
       masmorra: criarPadraoMasmorraEstado(),
@@ -329,6 +349,8 @@ function migrarPartida(dadosArmazenados: unknown): PartidaLocal {
       ...legado,
       versaoDoEsquemaDaPartida: VERSAO_DO_ESQUEMA_DA_PARTIDA,
       jornada: criarJornadaInicial(),
+      codice: { idsDescobertos: [`classe.${legado.personagem.idDaClasse}`] },
+      desafios: { idsConcluidos: [] },
       personagem: comVazioBanco(legado.personagem),
       combate: criarPadraoCombateEstado(),
       masmorra: criarPadraoMasmorraEstado(),
@@ -342,6 +364,8 @@ function migrarPartida(dadosArmazenados: unknown): PartidaLocal {
       ...legado,
       versaoDoEsquemaDaPartida: VERSAO_DO_ESQUEMA_DA_PARTIDA,
       jornada: criarJornadaInicial(),
+      codice: { idsDescobertos: [`classe.${legado.personagem.idDaClasse}`] },
+      desafios: { idsConcluidos: [] },
       personagem: migrarLegadoPersonagem(legado.personagem),
       fabricacao: { receitaAtiva: null },
       combate: criarPadraoCombateEstado(),
@@ -356,6 +380,8 @@ function migrarPartida(dadosArmazenados: unknown): PartidaLocal {
       ...legado,
       versaoDoEsquemaDaPartida: VERSAO_DO_ESQUEMA_DA_PARTIDA,
       jornada: criarJornadaInicial(),
+      codice: { idsDescobertos: [`classe.${legado.personagem.idDaClasse}`] },
+      desafios: { idsConcluidos: [] },
       personagem: migrarLegadoPersonagem(legado.personagem),
       profissoes: criarProgressoInicialDasProfissoes(),
       ocioso: { atividadeAtiva: null },

@@ -15,6 +15,7 @@ export const IDS_DAS_PROFISSOES = [
   "forja",
   "culinaria",
 ] as const
+export const NIVEL_MAXIMO_DE_PROFISSAO = 10
 
 export type IdDaProfissao = (typeof IDS_DAS_PROFISSOES)[number]
 
@@ -104,7 +105,7 @@ export function aplicarXpDeProfissao(progresso: ProgressoDeProfissao, ganhoXp: n
   let xp = progresso.xp + ganhoXp
   let niveisGanhos = 0
 
-  while (nivel < 10) {
+  while (nivel < NIVEL_MAXIMO_DE_PROFISSAO) {
     const requisito = XP_DE_PROFISSAO_PARA_PROXIMO_NIVEL[nivel - 1]
 
     if (requisito === undefined || xp < requisito) break
@@ -117,6 +118,22 @@ export function aplicarXpDeProfissao(progresso: ProgressoDeProfissao, ganhoXp: n
   return {
     progresso: { ...progresso, nivel, xp },
     niveisGanhos,
+  }
+}
+
+/** Reinicia um ofício no nível 10 e registra até Prestígio III; não concede recursos extras. */
+export function realizarPrestigioDaProfissao(partida: PartidaLocal, idDaProfissao: IdDaProfissao, agora: string): PartidaLocal {
+  const progresso = partida.profissoes[idDaProfissao]
+  if (progresso.nivel < NIVEL_MAXIMO_DE_PROFISSAO) throw new Error(`Leve o ofício ao nível ${NIVEL_MAXIMO_DE_PROFISSAO} antes de realizar Prestígio.`)
+  if (progresso.prestigio >= 3) throw new Error('Esse ofício já atingiu Prestígio III.')
+  if (partida.ocioso.atividadeAtiva || partida.fabricacao.receitaAtiva) throw new Error('Pare o trabalho atual antes de realizar Prestígio.')
+  return {
+    ...partida,
+    atualizadoEm: agora,
+    profissoes: {
+      ...partida.profissoes,
+      [idDaProfissao]: { nivel: 1, xp: 0, prestigio: progresso.prestigio + 1 },
+    },
   }
 }
 

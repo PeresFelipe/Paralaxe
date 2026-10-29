@@ -45,6 +45,10 @@ export interface EstadoDePrestigioDoPersonagem {
   idsDosNosDesbloqueados: string[]
 }
 
+/** Coleção e marcos concluídos são IDs estáveis; os nomes vêm dos catálogos de conteúdo. */
+export interface EstadoDoCodice { idsDescobertos: string[] }
+export interface EstadoDosDesafios { idsConcluidos: string[] }
+
 /** Cria o progresso permanente ainda sem níveis, pontos ou nós comprados. */
 export function criarPrestigioInicialDoPersonagem(): EstadoDePrestigioDoPersonagem {
   return {
@@ -137,7 +141,7 @@ export interface EstadoDoPersonagem {
 }
 
 /** Versão estrutural usada pelas migrações. Traduzir nomes internos não exige mudar o formato persistido. */
-export const VERSAO_DO_ESQUEMA_DA_PARTIDA = 10 as const
+export const VERSAO_DO_ESQUEMA_DA_PARTIDA = 11 as const
 
 /** Agregado salvo como uma unidade: personagem, trabalhos, combate, expedição e metas da jornada. */
 export interface PartidaLocal {
@@ -155,6 +159,8 @@ export interface PartidaLocal {
   combate: EstadoDeCombate
   masmorra: EstadoDeProgressoDaMasmorra
   jornada: EstadoDaJornada
+  codice: EstadoDoCodice
+  desafios: EstadoDosDesafios
 }
 
 export interface ParametrosDeCriacaoDaPartidaLocal {
@@ -286,6 +292,8 @@ export function criarPartidaLocal(entradaDeDados: ParametrosDeCriacaoDaPartidaLo
     ocioso: { atividadeAtiva: null },
     fabricacao: { receitaAtiva: null },
     jornada: criarJornadaInicial(),
+    codice: { idsDescobertos: [`classe.${entradaDeDados.classeDoPersonagem.id}`] },
+    desafios: { idsConcluidos: [] },
     combate: {
       preferencias: {
         estilo: "misto",

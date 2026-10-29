@@ -5,7 +5,7 @@
  */
 /**
  * Fronteira com as partidas publicadas antes da tradução.
- * O esquema 10 mantém a base "greywake", o armazenamento "saves" e a chave "saveId".
+ * O esquema 11 mantém a base "greywake", o armazenamento "saves" e a chave "saveId".
  * Apenas este adaptador e as amostras de regressão conhecem o vocabulário anterior.
  * A gravação permanece legível também pela versão anterior do jogo.
  */
@@ -19,6 +19,10 @@ const CAMPOS_LEGADOS: Readonly<Record<string, string>> = {
   "goal": "meta",
   "kind": "tipo",
   "journey": "jornada",
+  "codex": "codice",
+  "challenges": "desafios",
+  "discoveredIds": "idsDescobertos",
+  "completedIds": "idsConcluidos",
   "saveId": "idDaPartida",
   "createdAt": "criadoEm",
   "contentVersion": "versaoDoConteudo",

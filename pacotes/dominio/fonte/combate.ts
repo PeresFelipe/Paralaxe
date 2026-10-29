@@ -358,6 +358,33 @@ export function derivarEstatisticasDeCombateDoJogador(
   let maximoVidaBonus = 0
   let maximoManaBonus = 0
   let maximoFolegoBonus = 0
+  const prestigios = new Set(partida.personagem.prestigio.idsDosNosDesbloqueados)
+  if (prestigios.has('prestigio.corpo.constituicao')) atributos.vitalidade += 2
+  if (prestigios.has('prestigio.corpo.impeto')) atributos.forca += 1
+  if (prestigios.has('prestigio.corpo.segundo-folego')) atributos.vitalidade += 1
+  if (prestigios.has('prestigio.corpo.ultimo-resistenciaFinal')) atributos.vitalidade += 1
+  if (prestigios.has('prestigio.arcano.mental-reserva')) atributos.mente += 2
+  if (prestigios.has('prestigio.arcano.canalizacao')) atributos.inteligencia += 1
+  if (prestigios.has('prestigio.arcano.ressonancia')) atributos.inteligencia += 1
+  if (prestigios.has('prestigio.arcano.sobrecarga')) atributos.inteligencia += 2
+  if (prestigios.has('prestigio.espirito.conviccao')) atributos.fe += 2
+  if (prestigios.has('prestigio.espirito.restauradora-graca')) atributos.fe += 1
+  if (prestigios.has('prestigio.espirito.espiritual-resistencia')) atributos.fe += 1
+  if (prestigios.has('prestigio.espirito.companhia-laco')) atributos.fe += 1
+  if (prestigios.has('prestigio.espirito.comunhao')) atributos.fe += 2
+  if (prestigios.has('prestigio.tecnica.firme-mao')) atributos.destreza += 1
+  if (prestigios.has('prestigio.tecnica.preciso-golpe')) atributos.destreza += 1
+  if (prestigios.has('prestigio.tecnica.combate-ritmo')) atributos.destreza += 1
+  if (prestigios.has('prestigio.tecnica.oportunismo')) atributos.destreza += 1
+  if (prestigios.has('prestigio.tecnica.execucao')) atributos.destreza += 1
+  if (prestigios.has('prestigio.tecnica.ritmo-mestre')) atributos.destreza += 2
+  for (const id of prestigios) {
+    if (!id.startsWith('prestigio.hibrido.')) continue
+    if (id.includes('corpo-arcano')) { atributos.forca += 1; atributos.inteligencia += 1 }
+    if (id.includes('corpo-espirito')) { atributos.vitalidade += 1; atributos.fe += 1 }
+    if (id.includes('tecnica-arcano')) { atributos.destreza += 1; atributos.inteligencia += 1 }
+    if (id.includes('tecnica-espirito')) { atributos.destreza += 1; atributos.fe += 1 }
+  }
   const atributoAfixos: Partial<Record<string, keyof AtributosDoPersonagem>> = {
     "afixo.vitalidade-1": "vitalidade",
     "afixo.mente-1": "mente",
@@ -380,6 +407,14 @@ export function derivarEstatisticasDeCombateDoJogador(
     maximoFolegoBonus += entrada.definicao.bonusDeRecursos?.folegoMaximo ?? 0
   }
 
+  if (prestigios.has('prestigio.corpo.constituicao')) maximoVidaBonus += 24
+  if (prestigios.has('prestigio.corpo.folego-de-guerra')) maximoFolegoBonus += 16
+  if (prestigios.has('prestigio.arcano.arcano-reserva')) maximoManaBonus += 12
+  if (prestigios.has('prestigio.corpo.inabalavel')) simplesDefesaBonus += 8
+  if (prestigios.has('prestigio.corpo.ultimo-resistenciaFinal')) simplesDefesaBonus += 12
+  if (prestigios.has('prestigio.espirito.intercessao')) simplesDefesaBonus += 6
+  if (prestigios.has('prestigio.espirito.comunhao')) simplesDefesaBonus += 4
+
   const principalMaoId = partida.personagem.equipamento.maoPrincipal
   const maoPrincipal = equipado.find((entrada) => entrada.instancia.idDaInstancia === principalMaoId)
   if (!maoPrincipal?.definicao.combateDaArma) {
@@ -401,12 +436,12 @@ export function derivarEstatisticasDeCombateDoJogador(
     vidaMaxima: 100 + atributos.vitalidade * 12 + maximoVidaBonus,
     manaMaxima: 30 + atributos.mente * 10 + maximoManaBonus,
     folegoMaximo: 60 + atributos.vigor * 8 + maximoFolegoBonus,
-    regeneracaoDeManaPorSegundo: 1.5 + atributos.mente * 0.35,
-    regeneracaoDeFolegoPorSegundo: 5 + atributos.vigor * 0.6,
+    regeneracaoDeManaPorSegundo: 1.5 + atributos.mente * 0.35 + (prestigios.has('prestigio.arcano.fluxo-arcano') ? 1.5 : 0) + (prestigios.has('prestigio.arcano.arcano-reserva') ? 1 : 0),
+    regeneracaoDeFolegoPorSegundo: 5 + atributos.vigor * 0.6 + (prestigios.has('prestigio.corpo.folego-de-guerra') ? 2 : 0) + (prestigios.has('prestigio.corpo.ultimo-resistenciaFinal') ? 1 : 0),
     defesa,
     evasao: 100,
-    precisao: 100 + atributos.destreza * 2 + simplesPrecisaoBonus,
-    chanceDeCritico: 0.05 + atributos.destreza * 0.0025,
+    precisao: 100 + atributos.destreza * 2 + simplesPrecisaoBonus + (prestigios.has('prestigio.tecnica.firme-mao') ? 8 : 0),
+    chanceDeCritico: 0.05 + atributos.destreza * 0.0025 + (prestigios.has('prestigio.tecnica.preciso-golpe') ? 0.03 : 0) + (prestigios.has('prestigio.tecnica.oportunismo') ? 0.02 : 0),
     poderDoAtaqueBasico: armaPoder,
     tipoDeDanoBasico: maoPrincipal.definicao.combateDaArma.tipoDeDano,
     intervaloDeAcaoEmSegundos: maoPrincipal.definicao.combateDaArma.intervaloDeAcaoEmSegundos / (1 + velocidadeBonus),
@@ -586,6 +621,7 @@ export function simularCombate(
   if (!encontradoInimigo) throw new Error("Inimigo não encontrado no Catálogo de Conteúdo.")
   const inimigo: DefinicaoDeInimigo = encontradoInimigo
   const estatisticas = derivarEstatisticasDeCombateDoJogador(partida, catalogo)
+  const prestigios = new Set(partida.personagem.prestigio.idsDosNosDesbloqueados)
   const recursos = criarRecursosIniciais(estatisticas, recursosIniciais)
   const aleatorio = criarGeradorAleatorio(semente)
   const registro: EntradaDoRegistroDeCombate[] = []
@@ -608,6 +644,23 @@ export function simularCombate(
   let jogadorProntoEm = estatisticas.intervaloDeAcaoEmSegundos
   let inimigoProntoEm = inimigo.intervaloDeAcaoEmSegundos
   let avisoDeAtaque: EstadoDoAvisoDeAtaque | null = null
+  let segundoFolegoUsado = false
+  let inabalavelUsado = false
+
+  /** Aplica mitigação única de Inabalável e o Segundo Fôlego sem permitir que ele reverta uma derrota. */
+  function receberDano(dano: number) {
+    const relevante = dano >= recursos.vidaMaxima * 0.1
+    const danoFinal = relevante && !inabalavelUsado && prestigios.has('prestigio.corpo.inabalavel')
+      ? (inabalavelUsado = true, Math.round(dano * 0.8))
+      : dano
+    recursos.vida = Math.max(0, recursos.vida - danoFinal)
+    if (!segundoFolegoUsado && recursos.vida > 0 && recursos.vida <= recursos.vidaMaxima * 0.25 && prestigios.has('prestigio.corpo.segundo-folego')) {
+      segundoFolegoUsado = true
+      recursos.vida = Math.min(recursos.vidaMaxima, recursos.vida + Math.round(recursos.vidaMaxima * 0.2))
+      recursos.folego = Math.min(recursos.folegoMaximo, recursos.folego + Math.round(recursos.folegoMaximo * 0.2))
+      registro.push({ instanteEmSegundos: agora, agente: 'jogador', tipo: 'habilidade', mensagem: 'Segundo Fôlego restaura Vida e Fôlego.' })
+    }
+  }
 
   for (const habilidade of inimigo.habilidades) {
     inimigoRecargas.set(habilidade.id, habilidade.atrasoInicialEmSegundos ?? 0)
@@ -615,7 +668,8 @@ export function simularCombate(
 
   /** A queimadura ativa reduz temporariamente a defesa usada no cálculo do próximo golpe. */
   function jogadorDefesa() {
-    return estatisticas.defesa * (queimaduraAte > agora + EPSILON ? 0.85 : 1)
+    const bastiao = prestigios.has('prestigio.corpo.ultimo-resistenciaFinal') && recursos.vida <= recursos.vidaMaxima * 0.35 ? 1.25 : 1
+    return estatisticas.defesa * (queimaduraAte > agora + EPSILON ? 0.85 : 1) * bastiao
   }
 
   /** Acrescenta a melhoria de evasão somente durante sua janela de duração. */
@@ -680,7 +734,8 @@ export function simularCombate(
       avaliadoPorUltimoEm: agora,
       resistenciaAte: 0,
     }
-    const recebido = aplicacao.acumulo * (estado.resistenciaAte > agora + EPSILON ? 0.5 : 1)
+    const resistenciaDePrestigio = prestigios.has('prestigio.espirito.espiritual-resistencia') ? 0.8 : 1
+    const recebido = aplicacao.acumulo * resistenciaDePrestigio * (estado.resistenciaAte > agora + EPSILON ? 0.5 : 1)
     estado.valor += recebido
     estado.aplicadoPorUltimoEm = agora
     estado.avaliadoPorUltimoEm = agora
@@ -696,7 +751,7 @@ export function simularCombate(
       estado.resistenciaAte = agora + 6
       if (aplicacao.situacao === "sangramento") {
         const dano = Math.max(1, Math.round(recursos.vida * 0.08))
-        recursos.vida = Math.max(0, recursos.vida - dano)
+        receberDano(dano)
         registro.push({ instanteEmSegundos: agora, agente: 'system', tipo: "situacao", mensagem: `Sangramento causa ${dano} de dano.` })
       } else if (aplicacao.situacao === "atordoamento") {
         jogadorProntoEm = Math.max(jogadorProntoEm, agora) + 1.5
@@ -844,7 +899,7 @@ export function simularCombate(
       if (aleatorio() < acertoChance(inimigo.precisao, jogadorEvasao())) {
         const mitigado = inimigo.poder * (habilidade.multiplicadorDeDano ?? 0) * (1 - mitigacao(jogadorDefesa(), inimigo.nivelDeCombate))
         const dano = recebidoAgoraDiretoDano(mitigado)
-        recursos.vida = Math.max(0, recursos.vida - dano)
+        receberDano(dano)
         registro.push({ instanteEmSegundos: agora, agente: "inimigo", tipo: "habilidade", mensagem: `${inimigo.nome} usa ${habilidade.nome} e causa ${dano} de dano.` })
         aposInimigoAcerto(habilidade)
       } else {
@@ -938,7 +993,7 @@ export function simularCombate(
           if (aleatorio() < acertoChance(inimigo.precisao, jogadorEvasao())) {
             const mitigado = inimigo.poder * (pronto.multiplicadorDeDano ?? 0) * (1 - mitigacao(jogadorDefesa(), inimigo.nivelDeCombate))
             const dano = recebidoAgoraDiretoDano(mitigado)
-            recursos.vida = Math.max(0, recursos.vida - dano)
+            receberDano(dano)
             registro.push({ instanteEmSegundos: agora, agente: "inimigo", tipo: "habilidade", mensagem: `${inimigo.nome} usa ${pronto.nome} e causa ${dano} de dano.` })
             aposInimigoAcerto(pronto)
           } else {
@@ -950,7 +1005,7 @@ export function simularCombate(
         if (aleatorio() < acertoChance(inimigo.precisao, jogadorEvasao())) {
           const mitigado = inimigo.poder * (1 - mitigacao(jogadorDefesa(), inimigo.nivelDeCombate))
           const dano = recebidoAgoraDiretoDano(mitigado)
-          recursos.vida = Math.max(0, recursos.vida - dano)
+          receberDano(dano)
           registro.push({ instanteEmSegundos: agora, agente: "inimigo", tipo: "basico", mensagem: `${inimigo.nome} causa ${dano} de dano.` })
         } else {
           registro.push({ instanteEmSegundos: agora, agente: "inimigo", tipo: "basico", mensagem: `${inimigo.nome} erra.` })

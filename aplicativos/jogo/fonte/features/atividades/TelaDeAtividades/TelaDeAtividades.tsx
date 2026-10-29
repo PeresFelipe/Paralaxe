@@ -21,11 +21,12 @@ type PropriedadesDeTelaDeAtividades = {
   aoIniciarAtividade: (id: string) => Promise<void>
   aoIniciarReceita: (id: string) => Promise<void>
   aoPararTrabalho: () => Promise<void>
+  aoPrestigiarProfissao: (id: IdDaProfissao) => Promise<void>
   aoTrilhaReceita: (idDaReceita: string) => Promise<void>
 }
 
 /** Filtra o catálogo pela profissão selecionada e combina requisitos com o inventário para explicar as ações disponíveis. */
-export default function TelaDeAtividades({ partida, ultimoResultadoDoTrabalho, profissaoSelecionada, aoSelecionarProfissao, aoIniciarAtividade, aoIniciarReceita, aoPararTrabalho, aoTrilhaReceita }: PropriedadesDeTelaDeAtividades) {
+export default function TelaDeAtividades({ partida, ultimoResultadoDoTrabalho, profissaoSelecionada, aoSelecionarProfissao, aoIniciarAtividade, aoIniciarReceita, aoPararTrabalho, aoPrestigiarProfissao, aoTrilhaReceita }: PropriedadesDeTelaDeAtividades) {
   const [pendente, definirPendente] = useState(false)
   const [acaoErro, definirAcaoErro] = useState<string | null>(null)
   const progresso = partida.profissoes[profissaoSelecionada]
@@ -120,6 +121,7 @@ export default function TelaDeAtividades({ partida, ultimoResultadoDoTrabalho, p
             <strong>{rotulosDasProfissoes[profissaoSelecionada]} · Nv. {progresso.nivel}</strong>
             {proximoNivelXp ? <><ProgressBar max={proximoNivelXp} value={progresso.xp} label={`XP de ${rotulosDasProfissoes[profissaoSelecionada]} até o próximo nível`} /><span>{progresso.xp} / {proximoNivelXp} XP</span></> : <span>Nível máximo da versão · {progresso.xp} XP</span>}
             <details><summary>Detalhes</summary><p>Prestígio: {progresso.prestigio}. Trocar a habilidade em consulta mantém a atividade atual.</p></details>
+            {progresso.nivel >= 10 && progresso.prestigio < 3 ? <Button variant="primary" disabled={pendente || Boolean(partida.ocioso.atividadeAtiva || partida.fabricacao.receitaAtiva)} onClick={() => void agir(() => aoPrestigiarProfissao(profissaoSelecionada))}>Realizar Prestígio {progresso.prestigio + 1} · reiniciar ofício</Button> : null}
           </div>
           {acaoErro ? <p className="informacao-alerta" role="alert">{acaoErro}</p> : null}
           <div className={estilos.options}>
