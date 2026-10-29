@@ -1,0 +1,15 @@
+.progress {
+  display: block;
+  width: 100%;
+  height: var(--ui-size-progress-track);
+  overflow: hidden;
+  border: 0;
+  border-radius: var(--ui-radius-pill);
+  background: var(--ui-color-surface-sunken);
+  color: var(--ui-color-success);
+  accent-color: var(--ui-color-success);
+}
+
+.progress::-webkit-progress-bar { border-radius: inherit; background: var(--ui-color-surface-sunken); }
+.progress::-webkit-progress-value { border-radius: inherit; background: var(--ui-color-success); }
+.progress::-moz-progress-bar { border-radius: inherit; background: var(--ui-color-success); }

@@ -29,7 +29,7 @@
 
 .spaces {
   display: grid;
-  grid-template-columns: repeat(6, minmax(44px, 64px));
+  grid-template-columns: repeat(6, minmax(var(--ui-dimension-44px), var(--ui-dimension-64px)));
   justify-content: start;
   gap: var(--ui-space-2-5);
 }
@@ -68,7 +68,7 @@
 }
 
 .compact .spaces {
-  grid-template-columns: repeat(4, minmax(44px, 56px));
+  grid-template-columns: repeat(4, minmax(var(--ui-dimension-44px), var(--ui-dimension-56px)));
   gap: var(--ui-space-1-25);
 }
 
@@ -88,7 +88,7 @@
 
 @media (max-width: 720px) {
   .spaces {
-    grid-template-columns: repeat(4, minmax(44px, 64px));
+    grid-template-columns: repeat(4, minmax(var(--ui-dimension-44px), var(--ui-dimension-64px)));
     gap: var(--ui-space-2);
   }
 }

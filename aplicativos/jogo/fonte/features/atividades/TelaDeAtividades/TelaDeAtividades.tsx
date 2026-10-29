@@ -7,10 +7,10 @@ import { useState } from 'react'
 import { RECEITAS_INICIAIS_DE_FABRICACAO, ATIVIDADES_OCIOSAS_INICIAIS } from '@greywake/conteudo'
 import { obterXpDeProfissaoParaProximoNivel, type PartidaLocal, type IdDaProfissao } from '@greywake/dominio'
 import IndicadorDeProgressoOcioso from '../IndicadorDeProgressoOcioso'
-import { IconeDoJogo, ComparacaoDeEquipamento } from '../../../components/jogo'
-import { obterIconeDoItem, iconeDeProfissaoPorId } from '../../../iconesDosRecursos'
-import { coletaProfissoes, rotulosDosItens, producaoProfissoes, rotulosDasProfissoes } from '../../../rotulosDoJogo'
-import { Button, Card } from '../../../components/ui'
+import { IconeDoJogo, ComparacaoDeEquipamento } from '@/components/jogo'
+import { obterIconeDoItem, iconeDeProfissaoPorId } from '@/iconesDosRecursos'
+import { coletaProfissoes, rotulosDosItens, producaoProfissoes, rotulosDasProfissoes } from '@/rotulosDoJogo'
+import { Button, Card, ProgressBar, SelectField } from '@/components/ui'
 import estilos from './TelaDeAtividades.module.css'
 
 type PropriedadesDeTelaDeAtividades = {
@@ -90,11 +90,9 @@ export default function TelaDeAtividades({ partida, ultimoResultadoDoTrabalho, p
             </div>
           ))}
         </nav>
-        <label className="movel-profissao-seletor">Habilidade
-          <select value={profissaoSelecionada} onChange={(evento) => escolherProfissao(evento.target.value as IdDaProfissao)}>
+        <SelectField className="movel-profissao-seletor" label="Habilidade" value={profissaoSelecionada} onChange={(evento) => escolherProfissao(evento.target.value as IdDaProfissao)}>
             {([['Coleta', coletaProfissoes], ['Produção', producaoProfissoes]] as const).map(([rotulo, profissoes]) => <optgroup label={rotulo} key={rotulo}>{profissoes.map((profissao) => <option key={profissao} value={profissao}>{rotulosDasProfissoes[profissao]} · Nv. {partida.profissoes[profissao].nivel}{ativoProfissao === profissao ? ' · Em curso' : ''}</option>)}</optgroup>)}
-          </select>
-        </label>
+        </SelectField>
         <div className="atividades-areaDeTrabalho" aria-busy={pendente}>
           <div className="atividade-etapa">
             <div className="atividade-cena-envoltorio">
@@ -120,7 +118,7 @@ export default function TelaDeAtividades({ partida, ultimoResultadoDoTrabalho, p
           </div>
           <div className="profissao-nivel-faixa">
             <strong>{rotulosDasProfissoes[profissaoSelecionada]} · Nv. {progresso.nivel}</strong>
-            {proximoNivelXp ? <><progress max={proximoNivelXp} value={progresso.xp} aria-label={`XP de ${rotulosDasProfissoes[profissaoSelecionada]} até o próximo nível`} /><span>{progresso.xp} / {proximoNivelXp} XP</span></> : <span>Nível máximo da versão · {progresso.xp} XP</span>}
+            {proximoNivelXp ? <><ProgressBar max={proximoNivelXp} value={progresso.xp} label={`XP de ${rotulosDasProfissoes[profissaoSelecionada]} até o próximo nível`} /><span>{progresso.xp} / {proximoNivelXp} XP</span></> : <span>Nível máximo da versão · {progresso.xp} XP</span>}
             <details><summary>Detalhes</summary><p>Prestígio: {progresso.prestigio}. Trocar a habilidade em consulta mantém a atividade atual.</p></details>
           </div>
           {acaoErro ? <p className="informacao-alerta" role="alert">{acaoErro}</p> : null}

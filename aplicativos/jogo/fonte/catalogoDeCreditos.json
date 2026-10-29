@@ -82,7 +82,7 @@
       "autores": [
         {
           "nome": "Otsoga (@otsoga_ / @pedro_reisdc)",
-          "url": "http://artstation.com/otsoga"
+          "url": "https://artstation.com/otsoga"
         }
       ],
       "contribuicao": "Animação ociosa da classe Caçador na criação de personagem.",
@@ -225,6 +225,8 @@
       "arquivos": [
         "/arte/cenas-geradas.webp",
         "/arte/retratos-gerados.webp",
+        "/arte/cena-aventura.png",
+        "/arte/retrato-guerreiro.png",
         "/arte/atividades/culinaria.gif",
         "/arte/atividades/culinaria-estatico.png",
         "/arte/atividades/forja.gif",

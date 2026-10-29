@@ -3,7 +3,7 @@
  * A presença do componente controla a abertura; o pai recebe a intenção de fechar.
  */
 import type { ReactNode } from 'react'
-import { Modal } from '../../../components/ui'
+import { Modal } from '@/components/ui'
 import estilos from './PainelRapido.module.css'
 
 /** Compõe o diálogo compartilhado com a apresentação lateral própria do painel rápido. */

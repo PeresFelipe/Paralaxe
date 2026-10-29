@@ -4,7 +4,7 @@
  */
 import { useEffect, useState } from 'react'
 import { useRegisterSW } from 'virtual:pwa-register/react'
-import { Button } from '../../../components/ui'
+import { Button } from '@/components/ui'
 import estilos from './EstadoDoJogoWeb.module.css'
 
 /** Evento específico de navegadores que oferecem instalação; o pedido exige uma ação do usuário. */

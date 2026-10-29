@@ -4,7 +4,9 @@
  */
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
+import { criarRepositorioDePartidasIndexedDb } from '@greywake/persistencia'
 import Aplicativo from './Aplicativo'
+import { KitDeInterface } from './features/ui-kit/KitDeInterface'
 // A ordem das folhas importa: a base vem primeiro, seguida dos ajustes de disposição,
 // tipografia, tema e componentes. Regras posteriores podem sobrescrever as anteriores.
 import './styles/tokens.css'
@@ -17,6 +19,7 @@ import './jornada.css'
 import './interface-do-jogo.css'
 
 const raizElemento = document.getElementById("raiz")
+const repositorioDePartidas = criarRepositorioDePartidasIndexedDb()
 
 // Falha explicitamente se index.html não oferecer o ponto de montagem esperado.
 if (!raizElemento) {
@@ -25,6 +28,8 @@ if (!raizElemento) {
 
 createRoot(raizElemento).render(
   <StrictMode>
-    <Aplicativo />
+    {import.meta.env.DEV && window.location.pathname === '/ui-kit'
+      ? <KitDeInterface />
+      : <Aplicativo repositorioDePartidas={repositorioDePartidas} />}
   </StrictMode>,
 )

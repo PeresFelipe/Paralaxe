@@ -5,14 +5,14 @@
    A estrutura temática compartilha o estado, o conteúdo e a persistência existentes. */
 /* Cores e medidas finais do tema; as URLs das molduras são recursos públicos licenciados. */
 :root {
-  --jogo-trilho: 188px;
-  --estrutura-rodape: 76px;
+  --jogo-trilho: var(--ui-dimension-188px);
+  --estrutura-rodape: var(--ui-dimension-76px);
 }
 
 body {
   background:
     radial-gradient(ellipse at 45% 0%, var(--ui-color-background-glow) 0%, transparent 55%),
-    repeating-linear-gradient(93deg, color-mix(in srgb, var(--ui-color-border) 2%, transparent) 0 1px, transparent 1px 5px),
+    repeating-linear-gradient(93deg, color-mix(in srgb, var(--ui-color-border) 2%, transparent) 0 var(--ui-dimension-1px), transparent var(--ui-dimension-1px) var(--ui-dimension-5px)),
     var(--ui-color-background);
 }
 
@@ -66,7 +66,7 @@ summary:focus-visible,
 }
 
 .telaDoJogo-tituloDaSecao > div {
-  flex: 1 1 200px;
+  flex: 1 1 var(--ui-dimension-200px);
   min-width: 0;
 }
 
@@ -77,7 +77,7 @@ summary:focus-visible,
 }
 
 .telaDoJogo-tituloDaSecao .destaque-titulo .jogo-icone {
-  filter: drop-shadow(0 2px 2px var(--ui-color-card-shadow));
+  filter: drop-shadow(0 var(--ui-dimension-2px) var(--ui-dimension-2px) var(--ui-color-card-shadow));
 }
 
 .telaDoJogo-tituloDaSecao p:last-child {
@@ -102,14 +102,14 @@ summary:focus-visible,
 .jogo-barraLateral {
   position: fixed;
   inset: 0 auto 0 0;
-  z-index: 34;
+  z-index: var(--ui-z-sidebar);
   width: var(--jogo-trilho);
   display: flex;
   flex-direction: column;
   padding:var(--ui-space-6) var(--ui-space-3) var(--ui-space-4-5);
   border-right: var(--ui-size-border) solid var(--ui-color-border);
   background:
-    repeating-linear-gradient(0deg, color-mix(in srgb, var(--ui-color-border) 2%, transparent) 0 1px, transparent 1px 4px),
+    repeating-linear-gradient(0deg, color-mix(in srgb, var(--ui-color-border) 2%, transparent) 0 var(--ui-dimension-1px), transparent var(--ui-dimension-1px) var(--ui-dimension-4px)),
     var(--ui-color-surface);
   box-shadow:
     var(--ui-shadow-md),
@@ -133,17 +133,17 @@ summary:focus-visible,
 
 /* border-image divide a imagem de moldura em bordas e cantos; o conteúdo recebe fundo próprio. */
 .marca-simbolo {
-  width: 76px;
-  height: 84px;
+  width: var(--ui-dimension-76px);
+  height: var(--ui-dimension-84px);
   display: grid;
   place-items: center;
-  border: 12px solid transparent;
-  border-image: var(--ui-frame-gold) 24 / 12px stretch;
+  border: var(--ui-dimension-12px) solid transparent;
+  border-image: var(--ui-frame-gold) 24 / var(--ui-dimension-12px) stretch;
   background: var(--ui-color-surface-raised);
 }
 
 .marca-simbolo .jogo-icone {
-  filter: drop-shadow(2px 3px 0 var(--ui-color-inventory-icon-shadow));
+  filter: drop-shadow(var(--ui-dimension-2px) var(--ui-dimension-3px) 0 var(--ui-color-inventory-icon-shadow));
 }
 
 .jogo-marca strong {
@@ -162,8 +162,8 @@ summary:focus-visible,
 }
 
 .marca-ornamento {
-  width: min(132px, 100%);
-  height: 44px;
+  width: min(var(--ui-dimension-132px), 100%);
+  height: var(--ui-dimension-44px);
   background: url("/arte/interface/dark-ages/flourish-gold.png") center / contain
     no-repeat;
   image-rendering: pixelated;
@@ -185,7 +185,7 @@ summary:focus-visible,
   margin-top:auto;
   padding:var(--ui-space-7) var(--ui-space-2) var(--ui-space-3);
   display: grid;
-  grid-template-columns: 8px 1fr;
+  grid-template-columns: var(--ui-dimension-8px) 1fr;
   gap:var(--ui-space-1-75) var(--ui-space-2);
 }
 
@@ -203,8 +203,8 @@ summary:focus-visible,
 
 .reino-leve {
   align-self: center;
-  width: 6px;
-  height: 6px;
+  width: var(--ui-dimension-6px);
+  height: var(--ui-dimension-6px);
   background: var(--ui-color-success);
   box-shadow: var(--ui-shadow-success-glow);
   transform: rotate(45deg);
@@ -225,7 +225,7 @@ summary:focus-visible,
 
 /* O deslocamento à esquerda acompanha a largura do trilho de navegação. */
 .jogo-barraSuperior {
-  min-height: 80px;
+  min-height: var(--ui-dimension-80px);
   margin-left:var(--jogo-trilho);
   padding:var(--ui-space-3-25) var(--ui-space-6-5);
   gap:var(--ui-space-3) var(--ui-space-5);
@@ -237,11 +237,11 @@ summary:focus-visible,
 }
 
 .avatar-marcador {
-  width: 48px;
-  height: 48px;
+  width: var(--ui-dimension-48px);
+  height: var(--ui-dimension-48px);
   border-radius:var(--ui-radius-none);
-  border: 5px solid transparent;
-  border-image: var(--ui-frame-inventory) 8 / 8px stretch;
+  border: var(--ui-dimension-5px) solid transparent;
+  border-image: var(--ui-frame-inventory) 8 / var(--ui-dimension-8px) stretch;
   background: var(--ui-color-surface-raised);
 }
 
@@ -267,7 +267,7 @@ summary:focus-visible,
 }
 
 .global-recursos > div {
-  min-width: 73px;
+  min-width: var(--ui-dimension-73px);
   position: relative;
   padding-bottom:var(--ui-space-1-75);
   border-bottom: var(--ui-size-border-emphasis) solid var(--ui-color-resource-health);
@@ -299,14 +299,14 @@ summary:focus-visible,
 .recurso-simbolo {
   padding:var(--ui-space-0);
   border: 0;
-  width: 24px;
-  height: 24px;
+  width: var(--ui-dimension-24px);
+  height: var(--ui-dimension-24px);
   border-radius:var(--ui-radius-none);
 }
 
 .recurso-simbolo .jogo-icone {
-  width: 24px;
-  height: 24px;
+  width: var(--ui-dimension-24px);
+  height: var(--ui-dimension-24px);
 }
 
 
@@ -314,7 +314,7 @@ summary:focus-visible,
 .jogo-disposicao {
   margin-left:var(--jogo-trilho);
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 240px;
+  grid-template-columns: minmax(0, 1fr) var(--ui-dimension-240px);
   align-items: start;
   gap:var(--ui-space-5);
   padding:var(--ui-space-6);
@@ -325,11 +325,11 @@ summary:focus-visible,
   min-width: 0;
   margin:var(--ui-space-0);
   padding:var(--ui-space-5);
-  min-height: 560px;
-  border: 14px solid transparent;
-  border-image: var(--ui-frame-gold) 24 / 14px stretch;
+  min-height: var(--ui-dimension-560px);
+  border: var(--ui-dimension-14px) solid transparent;
+  border-image: var(--ui-frame-gold) 24 / var(--ui-dimension-14px) stretch;
   background:
-    repeating-linear-gradient(0deg, color-mix(in srgb, var(--ui-color-border) 1%, transparent) 0 1px, transparent 1px 4px),
+    repeating-linear-gradient(0deg, color-mix(in srgb, var(--ui-color-border) 1%, transparent) 0 var(--ui-dimension-1px), transparent var(--ui-dimension-1px) var(--ui-dimension-4px)),
     var(--ui-color-surface);
   box-shadow: var(--ui-shadow-md);
 }
@@ -345,8 +345,8 @@ summary:focus-visible,
 
 .companheiro-secao {
   padding:var(--ui-space-3-75) var(--ui-space-3);
-  border: 8px solid transparent;
-  border-image: var(--ui-frame-dark) 12 / 12px stretch;
+  border: var(--ui-dimension-8px) solid transparent;
+  border-image: var(--ui-frame-dark) 12 / var(--ui-dimension-12px) stretch;
   background: var(--ui-color-surface);
   min-width: 0;
 }
@@ -414,7 +414,7 @@ summary:focus-visible,
 
 /* A profissão consultada e a tarefa em execução têm indicações distintas. */
 .atividades-disposicao {
-  grid-template-columns: 156px minmax(0, 1fr);
+  grid-template-columns: var(--ui-dimension-156px) minmax(0, 1fr);
   gap:var(--ui-space-5);
 }
 
@@ -443,8 +443,8 @@ summary:focus-visible,
 
 .atividade-estado::before {
   content: "";
-  width: 5px;
-  height: 5px;
+  width: var(--ui-dimension-5px);
+  height: var(--ui-dimension-5px);
   background: var(--ui-color-text-muted);
   transform: rotate(45deg);
 }
@@ -500,7 +500,7 @@ summary:focus-visible,
 }
 
 .atividade-atualizado .ocioso-progressoTituloDaSecao > span {
-  flex: 1 1 110px;
+  flex: 1 1 var(--ui-dimension-110px);
 }
 
 .atividade-pronto h2 {
@@ -537,13 +537,13 @@ summary:focus-visible,
 }
 
 .profissao-nivel-faixa progress {
-  height: 8px;
+  height: var(--ui-dimension-8px);
   border-radius:var(--ui-radius-none);
-  min-width: 70px;
+  min-width: var(--ui-dimension-70px);
 }
 
 .profissao-nivel-faixa summary {
-  min-height: 44px;
+  min-height: var(--ui-dimension-44px);
   padding-block:var(--ui-space-3);
   font-size: var(--ui-font-size-compact);
 }
@@ -562,8 +562,8 @@ summary:focus-visible,
 .item-miniatura {
   border-radius:var(--ui-radius-none);
   background: var(--ui-color-inventory-slot-raised);
-  border: 6px solid transparent;
-  border-image: var(--ui-frame-inventory) 8 / 8px stretch;
+  border: var(--ui-dimension-6px) solid transparent;
+  border-image: var(--ui-frame-inventory) 8 / var(--ui-dimension-8px) stretch;
 }
 
 .item-cartao {
@@ -573,12 +573,12 @@ summary:focus-visible,
 }
 
 .item-cartao .item-miniatura .jogo-icone {
-  width: 32px;
-  height: 32px;
+  width: var(--ui-dimension-32px);
+  height: var(--ui-dimension-32px);
 }
 
 .personagem-disposicao {
-  grid-template-columns: 180px minmax(0, 1fr);
+  grid-template-columns: var(--ui-dimension-180px) minmax(0, 1fr);
   gap:var(--ui-space-5);
 }
 
@@ -606,7 +606,7 @@ summary:focus-visible,
 
 .equipado-suporte {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(44px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(var(--ui-dimension-44px), 1fr));
   gap:var(--ui-space-1-25);
 }
 
@@ -698,7 +698,7 @@ summary:focus-visible,
 
 .ocioso-progressoTrilha,
 .ocioso-progresso--compacto .ocioso-progressoTrilha {
-  height: 10px;
+  height: var(--ui-dimension-10px);
   border: var(--ui-size-border) solid var(--ui-color-border);
   border-radius:var(--ui-radius-pill);
   background: var(--ui-color-surface-sunken);
@@ -760,7 +760,7 @@ summary:focus-visible,
 }
 
 .jogo-estrutura--risco .jogo-aviso {
-  bottom: calc(var(--estrutura-rodape) + 12px);
+  bottom: calc(var(--estrutura-rodape) + var(--ui-dimension-12px));
 }
 
 .jogo-aviso {
@@ -776,7 +776,7 @@ summary:focus-visible,
 
 /* A criação de personagem compartilha os materiais e o tom do jogo. */
 .entrada-estrutura {
-  max-width: 980px;
+  max-width: var(--ui-dimension-980px);
 }
 
 .entrada-marca {
@@ -794,7 +794,7 @@ summary:focus-visible,
 }
 
 .entrada-cabecalho > div {
-  flex: 1 1 240px;
+  flex: 1 1 var(--ui-dimension-240px);
   min-width: 0;
 }
 
@@ -840,7 +840,7 @@ summary:focus-visible,
 /* Transforma o trilho lateral em uma faixa estreita com ícones e rótulos curtos. */
 @media (max-width: 980px) and (min-width: 721px) {
   :root {
-    --jogo-trilho: 88px;
+    --jogo-trilho: var(--ui-dimension-88px);
   }
 
   .jogo-barraLateral {
@@ -852,13 +852,13 @@ summary:focus-visible,
   }
 
   .marca-simbolo {
-    width: 56px;
-    height: 66px;
+    width: var(--ui-dimension-56px);
+    height: var(--ui-dimension-66px);
   }
 
   .marca-simbolo .jogo-icone {
-    width: 32px;
-    height: 32px;
+    width: var(--ui-dimension-32px);
+    height: var(--ui-dimension-32px);
   }
 
   .jogo-marca strong {
@@ -881,20 +881,20 @@ summary:focus-visible,
   }
 
   .atividades-disposicao {
-    grid-template-columns: 148px minmax(0, 1fr);
+    grid-template-columns: var(--ui-dimension-148px) minmax(0, 1fr);
     gap:var(--ui-space-3-5);
   }
 
   .atividade-etapa {
-    grid-template-columns: minmax(0, 192px) minmax(0, 1fr);
+    grid-template-columns: minmax(0, var(--ui-dimension-192px)) minmax(0, 1fr);
   }
 }
 
 /* A navegação vai para o rodapé; o espaço seguro evita sobrepor a área de gestos do aparelho. */
 @media (max-width: 720px) {
   :root {
-    --jogo-trilho: 0px;
-    --estrutura-rodape: 76px;
+    --jogo-trilho: var(--ui-dimension-0px);
+    --estrutura-rodape: var(--ui-dimension-76px);
   }
 
   .jogo-estrutura {
@@ -922,19 +922,19 @@ summary:focus-visible,
     position: fixed;
     inset: auto 0 0;
     width: 100%;
-    height: calc(66px + env(safe-area-inset-bottom));
+    height: calc(var(--ui-dimension-66px) + env(safe-area-inset-bottom));
     padding:var(--ui-space-0-75) var(--ui-space-1-25) env(safe-area-inset-bottom);
     gap:var(--ui-space-1);
     border-top: var(--ui-size-border) solid var(--ui-color-border);
     background: var(--ui-color-surface);
-    z-index: 40;
+    z-index: var(--ui-z-navigation-mobile);
   }
 
   .jogo-barraSuperior {
     position: sticky;
     display: grid;
     grid-template-columns: minmax(0, 1fr);
-    min-height: 76px;
+    min-height: var(--ui-dimension-76px);
     padding:var(--ui-space-2-5) var(--ui-space-3);
     gap:var(--ui-space-2-5);
   }
@@ -958,25 +958,25 @@ summary:focus-visible,
   }
 
   .avatar-marcador {
-    width: 40px;
-    height: 40px;
+    width: var(--ui-dimension-40px);
+    height: var(--ui-dimension-40px);
   }
 
   .avatar-marcador .jogo-icone {
-    width: 28px;
-    height: 28px;
+    width: var(--ui-dimension-28px);
+    height: var(--ui-dimension-28px);
   }
 
   .global-recursos {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr)) 44px;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) var(--ui-dimension-44px);
     gap:var(--ui-space-2);
     width: 100%;
   }
 
   .global-recursos > div {
     display: grid;
-    grid-template-columns: 16px minmax(0, 1fr);
+    grid-template-columns: var(--ui-dimension-16px) minmax(0, 1fr);
     grid-template-areas: "sig label" "value value";
     min-width: 0;
     padding-bottom:var(--ui-space-1);
@@ -1001,8 +1001,8 @@ summary:focus-visible,
   .global-recursos .recurso-simbolo,
   .recurso-simbolo .jogo-icone {
     min-width: 0;
-    width: 16px;
-    height: 16px;
+    width: var(--ui-dimension-16px);
+    height: var(--ui-dimension-16px);
   }
 
   .jogo-disposicao {
@@ -1013,8 +1013,8 @@ summary:focus-visible,
   .jogo-conteudo,
   .jogo-estrutura--risco .jogo-conteudo {
     padding:var(--ui-space-2-5);
-    border-width: 8px;
-    border-image-width: 10px;
+    border-width: var(--ui-dimension-8px);
+    border-image-width: var(--ui-dimension-10px);
     width: 100%;
   }
 
@@ -1067,7 +1067,7 @@ summary:focus-visible,
   }
 
   .atividade-etapa {
-    grid-template-columns: minmax(0, 160px) minmax(0, 1fr);
+    grid-template-columns: minmax(0, var(--ui-dimension-160px)) minmax(0, 1fr);
     gap:var(--ui-space-2-5);
   }
 
@@ -1100,7 +1100,7 @@ summary:focus-visible,
   }
 
   .personagem-disposicao {
-    grid-template-columns: 124px minmax(0, 1fr);
+    grid-template-columns: var(--ui-dimension-124px) minmax(0, 1fr);
     gap:var(--ui-space-3);
   }
 
@@ -1141,7 +1141,7 @@ summary:focus-visible,
 
   .cidade-visaoGeral-disposicao > .contexto-arte,
   .aventura-visaoGeral-disposicao > .contexto-arte {
-    max-width: 360px;
+    max-width: var(--ui-dimension-360px);
     justify-self: center;
   }
 
@@ -1151,7 +1151,7 @@ summary:focus-visible,
 
   .continuidade-barra,
   .jogo-estrutura--risco .continuidade-barra {
-    bottom: calc(66px + env(safe-area-inset-bottom));
+    bottom: calc(var(--ui-dimension-66px) + env(safe-area-inset-bottom));
     height: var(--estrutura-rodape);
     padding:var(--ui-space-2) var(--ui-space-3);
     gap:var(--ui-space-2);
@@ -1159,9 +1159,9 @@ summary:focus-visible,
 
   .jogo-aviso,
   .jogo-estrutura--risco .jogo-aviso {
-    bottom: calc(156px + env(safe-area-inset-bottom));
-    right: 12px;
-    width: calc(100% - 24px);
+    bottom: calc(var(--ui-dimension-156px) + env(safe-area-inset-bottom));
+    right: var(--ui-dimension-12px);
+    width: calc(100% - var(--ui-dimension-24px));
   }
 
   .risco-estado-faixa,
@@ -1173,8 +1173,8 @@ summary:focus-visible,
 
   .criacao-foco {
     padding:var(--ui-space-3-5);
-    border-width: 10px;
-    border-image-width: 12px;
+    border-width: var(--ui-dimension-10px);
+    border-image-width: var(--ui-dimension-12px);
   }
 }
 
@@ -1202,7 +1202,7 @@ summary:focus-visible,
   }
 
   .atividade-cena-envoltorio {
-    width: min(100%, 140px);
+    width: min(100%, var(--ui-dimension-140px));
   }
 
   .atividade-estado {
@@ -1223,7 +1223,7 @@ summary:focus-visible,
 
   .personagem-efigie {
     display: grid;
-    grid-template-columns: 100px minmax(0, 1fr);
+    grid-template-columns: var(--ui-dimension-100px) minmax(0, 1fr);
     align-items: center;
     gap:var(--ui-space-3);
     padding:var(--ui-space-2-5);
@@ -1246,7 +1246,7 @@ summary:focus-visible,
   }
 
   .atividade-cena-envoltorio {
-    width: min(100%, calc(var(--atividade-cena-largura) + 16px));
+    width: min(100%, calc(var(--atividade-cena-largura) + var(--ui-dimension-16px)));
   }
 }
 
@@ -1258,13 +1258,13 @@ summary:focus-visible,
   }
 
   .marca-simbolo {
-    width: 64px;
-    height: 64px;
+    width: var(--ui-dimension-64px);
+    height: var(--ui-dimension-64px);
   }
 
   .marca-simbolo .jogo-icone {
-    width: 32px;
-    height: 32px;
+    width: var(--ui-dimension-32px);
+    height: var(--ui-dimension-32px);
   }
 
   .marca-ornamento,
@@ -1298,7 +1298,7 @@ summary:focus-visible,
 
   [data-variant='inventory'][aria-pressed='true'],
   [data-variant='filter'][aria-pressed='true'] {
-    outline: 2px solid Highlight;
+    outline: var(--ui-dimension-2px) solid Highlight;
   }
 }
 
@@ -1306,8 +1306,8 @@ summary:focus-visible,
 /* width e height controlam a área exibida; contain preserva a proporção e pixelated evita suavização. */
 .criacao-classe-gif {
   display: block;
-  width: 160px;
-  height: 160px;
+  width: var(--ui-dimension-160px);
+  height: var(--ui-dimension-160px);
   object-fit: contain;
   image-rendering: pixelated;
 }

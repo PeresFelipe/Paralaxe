@@ -10,10 +10,11 @@
   "scripts": {
     "analisar": "oxlint fonte",
     "verificar:tipos": "tsc -p tsconfig.json --noEmit",
-    "testar": "vitest run"
+    "testar": "vitest run --pool=threads --maxWorkers=1"
   },
   "dependencies": {
-    "@greywake/dominio": "workspace:*"
+    "@greywake/dominio": "workspace:*",
+    "@greywake/interface": "workspace:*"
   },
   "devDependencies": {
     "fake-indexeddb": "^6.2.2",

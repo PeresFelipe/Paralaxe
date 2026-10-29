@@ -1,0 +1,54 @@
+import { describe, expect, it } from 'vitest'
+import { ATIVIDADES_OCIOSAS_INICIAIS, CLASSES_DE_PERSONAGEM, PRESENTES_INICIAIS, VERSAO_DO_CONTEUDO } from '@greywake/conteudo'
+import { criarPartidaLocal, iniciarAtividadeOciosa } from '@greywake/dominio'
+import { atualizarPartidaNaLista, formatarAusencia, processarTrabalhoAtual } from './partida'
+
+function criarPartida(idDaPartida: string) {
+  const classe = CLASSES_DE_PERSONAGEM.find((definicao) => definicao.id === 'guerreiro')
+  const presente = PRESENTES_INICIAIS.find((definicao) => definicao.id === 'nenhum')
+  if (!classe || !presente) throw new Error('Catálogo inicial incompleto para o teste.')
+
+  return criarPartidaLocal({
+    idDaPartida,
+    criadoEm: '2026-01-01T00:00:00.000Z',
+    versaoDoConteudo: VERSAO_DO_CONTEUDO,
+    nomeDoPersonagem: 'Aedan',
+    classeDoPersonagem: classe,
+    presente,
+  })
+}
+
+describe('serviço de partida', () => {
+  it('atualiza a partida pelo mesmo ID sem duplicar a lista', () => {
+    const anterior = criarPartida('partida-a')
+    const outra = criarPartida('partida-b')
+    const atualizada = { ...anterior, atualizadoEm: '2026-01-01T00:01:00.000Z' }
+
+    expect(atualizarPartidaNaLista([anterior, outra], atualizada)).toEqual([atualizada, outra])
+  })
+
+  it('formata ausência em segundos, minutos e horas', () => {
+    expect(formatarAusencia(0)).toBe('0s')
+    expect(formatarAusencia(61_000)).toBe('1min')
+    expect(formatarAusencia(3_661_000)).toBe('1h 1min')
+  })
+
+  it('credita a coleta pendente e preserva o resumo exibido', () => {
+    const inicio = '2026-01-01T00:00:00.000Z'
+    const atividade = ATIVIDADES_OCIOSAS_INICIAIS[0]
+    if (!atividade) throw new Error('Catálogo inicial de atividades incompleto para o teste.')
+    const partida = iniciarAtividadeOciosa(criarPartida('partida-coleta'), atividade, inicio)
+    const resultado = processarTrabalhoAtual(partida, '2026-01-01T00:00:04.000Z')
+
+    expect(resultado.partida.personagem.inventario).toContainEqual({ idDaDefinicao: atividade.idDaDefinicaoDoItemProduzido, quantidade: 1 })
+    expect(resultado.textoExibido).toBe('+1 Cloch · +8 XP de Profissão')
+  })
+
+  it('não processa coleta enquanto há expedição ativa', () => {
+    const partida = criarPartida('partida-expedicao')
+    const expedição = { ...partida.masmorra, expedicaoAtiva: {} as NonNullable<typeof partida.masmorra.expedicaoAtiva> }
+    const bloqueada = { ...partida, masmorra: expedição }
+
+    expect(processarTrabalhoAtual(bloqueada, '2026-01-01T00:00:10.000Z')).toEqual({ partida: bloqueada, textoExibido: null })
+  })
+})

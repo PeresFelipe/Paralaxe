@@ -29,7 +29,7 @@ import {
   type IdDoPresente,
   type PartidaLocal,
 } from "@greywake/dominio";
-import { criarRepositorioDePartidasIndexedDb } from "@greywake/persistencia";
+import type { RepositorioDePartidasLocais } from "@greywake/interface";
 import { useEffect, useRef, useState } from "react";
 import {
   atualizarPartidaNaLista,
@@ -37,8 +37,7 @@ import {
   formatarAusencia,
   processarTrabalhoAtual,
 } from "../services/partida";
-
-const repositorioDePartidas = criarRepositorioDePartidasIndexedDb();
+import { mensagensDeErroDaInterface } from "@/rotulosDaInterface";
 
 type Tela = "carregando" | "partida-listar" | "criar" | "jogo" | "erro";
 type ResumoDoPeriodoAusente = {
@@ -48,7 +47,7 @@ type ResumoDoPeriodoAusente = {
   marco: string | null;
 };
 
-export function useAplicativoDaPartida() {
+export function useAplicativoDaPartida(repositorioDePartidas: RepositorioDePartidasLocais) {
   const [tela, definirTela] = useState<Tela>("carregando");
   const [partidas, definirPartidas] = useState<PartidaLocal[]>([]);
   const [partidaAtiva, definirAtivoPartida] = useState<PartidaLocal | null>(null);
@@ -416,7 +415,7 @@ export function useAplicativoDaPartida() {
       definirMensagem(
         erro instanceof Error
           ? erro.message
-          : "Não foi possível equipar o item.",
+          : mensagensDeErroDaInterface.equiparItem,
       );
     }
   }

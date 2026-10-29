@@ -6,7 +6,7 @@
 import { useState } from 'react'
 import { OFERTAS_INICIAIS_DO_MERCADO_DE_PNJ } from '@greywake/conteudo'
 import { comprarOfertaDoMercadoDePnj, type PartidaLocal } from '@greywake/dominio'
-import { Button, Card } from '../../../components/ui'
+import { Button, Card } from '@/components/ui'
 import estilos from './BancadaDoMercado.module.css'
 
 type PropriedadesDaTelaDeMercado = {

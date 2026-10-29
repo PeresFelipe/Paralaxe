@@ -10,9 +10,9 @@
   "scripts": {
     "desenvolver": "node aplicativos/jogo/node_modules/vite/bin/vite.js aplicativos/jogo --config aplicativos/jogo/vite.config.ts",
     "compilar": "pnpm --filter @greywake/jogo compilar",
-    "analisar": "pnpm -r --if-present run analisar",
+    "analisar": "node ferramentas/verificarArquitetura.mjs && pnpm -r --if-present run analisar",
     "verificar:tipos": "pnpm -r --if-present run verificar:tipos",
-    "testar": "pnpm -r --if-present run testar",
+    "testar": "pnpm -r --workspace-concurrency=1 --if-present run testar",
     "verificar": "pnpm analisar && pnpm verificar:tipos && pnpm testar && pnpm verificar:creditos",
     "verificar:creditos": "node ferramentas/verificarCreditos.mjs"
   }

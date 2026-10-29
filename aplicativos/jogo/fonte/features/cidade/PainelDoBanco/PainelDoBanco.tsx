@@ -11,9 +11,10 @@ import {
   obterUsoDeEspacosDoInventario,
   type PartidaLocal,
 } from "@greywake/dominio";
-import { IconeDoJogo } from "../../../components/jogo";
-import { obterIconeDoEquipamento, obterIconeDoItem } from "../../../iconesDosRecursos";
-import { Button, Card } from '../../../components/ui'
+import { IconeDoJogo } from "@/components/jogo";
+import { obterIconeDoEquipamento, obterIconeDoItem } from "@/iconesDosRecursos";
+import { Button, Card } from '@/components/ui'
+import { rotulosDaInterface } from '@/rotulosDaInterface'
 import estilos from './PainelDoBanco.module.css'
 
 type PropriedadesDePainelDoBanco = {
@@ -76,7 +77,7 @@ export default function PainelDoBanco({
           </p>
         </div>
         <Button variant="secondary" onClick={aoVoltar}>
-          Voltar à Cidade
+          {rotulosDaInterface.voltarACidade}
         </Button>
       </div>
 

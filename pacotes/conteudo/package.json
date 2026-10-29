@@ -10,7 +10,7 @@
   "scripts": {
     "analisar": "oxlint fonte",
     "verificar:tipos": "tsc -p tsconfig.json --noEmit",
-    "testar": "vitest run"
+    "testar": "vitest run --pool=threads --maxWorkers=1"
   },
   "dependencies": {
     "@greywake/dominio": "workspace:*"

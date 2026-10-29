@@ -7,6 +7,9 @@
     ".": "./fonte/indice.ts"
   },
   "types": "./fonte/indice.ts",
+  "dependencies": {
+    "@greywake/dominio": "workspace:*"
+  },
   "scripts": {
     "analisar": "oxlint fonte",
     "verificar:tipos": "tsc -p tsconfig.json --noEmit"

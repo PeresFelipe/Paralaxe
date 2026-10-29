@@ -143,7 +143,7 @@
   gap:var(--ui-space-2);
 }
 
-.profession .jogo-icone {
+.profession > .iconContent > img {
   width: var(--ui-size-profession-icon);
   height: var(--ui-size-profession-icon);
   filter: none;
@@ -405,7 +405,7 @@
   color: var(--ui-color-primary);
 }
 
-.navigation > .iconContent :global(.jogo-icone) {
+.navigation > .iconContent > img {
   width: var(--ui-size-navigation-icon);
   height: var(--ui-size-navigation-icon);
 }
@@ -591,12 +591,12 @@
   place-items: center;
 }
 
-.inventory > .iconContent :global(.jogo-icone) {
+.inventory > .iconContent > img {
   width: var(--ui-size-inventory-icon);
   max-width: 100%;
   height: auto;
   aspect-ratio: 1;
-  filter: drop-shadow(1px 3px 2px var(--ui-color-inventory-icon-shadow));
+  filter: drop-shadow(var(--ui-dimension-1px) var(--ui-dimension-3px) var(--ui-dimension-2px) var(--ui-color-inventory-icon-shadow));
 }
 
 .inventory > .label {
@@ -754,8 +754,8 @@
 }
 
 .spinner {
-  width: 1em;
-  height: 1em;
+  width: var(--ui-dimension-1em);
+  height: var(--ui-dimension-1em);
   flex: 0 0 auto;
   border: var(--ui-size-focus-ring) solid currentColor;
   border-right-color: transparent;

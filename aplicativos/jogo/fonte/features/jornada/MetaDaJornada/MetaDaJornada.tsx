@@ -6,10 +6,10 @@
 import { useState } from 'react'
 import { RECEITAS_INICIAIS_DE_FABRICACAO, ATIVIDADES_OCIOSAS_INICIAIS, obterDefinicaoDeReceitaDeFabricacao } from '@greywake/conteudo'
 import { obterProgressoDaMetaDaJornada, type PartidaLocal, type IdDaProfissao } from '@greywake/dominio'
-import { ComparacaoDeEquipamento, IconeDoJogo } from '../../../components/jogo'
-import { obterIconeDoEquipamento, obterIconeDoItem } from '../../../iconesDosRecursos'
-import { rotulosDosItens, rotulosDasProfissoes } from '../../../rotulosDoJogo'
-import { Button } from '../../../components/ui'
+import { ComparacaoDeEquipamento, IconeDoJogo } from '@/components/jogo'
+import { obterIconeDoEquipamento, obterIconeDoItem } from '@/iconesDosRecursos'
+import { rotulosDosItens, rotulosDasProfissoes } from '@/rotulosDoJogo'
+import { Button, ProgressBar } from '@/components/ui'
 import estilos from './MetaDaJornada.module.css'
 
 type Propriedades = {
@@ -72,7 +72,7 @@ export default function MetaDaJornada({ partida, aoEscolherMeta, aoAbrirProfissa
       {progresso.concluido ? <div className={estilos.completion}><strong>Fabricação concluída.</strong><p>Seu feito permanece registrado, mesmo depois de usar ou guardar o item.</p>
         {receita.saida.tipo === "equipamento" ? <Button variant="primary" size="sm" onClick={aoAbrirEquipamento}>Ver equipamento</Button> : null}
       </div> : <>
-        <progress value={progresso.coletado} max={progresso.exigido || 1} aria-label={`Materiais para ${receita.nome}`} />
+        <ProgressBar value={progresso.coletado} max={progresso.exigido || 1} label={`Materiais para ${receita.nome}`} />
         <p className={estilos.progressLabel}>{progresso.fabricacao ? 'Fabricação em curso' : progresso.pronto ? 'Materiais reunidos' : `${progresso.coletado} / ${progresso.exigido} materiais reunidos`} · Inventário</p>
         <ul className={estilos.ingredients}>{progresso.ingredientes.map((ingrediente) => {
           const origem = ATIVIDADES_OCIOSAS_INICIAIS.find((atividade) => atividade.idDaDefinicaoDoItemProduzido === ingrediente.idDaDefinicao)

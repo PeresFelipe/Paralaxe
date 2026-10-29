@@ -29,7 +29,8 @@ import {
   type DefinicaoDeSalaDaMasmorra,
   type PartidaLocal,
 } from "@greywake/dominio";
-import { Button, Card } from "../../../components/ui";
+import { Button, Card } from "@/components/ui";
+import { rotulosDaInterface } from "@/rotulosDaInterface";
 import estilos from "./BancadaDaMasmorra.module.css";
 
 type PropriedadesDaTelaDeMasmorra = {
@@ -415,7 +416,7 @@ export default function BancadaDaMasmorra({
             size="sm"
             onClick={() => definirPreparando(false)}
           >
-            Voltar
+            {rotulosDaInterface.voltar}
           </Button>
         </div>
 
@@ -521,7 +522,7 @@ export default function BancadaDaMasmorra({
           </div>
           {aoRetorno ? (
             <Button variant="secondary" size="sm" onClick={aoRetorno}>
-              Voltar a Aventura
+              {rotulosDaInterface.voltarAAventura}
             </Button>
           ) : null}
         </div>

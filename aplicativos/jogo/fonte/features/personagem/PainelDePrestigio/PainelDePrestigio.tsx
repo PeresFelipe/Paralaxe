@@ -17,7 +17,8 @@ import {
   type DefinicaoDeNoDePrestigio,
   type RamoPuroDePrestigio,
 } from '@greywake/dominio'
-import { Button, Card } from '../../../components/ui'
+import { Button, Card } from '@/components/ui'
+import { rotulosDaInterface } from '@/rotulosDaInterface'
 import estilos from './PainelDePrestigio.module.css'
 
 type PropriedadesDePainelDePrestigio = {
@@ -121,8 +122,8 @@ export default function PainelDePrestigio({ partida, aoRealizarPrestigio, aoDesb
           <div className={estilos.confirmation} role="group" aria-labelledby="prestigio-confirmacao-titulo">
             <p id="prestigio-confirmacao-titulo"><strong>Reinício permanente da jornada.</strong> O nível e os atributos normais voltam ao início; Profissões, equipamentos, inventário e nós já desbloqueados permanecem.</p>
             <div className="botao-linhaDeDados">
-              <Button variant="secondary" size="sm" disabled={ehRealizandoPrestigio} onClick={() => definirConfirmandoPrestigio(false)}>Cancelar</Button>
-              <Button variant="primary" size="sm" disabled={!podeRealizarPrestigio || ehRealizandoPrestigio} loading={ehRealizandoPrestigio} onClick={() => void realizarPrestigio()}>{ehRealizandoPrestigio ? 'Aplicando…' : `Confirmar Prestígio ${proximoPrestigioRotulo}`}</Button>
+              <Button variant="secondary" size="sm" disabled={ehRealizandoPrestigio} onClick={() => definirConfirmandoPrestigio(false)}>{rotulosDaInterface.cancelar}</Button>
+              <Button variant="primary" size="sm" disabled={!podeRealizarPrestigio || ehRealizandoPrestigio} loading={ehRealizandoPrestigio} onClick={() => void realizarPrestigio()}>{ehRealizandoPrestigio ? 'Aplicando…' : `${rotulosDaInterface.confirmar} Prestígio ${proximoPrestigioRotulo}`}</Button>
             </div>
           </div>
         ) : null}

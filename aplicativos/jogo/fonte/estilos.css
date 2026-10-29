@@ -25,7 +25,7 @@ input:focus-visible, select:focus-visible { outline: var(--ui-size-focus-ring) s
 .atenuado { color: var(--ui-color-text-muted); }
 .pequeno-texto { font-size: var(--ui-font-size-xs); }
 .secao-espacamento { margin-top:var(--ui-space-section); }
-.secao-divisor { height: 1px; margin:var(--ui-space-4) 0; background: var(--ui-color-border); }
+.secao-divisor { height: var(--ui-dimension-1px); margin:var(--ui-space-4) 0; background: var(--ui-color-border); }
 
 /* Famílias de controles reutilizadas por todas as telas. */
 .botao-linhaDeDados { display: flex; flex-wrap: wrap; gap:var(--ui-space-2-25); align-items: center; }
@@ -33,30 +33,30 @@ input:focus-visible, select:focus-visible { outline: var(--ui-size-focus-ring) s
 .painel-tituloDaSecao, .telaDoJogo-tituloDaSecao { display: flex; justify-content: space-between; align-items: flex-end; gap:var(--ui-space-4-5); }
 .painel-tituloDaSecao { align-items: flex-start; margin-bottom:var(--ui-space-4-5); }
 .telaDoJogo-tituloDaSecao { margin-bottom:var(--ui-space-5-5); }
-.telaDoJogo-tituloDaSecao p:last-child { max-width: 620px; margin-bottom:0; }
+.telaDoJogo-tituloDaSecao p:last-child { max-width: var(--ui-dimension-620px); margin-bottom:0; }
 .emLinha-mensagem { padding:var(--ui-space-2-75) var(--ui-space-3-25); border: var(--ui-size-border) solid var(--ui-color-border-strong); border-left: var(--ui-size-border-emphasis) solid var(--ui-color-warning); border-radius:var(--ui-radius-sm); background: var(--ui-color-warning-surface); color: var(--ui-color-warning-text); font-size: var(--ui-font-size-sm); }
 .informacao-alerta { color: var(--ui-color-warning-text); font-size: var(--ui-font-size-xs); }
 .situacao-selo, .risco-selo, .moedaCorrente-selo { display: inline-flex; align-items: center; gap:var(--ui-space-1-5); border: var(--ui-size-border) solid var(--ui-color-border-strong); border-radius:var(--ui-radius-pill); background: var(--ui-color-warning-surface); color: var(--ui-color-warning-text); padding:var(--ui-space-1) var(--ui-space-2); font-size: var(--ui-font-size-2xs); font-family: var(--ui-font-family-body); letter-spacing: var(--ui-letter-spacing-compact); }
 .risco-selo { border-color: var(--ui-color-danger-border); color: var(--ui-color-danger-text); background: var(--ui-color-danger-surface); }
 
 /* Seleção de partidas e apresentação anterior à entrada no mundo. */
-.entrada-estrutura { width: min(1180px, calc(100% - 40px)); margin:0 auto; padding:var(--ui-space-8-5) 0 var(--ui-space-17-5); }
+.entrada-estrutura { width: min(var(--ui-dimension-1180px), calc(100% - var(--ui-dimension-40px))); margin:0 auto; padding:var(--ui-space-8-5) 0 var(--ui-space-17-5); }
 .entrada-centralizado { min-height: 100vh; display: grid; place-content: center; justify-items: center; text-align: center; }
 .entrada-cabecalho { display: flex; align-items: center; justify-content: space-between; gap:var(--ui-space-5); padding-bottom:var(--ui-space-7); border-bottom: var(--ui-size-border) solid var(--ui-color-border); }
 .entrada-marca { font-size: var(--ui-font-size-lg); }
 .entrada-introducao { padding:var(--ui-space-16) 0 var(--ui-space-7); }
 .entrada-introducao p:last-child { margin-bottom:0; }
 .partida-gradeVisual-emExecucao { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap:var(--ui-space-3); }
-.carregando-marcaVisual { width: 32px; height: 32px; margin-bottom:var(--ui-space-3-75); border: var(--ui-size-focus-ring) solid var(--ui-color-border); border-top-color: var(--ui-color-warning); border-radius:var(--ui-radius-pill); animation: girar 800ms linear infinite; }
+.carregando-marcaVisual { width: var(--ui-dimension-32px); height: var(--ui-dimension-32px); margin-bottom:var(--ui-space-3-75); border: var(--ui-size-focus-ring) solid var(--ui-color-border); border-top-color: var(--ui-color-warning); border-radius:var(--ui-radius-pill); animation: girar var(--ui-transition-loading) infinite; }
 @keyframes girar { to { transform: rotate(360deg); } }
 
 /* Etapas de criação, cartões de classe/presente e campos do personagem. */
-.criacao-etapa { min-height: calc(100vh - 130px); display: grid; align-content: start; justify-items: center; padding:var(--ui-space-13-5) 0; }
+.criacao-etapa { min-height: calc(100vh - var(--ui-dimension-130px)); display: grid; align-content: start; justify-items: center; padding:var(--ui-space-13-5) 0; }
 .criacao-progresso { display: flex; gap:var(--ui-space-1-75); margin-bottom:var(--ui-space-11); }
-.criacao-progresso span { width: 28px; height: 28px; display: grid; place-items: center; border: var(--ui-size-border) solid var(--ui-color-border); border-radius:var(--ui-radius-pill); color: var(--ui-color-text-muted); font-size: var(--ui-font-size-2xs); }
+.criacao-progresso span { width: var(--ui-dimension-28px); height: var(--ui-dimension-28px); display: grid; place-items: center; border: var(--ui-size-border) solid var(--ui-color-border); border-radius:var(--ui-radius-pill); color: var(--ui-color-text-muted); font-size: var(--ui-font-size-2xs); }
 .criacao-progresso span.ativo { border-color: var(--ui-color-primary); color: var(--ui-color-primary); background: var(--ui-color-primary-soft); }
-.criacao-foco { width: min(650px,100%); }
-.criacao-foco.amplo { width: min(980px,100%); }
+.criacao-foco { width: min(var(--ui-dimension-650px),100%); }
+.criacao-foco.amplo { width: min(var(--ui-dimension-980px),100%); }
 .criacao-foco > .destaque-titulo { margin-bottom:var(--ui-space-3-5); }
 .criacao-foco > .atenuado { margin-bottom:var(--ui-space-6-5); }
 .criacao-escolha-gradeVisual { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap:var(--ui-space-2-5); margin:var(--ui-space-6) 0; }
@@ -64,20 +64,20 @@ input:focus-visible, select:focus-visible { outline: var(--ui-size-focus-ring) s
 .criacao-resumo-emExecucao > div { display: flex; justify-content: space-between; gap:var(--ui-space-5); padding:var(--ui-space-3) 0; border-bottom: var(--ui-size-border) solid var(--ui-color-border); color: var(--ui-color-text-muted); }
 .criacao-resumo-emExecucao strong { color: var(--ui-color-text); }
 .campo-pilha { display: grid; gap:var(--ui-space-2); margin:var(--ui-space-3) 0; color: var(--ui-color-text-muted); font-size: var(--ui-font-size-xs); font-weight: var(--ui-font-weight-bold); }
-.campo-pilha input, .campo-pilha select { width: 100%; min-height: 40px; border: var(--ui-size-border) solid var(--ui-color-border); border-radius:var(--ui-radius-md); background: var(--ui-color-surface-raised); color: var(--ui-color-text); padding:var(--ui-space-2) var(--ui-space-2-5); }
+.campo-pilha input, .campo-pilha select { width: 100%; min-height: var(--ui-dimension-40px); border: var(--ui-size-border) solid var(--ui-color-border); border-radius:var(--ui-radius-md); background: var(--ui-color-surface-raised); color: var(--ui-color-text); padding:var(--ui-space-2) var(--ui-space-2-5); }
 
 /* Resumo do progresso calculado ao retornar à partida. */
 .ausente-retorno-tela { min-height: 100vh; display: grid; place-items: center; padding:var(--ui-space-6); }
-.ausente-retorno-cartao { width: min(42.5rem,100%); }
+.ausente-retorno-cartao { width: min(var(--ui-dimension-42-5rem),100%); }
 .ausente-duracao { color: var(--ui-color-text-muted); }
 .ausente-resultado { display: grid; gap:var(--ui-space-1-25); margin:var(--ui-space-6) 0; padding:var(--ui-space-4-25); border-left: var(--ui-size-border-emphasis) solid var(--ui-color-warning); background: var(--ui-color-warning-surface); }
 .ausente-resultado span { color: var(--ui-color-text-muted); font-size: var(--ui-font-size-2xs); text-transform: uppercase; letter-spacing: var(--ui-letter-spacing-wide); }
 
 /* Estrutura global: identidade, recursos, navegação e área central. */
 .jogo-estrutura { min-height: 100vh; padding-bottom:var(--ui-space-19); }
-.jogo-barraSuperior { min-height: 72px; position: sticky; top: 0; z-index: 30; display: flex; align-items: center; justify-content: space-between; gap:var(--ui-space-5); padding:var(--ui-space-2-25) var(--ui-space-7); border-bottom: var(--ui-size-border) solid var(--ui-color-border); background: color-mix(in srgb, var(--ui-color-surface) 96%, transparent); backdrop-filter: blur(12px); }
+.jogo-barraSuperior { min-height: var(--ui-dimension-72px); position: sticky; top: 0; z-index: var(--ui-z-header); display: flex; align-items: center; justify-content: space-between; gap:var(--ui-space-5); padding:var(--ui-space-2-25) var(--ui-space-7); border-bottom: var(--ui-size-border) solid var(--ui-color-border); background: color-mix(in srgb, var(--ui-color-surface) 96%, transparent); backdrop-filter: blur(var(--ui-blur-md)); }
 .jogador-identidade { display: flex; align-items: center; gap:var(--ui-space-2-75); }
-.avatar-marcador { width: 42px; height: 42px; display: grid; place-items: center; border: var(--ui-size-border) solid var(--ui-color-border-strong); border-radius:var(--ui-radius-pill); background: linear-gradient(145deg,var(--ui-color-surface-raised),var(--ui-color-surface-sunken)); color: var(--ui-color-text-metal); font-family: var(--ui-font-family-display); }
+.avatar-marcador { width: var(--ui-dimension-42px); height: var(--ui-dimension-42px); display: grid; place-items: center; border: var(--ui-size-border) solid var(--ui-color-border-strong); border-radius:var(--ui-radius-pill); background: linear-gradient(145deg,var(--ui-color-surface-raised),var(--ui-color-surface-sunken)); color: var(--ui-color-text-metal); font-family: var(--ui-font-family-display); }
 .jogador-identidade > div:last-child { display: grid; }
 .jogador-nome { font-size: var(--ui-font-size-md); text-transform: uppercase; letter-spacing: var(--ui-letter-spacing-compact); }
 .jogador-identidade span { color: var(--ui-color-text-muted); font-size: var(--ui-font-size-2xs); }
@@ -85,12 +85,12 @@ input:focus-visible, select:focus-visible { outline: var(--ui-size-focus-ring) s
 .global-recursos > div { display: grid; grid-template-columns: auto auto; grid-template-areas: "sig label" "sig value"; column-gap:var(--ui-space-1-5); align-items: center; }
 .global-recursos small { grid-area: label; color: var(--ui-color-text-muted); font-size: var(--ui-font-size-3xs); text-transform: uppercase; }
 .global-recursos strong { grid-area: value; font-size: var(--ui-font-size-xs); }
-.recurso-simbolo { grid-area: sig; min-width: 19px; height: 19px; padding:0 var(--ui-space-1); display: grid; place-items: center; border: var(--ui-size-border) solid currentColor; border-radius:var(--ui-radius-md); font-size: var(--ui-font-size-3xs); font-weight: var(--ui-font-weight-bold); }
-.recurso-simbolo .jogo-icone { width: 19px; height: 19px; }
+.recurso-simbolo { grid-area: sig; min-width: var(--ui-dimension-19px); height: var(--ui-dimension-19px); padding:0 var(--ui-space-1); display: grid; place-items: center; border: var(--ui-size-border) solid currentColor; border-radius:var(--ui-radius-md); font-size: var(--ui-font-size-3xs); font-weight: var(--ui-font-weight-bold); }
+.recurso-simbolo .jogo-icone { width: var(--ui-dimension-19px); height: var(--ui-dimension-19px); }
 .vida-simbolo { color: var(--ui-color-resource-health); }.mana-simbolo { color: var(--ui-color-resource-mana); }.folego-simbolo { color: var(--ui-color-resource-breath); }.moeda-simbolo { color: var(--ui-color-warning); }
-.principal-navegacao { height: 54px; position: sticky; top: 72px; z-index: 29; display: flex; padding:0 var(--ui-space-7); border-bottom: var(--ui-size-border) solid var(--ui-color-border); background: var(--ui-color-surface); }
-.risco-estado-faixa { height: 48px; display: flex; align-items: center; justify-content: space-between; gap:var(--ui-space-5); padding:0 var(--ui-space-8); border-bottom: var(--ui-size-border) solid var(--ui-color-danger-border); background: var(--ui-color-danger-surface); font-size: var(--ui-font-size-2xs); }
-.preparacao-estado-faixa { height: 44px; display: flex; align-items: center; justify-content: space-between; gap:var(--ui-space-5); padding:0 var(--ui-space-8); border-bottom: var(--ui-size-border) solid var(--ui-color-border-strong); background: var(--ui-color-warning-surface); font-size: var(--ui-font-size-2xs); }
+.principal-navegacao { height: var(--ui-dimension-54px); position: sticky; top: var(--ui-dimension-72px); z-index: var(--ui-z-navigation); display: flex; padding:0 var(--ui-space-7); border-bottom: var(--ui-size-border) solid var(--ui-color-border); background: var(--ui-color-surface); }
+.risco-estado-faixa { height: var(--ui-dimension-48px); display: flex; align-items: center; justify-content: space-between; gap:var(--ui-space-5); padding:0 var(--ui-space-8); border-bottom: var(--ui-size-border) solid var(--ui-color-danger-border); background: var(--ui-color-danger-surface); font-size: var(--ui-font-size-2xs); }
+.preparacao-estado-faixa { height: var(--ui-dimension-44px); display: flex; align-items: center; justify-content: space-between; gap:var(--ui-space-5); padding:0 var(--ui-space-8); border-bottom: var(--ui-size-border) solid var(--ui-color-border-strong); background: var(--ui-color-warning-surface); font-size: var(--ui-font-size-2xs); }
 .preparacao-estado-faixa span { color: var(--ui-color-warning-text); letter-spacing: var(--ui-letter-spacing-caps); }
 .preparacao-estado-faixa strong { color: var(--ui-color-text-muted); }
 .jogo-estrutura--preparacao .principal-navegacao { opacity: .48; }
@@ -99,11 +99,11 @@ input:focus-visible, select:focus-visible { outline: var(--ui-size-focus-ring) s
 .risco-estado-faixa strong { color: var(--ui-color-text-muted); }
 .jogo-estrutura--risco .principal-navegacao, .jogo-estrutura--risco .continuidade-barra { display: none; }
 .jogo-estrutura--risco .jogo-conteudo { padding-bottom:var(--ui-space-10); }
-.jogo-conteudo { width: min(1260px, calc(100% - 56px)); margin:0 auto; padding:var(--ui-space-7) 0 var(--ui-space-27-5); }
+.jogo-conteudo { width: min(var(--ui-dimension-1260px), calc(100% - var(--ui-dimension-56px))); margin:0 auto; padding:var(--ui-space-7) 0 var(--ui-space-27-5); }
 .funcionalidade-telaDoJogo { min-width: 0; }
 
 /* Barra fixa de trabalho; o preenchimento inferior do conteúdo evita sobreposição. */
-.continuidade-barra { height: 66px; position: fixed; left: 0; right: 0; bottom: 0; z-index: 31; border-top: var(--ui-size-border) solid var(--ui-color-border); background: color-mix(in srgb, var(--ui-color-surface) 97%, transparent); backdrop-filter: blur(10px); display: flex; align-items: center; justify-content: space-between; gap:var(--ui-space-4-5); padding:0 max(var(--ui-space-7), calc((var(--ui-size-viewport-width) - var(--ui-size-content-max-width))/2)); }
+.continuidade-barra { height: var(--ui-dimension-66px); position: fixed; left: 0; right: 0; bottom: 0; z-index: var(--ui-z-continuity); border-top: var(--ui-size-border) solid var(--ui-color-border); background: color-mix(in srgb, var(--ui-color-surface) 97%, transparent); backdrop-filter: blur(var(--ui-blur-sm)); display: flex; align-items: center; justify-content: space-between; gap:var(--ui-space-4-5); padding:0 max(var(--ui-space-7), calc((var(--ui-size-viewport-width) - var(--ui-size-content-max-width))/2)); }
 .continuidade-acoes { display: flex; gap:var(--ui-space-1-75); }
 
 .lateral-folha .destaque-titulo { font-size: var(--ui-font-size-2xl); margin-bottom:var(--ui-space-4-5); }
@@ -114,9 +114,9 @@ input:focus-visible, select:focus-visible { outline: var(--ui-size-focus-ring) s
 
 /* Abas internas e apresentação de personagem, equipamentos e habilidades. */
 .subnavegacao { display: flex; flex-wrap: wrap; gap:var(--ui-space-1-5); margin-bottom:var(--ui-space-4-5); }
-.personagem-disposicao { display: grid; grid-template-columns: 270px 1fr; gap:var(--ui-space-5); }
+.personagem-disposicao { display: grid; grid-template-columns: var(--ui-dimension-270px) 1fr; gap:var(--ui-space-5); }
 .retrato-marcador { aspect-ratio: 4/5; display: grid; place-items: center; border: var(--ui-size-border) solid var(--ui-color-border-strong); border-radius:var(--ui-radius-lg); background: linear-gradient(180deg, transparent 50%, var(--ui-color-scene-shadow)), radial-gradient(circle at 50% 30%,var(--ui-color-scene-mid),var(--ui-color-surface-sunken) 30%,var(--ui-color-scene-deep) 65%); color: var(--ui-color-text-muted); font: var(--ui-font-size-xs) var(--ui-font-family-display); letter-spacing: var(--ui-letter-spacing-wide); }
-.retrato-marcador--pnj { width: 150px; min-width: 150px; }
+.retrato-marcador--pnj { width: var(--ui-dimension-150px); min-width: var(--ui-dimension-150px); }
 .visaoGeral-pilha { display: grid; gap:var(--ui-space-3-5); }
 .informacoes-gradeVisual { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap:var(--ui-space-2); margin-top:var(--ui-space-4); }
 .informacoes-gradeVisual > div { display: grid; gap:var(--ui-space-1); padding:var(--ui-space-2-75); border: var(--ui-size-border) solid var(--ui-color-border); background: var(--ui-color-surface-raised); }
@@ -127,14 +127,14 @@ input:focus-visible, select:focus-visible { outline: var(--ui-size-focus-ring) s
 .profissao-resumo-gradeVisual > div { display: flex; align-items: center; justify-content: space-between; gap:var(--ui-space-3); padding:var(--ui-space-2) var(--ui-space-2-5); border-bottom: var(--ui-size-border) solid var(--ui-color-border); font-size: var(--ui-font-size-xs); }
 .profissao-resumo-gradeVisual span { color: var(--ui-color-text-muted); }
 .equipamento-gradeVisual-emExecucao { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap:var(--ui-space-2-5); }
-.item-cartao { display: grid; grid-template-columns: 82px 1fr; gap:var(--ui-space-3-25); padding:var(--ui-space-3-25); border: var(--ui-size-border) solid var(--ui-color-border); border-radius:var(--ui-radius-lg); background: var(--ui-color-surface); }
+.item-cartao { display: grid; grid-template-columns: var(--ui-dimension-82px) 1fr; gap:var(--ui-space-3-25); padding:var(--ui-space-3-25); border: var(--ui-size-border) solid var(--ui-color-border); border-radius:var(--ui-radius-lg); background: var(--ui-color-surface); }
 .item-miniatura { aspect-ratio: 1/1; display: grid; place-items: center; border: var(--ui-size-border) solid var(--ui-color-border-strong); border-radius:var(--ui-radius-md); background: radial-gradient(circle at 36% 34%, var(--ui-color-surface-raised), var(--ui-color-surface-sunken) 44%, var(--ui-color-scene-deep) 74%); color: var(--ui-color-text-metal); font: var(--ui-font-size-xl) var(--ui-font-family-display); }
 .item-miniatura .jogo-icone { width: 72%; height: 72%; }
 .item-cartaoCorpo h3 { margin:var(--ui-space-0-5) 0 var(--ui-space-1-75); }
 .item-cartaoCorpo p { margin:0 0 var(--ui-space-3); font-size: var(--ui-font-size-xs); }
 .tecnica-listar { display: grid; }
-.tecnica-linhaDeDados { display: grid; grid-template-columns: 32px 1fr; gap:var(--ui-space-2-5); align-items: center; padding:var(--ui-space-2-5) 0; border-bottom: var(--ui-size-border) solid var(--ui-color-border); }
-.prioridade-indice { width: 28px; height: 28px; display: grid; place-items: center; border: var(--ui-size-border) solid var(--ui-color-border-strong); border-radius:var(--ui-radius-md); color: var(--ui-color-warning-text); font-size: var(--ui-font-size-2xs); font-weight: var(--ui-font-weight-bold); }
+.tecnica-linhaDeDados { display: grid; grid-template-columns: var(--ui-dimension-32px) 1fr; gap:var(--ui-space-2-5); align-items: center; padding:var(--ui-space-2-5) 0; border-bottom: var(--ui-size-border) solid var(--ui-color-border); }
+.prioridade-indice { width: var(--ui-dimension-28px); height: var(--ui-dimension-28px); display: grid; place-items: center; border: var(--ui-size-border) solid var(--ui-color-border-strong); border-radius:var(--ui-radius-md); color: var(--ui-color-warning-text); font-size: var(--ui-font-size-2xs); font-weight: var(--ui-font-weight-bold); }
 .tecnica-linhaDeDados > div { display: grid; }
 .tecnica-linhaDeDados small { color: var(--ui-color-text-muted); font-size: var(--ui-font-size-2xs); }
 
@@ -142,7 +142,7 @@ input:focus-visible, select:focus-visible { outline: var(--ui-size-focus-ring) s
 
 /* Profissões, cenas e receitas; os controles encaminham ações ao React. */
 .contexto-arte { position: relative; aspect-ratio: 16/9; overflow: hidden; border: var(--ui-size-border) solid var(--ui-color-border-strong); border-radius:var(--ui-radius-lg); background: linear-gradient(180deg,transparent 35%,var(--ui-color-scene-shadow)), radial-gradient(circle at 70% 32%,var(--ui-color-scene-cool-glow),transparent 24%), linear-gradient(140deg,var(--ui-color-scene-mid),var(--ui-color-surface-sunken) 42%,var(--ui-color-scene-deep) 100%); box-shadow: var(--ui-shadow-lg); }
-.contexto-arte span { position: absolute; left: 15px; bottom: 13px; color: var(--ui-color-text-inverse); font: var(--ui-font-weight-semibold) var(--ui-font-size-2xs) var(--ui-font-family-display); letter-spacing: var(--ui-letter-spacing-wide); }
+.contexto-arte span { position: absolute; left: var(--ui-dimension-15px); bottom: var(--ui-dimension-13px); color: var(--ui-color-text-inverse); font: var(--ui-font-weight-semibold) var(--ui-font-size-2xs) var(--ui-font-family-display); letter-spacing: var(--ui-letter-spacing-wide); }
 .contexto-arte--compacto { aspect-ratio: 3/1; margin-bottom:var(--ui-space-5-5); }
 .contexto-arte--cidade { background: linear-gradient(180deg,transparent 36%,var(--ui-color-scene-shadow)), radial-gradient(circle at 30% 28%,var(--ui-color-scene-warm-glow),transparent 20%), linear-gradient(135deg,var(--ui-color-scene-mid),var(--ui-color-surface-sunken) 35%,var(--ui-color-scene-deep)); }
 .contexto-arte--risco, .contexto-arte--aventura, .contexto-arte--masmorra, .contexto-arte--combate { background: linear-gradient(180deg,transparent,var(--ui-color-scene-shadow)), radial-gradient(circle at 72% 30%,var(--ui-color-scene-danger-glow),transparent 24%), linear-gradient(140deg,var(--ui-color-scene-mid),var(--ui-color-surface-sunken) 45%,var(--ui-color-scene-deep)); }
@@ -174,31 +174,31 @@ input:focus-visible, select:focus-visible { outline: var(--ui-size-focus-ring) s
   .global-recursos { gap:var(--ui-space-1-75); }
   .global-recursos small { display: none; }
   .principal-navegacao { padding:0 var(--ui-space-3-5); }
-  .jogo-conteudo { width: calc(100% - 28px); }
+  .jogo-conteudo { width: calc(100% - var(--ui-dimension-28px)); }
   .personagem-disposicao, .preparacao-disposicao { grid-template-columns: 1fr; }
-  .retrato-marcador { max-width: 270px; }
+  .retrato-marcador { max-width: var(--ui-dimension-270px); }
   .informacoes-gradeVisual, .profissao-resumo-gradeVisual { grid-template-columns: repeat(2,minmax(0,1fr)); }
   .cidade-localDoJogo-gradeVisual { grid-template-columns: repeat(3,minmax(0,1fr)); }
   .preparacao-cartoes { grid-template-columns: repeat(2,minmax(0,1fr)); }
 }
 
 @media (max-width: 720px) {
-  .entrada-estrutura { width: calc(100% - 24px); padding-top:var(--ui-space-4-5); }
+  .entrada-estrutura { width: calc(100% - var(--ui-dimension-24px)); padding-top:var(--ui-space-4-5); }
   .partida-gradeVisual-emExecucao, .criacao-escolha-gradeVisual, .equipamento-gradeVisual-emExecucao, .aventura-gradeVisual { grid-template-columns: 1fr; }
   .jogo-estrutura { padding-bottom:var(--ui-space-29-5); }
-  .jogo-barraSuperior { min-height: 78px; align-items: flex-start; }
-  .avatar-marcador { width: 36px; height: 36px; }
+  .jogo-barraSuperior { min-height: var(--ui-dimension-78px); align-items: flex-start; }
+  .avatar-marcador { width: var(--ui-dimension-36px); height: var(--ui-dimension-36px); }
   .jogador-nome { font-size: var(--ui-font-size-body-dense); }
   .global-recursos { display: grid; grid-template-columns: repeat(4,auto); }
   .global-recursos > div { display: flex; gap:var(--ui-space-1); }
-  .global-recursos .recurso-simbolo { min-width: 17px; height: 17px; }
+  .global-recursos .recurso-simbolo { min-width: var(--ui-dimension-17px); height: var(--ui-dimension-17px); }
   .global-recursos strong { font-size: var(--ui-font-size-caption); }
-  .principal-navegacao { position: fixed; top: auto; bottom: 0; left: 0; right: 0; height: 60px; z-index: 40; justify-content: space-around; border-top: var(--ui-size-border) solid var(--ui-color-border); }
+  .principal-navegacao { position: fixed; top: auto; bottom: 0; left: 0; right: 0; height: var(--ui-dimension-60px); z-index: var(--ui-z-navigation-mobile); justify-content: space-around; border-top: var(--ui-size-border) solid var(--ui-color-border); }
   .jogo-estrutura--risco .principal-navegacao { display: none; }
   .risco-estado-faixa { padding:0 var(--ui-space-3-5); }
-  .continuidade-barra { bottom: 60px; height: 58px; padding:0 var(--ui-space-3-5); }
+  .continuidade-barra { bottom: var(--ui-dimension-60px); height: var(--ui-dimension-58px); padding:0 var(--ui-space-3-5); }
   .cidade-localDoJogo-gradeVisual { grid-template-columns: repeat(2,minmax(0,1fr)); }
-  .pnj-cartao { display: grid; }.retrato-marcador--pnj { width: 135px; min-width: 0; }
+  .pnj-cartao { display: grid; }.retrato-marcador--pnj { width: var(--ui-dimension-135px); min-width: 0; }
   .confirmar-painel { align-items: stretch; flex-direction: column; }
   .telaDoJogo-tituloDaSecao { align-items: flex-start; flex-direction: column; }
 }
@@ -214,5 +214,5 @@ input:focus-visible, select:focus-visible { outline: var(--ui-size-focus-ring) s
 
 /* Reduz transições e animações globais conforme a preferência do sistema. */
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
+  *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; animation-duration: var(--ui-motion-reduced-duration) !important; animation-iteration-count: 1 !important; }
 }

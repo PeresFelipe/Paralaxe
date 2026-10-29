@@ -12,12 +12,14 @@ import {
   type IdDaClasseDoPersonagem,
   type IdDoPresente,
 } from "@greywake/dominio";
+import type { RepositorioDePartidasLocais } from "@greywake/interface";
 import CreditosDosRecursos from "./components/jogo/CreditosDosRecursos";
 import { IconeDoJogo } from "./components/jogo";
 import EstruturaDoJogo from "./EstruturaDoJogo";
 import EstadoDoJogoWeb from "./features/aplicativo-web/EstadoDoJogoWeb";
-import { Button, Card } from './components/ui'
+import { Button, Card, TextField } from './components/ui'
 import { useAplicativoDaPartida } from "./hooks/useAplicativoDaPartida";
+import { rotulosDaInterface } from './rotulosDaInterface'
 
 /** Relaciona a classe ao arquivo servido por publico. Os caminhos da URL começam em /arte, sem o prefixo publico. */
 const GIFS_DAS_CLASSES: Partial<Record<IdDaClasseDoPersonagem, string>> = {
@@ -42,8 +44,12 @@ function obterNomeDoPresente(idDoPresente: IdDoPresente) {
   );
 }
 
+interface AplicativoProps {
+  repositorioDePartidas: RepositorioDePartidasLocais;
+}
+
 /** Compõe as telas e conecta eventos à camada de aplicação da partida. */
-function Aplicativo() {
+function Aplicativo({ repositorioDePartidas }: AplicativoProps) {
   const {
     tela, definirTela, partidas, partidaAtiva, nomeDoPersonagem, definirPersonagemNome,
     idDaClasseSelecionada, definirIdDaClasseSelecionada, selecionadoPresenteId,
@@ -56,7 +62,7 @@ function Aplicativo() {
     tratarRetirarBancoPilha, tratarDepositarBancoEquipamento, tratarRetirarBancoEquipamento,
     persistirPartidaAtiva, prepararRisco,
     iniciarNovoPartida, alternarPartida,
-  } = useAplicativoDaPartida();
+  } = useAplicativoDaPartida(repositorioDePartidas);
 
   // A renderização segue a máquina de telas: inicialização/erro, partida ativa, lista e, por último, criação.
   if (tela === "carregando") {
@@ -250,22 +256,21 @@ function Aplicativo() {
           <div className="criacao-foco">
             <p className="secao-chamada">Nome</p>
             <h1 className="destaque-titulo">Quem desperta em Greywake?</h1>
-            <label className="campo-pilha">
-              <span>Nome do personagem</span>
-              <input
-                autoFocus
-                autoComplete="off"
-                value={nomeDoPersonagem}
-                onChange={(evento) => definirPersonagemNome(evento.target.value)}
-                placeholder="Nome"
-              />
-            </label>
+            <TextField
+              className="campo-pilha"
+              label="Nome do personagem"
+              autoFocus
+              autoComplete="off"
+              value={nomeDoPersonagem}
+              onChange={(evento) => definirPersonagemNome(evento.target.value)}
+              placeholder="Nome"
+            />
             <div className="botao-linhaDeDados">
               <Button
                 variant="secondary"
                 onClick={() => definirCriacaoPasso(0)}
               >
-                Voltar
+                {rotulosDaInterface.voltar}
               </Button>
               <Button
                 variant="primary"
@@ -326,7 +331,7 @@ function Aplicativo() {
             </div>
             <div className="botao-linhaDeDados">
               <Button variant="secondary" onClick={() => definirCriacaoPasso(1)}>
-                Voltar
+                {rotulosDaInterface.voltar}
               </Button>
               <Button variant="primary" size="sm" disabled={!idDaClasseSelecionada} onClick={() => definirCriacaoPasso(3)}>
                 Continuar
@@ -357,7 +362,7 @@ function Aplicativo() {
                 variant="secondary"
                 onClick={() => definirCriacaoPasso(2)}
               >
-                Voltar
+                {rotulosDaInterface.voltar}
               </Button>
               <Button
                 variant="primary"
@@ -374,7 +379,7 @@ function Aplicativo() {
         {/* Somente esta confirmação chama o domínio e grava o personagem; ehSalvando bloqueia novos envios durante a operação. */}
         {criacaoPasso === 4 ? (
           <div className="criacao-foco">
-            <p className="secao-chamada">Confirmar</p>
+            <p className="secao-chamada">{rotulosDaInterface.confirmar}</p>
             <h1 className="destaque-titulo">{nomeDoPersonagem}</h1>
             <div className="criacao-resumo-emExecucao">
               <div>
@@ -400,7 +405,7 @@ function Aplicativo() {
                 variant="secondary"
                 onClick={() => definirCriacaoPasso(3)}
               >
-                Voltar
+                {rotulosDaInterface.voltar}
               </Button>
               <Button
                 variant="primary"

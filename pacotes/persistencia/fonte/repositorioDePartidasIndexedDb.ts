@@ -18,7 +18,7 @@ import {
   type ProgressoDeProfissaoPorId,
   type ConjuntoDeEquipamentosIniciais,
 } from '@greywake/dominio'
-import type { RepositorioDePartidasLocais } from './repositorioDePartidas'
+import type { RepositorioDePartidasLocais } from '@greywake/interface'
 
 /** Nome já publicado no navegador; alterá-lo criaria outro banco e ocultaria as partidas existentes. */
 const NOME_DO_BANCO_DE_DADOS = 'greywake'

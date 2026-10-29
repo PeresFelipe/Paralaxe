@@ -6,10 +6,11 @@
 import { useState } from 'react'
 import { obterDefinicaoDeEquipamento } from '@greywake/conteudo'
 import { LIMITE_DE_ESPACOS_DO_INVENTARIO_V01, obterUsoDeEspacosDoInventario, type PartidaLocal } from '@greywake/dominio'
-import { IconeDoJogo } from '../../../components/jogo'
-import { obterIconeDoEquipamento, obterIconeDoItem } from '../../../iconesDosRecursos'
-import { rotulosDosItens } from '../../../rotulosDoJogo'
-import { Button } from '../../../components/ui'
+import { IconeDoJogo } from '@/components/jogo'
+import { obterIconeDoEquipamento, obterIconeDoItem } from '@/iconesDosRecursos'
+import { rotulosDosItens } from '@/rotulosDoJogo'
+import { Button } from '@/components/ui'
+import { mensagensDeErroDaInterface } from '@/rotulosDaInterface'
 import estilos from './GradeDoInventario.module.css'
 
 type Filtro = "todos" | 'material' | "consumivel" | "equipamento"
@@ -51,7 +52,7 @@ export default function GradeDoInventario({ partida, compacto = false, aoEquipar
     definirPendente(true)
     definirErro(null)
     try { await aoEquipar(id); definirSelecionado(null) }
-    catch (motivo) { definirErro(motivo instanceof Error ? motivo.message : 'Não foi possível equipar o item.') }
+    catch (motivo) { definirErro(motivo instanceof Error ? motivo.message : mensagensDeErroDaInterface.equiparItem) }
     finally { definirPendente(false) }
   }
 

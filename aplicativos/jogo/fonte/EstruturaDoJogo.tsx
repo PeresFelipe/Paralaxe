@@ -37,6 +37,7 @@ import GradeDoInventario from "./features/inventario/GradeDoInventario";
 import MetaDaJornada, { ResumoDaMetaDaJornada } from "./features/jornada/MetaDaJornada";
 import { obterIconeDoEquipamento, iconeDoPainelPorId, iconeDeProfissaoPorId } from "./iconesDosRecursos";
 import { rotulosDasProfissoes } from "./rotulosDoJogo";
+import { rotulosDaInterface } from './rotulosDaInterface'
 import { Button, Card } from "./components/ui";
 
 type DestinoPrincipal = "personagem" | "atividades" | "aventura" | "cidade";
@@ -1006,7 +1007,7 @@ function ComponenteDaTelaDaCidade({
             size="sm"
             onClick={() => aoTelaDoJogo("visaoGeral")}
           >
-            Voltar à Cidade
+            {rotulosDaInterface.voltarACidade}
           </Button>
         </div>
         <div className="cidade-contexto-disposicao">
@@ -1077,7 +1078,7 @@ function ComponenteDaTelaDaCidade({
             size="sm"
             onClick={() => aoTelaDoJogo("visaoGeral")}
           >
-            Voltar à Cidade
+            {rotulosDaInterface.voltarACidade}
           </Button>
         </div>
         <div className="contexto-arte contexto-arte--cidade" aria-hidden="true">

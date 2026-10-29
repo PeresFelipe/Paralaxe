@@ -3,8 +3,8 @@
  * cartões informativos e navegação inferior. Conteúdo e estados vêm do jogo atual.
  */
 :root {
-  --jogo-trilho: 0px;
-  --estrutura-rodape: 0px;
+  --jogo-trilho: var(--ui-dimension-0px);
+  --estrutura-rodape: var(--ui-dimension-0px);
 }
 
 body {
@@ -22,11 +22,11 @@ body {
 .jogo-barraSuperior {
   position: sticky;
   top: 0;
-  z-index: 35;
+  z-index: var(--ui-z-floating-content);
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   gap:var(--ui-space-2-5) var(--ui-space-4-5);
-  width: min(760px, 100%);
+  width: min(var(--ui-dimension-760px), 100%);
   min-height: 0;
   margin-inline:auto;
   padding:var(--ui-space-3-5) var(--ui-space-5-5) var(--ui-space-3);
@@ -34,7 +34,7 @@ body {
   border-radius:var(--ui-radius-none) var(--ui-radius-none) var(--ui-radius-2xl) var(--ui-radius-2xl);
   background: color-mix(in srgb, var(--ui-color-surface) 97%, transparent);
   box-shadow: var(--ui-shadow-md);
-  backdrop-filter: blur(16px);
+  backdrop-filter: blur(var(--ui-blur-lg));
 }
 
 .jogador-identidade {
@@ -78,27 +78,27 @@ body {
 .principal-navegacao,
 .jogo-estrutura--risco .principal-navegacao {
   position: fixed;
-  inset: auto auto 14px 50%;
-  z-index: 50;
+  inset: auto auto var(--ui-dimension-14px) 50%;
+  z-index: var(--ui-z-panel);
   display: flex;
   flex-direction: row;
-  width: min(700px, calc(100% - 28px));
-  height: 72px;
-  min-height: 72px;
+  width: min(var(--ui-dimension-700px), calc(100% - var(--ui-dimension-28px)));
+  height: var(--ui-dimension-72px);
+  min-height: var(--ui-dimension-72px);
   padding:var(--ui-space-1-5);
   gap:var(--ui-space-1);
   border: var(--ui-size-border) solid var(--ui-color-border);
   border-radius:var(--ui-radius-2xl);
   background: color-mix(in srgb, var(--ui-color-surface) 95%, transparent);
   box-shadow: var(--ui-shadow-lg);
-  backdrop-filter: blur(18px);
+  backdrop-filter: blur(var(--ui-blur-xl));
   transform: translateX(-50%);
 }
 
 
 .jogo-disposicao {
   display: block;
-  width: min(760px, 100%);
+  width: min(var(--ui-dimension-760px), 100%);
   margin:var(--ui-space-0) auto;
   padding:var(--ui-space-4) var(--ui-space-4-5) var(--ui-space-8);
 }
@@ -125,11 +125,11 @@ body {
 }
 
 .jogo-conteudo > :not([data-meta-resumo]) {
-  animation: interface-conteudo-entrar 360ms cubic-bezier(.2,.8,.2,1) both;
+  animation: interface-conteudo-entrar var(--ui-transition-screen-entry) both;
 }
 
 @keyframes interface-conteudo-entrar {
-  from { opacity: 0; transform: translateY(10px); }
+  from { opacity: 0; transform: translateY(var(--ui-dimension-10px)); }
   to { opacity: 1; transform: translateY(0); }
 }
 
@@ -239,25 +239,25 @@ body {
 .continuidade-barra,
 .jogo-estrutura--risco .continuidade-barra {
   position: fixed;
-  inset: auto auto 96px 50%;
-  z-index: 45;
-  width: min(700px, calc(100% - 28px));
-  height: 58px;
+  inset: auto auto var(--ui-dimension-96px) 50%;
+  z-index: var(--ui-z-toast);
+  width: min(var(--ui-dimension-700px), calc(100% - var(--ui-dimension-28px)));
+  height: var(--ui-dimension-58px);
   padding:var(--ui-space-1-5) var(--ui-space-3);
   gap:var(--ui-space-2);
   border: var(--ui-size-border) solid var(--ui-color-border);
   border-radius:var(--ui-radius-xl);
   background: color-mix(in srgb, var(--ui-color-surface) 97%, transparent);
   box-shadow: var(--ui-shadow-md);
-  backdrop-filter: blur(16px);
+  backdrop-filter: blur(var(--ui-dimension-16px));
   transform: translateX(-50%);
 }
 
 .continuidade-acoes { gap:var(--ui-space-1-25); }
 
 .jogo-aviso {
-  right: max(14px, calc((100vw - 700px) / 2));
-  bottom: 178px;
+  right: max(var(--ui-dimension-14px), calc((100vw - var(--ui-dimension-700px)) / 2));
+  bottom: var(--ui-dimension-178px);
   border-color: var(--ui-color-warning);
   border-radius:var(--ui-radius-xl);
   color: var(--ui-color-text);
@@ -278,9 +278,9 @@ body {
   .global-recursos { gap:var(--ui-space-1-25); }
   .global-recursos > div { padding:var(--ui-space-1) var(--ui-space-1-25); border-radius:var(--ui-radius-compact); }
   .principal-navegacao,
-  .jogo-estrutura--risco .principal-navegacao { bottom: calc(8px + env(safe-area-inset-bottom)); height: 68px; min-height: 68px; }
+  .jogo-estrutura--risco .principal-navegacao { bottom: calc(var(--ui-dimension-8px) + env(safe-area-inset-bottom)); height: var(--ui-dimension-68px); min-height: var(--ui-dimension-68px); }
   .continuidade-barra,
-  .jogo-estrutura--risco .continuidade-barra { bottom: calc(84px + env(safe-area-inset-bottom)); height: 58px; padding:var(--ui-space-1-25) var(--ui-space-2); }
+  .jogo-estrutura--risco .continuidade-barra { bottom: calc(var(--ui-dimension-84px) + env(safe-area-inset-bottom)); height: var(--ui-dimension-58px); padding:var(--ui-space-1-25) var(--ui-space-2); }
   .contexto-arte,
   .cidade-visaoGeral-disposicao > .contexto-arte,
   .aventura-visaoGeral-disposicao > .contexto-arte { aspect-ratio: 1.38 / 1; border-radius:var(--ui-radius-xl); }
@@ -340,7 +340,7 @@ body {
 .atividade-pronto > p:not(.secao-chamada) { color: var(--ui-color-text-muted); }
 
 .profissao-nivel-faixa {
-  grid-template-columns: auto minmax(70px, 1fr) auto auto;
+  grid-template-columns: auto minmax(var(--ui-dimension-70px), 1fr) auto auto;
   align-items: center;
   padding:var(--ui-space-2-5) var(--ui-space-0) var(--ui-space-3-5);
   border-bottom-color: var(--ui-color-border);
@@ -442,15 +442,15 @@ body {
 @media (min-width: 980px) {
   .continuidade-barra,
   .jogo-estrutura--risco .continuidade-barra {
-    inset: auto auto 14px 18px;
-    width: min(500px, calc(50vw - 30px));
+    inset: auto auto var(--ui-dimension-14px) var(--ui-dimension-18px);
+    width: min(var(--ui-dimension-500px), calc(50vw - var(--ui-dimension-30px)));
     transform: none;
   }
 
   .principal-navegacao,
   .jogo-estrutura--risco .principal-navegacao {
-    inset: auto 18px 14px auto;
-    width: min(500px, calc(50vw - 30px));
+    inset: auto var(--ui-dimension-18px) var(--ui-dimension-14px) auto;
+    width: min(var(--ui-dimension-500px), calc(50vw - var(--ui-dimension-30px)));
     transform: none;
   }
 }
@@ -459,13 +459,13 @@ body {
 @media (min-width: 1100px) {
   .continuidade-barra,
   .jogo-estrutura--risco .continuidade-barra {
-    inset: 50% auto auto 16px;
+    inset: 50% auto auto var(--ui-dimension-16px);
     display: flex;
     flex-direction: column;
     align-items: stretch;
     justify-content: center;
     gap:var(--ui-space-2);
-    width: min(230px, calc((100vw - 760px) / 2 - 24px));
+    width: min(var(--ui-dimension-230px), calc((100vw - var(--ui-dimension-760px)) / 2 - var(--ui-dimension-24px)));
     height: auto;
     min-height: 0;
     padding:var(--ui-space-3);
@@ -480,12 +480,12 @@ body {
 
   .principal-navegacao,
   .jogo-estrutura--risco .principal-navegacao {
-    inset: 50% 16px auto auto;
+    inset: 50% var(--ui-dimension-16px) auto auto;
     flex-direction: column;
     align-items: stretch;
     justify-content: center;
     gap:var(--ui-space-1);
-    width: min(230px, calc((100vw - 760px) / 2 - 24px));
+    width: min(var(--ui-dimension-230px), calc((100vw - var(--ui-dimension-760px)) / 2 - var(--ui-dimension-24px)));
     height: auto;
     min-height: 0;
     padding:var(--ui-space-2);
@@ -534,15 +534,15 @@ body {
 
 .criacao-classe-sprite {
   display: block;
-  width: 80px;
-  height: 80px;
+  width: var(--ui-dimension-80px);
+  height: var(--ui-dimension-80px);
   justify-self: center;
   background-repeat: no-repeat;
   background-position: 0 0;
   /* A folha tem seis quadros e repete o primeiro no fim: seis passos exatos fecham o loop. */
   background-size: 700% 100%;
   image-rendering: pixelated;
-  animation: joanna-idle 720ms steps(6, end) infinite;
+  animation: joanna-idle var(--ui-transition-character-idle) infinite;
 }
 
 @keyframes joanna-idle {

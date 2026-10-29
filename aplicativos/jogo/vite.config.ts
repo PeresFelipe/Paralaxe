@@ -5,10 +5,16 @@
 import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
 import { VitePWA } from 'vite-plugin-pwa'
+import { fileURLToPath } from 'node:url'
 
 export default defineConfig({
   // Recursos desta pasta são copiados sem transformação: /arte/... aponta para publico/arte/....
   publicDir: 'publico',
+  resolve: {
+    alias: {
+      '@': fileURLToPath(new URL('./fonte', import.meta.url)),
+    },
+  },
   server: {
     host: '0.0.0.0',
     allowedHosts: ['terminal.local'],

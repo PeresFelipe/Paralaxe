@@ -2,7 +2,7 @@
  * @file Imagem padronizada do catálogo de ícones: endereço, tamanho e acessibilidade.
  * A aparência pixelada é definida no módulo CSS; não há lógica de jogo neste componente.
  */
-import { obterCaminhoDoIconeShikashi, type NomeDoIconeShikashi } from "../../../iconesDosRecursos";
+import { obterCaminhoDoIconeShikashi, type NomeDoIconeShikashi } from "@/iconesDosRecursos";
 import estilos from "./IconeDoJogo.module.css";
 
 /** O texto alternativo é opcional: ícones ao lado de um rótulo visível são decorativos. */

@@ -3,7 +3,7 @@
  * A janela reúne autoria, origem, adaptações e avisos sem duplicar esses dados no JSX.
  */
 import { useId, useState } from 'react'
-import catalogo from '../../../catalogoDeCreditos.json'
+import catalogo from '@/catalogoDeCreditos.json'
 import estilos from './CreditosDosRecursos.module.css'
 import { IconeDoJogo } from '..'
 import { Button, Modal } from '../../ui'

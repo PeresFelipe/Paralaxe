@@ -21,7 +21,8 @@ import {
   type RecursoDoLimiarDeCombate,
   type PartidaLocal,
 } from "@greywake/dominio";
-import { Button, Card } from '../../../components/ui'
+import { Button, Card, SelectField, TextField } from '@/components/ui'
+import { rotulosDaInterface } from '@/rotulosDaInterface'
 import estilos from './BancadaDeCombate.module.css'
 
 type PropriedadesDaTelaDeCombate = {
@@ -266,7 +267,7 @@ export default function BancadaDeCombate({
         </div>
         {!executando && aoRetorno ? (
           <Button variant="secondary" onClick={aoRetorno}>
-            Voltar a Aventura
+            {rotulosDaInterface.voltarAAventura}
           </Button>
         ) : null}
       </div>
@@ -505,9 +506,9 @@ export default function BancadaDeCombate({
                 <p className="secao-chamada">
                   Consumível preparado · Espaço {espacoIndice + 1}
                 </p>
-                <label className="campo-pilha">
-                  <span>Item</span>
-                  <select
+                <SelectField
+                  className="campo-pilha"
+                  label="Item"
                     value={espaco.idDaDefinicao ?? ""}
                     onChange={(evento) =>
                       void atualizarConsumivelEspaco(espacoIndice, {
@@ -522,11 +523,10 @@ export default function BancadaDeCombate({
                         {inventarioQuantidade(partida, consumivel.id)}
                       </option>
                     ))}
-                  </select>
-                </label>
-                <label className="campo-pilha">
-                  <span>Usar automaticamente quando</span>
-                  <select
+                </SelectField>
+                <SelectField
+                  className="campo-pilha"
+                  label="Usar automaticamente quando"
                     value={espaco.recursoDeUsoAutomatico ?? ""}
                     disabled={!espaco.idDaDefinicao}
                     onChange={(evento) =>
@@ -540,11 +540,10 @@ export default function BancadaDeCombate({
                     <option value="vida">Vida</option>
                     <option value="mana">Mana</option>
                     <option value="folego">Fôlego</option>
-                  </select>
-                </label>
-                <label className="campo-pilha">
-                  <span>Limite (%)</span>
-                  <input
+                </SelectField>
+                <TextField
+                  className="campo-pilha"
+                  label="Limite (%)"
                     type="number"
                     min="1"
                     max="100"
@@ -556,7 +555,6 @@ export default function BancadaDeCombate({
                       })
                     }
                   />
-                </label>
                 {espaco.idDaDefinicao ? (
                   <p className="atenuado pequeno-texto">
                     Usar consumível ocupa a ação atual; não concede uma ação

@@ -10,7 +10,7 @@ import {
 } from "@greywake/conteudo";
 import type { PartidaLocal, IdDaProfissao } from "@greywake/dominio";
 
-import { rotulosDosItens, rotulosDasProfissoes } from "../../../rotulosDoJogo";
+import { rotulosDosItens, rotulosDasProfissoes } from "@/rotulosDoJogo";
 import estilos from "./IndicadorDeProgressoOcioso.module.css";
 
 export type PropriedadesDeIndicadorDeProgressoOcioso = {

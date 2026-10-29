@@ -4,10 +4,10 @@
 /* Versão 0.1: disposição compacta e legível. Cópia anterior: backup/web-usability-453dbba. */
 /* Medidas compartilhadas mantêm a posição da navegação, do conteúdo e do rodapé coerentes. */
 :root {
-  --compacto-conteudo-largura: 1180px;
-  --estrutura-cabecalho: 60px;
-  --estrutura-rodape: 68px;
-  --toque-alvo: 44px;
+  --compacto-conteudo-largura: var(--ui-dimension-1180px);
+  --estrutura-cabecalho: var(--ui-dimension-60px);
+  --estrutura-rodape: var(--ui-dimension-68px);
+  --toque-alvo: var(--ui-dimension-44px);
 }
 .jogo-estrutura {
   padding-bottom:var(--ui-space-0);
@@ -37,8 +37,8 @@
   font-size: var(--ui-font-size-xs);
 }
 .avatar-marcador {
-  width: 36px;
-  height: 36px;
+  width: var(--ui-dimension-36px);
+  height: var(--ui-dimension-36px);
   flex-shrink: 0;
 }
 .global-recursos {
@@ -53,19 +53,19 @@
   font-variant-numeric: tabular-nums;
 }
 .principal-navegacao {
-  min-height: 44px;
+  min-height: var(--ui-dimension-44px);
   height: auto;
   top: var(--estrutura-cabecalho);
   padding-inline:var(--ui-space-6);
 }
 .risco-estado-faixa,
 .preparacao-estado-faixa {
-  min-height: 40px;
+  min-height: var(--ui-dimension-40px);
   height: auto;
   padding:var(--ui-space-2) var(--ui-space-6);
 }
 .jogo-conteudo {
-  width: min(var(--compacto-conteudo-largura), calc(100% - 40px));
+  width: min(var(--compacto-conteudo-largura), calc(100% - var(--ui-dimension-40px)));
   padding:var(--ui-space-4-5) var(--ui-space-0) calc(var(--estrutura-rodape) + var(--ui-space-5));
 }
 .jogo-estrutura--risco .jogo-conteudo {
@@ -133,15 +133,15 @@ summary {
 /* O atalho fica fora da tela até receber foco; permite saltar a navegação com teclado. */
 .pular-ligacao {
   position: fixed;
-  left: 16px;
+  left: var(--ui-dimension-16px);
   top: -100px;
-  z-index: 100;
+  z-index: var(--ui-z-skip-link);
   background: var(--ui-color-surface);
   color: var(--ui-color-text);
   padding:var(--ui-space-3);
 }
 .pular-ligacao:focus {
-  top: 8px;
+  top: var(--ui-dimension-8px);
 }
 #jogo-conteudo {
   scroll-margin-top: var(--ui-space-30);
@@ -162,13 +162,13 @@ summary {
 /* O aviso flutua acima do rodapé para não cobrir os comandos persistentes. */
 .jogo-aviso {
   position: fixed;
-  right: 20px;
-  bottom: calc(var(--estrutura-rodape) + 12px);
-  z-index: 45;
+  right: var(--ui-dimension-20px);
+  bottom: calc(var(--estrutura-rodape) + var(--ui-dimension-12px));
+  z-index: var(--ui-z-toast);
   display: flex;
   align-items: center;
   gap:var(--ui-space-3);
-  width: min(440px, calc(100% - 40px));
+  width: min(var(--ui-dimension-440px), calc(100% - var(--ui-dimension-40px)));
   padding:var(--ui-space-2) var(--ui-space-2) var(--ui-space-2) var(--ui-space-3-5);
   border: var(--ui-size-border) solid var(--ui-color-warning);
   border-radius:var(--ui-radius-lg);
@@ -182,7 +182,7 @@ summary {
   overflow-wrap: anywhere;
 }
 .jogo-estrutura--risco .jogo-aviso {
-  bottom: 12px;
+  bottom: var(--ui-dimension-12px);
 }
 .lateral-folha .destaque-titulo {
   font-size: var(--ui-font-size-title-large);
@@ -197,11 +197,11 @@ summary {
 }
 /* Reduz o retrato e deixa a coluna de dados encolher usando minmax(0, 1fr). */
 .personagem-disposicao {
-  grid-template-columns: 180px minmax(0, 1fr);
+  grid-template-columns: var(--ui-dimension-180px) minmax(0, 1fr);
   gap:var(--ui-space-3-5);
 }
 .personagem-disposicao > .retrato-marcador {
-  width: 180px;
+  width: var(--ui-dimension-180px);
   max-width: 100%;
 }
 .visaoGeral-pilha {
@@ -233,7 +233,7 @@ summary {
   gap:var(--ui-space-2-5);
 }
 .item-cartao {
-  grid-template-columns: 56px minmax(0, 1fr);
+  grid-template-columns: var(--ui-dimension-56px) minmax(0, 1fr);
   gap:var(--ui-space-2-5);
   padding:var(--ui-space-3);
 }
@@ -248,13 +248,13 @@ summary {
   font-size: var(--ui-font-size-sm);
 }
 .tecnica-linhaDeDados {
-  grid-template-columns: 28px 1fr;
+  grid-template-columns: var(--ui-dimension-28px) 1fr;
   gap:var(--ui-space-2);
   padding:var(--ui-space-2) var(--ui-space-0);
 }
 .prioridade-indice {
-  width: 28px;
-  height: 28px;
+  width: var(--ui-dimension-28px);
+  height: var(--ui-dimension-28px);
   font-size: var(--ui-font-size-body-large);
 }
 .tecnica-linhaDeDados small {
@@ -263,13 +263,13 @@ summary {
 /* Trilho de profissões à esquerda e área de trabalho à direita; a opção móvel é alternativa visual. */
 .atividades-disposicao {
   display: grid;
-  grid-template-columns: 184px minmax(0, 1fr);
+  grid-template-columns: var(--ui-dimension-184px) minmax(0, 1fr);
   gap:var(--ui-space-4);
   align-items: start;
 }
 .atividades-profissao-trilho {
   position: sticky;
-  top: 120px;
+  top: var(--ui-dimension-120px);
   display: grid;
   gap:var(--ui-space-4);
 }
@@ -278,7 +278,7 @@ summary {
 }
 /* A variável limita a cena sem impor uma largura mínima ao conteúdo textual. */
 .atividades-areaDeTrabalho {
-  --atividade-cena-largura: 224px;
+  --atividade-cena-largura: var(--ui-dimension-224px);
   min-width: 0;
 }
 .atividade-etapa {
@@ -346,9 +346,9 @@ summary {
 }
 .profissao-nivel-faixa progress {
   flex: 1;
-  min-width: 80px;
-  max-width: 240px;
-  height: 6px;
+  min-width: var(--ui-dimension-80px);
+  max-width: var(--ui-dimension-240px);
+  height: var(--ui-dimension-6px);
   accent-color: var(--ui-color-warning);
   border: 0;
   border-radius:var(--ui-radius-2xs);
@@ -373,7 +373,7 @@ progress::-moz-progress-bar {
 }
 .profissao-nivel-faixa summary {
   cursor: pointer;
-  min-height: 32px;
+  min-height: var(--ui-dimension-32px);
   display: list-item;
   width: fit-content;
   padding-block:var(--ui-space-1-25);
@@ -416,7 +416,7 @@ progress::-moz-progress-bar {
 }
 .funcionalidade-telaDoJogo > .contexto-arte--aventura,
 .funcionalidade-telaDoJogo > .contexto-arte--cidade {
-  width: min(100%, 580px);
+  width: min(100%, var(--ui-dimension-580px));
 }
 .cidade-localDoJogo-gradeVisual {
   gap:var(--ui-space-2);
@@ -434,8 +434,8 @@ progress::-moz-progress-bar {
   gap:var(--ui-space-3);
 }
 .retrato-marcador--pnj {
-  width: 112px;
-  min-width: 112px;
+  width: var(--ui-dimension-112px);
+  min-width: var(--ui-dimension-112px);
 }
 .preparacao-disposicao {
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
@@ -461,20 +461,20 @@ progress::-moz-progress-bar {
     gap:var(--ui-space-2);
   }
   .jogo-conteudo {
-    width: calc(100% - 32px);
+    width: calc(100% - var(--ui-dimension-32px));
   }
   .atividades-disposicao {
-    grid-template-columns: 166px minmax(0, 1fr);
+    grid-template-columns: var(--ui-dimension-166px) minmax(0, 1fr);
     gap:var(--ui-space-3);
   }
   .atividades-areaDeTrabalho {
-    --atividade-cena-largura: 192px;
+    --atividade-cena-largura: var(--ui-dimension-192px);
   }
   .personagem-disposicao {
-    grid-template-columns: 150px minmax(0, 1fr);
+    grid-template-columns: var(--ui-dimension-150px) minmax(0, 1fr);
   }
   .personagem-disposicao > .retrato-marcador {
-    width: 150px;
+    width: var(--ui-dimension-150px);
   }
   .preparacao-disposicao,
   .cidade-contexto-disposicao {
@@ -487,8 +487,8 @@ progress::-moz-progress-bar {
 /* Usa seletor de profissão, navegação inferior e espaço seguro dos aparelhos móveis. */
 @media (max-width: 720px) {
   :root {
-    --estrutura-rodape: 74px;
-    --estrutura-cabecalho: 64px;
+    --estrutura-rodape: var(--ui-dimension-74px);
+    --estrutura-cabecalho: var(--ui-dimension-64px);
   }
   .jogo-estrutura {
     padding-bottom:var(--ui-space-0);
@@ -525,11 +525,11 @@ progress::-moz-progress-bar {
   }
   .principal-navegacao {
     top: auto;
-    height: calc(56px + env(safe-area-inset-bottom));
+    height: calc(var(--ui-dimension-56px) + env(safe-area-inset-bottom));
     padding:var(--ui-space-0) var(--ui-space-1) env(safe-area-inset-bottom);
   }
   .jogo-conteudo {
-    width: calc(100% - 24px);
+    width: calc(100% - var(--ui-dimension-24px));
     padding:var(--ui-space-3-5) var(--ui-space-0)
       calc(var(--estrutura-rodape) + var(--ui-space-19) + env(safe-area-inset-bottom));
   }
@@ -555,7 +555,7 @@ progress::-moz-progress-bar {
   .movel-profissao-seletor select {
     min-width: 0;
     flex: 1;
-    min-height: 44px;
+    min-height: var(--ui-dimension-44px);
     padding:var(--ui-space-2);
     color: var(--ui-color-text);
     background: var(--ui-color-surface);
@@ -564,7 +564,7 @@ progress::-moz-progress-bar {
     font-size: var(--ui-font-size-md);
   }
   .atividades-areaDeTrabalho {
-    --atividade-cena-largura: 160px;
+    --atividade-cena-largura: var(--ui-dimension-160px);
   }
   .atividade-etapa {
     gap:var(--ui-space-2-5);
@@ -582,10 +582,10 @@ progress::-moz-progress-bar {
     grid-template-columns: 1fr;
   }
   .personagem-disposicao > .retrato-marcador {
-    width: 128px;
+    width: var(--ui-dimension-128px);
   }
   .continuidade-barra {
-    bottom: calc(56px + env(safe-area-inset-bottom));
+    bottom: calc(var(--ui-dimension-56px) + env(safe-area-inset-bottom));
     height: var(--estrutura-rodape);
     padding-inline:var(--ui-space-3);
     gap:var(--ui-space-2);
@@ -594,9 +594,9 @@ progress::-moz-progress-bar {
     gap:var(--ui-space-1-25);
   }
   .jogo-aviso {
-    right: 12px;
-    width: calc(100% - 24px);
-    bottom: calc(var(--estrutura-rodape) + 68px + env(safe-area-inset-bottom));
+    right: var(--ui-dimension-12px);
+    width: calc(100% - var(--ui-dimension-24px));
+    bottom: calc(var(--estrutura-rodape) + var(--ui-dimension-68px) + env(safe-area-inset-bottom));
   }
   .cidade-visaoGeral-disposicao .cidade-localDoJogo-gradeVisual {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -613,8 +613,8 @@ progress::-moz-progress-bar {
     gap:var(--ui-space-2-5);
   }
   .avatar-marcador {
-    width: 28px;
-    height: 28px;
+    width: var(--ui-dimension-28px);
+    height: var(--ui-dimension-28px);
   }
   .global-recursos {
     width: 100%;
@@ -624,7 +624,7 @@ progress::-moz-progress-bar {
     grid-template-columns: 1fr;
   }
   .atividades-areaDeTrabalho {
-    --atividade-cena-largura: 128px;
+    --atividade-cena-largura: var(--ui-dimension-128px);
   }
   .atividade-atualizado {
     gap:var(--ui-space-2);
@@ -642,7 +642,7 @@ progress::-moz-progress-bar {
     gap:var(--ui-space-1-5) var(--ui-space-2);
   }
   .profissao-nivel-faixa progress {
-    max-width: 90px;
+    max-width: var(--ui-dimension-90px);
   }
 }
 @media (prefers-reduced-motion: reduce) {

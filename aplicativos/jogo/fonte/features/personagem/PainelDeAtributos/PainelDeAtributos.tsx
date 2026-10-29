@@ -9,8 +9,9 @@ import {
   type ChaveDeAtributo,
   type PartidaLocal,
 } from "@greywake/dominio";
-import { Button, Card } from '../../../components/ui'
-import { useDistribuicaoDeAtributos } from '../../../hooks/useDistribuicaoDeAtributos'
+import { Button, Card } from '@/components/ui'
+import { useDistribuicaoDeAtributos } from '@/hooks/useDistribuicaoDeAtributos'
+import { rotulosDaInterface } from '@/rotulosDaInterface'
 import estilos from './PainelDeAtributos.module.css'
 
 const rotulosDosAtributos: Record<ChaveDeAtributo, string> = {
@@ -126,7 +127,7 @@ export default function PainelDeAtributos({
           >
             {ehSalvando
               ? "Salvando…"
-              : `Confirmar distribuição · ${pendentePontos}`}
+              : `${rotulosDaInterface.confirmar} distribuição · ${pendentePontos}`}
           </Button>
         </div>
       ) : null}
