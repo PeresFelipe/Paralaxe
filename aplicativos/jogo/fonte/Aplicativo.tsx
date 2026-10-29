@@ -50,6 +50,10 @@ const GIFS_DAS_CLASSES: Partial<Record<IdDaClasseDoPersonagem, string>> = {
   mago: "/arte/classes/mago/LuizMelo/mago.gif",
 };
 
+const FOLHAS_DE_ANIMACAO_DAS_CLASSES: Partial<Record<IdDaClasseDoPersonagem, string>> = {
+  cacador: "/arte/classes/cacador/Otsoga/joanna-idle-strip.png?v=2",
+};
+
 /** Uma fábrica fora do componente mantém a mesma interface de armazenamento entre renderizações. */
 const repositorioDePartidas = criarRepositorioDePartidasIndexedDb();
 
@@ -974,18 +978,25 @@ function Aplicativo() {
             <div className="criacao-escolha-gradeVisual">
               {CLASSES_DE_PERSONAGEM.map((definicao) => {
                 const gif = GIFS_DAS_CLASSES[definicao.id];
+                const folhaDeAnimacao = FOLHAS_DE_ANIMACAO_DAS_CLASSES[definicao.id];
 
                 return (
                   <button
                     key={definicao.id}
                     type="button"
                     className={`criacao-escolha ${
-                      gif ? "criacao-classe-escolha" : ""
+                      gif || folhaDeAnimacao ? "criacao-classe-escolha" : ""
                     } ${idDaClasseSelecionada === definicao.id ? "selecionado" : ""}`}
                     aria-pressed={idDaClasseSelecionada === definicao.id}
                     onClick={() => definirIdDaClasseSelecionada(definicao.id)}
                   >
-                    {gif && (
+                    {folhaDeAnimacao ? (
+                      <span
+                        className="criacao-classe-sprite"
+                        aria-hidden="true"
+                        style={{ backgroundImage: `url("${folhaDeAnimacao}")` }}
+                      />
+                    ) : gif ? (
                       <img
                         className="criacao-classe-gif"
                         src={gif}
@@ -993,7 +1004,7 @@ function Aplicativo() {
                         width={80}
                         height={80}
                       />
-                    )}
+                    ) : null}
 
                     <span className="criacao-classe-texto">
                       <strong>{definicao.nome}</strong>

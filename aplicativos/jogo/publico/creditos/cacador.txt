@@ -1,0 +1,22 @@
+Eleonore and Joanna — Joanna Idle
+Autor: Otsoga (@otsoga_)
+Instagram: @pedro_reisdc
+E-mail: queijosete77@gmail.com
+ArtStation: http://artstation.com/otsoga
+Twitter: @otsoga_
+Revisado em: 29/10/2026
+
+Uso no Greywake: animação ociosa da classe Caçador na criação de personagem.
+Adaptação: folha horizontal montada com os seis quadros originais Idle e o primeiro
+repetido para fechar o loop; a animação é feita por CSS. Os PNGs de origem não
+foram incluídos no jogo.
+
+Licença original fornecida com o pacote: uso pessoal e comercial e modificações
+permitidos; crédito opcional, mas apreciado; não redistribuir nem revender o asset.
+O GIF aparece como parte integrante do jogo, não como pacote de recursos.
+
+A licença original permanece em:
+/arte/classes/cacador/Otsoga/License.txt
+
+Este aviso registra a atribuição e resume os termos originais; não substitui
+nem altera a licença do autor.

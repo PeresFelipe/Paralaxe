@@ -1,5 +1,5 @@
 {
-  "revisadoEm": "2026-09-16",
+  "revisadoEm": "2026-10-29",
   "grupos": [
     {
       "id": "personagens",
@@ -72,6 +72,34 @@
       ],
       "arquivos": [
         "/arte/classes/mago/LuizMelo/"
+      ],
+      "creditosComplementares": []
+    },
+    {
+      "id": "cacador",
+      "grupo": "personagens",
+      "titulo": "Eleonore and Joanna — Joanna Idle",
+      "autores": [
+        {
+          "nome": "Otsoga (@otsoga_ / @pedro_reisdc)",
+          "url": "http://artstation.com/otsoga"
+        }
+      ],
+      "contribuicao": "Animação ociosa da classe Caçador na criação de personagem.",
+      "licenca": {
+        "nome": "Licença própria do autor",
+        "url": "/arte/classes/cacador/Otsoga/License.txt"
+      },
+      "origem": null,
+      "modificacoes": "Folha horizontal montada com os seis quadros originais Idle e o primeiro quadro repetido para fechar o loop; animação feita por CSS. Os PNGs de origem não foram incluídos no jogo.",
+      "avisos": [
+        {
+          "rotulo": "Atribuição e termos de uso",
+          "url": "/creditos/cacador.txt"
+        }
+      ],
+      "arquivos": [
+        "/arte/classes/cacador/Otsoga/joanna-idle-strip.png"
       ],
       "creditosComplementares": []
     },

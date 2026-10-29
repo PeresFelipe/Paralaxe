@@ -999,3 +999,98 @@ button.prestigio-no:hover:not(:disabled) {
     text-align: left;
   }
 }
+
+/* O assistente de criação e a seleção de partidas acompanham a paleta clara do jogo. */
+.criacao-foco,
+.ausente-retorno-cartao {
+  border: 1px solid var(--linha);
+  border-image: none;
+  border-radius: 22px;
+  color: var(--textoExibido);
+  background: linear-gradient(145deg, var(--superficie), var(--superficie-2));
+  box-shadow: 0 12px 32px var(--sombra-cartao);
+}
+
+.criacao-foco > .secao-chamada,
+.entrada-cabecalho .secao-chamada { color: var(--bronze); }
+
+.criacao-progresso span {
+  border-color: var(--linha);
+  color: var(--atenuado);
+  background: var(--superficie);
+}
+
+.criacao-progresso span.ativo {
+  border-color: var(--cor-acao);
+  color: var(--cor-acao-texto);
+  background: var(--cor-acao);
+}
+
+.criacao-escolha,
+.partida-cartao-emExecucao {
+  border: 1px solid var(--linha);
+  border-radius: 18px;
+  color: var(--textoExibido);
+  background: linear-gradient(145deg, var(--superficie), var(--superficie-2));
+  box-shadow: 0 6px 18px var(--sombra-cartao);
+  transition: transform 200ms ease, border-color 200ms ease, background 200ms ease, box-shadow 200ms ease;
+}
+
+.criacao-escolha strong,
+.criacao-escolha .criacao-classe-texto strong,
+.partida-cartao-emExecucao > strong { color: var(--textoExibido); }
+
+.criacao-escolha span,
+.partida-cartao-emExecucao > span,
+.partida-cartao-emExecucao > small { color: var(--atenuado); }
+
+.criacao-escolha.selecionado {
+  border-color: var(--cor-acao);
+  background: var(--cor-acao-suave);
+  box-shadow: 0 0 0 2px #705b3c18;
+}
+
+.criacao-escolha:hover:not(:disabled),
+.partida-cartao-emExecucao:hover:not(:disabled) {
+  transform: translateY(-2px);
+  border-color: #bcb59f;
+  background: var(--superficie-2);
+}
+
+.partida-cartao-emExecucao > em { color: var(--cor-acao); }
+
+.nome-entradaDeDados,
+.campo-pilha input,
+.campo-pilha select {
+  border-color: var(--linha);
+  border-radius: 10px;
+  color: var(--textoExibido);
+  background: var(--superficie);
+}
+
+.criacao-resumo-emExecucao { border-color: var(--linha); }
+.criacao-resumo-emExecucao > div { border-color: var(--linha); color: var(--atenuado); }
+.criacao-resumo-emExecucao strong { color: var(--textoExibido); }
+.criacao-foco :where(button, input, select):focus-visible { outline-color: var(--bronze); }
+
+.criacao-classe-sprite {
+  display: block;
+  width: 80px;
+  height: 80px;
+  justify-self: center;
+  background-repeat: no-repeat;
+  background-position: 0 0;
+  /* A folha tem seis quadros e repete o primeiro no fim: seis passos exatos fecham o loop. */
+  background-size: 700% 100%;
+  image-rendering: pixelated;
+  animation: joanna-idle 720ms steps(6, end) infinite;
+}
+
+@keyframes joanna-idle {
+  from { background-position: 0 0; }
+  to { background-position: 100% 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .criacao-classe-sprite { animation: none; }
+}
