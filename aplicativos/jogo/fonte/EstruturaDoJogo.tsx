@@ -432,7 +432,6 @@ export default function EstruturaDoJogo({
               telaDoJogo={cidadeTelaDoJogo}
               aoTelaDoJogo={definirCidadeTelaDoJogo}
               aoAbrirAventura={() => abrirAventura("masmorra")}
-              aoPersistir={aoPersistir}
               aoIniciarVigilia={aoIniciarVigilia}
               aoConcluirVigilia={aoConcluirVigilia}
               aoCancelarVigilia={aoCancelarVigilia}
@@ -995,7 +994,6 @@ function ComponenteDaTelaDaCidade({
   telaDoJogo,
   aoTelaDoJogo,
   aoAbrirAventura,
-  aoPersistir,
   aoIniciarVigilia,
   aoConcluirVigilia,
   aoCancelarVigilia,
@@ -1010,7 +1008,6 @@ function ComponenteDaTelaDaCidade({
   telaDoJogo: TelaDaCidade;
   aoTelaDoJogo: (telaDoJogo: TelaDaCidade) => void;
   aoAbrirAventura: () => void;
-  aoPersistir: (partida: PartidaLocal, mensagem?: string) => void | Promise<void>;
   aoIniciarVigilia: AcoesDaVigilia['aoIniciarVigilia'];
   aoConcluirVigilia: AcoesDaVigilia['aoConcluirVigilia'];
   aoCancelarVigilia: AcoesDaVigilia['aoCancelarVigilia'];
