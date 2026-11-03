@@ -10,18 +10,25 @@
 - `comparativo-cidade.jpg`: visão geral dos cinco estágios.
 - `manifesto-assets.json`: relação de arquivos e tamanhos.
 
-## Integração com o código do Prompt 1
+## Publicação das artes no GitHub
 
-O componente `CenaDaCidade` já espera exatamente as URLs `/arte/cidade/cidade-estagio-0.webp` a `/arte/cidade/cidade-estagio-4.webp` e proporção 16:9.
+O código funcional está publicado na branch `codex/vigilia-cidade-evolutiva-2026-11-03`, mas as imagens WebP/PNG **ainda não estão presentes no repositório remoto**. Por isso, `CENAS_DA_CIDADE` mantém `disponivel: false` e a interface usa SVG como alternativa operacional.
 
-1. Copie a pasta `aplicativos/jogo/publico/arte/cidade/` para o clone da branch `codex/codice-desafios-prestigio` que já recebeu a implementação da Vigília.
-2. Em `pacotes/conteudo/fonte/cidadeEvolutiva.ts`, mude **somente** o `disponivel` das cinco cenas principais para `true` após inspecionar os arquivos.
-3. Mantenha o campo `disponivel` de **todas as camadas** como `false`: as construções fornecidas são apenas referências e não estão perfeitamente posicionadas nem recortadas.
-4. Confira hotspots e corte/escala em desktop e celular. Não faça overdraw de GIF nem carregue todas as cenas ao mesmo tempo.
-5. Cadastre a atribuição de recursos gerados no catálogo de créditos, conforme as regras do projeto.
-6. Rode `pnpm verificar` e `pnpm compilar` após integrar.
+Para importar o ZIP `greywake-cidade-artes-vigilia.zip` (arquivo fornecido separadamente no ChatGPT), execute em um clone limpo desta branch:
 
-**Material disponibilizado na branch de desenvolvimento; nenhuma alteração na main.**
+```sh
+git switch codex/vigilia-cidade-evolutiva-2026-11-03
+python3 ferramentas/importarArtesDaCidade.py /caminho/greywake-cidade-artes-vigilia.zip
+pnpm verificar
+pnpm compilar
+git add aplicativos/jogo/publico/arte/cidade pacotes/conteudo/fonte/cidadeEvolutiva.ts aplicativos/jogo/fonte/catalogoDeCreditos.json
+git commit -m "feat(arte): integra cenarios e icones da Cidade Livre"
+git push origin codex/vigilia-cidade-evolutiva-2026-11-03
+```
+
+O importador adiciona as cinco cenas 1600×900, as cinco versões mobile 960×540 e os ícones, habilita as cenas principais e registra a pasta de arte no catálogo de créditos. Ele **não** publica arte automaticamente: o commit e o push acima devem ser feitos no clone autorizado. As camadas individuais continuam desabilitadas porque não estão alinhadas.
+
+Confira hotspots, visibilidade e proporção em desktop e celular antes de aprovar a interface. Não altere a `main`.
 
 ## Limites técnicos e artísticos
 
