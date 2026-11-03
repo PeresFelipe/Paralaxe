@@ -75,3 +75,11 @@
     animation: none;
   }
 }
+
+/* GW-UI-RESPONSIVA-V1: INÍCIO DO REFINAMENTO */
+.panel { box-sizing: border-box; min-inline-size: 0; max-inline-size: 100%; }
+.panel :where(img, picture, video) { max-inline-size: 100%; }
+@media (max-width: 23rem) {
+  .panel { inline-size: 100%; padding-inline: var(--ui-space-3); }
+}
+/* GW-UI-RESPONSIVA-V1: FIM DO REFINAMENTO */

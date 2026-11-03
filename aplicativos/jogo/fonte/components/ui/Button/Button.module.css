@@ -823,3 +823,33 @@
     outline: var(--ui-size-focus-ring) solid Highlight;
   }
 }
+
+/* GW-UI-RESPONSIVA-V1: INÍCIO DO REFINAMENTO */
+/* Refinamento de tamanho: o botão comum é compacto; fullWidth continua explícito. */
+.button {
+  box-sizing: border-box;
+  min-inline-size: 0;
+  max-inline-size: 100%;
+  flex-shrink: 1;
+}
+.label { min-inline-size: 0; max-inline-size: 100%; overflow-wrap: anywhere; white-space: normal; }
+.iconContent { min-inline-size: 0; max-inline-size: 100%; }
+.iconContent > :where(img, svg) { max-inline-size: 100%; object-fit: contain; }
+/* Grid e cards não devem esticar todas as ações comuns pela largura da célula. */
+.primary:not(.fullWidth), .secondary:not(.fullWidth),
+.danger:not(.fullWidth), .ghost:not(.fullWidth) {
+  inline-size: fit-content;
+  max-inline-size: 100%;
+  justify-self: start;
+  flex: 0 1 auto;
+}
+.fullWidth { inline-size: 100%; max-inline-size: 100%; }
+@media (max-width: 25rem) {
+  .sm, .md, .lg { padding-inline: var(--ui-space-3); }
+}
+@media (pointer: coarse) {
+  .sm:not(.inventory):not(.navigation):not(.icon) {
+    min-block-size: var(--ui-dimension-44px);
+  }
+}
+/* GW-UI-RESPONSIVA-V1: FIM DO REFINAMENTO */

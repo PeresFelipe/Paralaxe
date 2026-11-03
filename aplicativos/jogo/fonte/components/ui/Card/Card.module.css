@@ -7,3 +7,8 @@
   color: var(--ui-color-text);
   box-shadow: var(--ui-shadow-md);
 }
+
+/* GW-UI-RESPONSIVA-V1: INÍCIO DO REFINAMENTO */
+.card { box-sizing: border-box; max-inline-size: 100%; overflow-wrap: break-word; }
+.card :where(img, video, picture) { max-inline-size: 100%; }
+/* GW-UI-RESPONSIVA-V1: FIM DO REFINAMENTO */

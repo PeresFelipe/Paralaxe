@@ -38,3 +38,13 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* GW-UI-RESPONSIVA-V1: INÍCIO DO REFINAMENTO */
+.attributes, .attribute { min-inline-size: 0; }
+.controls { flex-wrap: wrap; justify-content: flex-end; }
+.attribute > span { overflow-wrap: anywhere; }
+@media (max-width: 30rem) {
+  .attributes { grid-template-columns: minmax(0, 1fr); }
+  .attribute { align-items: center; }
+}
+/* GW-UI-RESPONSIVA-V1: FIM DO REFINAMENTO */

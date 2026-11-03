@@ -210,3 +210,14 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* GW-UI-RESPONSIVA-V1: INÍCIO DO REFINAMENTO */
+.screen, .summary, .gate, .branchGrid, .hybridGrid { min-inline-size: 0; }
+.gateMain, .gateActions, .branch, .hybridPath { min-inline-size: 0; }
+.gateActions { flex-wrap: wrap; }
+@media (max-width: 45rem) {
+  .gate { grid-template-columns: minmax(0, 1fr); }
+  .branchGrid, .hybridGrid { grid-template-columns: minmax(0, 1fr); }
+  .gateActions { justify-content: flex-start; }
+}
+/* GW-UI-RESPONSIVA-V1: FIM DO REFINAMENTO */

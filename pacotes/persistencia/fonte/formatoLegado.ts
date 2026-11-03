@@ -5,9 +5,9 @@
  */
 /**
  * Fronteira com as partidas publicadas antes da tradução.
- * O esquema 12 mantém a base "greywake", o armazenamento "saves" e a chave "saveId".
+ * O esquema 13 mantém a base "greywake", o armazenamento "saves" e a chave "saveId".
  * Apenas este adaptador e as amostras de regressão conhecem o vocabulário anterior.
- * A gravação permanece legível também pela versão anterior do jogo.
+ * A versão 13 não garante leitura por versões anteriores; backup recomendado.
  */
 import type { PartidaLocal } from '@greywake/dominio'
 

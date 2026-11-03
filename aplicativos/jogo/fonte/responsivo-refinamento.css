@@ -1,0 +1,84 @@
+/* Greywake — refinamento responsivo transversal.
+   Mantém regras da arquitetura original e evita transformações de layout no gameplay. */
+:root {
+  --gw-ui-max-action: 22rem;
+  --gw-ui-column-min: 18rem;
+}
+
+/* Media nunca deve impor largura intrínseca superior ao seu contexto. */
+:where(img, video, canvas, svg, picture) {
+  max-inline-size: 100%;
+}
+:where(img, video) {
+  block-size: auto;
+}
+:where(picture) {
+  display: block;
+}
+
+/* O conteúdo das áreas de jogo pode encolher sem forçar overflow horizontal. */
+html, body, #raiz {
+  min-inline-size: 0;
+  max-inline-size: 100%;
+}
+:where(.jogo-estrutura, .jogo-disposicao, .jogo-conteudo,
+  .funcionalidade-telaDoJogo, .cidade-visaoGeral-disposicao,
+  .aventura-visaoGeral-disposicao, .personagem-disposicao,
+  .atividades-disposicao, .atividades-areaDeTrabalho,
+  .jogo-companheiro, .jogo-barraLateral) {
+  min-inline-size: 0;
+  max-inline-size: 100%;
+}
+:where(.jogo-conteudo, .funcionalidade-telaDoJogo) > * {
+  min-inline-size: 0;
+  max-inline-size: 100%;
+}
+:where(.telaDoJogo-tituloDaSecao, .painel-tituloDaSecao) {
+  flex-wrap: wrap;
+  min-inline-size: 0;
+}
+:where(.telaDoJogo-tituloDaSecao, .painel-tituloDaSecao) > div {
+  min-inline-size: 0;
+  max-inline-size: 100%;
+}
+:where(.botao-linhaDeDados, .continuidade-acoes) {
+  flex-wrap: wrap;
+  min-inline-size: 0;
+}
+:where(.jogo-conteudo) :where(img, video, picture) {
+  max-inline-size: 100%;
+}
+:where(.jogo-conteudo) :where(h1, h2, h3, h4, p, small, strong) {
+  overflow-wrap: break-word;
+}
+/* Cabeçalhos podem deslocar a ação para outra linha em telas compactas. */
+@media (max-width: 42rem) {
+  .jogo-conteudo .telaDoJogo-tituloDaSecao {
+    align-items: flex-start;
+    gap: var(--ui-space-3);
+  }
+  .jogo-conteudo .telaDoJogo-tituloDaSecao > div {
+    flex: 1 1 100%;
+  }
+  .jogo-conteudo .telaDoJogo-tituloDaSecao > button {
+    max-inline-size: 100%;
+  }
+}
+/* Em 320px, privilegiar conteúdo e não larguras mínimas artificiais. */
+@media (max-width: 23rem) {
+  .jogo-disposicao {
+    max-inline-size: 100%;
+    padding-inline: var(--ui-space-2);
+  }
+  .jogo-conteudo,
+  .jogo-estrutura--risco .jogo-conteudo {
+    max-inline-size: 100%;
+    min-inline-size: 0;
+    padding-inline: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .jogo-conteudo :where(img, picture, video) {
+    transition: none;
+  }
+}

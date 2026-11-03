@@ -33,11 +33,8 @@ import {
   type PartidaLocal,
 } from "@greywake/dominio";
 import type { RepositorioDePartidasLocais } from "@greywake/interface";
-import { obterDistritoDaCidade, OFERTAS_INICIAIS_DO_MERCADO_DE_PNJ } from '@greywake/conteudo'
-import {
-  iniciarVigilia, concluirVigilia, cancelarVigilia, melhorarDistrito, comprarOfertaDoMercadoDePnj,
-  type IdDoDistrito,
-} from '@greywake/dominio' 
+import { obterProjetoDaCidade, OFERTAS_INICIAIS_DO_MERCADO_DE_PNJ } from '@greywake/conteudo'
+import { concluirProjeto, comprarOfertaDoMercadoDePnj } from '@greywake/dominio'
 import { useEffect, useRef, useState } from "react";
 import {
   atualizarPartidaNaLista,
@@ -390,32 +387,13 @@ export function useAplicativoDaPartida(repositorioDePartidas: RepositorioDeParti
     await aplicarAlteracaoNaPartidaAtiva((atual) => realizarPrestigioDaProfissao(atual, idDaProfissao, new Date().toISOString()), 'Prestígio do ofício realizado; ele voltou ao nível 1.')
   }
 
-  /** Sessões e melhorias usam a mesma fila serializada que as demais operações da partida. */
-  async function tratarIniciarVigilia(nome: string, duracaoMinutos: number) {
+  /** Conquista validada e recursos consumidos na mesma fila das ações do RPG. */
+  async function tratarConcluirProjeto(idDoProjeto: string) {
+    const projeto = obterProjetoDaCidade(idDoProjeto)
+    if (!projeto) throw new Error('Projeto de reconstrução desconhecido.')
     await aplicarAlteracaoNaPartidaAtiva(
-      atual => iniciarVigilia(atual, { id: criarIdDaPartida(), nome, duracaoMinutos }, new Date().toISOString()),
-      'Vigília iniciada. Que a Cidade Livre encontre novas chamas.',
-    )
-  }
-
-  async function tratarConcluirVigilia(idDaSessao: string) {
-    await aplicarAlteracaoNaPartidaAtiva(
-      atual => concluirVigilia(atual, idDaSessao, new Date().toISOString()),
-      'Vigília concluída. Brasas adicionadas à reconstrução.',
-    )
-  }
-
-  async function tratarCancelarVigilia(idDaSessao: string) {
-    await aplicarAlteracaoNaPartidaAtiva(
-      atual => cancelarVigilia(atual, idDaSessao, new Date().toISOString()),
-      'Vigília cancelada sem recompensa.',
-    )
-  }
-
-  async function tratarMelhorarDistrito(id: IdDoDistrito) {
-    await aplicarAlteracaoNaPartidaAtiva(
-      atual => melhorarDistrito(atual, obterDistritoDaCidade(id), new Date().toISOString()),
-      'Um novo trecho da Cidade Livre foi restaurado.',
+      atual => concluirProjeto(atual, projeto, new Date().toISOString()),
+      `Construção restaurada: ${projeto.nome}.`,
     )
   }
 
@@ -700,10 +678,7 @@ export function useAplicativoDaPartida(repositorioDePartidas: RepositorioDeParti
     tratarIniciarReceita,
     tratarPararTrabalho,
     tratarPrestigiarProfissao,
-    tratarIniciarVigilia,
-    tratarConcluirVigilia,
-    tratarCancelarVigilia,
-    tratarMelhorarDistrito,
+    tratarConcluirProjeto,
     tratarComprarOfertaDoMercado,
     tratarEscolherJornadaMeta,
     tratarEquipar,

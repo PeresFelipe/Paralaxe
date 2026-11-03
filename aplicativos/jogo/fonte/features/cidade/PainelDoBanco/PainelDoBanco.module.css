@@ -80,3 +80,14 @@
     flex-direction: column;
   }
 }
+
+/* GW-UI-RESPONSIVA-V1: INÍCIO DO REFINAMENTO */
+.columns, .capacities, .listCard { min-inline-size: 0; }
+.row { min-inline-size: 0; flex-wrap: wrap; }
+.itemLabel { flex: 1 1 10rem; min-inline-size: 0; max-inline-size: 100%; }
+.row :global(.botao-linhaDeDados) { min-inline-size: 0; flex-wrap: wrap; }
+@media (max-width: 47.5rem) {
+  .columns, .capacities { grid-template-columns: minmax(0, 1fr); }
+  .row { align-items: stretch; }
+}
+/* GW-UI-RESPONSIVA-V1: FIM DO REFINAMENTO */

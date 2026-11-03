@@ -151,3 +151,19 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* GW-UI-RESPONSIVA-V1: INÍCIO DO REFINAMENTO */
+.combatGrid { min-inline-size: 0; grid-template-columns: minmax(0, .8fr) minmax(0, 1.25fr) minmax(0, .8fr); }
+.combatGrid > *, .combatant, .consumables > * { min-inline-size: 0; }
+.combatContext, .timingResources { flex-wrap: wrap; }
+.resourcePile > div { flex-wrap: wrap; min-inline-size: 0; }
+.logEntry { min-inline-size: 0; grid-template-columns: minmax(3.5rem, auto) minmax(0, 1fr); }
+.logEntry > * { min-inline-size: 0; overflow-wrap: anywhere; }
+@media (max-width: 61.25rem) {
+  .combatGrid { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 25rem) {
+  .combatContext { align-items: flex-start; }
+  .consumables { grid-template-columns: minmax(0, 1fr); }
+}
+/* GW-UI-RESPONSIVA-V1: FIM DO REFINAMENTO */

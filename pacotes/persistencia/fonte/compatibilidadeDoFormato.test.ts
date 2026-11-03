@@ -76,13 +76,13 @@ describe('compatibilidade com a main anterior à tradução', () => {
     expect(await lerGravacaoBruta()).toEqual(partidaLegadaV10)
   })
 
-  it('grava novamente no formato exato que a versão anterior consegue ler', async () => {
+  it('preserva o vocabulário histórico ao gravar um save mais recente', async () => {
     await inserirPartidaAntiga(partidaLegadaV10)
     const repositorio = criarRepositorioDePartidasIndexedDb()
     const partida = await repositorio.obter('warrior')
     expect(partida).not.toBeNull()
     await repositorio.salvar(partida!)
-    expect(await lerGravacaoBruta()).toMatchObject({ ...partidaLegadaV10, saveSchemaVersion: 12, codex: { discoveredIds: ['classe.guerreiro'] }, challenges: { completedIds: [] } })
+    expect(await lerGravacaoBruta()).toMatchObject({ ...partidaLegadaV10, saveSchemaVersion: 13, codex: { discoveredIds: ['classe.guerreiro'] }, challenges: { completedIds: [] } })
     expect(partida?.vigilia).toBeDefined()
     expect(await criarRepositorioDePartidasIndexedDb().obter('warrior')).toEqual(partida)
   })
@@ -113,7 +113,7 @@ describe('compatibilidade com a main anterior à tradução', () => {
     expect(jornadaAntiga.craftedRecipeIds.length).toBeGreaterThan(0)
     await inserirPartidaAntiga({ ...legado, saveSchemaVersion: 9 })
     const partida = await criarRepositorioDePartidasIndexedDb().obter('warrior')
-    expect(partida?.versaoDoEsquemaDaPartida).toBe(12)
+    expect(partida?.versaoDoEsquemaDaPartida).toBe(13)
     expect(partida?.jornada).toEqual({ meta: null, idsDasReceitasFabricadas: [] })
     expect(partida?.personagem).toEqual((lerFormatoLegado(partidaLegadaV10) as PartidaLocal).personagem)
   })

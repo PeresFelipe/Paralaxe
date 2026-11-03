@@ -203,3 +203,18 @@
     gap: var(--ui-space-1-25);
   }
 }
+
+/* GW-UI-RESPONSIVA-V1: INÍCIO DO REFINAMENTO */
+.professionGrid { flex-wrap: wrap; min-inline-size: 0; }
+.professionGroup, .options, .option, .optionBody { min-inline-size: 0; max-inline-size: 100%; }
+.option { grid-template-columns: minmax(0, var(--ui-size-activity-option-icon)) minmax(0, 1fr); }
+.optionBody :where(h2, strong, p) { overflow-wrap: anywhere; }
+@media (max-width: 45rem) {
+  .option { grid-template-columns: minmax(0, var(--ui-size-activity-option-icon-compact)) minmax(0, 1fr); }
+  .optionTitle { flex-wrap: wrap; }
+}
+@media (max-width: 23rem) {
+  .option { gap: var(--ui-space-2); }
+  .optionsHeading { flex-wrap: wrap; }
+}
+/* GW-UI-RESPONSIVA-V1: FIM DO REFINAMENTO */

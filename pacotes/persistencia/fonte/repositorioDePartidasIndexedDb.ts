@@ -12,6 +12,8 @@ import {
   criarJornadaInicial,
   criarEstadoInicialDaVigilia,
   validarEstadoDaVigilia,
+  criarLegadoInicial,
+  validarLegado,
   criarEstadoDosEquipamentosIniciais,
   type EstadoDeCombate,
   type EstadoDeFabricacao,
@@ -249,7 +251,7 @@ function migrarLegadoPersonagem(personagem: EstadoLegadoDoPersonagem): PartidaLo
  * Primeiro traduz o vocabulário, depois escolhe a migração pela versão do esquema.
  * Versões reconhecidas recebem somente os estados que lhes faltavam; versões desconhecidas são rejeitadas.
  */
-function migrarPartidaAnterior(dadosArmazenados: unknown): Omit<PartidaLocal, 'vigilia'> {
+function migrarPartidaAnterior(dadosArmazenados: unknown): Omit<PartidaLocal, 'vigilia' | 'legado'> {
   const brutoPartida = lerFormatoLegado(dadosArmazenados)
   if (!brutoPartida || typeof brutoPartida !== 'object') {
     throw new Error("Partida local inválido.")
@@ -259,7 +261,13 @@ function migrarPartidaAnterior(dadosArmazenados: unknown): Omit<PartidaLocal, 'v
 
   if (candidato.versaoDoEsquemaDaPartida === VERSAO_DO_ESQUEMA_DA_PARTIDA) {
     validarEstadoDaVigilia((brutoPartida as Partial<PartidaLocal>).vigilia)
+    validarLegado((brutoPartida as Partial<PartidaLocal>).legado)
     return brutoPartida as PartidaLocal
+  }
+
+  if (candidato.versaoDoEsquemaDaPartida === 12) {
+    validarEstadoDaVigilia((brutoPartida as Partial<PartidaLocal>).vigilia)
+    return { ...(brutoPartida as PartidaLocal), versaoDoEsquemaDaPartida: VERSAO_DO_ESQUEMA_DA_PARTIDA }
   }
 
   if (candidato.versaoDoEsquemaDaPartida === 11) {
@@ -401,14 +409,21 @@ function migrarPartidaAnterior(dadosArmazenados: unknown): Omit<PartidaLocal, 'v
   throw new Error(`Esquema de partida não suportado: ${String(candidato.versaoDoEsquemaDaPartida)}.`)
 }
 
-/** Adiciona somente o estado novo às versões anteriores; saves v12 inválidos são recusados. */
+/** Migra o legado sem reembolsar investimentos, e preserva a Vigília somente como histórico. */
 function migrarPartida(dadosArmazenados: unknown): PartidaLocal {
   const migrada = migrarPartidaAnterior(dadosArmazenados)
+  if ('legado' in migrada) {
+    validarLegado(migrada.legado)
+    if (!('vigilia' in migrada)) throw new Error('Save v13 sem histórico da Vigília.')
+    validarEstadoDaVigilia(migrada.vigilia)
+    return { ...migrada, vigilia: migrada.vigilia, legado: migrada.legado }
+  }
   if ('vigilia' in migrada) {
     validarEstadoDaVigilia(migrada.vigilia)
-    return { ...migrada, vigilia: migrada.vigilia }
+    return { ...migrada, vigilia: migrada.vigilia, legado: criarLegadoInicial(migrada.vigilia) }
   }
-  return { ...migrada, vigilia: criarEstadoInicialDaVigilia() }
+  const vigilia = criarEstadoInicialDaVigilia()
+  return { ...migrada, vigilia, legado: criarLegadoInicial(vigilia) }
 }
 
 /** Abre a base publicada e cria a coleção apenas na atualização inicial da estrutura. */

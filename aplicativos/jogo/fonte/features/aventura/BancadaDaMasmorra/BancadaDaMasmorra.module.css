@@ -157,3 +157,19 @@
     grid-template-columns: minmax(0, 1fr);
   }
 }
+
+/* GW-UI-RESPONSIVA-V1: INÍCIO DO REFINAMENTO */
+.entradaGrade, .execucaoGrade { min-inline-size: 0; }
+.entradaGrade > *, .execucaoGrade > *, .lateral > *, .caminhos > * { min-inline-size: 0; }
+.execucaoCabecalho, .confirmarChefe, .painelConclusao { flex-wrap: wrap; }
+.linhaSaque { flex-wrap: wrap; overflow-wrap: break-word; }
+.recursoGrade > div { min-inline-size: 0; }
+.recursoGrade :where(strong, span) { overflow-wrap: anywhere; }
+@media (max-width: 61.25rem) {
+  .entradaGrade, .execucaoGrade { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 23rem) {
+  .recursoGrade { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .execucaoCabecalho, .confirmarChefe, .painelConclusao { align-items: stretch; flex-direction: column; }
+}
+/* GW-UI-RESPONSIVA-V1: FIM DO REFINAMENTO */
