@@ -79,7 +79,7 @@ describe("repositório de partidas em IndexedDB", () => {
       classeDoPersonagem, presente,
     })
     const legado = { ...atual, versaoDoEsquemaDaPartida: 11 as const }
-    delete (legado as Partial<PartidaLocal>).vigilia
+    delete (legado as unknown as Partial<PartidaLocal>).vigilia
     const repositorio = criarRepositorioDePartidasIndexedDb()
     await repositorio.salvar(legado as unknown as PartidaLocal)
     const restaurado = await repositorio.obter('migra-v11')
