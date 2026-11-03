@@ -157,7 +157,7 @@
 .combatGrid > *, .combatant, .consumables > * { min-inline-size: 0; }
 .combatContext, .timingResources { flex-wrap: wrap; }
 .resourcePile > div { flex-wrap: wrap; min-inline-size: 0; }
-.logEntry { min-inline-size: 0; grid-template-columns: minmax(3.5rem, auto) minmax(0, 1fr); }
+.logEntry { min-inline-size: 0; grid-template-columns: minmax(var(--ui-size-combat-log-time-column), auto) minmax(0, 1fr); }
 .logEntry > * { min-inline-size: 0; overflow-wrap: anywhere; }
 @media (max-width: 61.25rem) {
   .combatGrid { grid-template-columns: minmax(0, 1fr); }

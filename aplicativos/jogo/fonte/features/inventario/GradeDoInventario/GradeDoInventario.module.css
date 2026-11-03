@@ -104,18 +104,18 @@
 /* Colunas flexíveis: 6/4 itens sem impor larguras mínimas acima do contêiner. */
 .spaces {
   inline-size: 100%;
-  max-inline-size: min(100%, 27rem);
+  max-inline-size: min(100%, var(--ui-dimension-440px));
   grid-template-columns: repeat(6, minmax(0, 1fr));
 }
 .compact .spaces {
-  max-inline-size: min(100%, 18rem);
+  max-inline-size: min(100%, var(--ui-dimension-270px));
   grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 .spaces > * { min-inline-size: 0; max-inline-size: 100%; }
 .emptySlot { min-inline-size: 0; min-block-size: 0; max-inline-size: 100%; }
 @media (max-width: 45rem) {
   .spaces {
-    max-inline-size: min(100%, 19rem);
+    max-inline-size: min(100%, var(--ui-dimension-270px));
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
   .filters > * { max-inline-size: 100%; }

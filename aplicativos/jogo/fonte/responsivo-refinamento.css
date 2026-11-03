@@ -1,9 +1,5 @@
 /* Greywake — refinamento responsivo transversal.
    Mantém regras da arquitetura original e evita transformações de layout no gameplay. */
-:root {
-  --gw-ui-max-action: 22rem;
-  --gw-ui-column-min: 18rem;
-}
 
 /* Media nunca deve impor largura intrínseca superior ao seu contexto. */
 :where(img, video, canvas, svg, picture) {

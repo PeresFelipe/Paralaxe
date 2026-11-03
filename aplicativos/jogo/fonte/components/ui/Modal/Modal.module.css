@@ -3,6 +3,6 @@
 }
 
 /* GW-UI-RESPONSIVA-V1: INÍCIO DO REFINAMENTO */
-.modal { box-sizing: border-box; max-inline-size: min(100%, 44rem); max-block-size: calc(100dvh - var(--ui-space-4)); }
+.modal { box-sizing: border-box; max-inline-size: min(100%, var(--ui-dimension-42-5rem)); max-block-size: calc(100dvh - var(--ui-space-4)); }
 .modal :where(img, video) { max-inline-size: 100%; block-size: auto; }
 /* GW-UI-RESPONSIVA-V1: FIM DO REFINAMENTO */

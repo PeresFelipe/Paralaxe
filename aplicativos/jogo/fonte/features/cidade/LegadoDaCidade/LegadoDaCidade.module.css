@@ -68,10 +68,10 @@
 .legenda { max-inline-size: calc(100% - var(--ui-space-6)); overflow-wrap: break-word; }
 .legenda img { flex: 0 0 auto; max-inline-size: 100%; }
 .grade {
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--gw-ui-column-min, 18rem)), 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--ui-dimension-270px)), 1fr));
 }
 .estatisticas {
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 10rem), 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--ui-dimension-160px)), 1fr));
 }
 .estatisticas > div:first-child { grid-column: auto; }
 .estatisticas > div { min-inline-size: 0; overflow-wrap: anywhere; }
@@ -84,7 +84,7 @@
 .ornamento { max-inline-size: 100%; block-size: auto; }
 @media (max-width: 45rem) {
   .grade { grid-template-columns: minmax(0, 1fr); }
-  .estatisticas { grid-template-columns: repeat(auto-fit, minmax(min(100%, 9rem), 1fr)); }
+  .estatisticas { grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--ui-dimension-150px)), 1fr)); }
   .cabecalhoProjetos { align-items: flex-start; }
 }
 @media (max-width: 24rem) {
