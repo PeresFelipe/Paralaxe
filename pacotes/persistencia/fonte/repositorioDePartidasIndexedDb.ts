@@ -406,7 +406,7 @@ function migrarPartida(dadosArmazenados: unknown): PartidaLocal {
   const migrada = migrarPartidaAnterior(dadosArmazenados)
   if ('vigilia' in migrada) {
     validarEstadoDaVigilia(migrada.vigilia)
-    return migrada
+    return { ...migrada, vigilia: migrada.vigilia }
   }
   return { ...migrada, vigilia: criarEstadoInicialDaVigilia() }
 }
