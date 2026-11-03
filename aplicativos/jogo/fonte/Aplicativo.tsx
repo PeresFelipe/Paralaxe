@@ -60,6 +60,7 @@ function Aplicativo({ repositorioDePartidas }: AplicativoProps) {
     tratarPararTrabalho, tratarPrestigiarProfissao, tratarEscolherJornadaMeta, tratarEquipar, tratarDistribuirAtributos,
     tratarDesbloquearPrestigioNo, tratarRealizarPersonagemPrestigio, tratarDepositarBancoPilha,
     tratarRetirarBancoPilha, tratarDepositarBancoEquipamento, tratarRetirarBancoEquipamento,
+    tratarIniciarVigilia, tratarConcluirVigilia, tratarCancelarVigilia, tratarMelhorarDistrito, tratarComprarOfertaDoMercado,
     persistirPartidaAtiva, prepararRisco,
     iniciarNovoPartida, alternarPartida,
   } = useAplicativoDaPartida(repositorioDePartidas);
@@ -140,6 +141,11 @@ function Aplicativo({ repositorioDePartidas }: AplicativoProps) {
           aoEscolherMetaDaJornada={tratarEscolherJornadaMeta}
           aoPararTrabalho={tratarPararTrabalho}
           aoPrestigiarProfissao={tratarPrestigiarProfissao}
+          aoIniciarVigilia={tratarIniciarVigilia}
+          aoConcluirVigilia={tratarConcluirVigilia}
+          aoCancelarVigilia={tratarCancelarVigilia}
+          aoMelhorarDistrito={tratarMelhorarDistrito}
+          aoComprarOfertaDoMercado={tratarComprarOfertaDoMercado}
           aoEquipar={tratarEquipar}
           aoDistribuirAtributos={tratarDistribuirAtributos}
           aoRealizarPrestigioDoPersonagem={tratarRealizarPersonagemPrestigio}

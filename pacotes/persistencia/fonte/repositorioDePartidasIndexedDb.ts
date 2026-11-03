@@ -10,6 +10,8 @@ import {
   criarPrestigioInicialDoPersonagem,
   criarProgressoInicialDasProfissoes,
   criarJornadaInicial,
+  criarEstadoInicialDaVigilia,
+  validarEstadoDaVigilia,
   criarEstadoDosEquipamentosIniciais,
   type EstadoDeCombate,
   type EstadoDeFabricacao,
@@ -247,7 +249,7 @@ function migrarLegadoPersonagem(personagem: EstadoLegadoDoPersonagem): PartidaLo
  * Primeiro traduz o vocabulário, depois escolhe a migração pela versão do esquema.
  * Versões reconhecidas recebem somente os estados que lhes faltavam; versões desconhecidas são rejeitadas.
  */
-function migrarPartida(dadosArmazenados: unknown): PartidaLocal {
+function migrarPartidaAnterior(dadosArmazenados: unknown): PartidaLocal {
   const brutoPartida = lerFormatoLegado(dadosArmazenados)
   if (!brutoPartida || typeof brutoPartida !== 'object') {
     throw new Error("Partida local inválido.")
@@ -256,7 +258,12 @@ function migrarPartida(dadosArmazenados: unknown): PartidaLocal {
   const candidato = brutoPartida as Record<string, unknown>
 
   if (candidato.versaoDoEsquemaDaPartida === VERSAO_DO_ESQUEMA_DA_PARTIDA) {
+    validarEstadoDaVigilia((brutoPartida as Partial<PartidaLocal>).vigilia)
     return brutoPartida as PartidaLocal
+  }
+
+  if (candidato.versaoDoEsquemaDaPartida === 11) {
+    return { ...(brutoPartida as PartidaLocal), versaoDoEsquemaDaPartida: VERSAO_DO_ESQUEMA_DA_PARTIDA }
   }
 
   if (candidato.versaoDoEsquemaDaPartida === 10) {
@@ -392,6 +399,16 @@ function migrarPartida(dadosArmazenados: unknown): PartidaLocal {
   }
 
   throw new Error(`Esquema de partida não suportado: ${String(candidato.versaoDoEsquemaDaPartida)}.`)
+}
+
+/** Adiciona somente o estado novo às versões anteriores; saves v12 inválidos são recusados. */
+function migrarPartida(dadosArmazenados: unknown): PartidaLocal {
+  const migrada = migrarPartidaAnterior(dadosArmazenados)
+  if ('vigilia' in migrada) {
+    validarEstadoDaVigilia(migrada.vigilia)
+    return migrada
+  }
+  return { ...migrada, vigilia: criarEstadoInicialDaVigilia() }
 }
 
 /** Abre a base publicada e cria a coleção apenas na atualização inicial da estrutura. */

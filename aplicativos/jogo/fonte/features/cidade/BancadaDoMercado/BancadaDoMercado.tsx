@@ -5,17 +5,17 @@
  */
 import { useState } from 'react'
 import { OFERTAS_INICIAIS_DO_MERCADO_DE_PNJ } from '@greywake/conteudo'
-import { comprarOfertaDoMercadoDePnj, type PartidaLocal } from '@greywake/dominio'
+import type { PartidaLocal } from '@greywake/dominio'
 import { Button, Card } from '@/components/ui'
 import estilos from './BancadaDoMercado.module.css'
 
 type PropriedadesDaTelaDeMercado = {
   partida: PartidaLocal
-  aoAlterarPartida: (partida: PartidaLocal, mensagem?: string) => void | Promise<void>
+  aoComprarOferta: (idDaOferta: string) => Promise<void>
 }
 
 /** Mantém apenas mensagem e bloqueio de operação; os produtos e preços vêm do catálogo fixo. */
-export default function BancadaDoMercado({ partida, aoAlterarPartida }: PropriedadesDaTelaDeMercado) {
+export default function BancadaDoMercado({ partida, aoComprarOferta }: PropriedadesDaTelaDeMercado) {
   const [mensagem, definirMensagem] = useState<string | null>(null)
   const [ocupado, definirOcupado] = useState(false)
 
@@ -27,10 +27,8 @@ export default function BancadaDoMercado({ partida, aoAlterarPartida }: Propried
 
     definirOcupado(true)
     try {
-      const atualizado = comprarOfertaDoMercadoDePnj(partida, oferta, new Date().toISOString())
-      const textoExibido = `${oferta.nome} comprado por ${oferta.preco} moedas.`
-      await aoAlterarPartida(atualizado, textoExibido)
-      definirMensagem(textoExibido)
+      await aoComprarOferta(oferta.id)
+      definirMensagem(`${oferta.nome} comprado por ${oferta.preco} moedas.`)
     } catch (erro) {
       definirMensagem(erro instanceof Error ? erro.message : 'Não foi possível concluir a compra.')
     } finally {

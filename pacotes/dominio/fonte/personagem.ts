@@ -15,6 +15,7 @@ import {
 } from './equipamento'
 import { criarProgressoInicialDasProfissoes, type EstadoOcioso, type ProgressoDeProfissaoPorId } from './ocioso'
 import { criarJornadaInicial, type EstadoDaJornada } from './jornada'
+import { criarEstadoInicialDaVigilia, type EstadoDaVigilia } from './vigiliaDaCidade'
 
 /** Ordem comum à criação, distribuição de pontos e validação dos sete atributos. */
 export const CHAVES_DOS_ATRIBUTOS = [
@@ -141,7 +142,7 @@ export interface EstadoDoPersonagem {
 }
 
 /** Versão estrutural usada pelas migrações. Traduzir nomes internos não exige mudar o formato persistido. */
-export const VERSAO_DO_ESQUEMA_DA_PARTIDA = 11 as const
+export const VERSAO_DO_ESQUEMA_DA_PARTIDA = 12 as const
 
 /** Agregado salvo como uma unidade: personagem, trabalhos, combate, expedição e metas da jornada. */
 export interface PartidaLocal {
@@ -161,6 +162,7 @@ export interface PartidaLocal {
   jornada: EstadoDaJornada
   codice: EstadoDoCodice
   desafios: EstadoDosDesafios
+  vigilia: EstadoDaVigilia
 }
 
 export interface ParametrosDeCriacaoDaPartidaLocal {
@@ -294,6 +296,7 @@ export function criarPartidaLocal(entradaDeDados: ParametrosDeCriacaoDaPartidaLo
     jornada: criarJornadaInicial(),
     codice: { idsDescobertos: [`classe.${entradaDeDados.classeDoPersonagem.id}`] },
     desafios: { idsConcluidos: [] },
+    vigilia: criarEstadoInicialDaVigilia(),
     combate: {
       preferencias: {
         estilo: "misto",

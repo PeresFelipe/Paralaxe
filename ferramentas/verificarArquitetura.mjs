@@ -1,5 +1,5 @@
 import { readdir, readFile } from 'node:fs/promises';
-import { dirname, extname, join, relative, resolve } from 'node:path';
+import { dirname, extname, join, relative, resolve, sep } from 'node:path';
 import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
 
@@ -30,7 +30,7 @@ const controlesProibidos = new Set(['button', 'input', 'select', 'textarea', 'pr
 for (const arquivo of tsArquivos) {
   const conteudo = await readFile(arquivo, 'utf8');
   const fonte = ts.createSourceFile(arquivo, conteudo, parserTs, true, arquivo.endsWith('.tsx') ? ts.ScriptKind.TSX : ts.ScriptKind.TS);
-  const dentroDeUi = resolve(arquivo).startsWith(raizUi + '\\');
+  const dentroDeUi = resolve(arquivo).startsWith(raizUi + sep);
   function visitar(no) {
     const elementoJsx = ts.isJsxOpeningElement(no) || ts.isJsxSelfClosingElement(no);
     if (no.kind === ts.SyntaxKind.AnyKeyword) erros.push(`${arquivo}: tipo any proibido pelo TypeScript estrito`);

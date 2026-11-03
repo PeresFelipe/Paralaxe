@@ -1,0 +1,52 @@
+{
+  "project": "Greywake",
+  "branch": "codex/vigilia-cidade-evolutiva-2026-11-03",
+  "stageScenes": [
+    {
+      "stage": 0,
+      "name": "Cinzas da Fundação",
+      "file": "aplicativos/jogo/publico/arte/cidade/cidade-estagio-0.webp",
+      "dimensions": "1600×900",
+      "bytes": 329958,
+      "mobile": "aplicativos/jogo/publico/arte/cidade/mobile/cidade-estagio-0-mobile.webp",
+      "mobileBytes": 96780
+    },
+    {
+      "stage": 1,
+      "name": "Primeiras Chamas",
+      "file": "aplicativos/jogo/publico/arte/cidade/cidade-estagio-1.webp",
+      "dimensions": "1600×900",
+      "bytes": 403396,
+      "mobile": "aplicativos/jogo/publico/arte/cidade/mobile/cidade-estagio-1-mobile.webp",
+      "mobileBytes": 122620
+    },
+    {
+      "stage": 2,
+      "name": "Vila Desperta",
+      "file": "aplicativos/jogo/publico/arte/cidade/cidade-estagio-2.webp",
+      "dimensions": "1600×900",
+      "bytes": 554624,
+      "mobile": "aplicativos/jogo/publico/arte/cidade/mobile/cidade-estagio-2-mobile.webp",
+      "mobileBytes": 176742
+    },
+    {
+      "stage": 3,
+      "name": "Bastião da Esperança",
+      "file": "aplicativos/jogo/publico/arte/cidade/cidade-estagio-3.webp",
+      "dimensions": "1600×900",
+      "bytes": 572456,
+      "mobile": "aplicativos/jogo/publico/arte/cidade/mobile/cidade-estagio-3-mobile.webp",
+      "mobileBytes": 187450
+    },
+    {
+      "stage": 4,
+      "name": "Cidade Reerguida",
+      "file": "aplicativos/jogo/publico/arte/cidade/cidade-estagio-4.webp",
+      "dimensions": "1600×900",
+      "bytes": 624980,
+      "mobile": "aplicativos/jogo/publico/arte/cidade/mobile/cidade-estagio-4-mobile.webp",
+      "mobileBytes": 207310
+    }
+  ],
+  "note": "CENAS_DA_CIDADE in pacotes/conteudo/fonte/cidadeEvolutiva.ts: set disponivel=true for stage images after review. Leave layers disabled until precisely registered and transparency checked."
+}

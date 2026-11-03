@@ -72,6 +72,25 @@ describe("repositório de partidas em IndexedDB", () => {
     await excluirBancoDeDados()
   })
 
+  it('migra um save v11 sem inventar sessões de foco', async () => {
+    const atual = criarPartidaLocal({
+      idDaPartida: 'migra-v11', criadoEm: '2026-10-29T12:00:00.000Z',
+      versaoDoConteudo: '0.1.0-dev', nomeDoPersonagem: 'Ailith',
+      classeDoPersonagem, presente,
+    })
+    const legado = { ...atual, versaoDoEsquemaDaPartida: 11 as const }
+    delete (legado as Partial<PartidaLocal>).vigilia
+    const repositorio = criarRepositorioDePartidasIndexedDb()
+    await repositorio.salvar(legado as unknown as PartidaLocal)
+    const restaurado = await repositorio.obter('migra-v11')
+    expect(restaurado?.versaoDoEsquemaDaPartida).toBe(12)
+    expect(restaurado?.vigilia.sessoesConcluidas).toBe(0)
+    expect(restaurado?.vigilia.saldoBrasas).toBe(0)
+    expect(restaurado?.vigilia.sessaoAtiva).toBeNull()
+    expect(restaurado?.personagem).toEqual(atual.personagem)
+    expect(restaurado?.jornada).toEqual(atual.jornada)
+  })
+
   it("reabre uma expedição ativa com semente, sala, bolsa e recursos intactos", async () => {
     let partida = criarPartidaLocal({
       idDaPartida: "recarregar-masmorra",
@@ -113,7 +132,7 @@ describe("repositório de partidas em IndexedDB", () => {
     const repositorioAposRecarregar = criarRepositorioDePartidasIndexedDb()
     const carregado = await repositorioAposRecarregar.obter(partida.idDaPartida)
 
-    expect(carregado?.versaoDoEsquemaDaPartida).toBe(11)
+    expect(carregado?.versaoDoEsquemaDaPartida).toBe(12)
     expect(carregado?.personagem.prestigio).toEqual({ nivel: 0, pontos: 0, idsDosNosDesbloqueados: [] })
     expect(carregado?.personagem.banco).toEqual({ inventario: [], itensDeEquipamento: [] })
     expect(carregado?.masmorra.contratoAceito).toBe(true)
@@ -152,7 +171,7 @@ describe("repositório de partidas em IndexedDB", () => {
     const anelId = carregado?.personagem.equipamento.anel1
     const anel = carregado?.personagem.itensDeEquipamento.find((item) => item.idDaInstancia === anelId)
 
-    expect(carregado?.versaoDoEsquemaDaPartida).toBe(11)
+    expect(carregado?.versaoDoEsquemaDaPartida).toBe(12)
     expect(carregado?.personagem.prestigio).toEqual({ nivel: 0, pontos: 0, idsDosNosDesbloqueados: [] })
     expect(anel?.idDaDefinicao).toBe("item.equipamento.viajante-anel")
     expect(carregado?.personagem.inventario.some((pilha) => pilha.idDaDefinicao === "item.equipamento.viajante-anel")).toBe(false)
@@ -179,7 +198,7 @@ describe("repositório de partidas em IndexedDB", () => {
     await repositorio.salvar(legado as unknown as PartidaLocal)
     const carregado = await repositorio.obter("legado-prestigio")
 
-    expect(carregado?.versaoDoEsquemaDaPartida).toBe(11)
+    expect(carregado?.versaoDoEsquemaDaPartida).toBe(12)
     expect(carregado?.personagem.prestigio).toEqual({ nivel: 0, pontos: 0, idsDosNosDesbloqueados: [] })
   })
 
@@ -189,7 +208,7 @@ describe("repositório de partidas em IndexedDB", () => {
     const repositorio = criarRepositorioDePartidasIndexedDb()
     await repositorio.salvar({ ...legado, versaoDoEsquemaDaPartida: 10 } as unknown as PartidaLocal)
     const migrado = await repositorio.obter(original.idDaPartida)
-    expect(migrado?.versaoDoEsquemaDaPartida).toBe(11)
+    expect(migrado?.versaoDoEsquemaDaPartida).toBe(12)
     expect(migrado?.jornada).toEqual(original.jornada)
     expect(migrado?.codice).toEqual({ idsDescobertos: ['classe.errante'] })
     expect(migrado?.desafios).toEqual({ idsConcluidos: [] })
@@ -202,7 +221,7 @@ describe("repositório de partidas em IndexedDB", () => {
     const repositorio = criarRepositorioDePartidasIndexedDb()
     await repositorio.salvar({ ...legado, versaoDoEsquemaDaPartida: 9 } as unknown as PartidaLocal)
     const migrado = await repositorio.obter(original.idDaPartida)
-    expect(migrado?.versaoDoEsquemaDaPartida).toBe(11)
+    expect(migrado?.versaoDoEsquemaDaPartida).toBe(12)
     expect(migrado?.personagem).toEqual(original.personagem)
     expect(migrado?.jornada).toEqual({ meta: null, idsDasReceitasFabricadas: [] })
     if (!migrado) throw new Error("Partida ausente")

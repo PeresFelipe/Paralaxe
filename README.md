@@ -8,6 +8,10 @@ A versão 0.1 funciona localmente e integra criação de personagem, sete profis
 
 O código próprio, os caminhos, os comandos e a documentação estão em português brasileiro. Os identificadores de código usam português sem acentos; os textos exibidos usam acentuação normal.
 
+## Vigília da Cidade (branch de desenvolvimento)
+
+A evolução experimental da Cidade Livre e o sistema de sessões de foco estão documentados em `documentacao/implementacao/VIGILIA-DA-CIDADE.md`. O pacote inclui cinco estados visuais e persistência versionada; conferir a validação antes de integrar à `main`.
+
 ## Executar
 
 Requisitos: Node.js compatível com Vite 8 (`20.19+` ou `22.12+`) e pnpm.

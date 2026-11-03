@@ -1,5 +1,5 @@
 {
-  "revisadoEm": "2026-10-29",
+  "revisadoEm": "2026-11-03",
   "grupos": [
     {
       "id": "personagens",
@@ -243,7 +243,8 @@
         "/arte/atividades/pesca-estatico.png",
         "/favicon.svg",
         "/icones/greywake-192.png",
-        "/icones/greywake-512.png"
+        "/icones/greywake-512.png",
+        "/arte/cidade/"
       ],
       "creditosComplementares": []
     },

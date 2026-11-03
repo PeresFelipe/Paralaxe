@@ -31,6 +31,10 @@ import IndicadorDeProgressoOcioso from "./features/atividades/IndicadorDeProgres
 import TelaDeAtividades from "./features/atividades/TelaDeAtividades";
 import PainelDePrestigio from "./features/personagem/PainelDePrestigio";
 import PainelDoCodice from "./features/cidade/PainelDoCodice";
+import {
+  ResumoDaCidade, TelaDaVigilia, PainelDeReconstrucao,
+  type AcoesDaVigilia,
+} from './features/cidade/VigiliaDaCidade';
 import PainelDeDesafios from "./features/aventura/PainelDeDesafios";
 import PainelRapido from "./features/navegacao/PainelRapido";
 import CreditosDosRecursos from "./components/jogo/CreditosDosRecursos";
@@ -58,7 +62,9 @@ type TelaDaCidade =
   | "ferreiro"
   | "banco"
   | "relicario"
-  | "codice";
+  | "codice"
+  | "vigilia"
+  | "reconstrucao";
 type PainelRapidoAtivo = "jornada" | "inventario" | null;
 
 /** Contrato entre a coordenação da partida e suas telas. Alterações são enviadas pelos callbacks, não ao IndexedDB. */
@@ -72,6 +78,11 @@ type PropriedadesDeEstruturaDoJogo = {
   aoAlterarEstadoDeRisco: (ativo: boolean) => void;
   aoAlternarPartida: () => void;
   aoPersistir: (partida: PartidaLocal, mensagem?: string) => void | Promise<void>;
+  aoIniciarVigilia: AcoesDaVigilia['aoIniciarVigilia'];
+  aoConcluirVigilia: AcoesDaVigilia['aoConcluirVigilia'];
+  aoCancelarVigilia: AcoesDaVigilia['aoCancelarVigilia'];
+  aoMelhorarDistrito: AcoesDaVigilia['aoMelhorarDistrito'];
+  aoComprarOfertaDoMercado: (idDaOferta: string) => Promise<void>;
   prepararRisco: () => Promise<PartidaLocal>;
   aoIniciarAtividade: (idDaDefinicaoDaAtividade: string) => Promise<void>;
   aoIniciarReceita: (
@@ -143,6 +154,11 @@ export default function EstruturaDoJogo({
   aoAlterarEstadoDeRisco,
   aoAlternarPartida,
   aoPersistir,
+  aoIniciarVigilia,
+  aoConcluirVigilia,
+  aoCancelarVigilia,
+  aoMelhorarDistrito,
+  aoComprarOfertaDoMercado,
   prepararRisco,
   aoIniciarAtividade,
   aoIniciarReceita,
@@ -417,6 +433,11 @@ export default function EstruturaDoJogo({
               aoTelaDoJogo={definirCidadeTelaDoJogo}
               aoAbrirAventura={() => abrirAventura("masmorra")}
               aoPersistir={aoPersistir}
+              aoIniciarVigilia={aoIniciarVigilia}
+              aoConcluirVigilia={aoConcluirVigilia}
+              aoCancelarVigilia={aoCancelarVigilia}
+              aoMelhorarDistrito={aoMelhorarDistrito}
+              aoComprarOfertaDoMercado={aoComprarOfertaDoMercado}
               aoDepositarPilhaNoBanco={aoDepositarPilhaNoBanco}
               aoRetirarPilhaDoBanco={aoRetirarPilhaDoBanco}
               aoDepositarEquipamentoNoBanco={aoDepositarEquipamentoNoBanco}
@@ -975,6 +996,11 @@ function ComponenteDaTelaDaCidade({
   aoTelaDoJogo,
   aoAbrirAventura,
   aoPersistir,
+  aoIniciarVigilia,
+  aoConcluirVigilia,
+  aoCancelarVigilia,
+  aoMelhorarDistrito,
+  aoComprarOfertaDoMercado,
   aoDepositarPilhaNoBanco,
   aoRetirarPilhaDoBanco,
   aoDepositarEquipamentoNoBanco,
@@ -985,6 +1011,11 @@ function ComponenteDaTelaDaCidade({
   aoTelaDoJogo: (telaDoJogo: TelaDaCidade) => void;
   aoAbrirAventura: () => void;
   aoPersistir: (partida: PartidaLocal, mensagem?: string) => void | Promise<void>;
+  aoIniciarVigilia: AcoesDaVigilia['aoIniciarVigilia'];
+  aoConcluirVigilia: AcoesDaVigilia['aoConcluirVigilia'];
+  aoCancelarVigilia: AcoesDaVigilia['aoCancelarVigilia'];
+  aoMelhorarDistrito: AcoesDaVigilia['aoMelhorarDistrito'];
+  aoComprarOfertaDoMercado: (idDaOferta: string) => Promise<void>;
   aoDepositarPilhaNoBanco: (idDaDefinicao: string, quantidade: number) => Promise<void>;
   aoRetirarPilhaDoBanco: (
     idDaDefinicao: string,
@@ -993,11 +1024,20 @@ function ComponenteDaTelaDaCidade({
   aoDepositarEquipamentoNoBanco: (idDaInstancia: string) => Promise<void>;
   aoRetirarEquipamentoDoBanco: (idDaInstancia: string) => Promise<void>;
 }) {
+  if (telaDoJogo === 'vigilia') {
+    return <TelaDaVigilia partida={partida} aoVoltar={() => aoTelaDoJogo('visaoGeral')}
+      aoIniciarVigilia={aoIniciarVigilia} aoConcluirVigilia={aoConcluirVigilia}
+      aoCancelarVigilia={aoCancelarVigilia} />;
+  }
+  if (telaDoJogo === 'reconstrucao') {
+    return <PainelDeReconstrucao partida={partida} aoVoltar={() => aoTelaDoJogo('visaoGeral')}
+      aoMelhorarDistrito={aoMelhorarDistrito} />;
+  }
   if (telaDoJogo === "codice") {
     return <PainelDoCodice partida={partida} aoVoltar={() => aoTelaDoJogo("visaoGeral")} />;
   }
   if (telaDoJogo === "mercado")
-    return <BancadaDoMercado partida={partida} aoAlterarPartida={aoPersistir} />;
+    return <BancadaDoMercado partida={partida} aoComprarOferta={aoComprarOfertaDoMercado} />;
   if (telaDoJogo === "banco") {
     return (
       <PainelDoBanco
@@ -1071,7 +1111,7 @@ function ComponenteDaTelaDaCidade({
   // Ferreiro e Relicário possuem apresentação contextual, mas não executam novos serviços nesta versão.
   if (telaDoJogo !== "visaoGeral") {
     const texto: Record<
-      Exclude<TelaDaCidade, "visaoGeral" | "taverna" | "mercado" | "banco">,
+      Exclude<TelaDaCidade, "visaoGeral" | "taverna" | "mercado" | "banco" | "vigilia" | "reconstrucao">,
       { titulo: string; corpo: string }
     > = {
       ferreiro: {
@@ -1123,9 +1163,9 @@ function ComponenteDaTelaDaCidade({
         </div>
       </div>
       <div className="cidade-visaoGeral-disposicao secao-espacamento">
-        <div className="contexto-arte contexto-arte--cidade" aria-hidden="true">
-          <span>ARTE 16:9 · CIDADE LIVRE</span>
-        </div>
+        <ResumoDaCidade partida={partida}
+          aoAbrirVigilia={() => aoTelaDoJogo('vigilia')}
+          aoAbrirReconstrucao={() => aoTelaDoJogo('reconstrucao')} />
         <div className="cidade-localDoJogo-gradeVisual">
           <Button variant="location" icon={<IconeDoJogo icone="livro-abrir" tamanho={32} />} onClick={() => aoTelaDoJogo("taverna")}>
             <strong>Taverna</strong>

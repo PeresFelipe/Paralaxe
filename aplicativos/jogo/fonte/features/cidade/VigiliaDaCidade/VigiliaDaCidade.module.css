@@ -1,0 +1,53 @@
+/* As cores/medidas vêm dos tokens existentes; os estágios são alcançáveis sem artes externas. */
+.cena { position: relative; overflow: hidden; aspect-ratio: 16 / 9; border: var(--ui-size-border) solid var(--ui-color-border-strong); border-radius: var(--ui-radius-xl); background: var(--ui-color-scene-deep); isolation: isolate; }
+.imagemCamada { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
+.imagemResponsiva { display: block; width: 100%; height: 100%; }
+.ilustracao, .imagemFinal { width: 100%; height: 100%; display: block; object-fit: cover; }
+.ceuTopo { stop-color: var(--ui-color-scene-deep); }
+.ceuBase { stop-color: var(--ui-color-scene-mid); }
+.montanhasDistantes { fill: var(--ui-color-scene-deep); opacity: .8; }
+.montanhasProximas { fill: var(--ui-color-scene-mid); opacity: .85; }
+.terra { fill: var(--ui-color-inventory-slot); }
+.estrada { fill: var(--ui-color-inventory-slot-raised); opacity: .65; }
+.muralha { fill: var(--ui-color-scene-mid); stroke: var(--ui-color-border-strong); stroke-width: var(--ui-size-border); }
+.sombra { fill: var(--ui-color-scene-shadow); }
+.parede { fill: var(--ui-color-border-strong); stroke: var(--ui-color-scene-shadow); stroke-width: var(--ui-size-border); }
+.telhado { fill: var(--ui-color-scene-deep); stroke: var(--ui-color-border); stroke-width: var(--ui-size-border); }
+.porta { fill: var(--ui-color-inventory-slot); }
+.janela { fill: var(--ui-color-warning); }
+.rachadura { stroke: var(--ui-color-scene-deep); stroke-width: var(--ui-size-border-strong); fill: none; }
+.detalhe { stroke: var(--ui-color-border); stroke-width: var(--ui-size-border-emphasis); fill: none; }
+.lanterna, .luzes { fill: var(--ui-color-warning); }
+.bandeira { fill: var(--ui-color-resource-health); }
+.caminhosRestaurados { stroke: var(--ui-color-border); stroke-width: var(--ui-size-border-strong); fill: none; }
+.ruina { opacity: .68; }
+.restaurado { opacity: 1; }
+.estagio1 .ceuBase { stop-color: var(--ui-color-scene-mid); }
+.estagio2 .terra { fill: var(--ui-color-inventory-slot-raised); }
+.estagio3 .parede { fill: var(--ui-color-surface-sunken); }
+.estagio4 .telhado { fill: var(--ui-color-primary); }
+.estagio4 .terra { fill: var(--ui-color-success); }
+.legenda { position: absolute; left: var(--ui-space-3); bottom: var(--ui-space-3); padding: var(--ui-space-2) var(--ui-space-3); color: var(--ui-color-text-inverse); background: var(--ui-color-scene-shadow); border-radius: var(--ui-radius-md); font-size: var(--ui-font-size-sm); font-weight: bold; }
+.hotspots { position: absolute; inset: 0; }
+.hotspot { position: absolute; transform: translate(-50%, -50%); min-width: var(--ui-size-control-sm); height: var(--ui-size-control-sm); padding: var(--ui-space-1); color: var(--ui-color-text-inverse); border: var(--ui-size-border) solid var(--ui-color-inventory-selected-outline); background: var(--ui-color-scene-shadow); border-radius: var(--ui-radius-pill); }
+.hotspot:hover, .hotspot:focus-visible { background: var(--ui-color-primary); }
+.resumo { display: grid; gap: var(--ui-space-4); min-width: 0; }
+.resumoTexto { display: grid; gap: var(--ui-space-3); }
+.resumoTexto h2, .controleDaVigilia h2, .cartaoDistrito h2 { margin: var(--ui-space-0); }
+.metricas, .acoes, .duracoes { display: flex; flex-wrap: wrap; align-items: center; gap: var(--ui-space-2); }
+.metricas { justify-content: space-between; }
+.painelDaVigilia { display: grid; gap: var(--ui-space-4); min-width: 0; }
+.controleDaVigilia { display: grid; align-content: start; gap: var(--ui-space-4); }
+.relogio { display: block; text-align: center; font-size: var(--ui-font-size-display-large); font-weight: bold; font-variant-numeric: tabular-nums; letter-spacing: var(--ui-letter-spacing-tight); color: var(--ui-color-primary); }
+.gradeDistritos { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--ui-space-4); margin-block: var(--ui-space-4); }
+.cartaoDistrito { display: grid; align-content: start; gap: var(--ui-space-3); }
+.cartaoDistrito > button { margin-top: auto; }
+.historico { margin-top: var(--ui-space-4); }
+.historico ul { padding-inline-start: var(--ui-space-6); }
+.erro { color: var(--ui-color-danger-text); padding: var(--ui-space-2); border: var(--ui-size-border) solid var(--ui-color-danger-border); border-radius: var(--ui-radius-sm); }
+@media (max-width: 720px) {
+  .gradeDistritos { grid-template-columns: 1fr; }
+  .hotspot { display: none; }
+  .acoes > button { flex: 1 1 auto; }
+}
+@media (prefers-reduced-motion: reduce) { .cena *, .cena *::before, .cena *::after { animation: none; transition: none; } }
