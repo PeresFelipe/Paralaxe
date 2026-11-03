@@ -215,7 +215,7 @@
         "url": null
       },
       "origem": null,
-      "modificacoes": "Artes de ambientação geradas com assistência de IA, com recortes, montagem e ajustes para o jogo.",
+      "modificacoes": "Artes de ambientação geradas com assistência de IA, com recortes, montagem e ajustes para o jogo. Cinco panoramas evolutivos 16:9 e 15 recursos de UI da Vigília produzidos com assistência de IA; versões WebP otimizadas e ícones recortados da prancha de referência.",
       "avisos": [
         {
           "rotulo": "Registro de origem",
@@ -243,7 +243,8 @@
         "/arte/atividades/pesca-estatico.png",
         "/favicon.svg",
         "/icones/greywake-192.png",
-        "/icones/greywake-512.png"
+        "/icones/greywake-512.png",
+        "/arte/cidade/"
       ],
       "creditosComplementares": []
     },

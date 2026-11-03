@@ -24,6 +24,18 @@ interface PropsCena {
   aoSelecionarDistrito?: (id: IdDoDistrito) => void
 }
 
+const ICONES_DOS_DISTRITOS: Record<IdDoDistrito, string> = {
+  praca: 'cidade-reconstrucao.png',
+  taverna: 'icone-taverna.png',
+  ferreiro: 'icone-ferreiro.png',
+  mercado: 'icone-mercado.png',
+  banco: 'icone-banco.png',
+  relicario: 'icone-relicario.png',
+  codice: 'icone-codice.png',
+  muralhas: 'cidade-reconstrucao.png',
+}
+const caminhoIcone = (nome: string) => `/arte/cidade/interface/${nome}`
+
 const POSICOES: Record<IdDoDistrito, { x: number; y: number; largura: number; altura: number }> = {
   praca: { x: 414, y: 331, largura: 122, altura: 72 },
   taverna: { x: 174, y: 238, largura: 142, altura: 100 },
@@ -113,7 +125,7 @@ export function CenaDaCidade({ partida, aoSelecionarDistrito }: PropsCena) {
           })}
         </div>
       ) : null}
-      <div className={estilos.legenda} aria-hidden="true">{ESTAGIOS_DA_CIDADE[estagio].nome}</div>
+      <div className={estilos.legenda} aria-hidden="true"><img className={estilos.emblemaDaCidade} src={caminhoIcone(`emblema-estagio-${estagio}.png`)} alt="" loading="lazy" decoding="async" />{ESTAGIOS_DA_CIDADE[estagio].nome}</div>
     </div>
   )
 }
@@ -130,14 +142,14 @@ export function ResumoDaCidade({ partida, aoAbrirVigilia, aoAbrirReconstrucao }:
     <div className={estilos.resumo}>
       <CenaDaCidade partida={partida} aoSelecionarDistrito={() => aoAbrirReconstrucao()} />
       <Card className={estilos.resumoTexto}>
-        <p className="secao-chamada">Cidade Livre · Reconstrução</p>
+        <p className="secao-chamada"><img className={estilos.iconeDecorativo} src={caminhoIcone("cidade-reconstrucao.png")} alt="" loading="lazy" decoding="async" /> Cidade Livre · Reconstrução</p>
         <h2>{ESTAGIOS_DA_CIDADE[estagio].nome}</h2>
         <p className="atenuado">{ESTAGIOS_DA_CIDADE[estagio].descricao}</p>
         <div className={estilos.metricas}>
-          <span><strong>{partida.vigilia.saldoBrasas}</strong> Brasas disponíveis</span>
+          <span><img className={estilos.iconeDecorativo} src={caminhoIcone("vigilia-brasa.png")} alt="" loading="lazy" decoding="async" /><strong>{partida.vigilia.saldoBrasas}</strong> Brasas disponíveis</span>
           <span><strong>{total}</strong> melhorias realizadas</span>
         </div>
-        {proximo !== undefined ? <ProgressBar label="Progresso da restauração" value={total - LIMIARES_DOS_ESTAGIOS[estagio]} max={proximo - LIMIARES_DOS_ESTAGIOS[estagio]} /> : <p role="status">Cidade reerguida — estágio máximo!</p>}
+        {proximo !== undefined ? <div className={estilos.progressoComArte}><img src={caminhoIcone("cidade-progresso.png")} className={estilos.decoracaoDoProgresso} alt="" loading="lazy" decoding="async" /><ProgressBar label="Progresso da restauração" value={total - LIMIARES_DOS_ESTAGIOS[estagio]} max={proximo - LIMIARES_DOS_ESTAGIOS[estagio]} /></div> : <p role="status">Cidade reerguida — estágio máximo!</p>}
         <div className={estilos.acoes}>
           <Button variant="primary" onClick={aoAbrirVigilia}>Iniciar Vigília</Button>
           <Button variant="secondary" onClick={aoAbrirReconstrucao}>Restaurar distritos</Button>
@@ -203,7 +215,7 @@ export function TelaDaVigilia({ partida, aoVoltar, aoIniciarVigilia, aoConcluirV
         <Card className={estilos.controleDaVigilia}>
           {ativa ? (
             <>
-              <p className="secao-chamada">{restante === 0 ? 'Sessão pronta para confirmar' : 'Concentração em andamento'}</p>
+              <p className="secao-chamada"><img className={estilos.iconeDecorativo} src={caminhoIcone("vigilia-cronometro.png")} alt="" loading="lazy" decoding="async" />{restante === 0 ? 'Sessão pronta para confirmar' : 'Concentração em andamento'}</p>
               <h2>{ativa.nome}</h2>
               <output className={estilos.relogio} aria-live="off" aria-label={`${restante} segundos restantes`}>{formatarRelogio(restante)}</output>
               <ProgressBar label="Tempo de concentração" value={progresso} max={100} />
@@ -216,7 +228,7 @@ export function TelaDaVigilia({ partida, aoVoltar, aoIniciarVigilia, aoConcluirV
             </>
           ) : (
             <>
-              <p className="secao-chamada">Assumir vigília</p>
+              <p className="secao-chamada"><img className={estilos.iconeDecorativo} src={caminhoIcone("vigilia-cronometro.png")} alt="" loading="lazy" decoding="async" /> Assumir vigília</p>
               <TextField label="Nome da sessão" value={nome} maxLength={80} onChange={evento => definirNome(evento.target.value)} />
               <div className={estilos.duracoes} role="group" aria-label="Duração de concentração">
                 {[15, 25, 45, 60].map(minutos => (
@@ -225,7 +237,7 @@ export function TelaDaVigilia({ partida, aoVoltar, aoIniciarVigilia, aoConcluirV
               </div>
               <TextField label="Duração personalizada (10–120 minutos)" type="number" min={10} max={120} value={personalizada} onChange={evento => definirPersonalizada(evento.target.value)} />
               <Button variant="ghost" size="sm" onClick={() => { const valor = Number(personalizada); if (Number.isInteger(valor) && valor >= 10 && valor <= 120) { definirDuracao(valor); definirErro(null) } else definirErro('Digite um número inteiro entre 10 e 120.') }}>Usar duração personalizada</Button>
-              <p className="atenuado">{duracao} minutos de foco · {recompensa} Brasas ao concluir</p>
+              <p className="atenuado"><img className={estilos.iconeDecorativo} src={caminhoIcone("vigilia-brasa.png")} alt="" loading="lazy" decoding="async" />{duracao} minutos de foco · {recompensa} Brasas ao concluir</p>
               <Button disabled={pendente} onClick={() => void executar(() => aoIniciarVigilia(nome, duracao))}>Iniciar Vigília</Button>
               <p className="atenuado">O jogo offline não consegue verificar o uso de outros aplicativos. Use esta sessão como compromisso pessoal.</p>
             </>
@@ -269,7 +281,7 @@ export function PainelDeReconstrucao({ partida, aoVoltar, aoMelhorarDistrito }: 
           return (
             <Card key={distrito.id} className={estilos.cartaoDistrito}>
               <p className="secao-chamada">Nível {melhoria.nivelAtual} / 4</p>
-              <h2>{distrito.nome}</h2>
+              <h2 className={estilos.tituloDistrito}><img className={estilos.iconeDistrito} src={caminhoIcone(ICONES_DOS_DISTRITOS[distrito.id])} alt="" loading="lazy" decoding="async" />{distrito.nome}</h2>
               <p className="atenuado">{distrito.descricao}</p>
               <Button variant="secondary" disabled={!melhoria.permitido || pendente !== null} onClick={() => void melhorar(distrito.id)}>{melhoria.custo === null ? 'Concluído' : `Restaurar · ${melhoria.custo} Brasas`}</Button>
               {!melhoria.permitido ? <p className="atenuado">{melhoria.motivo}</p> : null}

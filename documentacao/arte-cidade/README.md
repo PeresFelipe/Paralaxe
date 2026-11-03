@@ -12,7 +12,7 @@
 
 ## Publicação das artes no GitHub
 
-O código funcional está publicado na branch `codex/vigilia-cidade-evolutiva-2026-11-03`, mas as imagens WebP/PNG **ainda não estão presentes no repositório remoto**. Por isso, `CENAS_DA_CIDADE` mantém `disponivel: false` e a interface usa SVG como alternativa operacional.
+A branch de arte `codex/vigilia-cidade-artes-completas-2026-11-03` publica as cinco imagens WebP, cinco versões móveis, quinze recursos de interface e referências conceituais. `CENAS_DA_CIDADE` mantém `disponivel: true` para as cenas; camadas independentes não alinhadas seguem desabilitadas. A etapa de importação descrita abaixo aplica-se apenas a clones da branch anterior que ainda não possuam os binários.
 
 Para importar o ZIP `greywake-cidade-artes-vigilia.zip` (arquivo fornecido separadamente no ChatGPT), execute em um clone limpo desta branch:
 

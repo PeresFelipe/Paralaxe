@@ -51,3 +51,12 @@
   .acoes > button { flex: 1 1 auto; }
 }
 @media (prefers-reduced-motion: reduce) { .cena *, .cena *::before, .cena *::after { animation: none; transition: none; } }
+
+/* Artes finais da Vigília — elementos complementares; não exigem animações. */
+.legenda { display: flex; align-items: center; gap: var(--ui-space-2); }
+.emblemaDaCidade { display: block; width: var(--ui-size-control-sm); height: var(--ui-size-control-sm); object-fit: contain; }
+.iconeDecorativo { display: inline-block; vertical-align: middle; width: var(--ui-size-control-sm); height: var(--ui-size-control-sm); object-fit: contain; margin-inline-end: var(--ui-space-1); }
+.tituloDistrito { display: flex; align-items: center; gap: var(--ui-space-2); }
+.iconeDistrito { width: var(--ui-size-control-sm); height: var(--ui-size-control-sm); object-fit: contain; flex: 0 0 auto; }
+.progressoComArte { display: grid; gap: var(--ui-space-1); }
+.decoracaoDoProgresso { display: block; width: 100%; max-height: var(--ui-size-control-sm); object-fit: contain; object-position: center; }

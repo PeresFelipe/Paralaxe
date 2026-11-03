@@ -45,7 +45,7 @@ export interface CenaDaCidadeDefinida {
 export const CENAS_DA_CIDADE: readonly CenaDaCidadeDefinida[] = [0, 1, 2, 3, 4].map(estagio => ({
   estagio,
   caminho: `/arte/cidade/cidade-estagio-${estagio}.webp`,
-  disponivel: false,
+  disponivel: true,
   camadas: DISTRITOS_DA_CIDADE.map(distrito => ({
     id: distrito.id,
     nivelMinimo: 1,
