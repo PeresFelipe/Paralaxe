@@ -91,7 +91,7 @@ describe('Vigília da Cidade', () => {
 
   it('não credita uma sessão vencida sem confirmação após recarregar', () => {
     const ativa = iniciarVigilia(partida(), { id: 'reabrir', nome: 'Leitura', duracaoMinutos: 25 }, inicio)
-    const restaurada = structuredClone(ativa)
+    const restaurada = JSON.parse(JSON.stringify(ativa)) as typeof ativa
     expect(restaurada.vigilia.saldoBrasas).toBe(0)
     expect(concluirVigilia(restaurada, 'reabrir', fim).vigilia.saldoBrasas).toBe(5)
   })
