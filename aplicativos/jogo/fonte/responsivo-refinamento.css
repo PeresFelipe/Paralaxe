@@ -60,7 +60,7 @@ html, body, #raiz {
     max-inline-size: 100%;
   }
 }
-/* Em 320px, privilegiar conteúdo e não larguras mínimas artificiais. */
+/* Em telas muito estreitas, evitar larguras mínimas artificiais. */
 @media (max-width: 23rem) {
   .jogo-disposicao {
     max-inline-size: 100%;
