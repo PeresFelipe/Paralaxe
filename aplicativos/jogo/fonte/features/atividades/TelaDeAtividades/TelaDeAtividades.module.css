@@ -21,7 +21,7 @@
   min-width: 0;
 }
 
-@media (max-width: var(--ui-oficios-medida-94)) {
+@media (max-width: 540px) {
   :global(.atividades-telaDoJogo) .stage {
     grid-template-columns: minmax(0, 1fr);
   }
@@ -162,7 +162,7 @@
   font-weight:var(--ui-oficios-peso-113);
 }
 
-@media (max-width: var(--ui-oficios-medida-99)) {
+@media (max-width: 720px) {
   .optionsHeading > span {
     display: none;
   }
@@ -179,7 +179,7 @@
   }
 }
 
-@media (max-width: var(--ui-oficios-medida-100)) {
+@media (max-width: 440px) {
   .optionTitle {
     flex-direction: column;
     align-items: flex-start;
@@ -191,11 +191,11 @@
 .options, .option, .optionBody { min-inline-size: 0; max-inline-size: 100%; }
 .option { grid-template-columns: minmax(0, var(--ui-size-activity-option-icon)) minmax(0, 1fr); }
 .optionBody :where(h2, strong, p) { overflow-wrap: anywhere; }
-@media (max-width: var(--ui-oficios-medida-101)) {
+@media (max-width: 45rem) {
   .option { grid-template-columns: minmax(0, var(--ui-size-activity-option-icon-compact)) minmax(0, 1fr); }
   .optionTitle { flex-wrap: wrap; }
 }
-@media (max-width: var(--ui-oficios-medida-102)) {
+@media (max-width: 23rem) {
   .option { gap: var(--ui-space-2); }
   .optionsHeading { flex-wrap: wrap; }
 }

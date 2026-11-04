@@ -32,6 +32,6 @@
   font-size:var(--ui-oficios-fonte-96);
   text-align: left;
 }
-@media (max-width: var(--ui-oficios-medida-94)) {
+@media (max-width: 540px) {
   .moldura { width: min(100%, var(--ui-oficios-medida-95)); }
 }

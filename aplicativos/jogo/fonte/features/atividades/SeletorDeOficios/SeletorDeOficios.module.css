@@ -130,7 +130,7 @@
   from { opacity: 0; transform: translateY(var(--ui-oficios-medida-76)) scale(.985); }
   to { opacity: 1; transform: translateY(0) scale(1); }
 }
-@media (max-width: var(--ui-oficios-medida-77)) {
+@media (max-width: 375px) {
   .selo { display: none; }
   .gatilho { gap: var(--ui-oficios-medida-68); padding: var(--ui-oficios-medida-54); }
 }
