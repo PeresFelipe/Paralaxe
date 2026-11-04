@@ -70,7 +70,7 @@ export function idDoRecursoDePrestigio(
     if (prestigio === 1) return ultimoNormal[profissao]
     return idDoRecursoDePrestigio(profissao, (prestigio - 1) as 1 | 2, 6)
   }
-  return `material.prestigio.${profissao}.${slugDeRecurso(RECURSOS[profissao][prestigio-1][indice] ?? '')}`
+  return `material.prestigio.${profissao}.${slugDeRecurso(((((((RECURSOS[profissao][prestigio-1] ?? []) ?? []) ?? []) ?? []) ?? []) ?? [])[indice] ?? '')}`
 }
 
 function idDaLiga(prestigio: 1 | 2 | 3, indice: number): string {
@@ -78,17 +78,17 @@ function idDaLiga(prestigio: 1 | 2 | 3, indice: number): string {
     if (prestigio === 1) return 'material.grianchloch-refinado'
     return idDaLiga((prestigio - 1) as 1 | 2, 6)
   }
-  return `material.prestigio.metalurgia.${slugDeRecurso(LIGAS[prestigio-1][indice] ?? '')}`
+  return `material.prestigio.metalurgia.${slugDeRecurso((LIGAS[prestigio-1] ?? [])[indice] ?? '')}`
 }
 
 export const ATIVIDADES_DE_PRESTIGIO: readonly DefinicaoDeAtividadeOciosa[] =
   COLETAS.flatMap(profissao => ([1, 2, 3] as const).flatMap(prestigio =>
     NIVEIS.map((nivel, indice): DefinicaoDeAtividadeOciosa => ({
-      id: `coletar.${profissao}.p${prestigio}.${slugDeRecurso(RECURSOS[profissao][prestigio-1][indice] ?? '')}`,
+      id: `coletar.${profissao}.p${prestigio}.${slugDeRecurso(((((((RECURSOS[profissao][prestigio-1] ?? []) ?? []) ?? []) ?? []) ?? []) ?? [])[indice] ?? '')}`,
       idDaProfissao: profissao,
-      nome: `Coletar ${RECURSOS[profissao][prestigio-1][indice] ?? ''} · Prestígio ${prestigio}`,
+      nome: `Coletar ${((((((RECURSOS[profissao][prestigio-1] ?? []) ?? []) ?? []) ?? []) ?? []) ?? [])[indice] ?? ''} · Prestígio ${prestigio}`,
       idDaDefinicaoDoItemProduzido: idDoRecursoDePrestigio(profissao, prestigio, indice),
-      nomeDoResultado: RECURSOS[profissao][prestigio-1][indice] ?? '',
+      nomeDoResultado: ((((((RECURSOS[profissao][prestigio-1] ?? []) ?? []) ?? []) ?? []) ?? []) ?? [])[indice] ?? '',
       nivelExigidoDaProfissao: nivel, prestigioExigido: prestigio,
       segundosPorAcao: 10 + prestigio*3 + indice*3,
       xpDeProfissaoPorAcao: 18 + prestigio*10 + indice*9,
@@ -101,45 +101,45 @@ export const RECEITAS_DE_PRESTIGIO: readonly DefinicaoDeReceitaDeFabricacao[] =
     const madeira = idDoRecursoDePrestigio('lenhador', prestigio, indice)
     const peixe = idDoRecursoDePrestigio('pesca', prestigio, indice)
     const erva = idDoRecursoDePrestigio('herbologia', prestigio, indice)
-    const comida = `item.consumivel.p${prestigio}.${slugDeRecurso(PREPAROS[prestigio-1][indice] ?? '')}`
-    const arma = `arma.p${prestigio}.${slugDeRecurso(FORJAS[prestigio-1][indice] ?? '')}`
+    const comida = `item.consumivel.p${prestigio}.${slugDeRecurso((PREPAROS[prestigio-1] ?? [])[indice] ?? '')}`
+    const arma = `arma.p${prestigio}.${slugDeRecurso((FORJAS[prestigio-1] ?? [])[indice] ?? '')}`
     return [
-      { id: `receita.metalurgia.p${prestigio}.${slugDeRecurso(LIGAS[prestigio-1][indice] ?? '')}`,
-        idDaProfissao: 'metalurgia', nome: LIGAS[prestigio-1][indice] ?? '',
+      { id: `receita.metalurgia.p${prestigio}.${slugDeRecurso((LIGAS[prestigio-1] ?? [])[indice] ?? '')}`,
+        idDaProfissao: 'metalurgia', nome: (LIGAS[prestigio-1] ?? [])[indice] ?? '',
         prestigioExigido: prestigio, nivelExigidoDaProfissao: nivel,
         segundosPorAcao: 15 + prestigio*5 + indice*4, xpDeProfissaoPorAcao: 25 + prestigio*12 + indice*9,
         ingredientes: [{ idDaDefinicao: idDoRecursoDePrestigio('mineracao', prestigio, indice), quantidade: 3 }],
-        saida: { tipo: 'item', idDaDefinicao: metal, nome: LIGAS[prestigio-1][indice] ?? '', quantidade: 1 },
+        saida: { tipo: 'item', idDaDefinicao: metal, nome: (LIGAS[prestigio-1] ?? [])[indice] ?? '', quantidade: 1 },
       },
-      { id: `receita.forja.p${prestigio}.${slugDeRecurso(FORJAS[prestigio-1][indice] ?? '')}`,
-        idDaProfissao: 'forja', nome: `Peça de ${FORJAS[prestigio-1][indice] ?? ''}`,
+      { id: `receita.forja.p${prestigio}.${slugDeRecurso((FORJAS[prestigio-1] ?? [])[indice] ?? '')}`,
+        idDaProfissao: 'forja', nome: `Peça de ${(FORJAS[prestigio-1] ?? [])[indice] ?? ''}`,
         prestigioExigido: prestigio, nivelExigidoDaProfissao: nivel,
         segundosPorAcao: 25 + prestigio*6 + indice*5, xpDeProfissaoPorAcao: 40 + prestigio*15 + indice*11,
         ingredientes: [{ idDaDefinicao: metal, quantidade: 2 }, { idDaDefinicao: madeira, quantidade: 3 }],
-        saida: { tipo: 'equipamento', idDaDefinicao: arma, nome: `Peça de ${FORJAS[prestigio-1][indice] ?? ''}` },
+        saida: { tipo: 'equipamento', idDaDefinicao: arma, nome: `Peça de ${(FORJAS[prestigio-1] ?? [])[indice] ?? ''}` },
       },
-      { id: `receita.culinaria.p${prestigio}.${slugDeRecurso(PREPAROS[prestigio-1][indice] ?? '')}`,
-        idDaProfissao: 'culinaria', nome: PREPAROS[prestigio-1][indice] ?? '',
+      { id: `receita.culinaria.p${prestigio}.${slugDeRecurso((PREPAROS[prestigio-1] ?? [])[indice] ?? '')}`,
+        idDaProfissao: 'culinaria', nome: (PREPAROS[prestigio-1] ?? [])[indice] ?? '',
         prestigioExigido: prestigio, nivelExigidoDaProfissao: nivel,
         segundosPorAcao: 18 + prestigio*5 + indice*3, xpDeProfissaoPorAcao: 28 + prestigio*12 + indice*9,
         ingredientes: [{ idDaDefinicao: peixe, quantidade: 2 }, { idDaDefinicao: erva, quantidade: 2 }],
-        saida: { tipo: 'item', idDaDefinicao: comida, nome: PREPAROS[prestigio-1][indice] ?? '', quantidade: 1 },
+        saida: { tipo: 'item', idDaDefinicao: comida, nome: (PREPAROS[prestigio-1] ?? [])[indice] ?? '', quantidade: 1 },
       },
     ]
   }))
 
 export const EQUIPAMENTOS_DE_PRESTIGIO: readonly DefinicaoDeEquipamento[] =
   ([1,2,3] as const).flatMap(prestigio => NIVEIS.map((_, indice): DefinicaoDeEquipamento => ({
-    id: `arma.p${prestigio}.${slugDeRecurso(FORJAS[prestigio-1][indice] ?? '')}`,
-    nome: `Peça de ${FORJAS[prestigio-1][indice] ?? ''}`,
+    id: `arma.p${prestigio}.${slugDeRecurso((FORJAS[prestigio-1] ?? [])[indice] ?? '')}`,
+    nome: `Peça de ${(FORJAS[prestigio-1] ?? [])[indice] ?? ''}`,
     espaco: 'maoPrincipal', estatisticaPrincipal: { tipo: 'ataque', valor: 20 + prestigio*12 + indice*5 },
     combateDaArma: { tipoDeDano: 'corte', intervaloDeAcaoEmSegundos: 2.2, escalonamento: { forca: 'B', destreza: 'C' } },
   })))
 
 export const CONSUMIVEIS_DE_PRESTIGIO: readonly DefinicaoDeConsumivelDeCombate[] =
   ([1,2,3] as const).flatMap(prestigio => NIVEIS.map((_,indice): DefinicaoDeConsumivelDeCombate => ({
-    id: `item.consumivel.p${prestigio}.${slugDeRecurso(PREPAROS[prestigio-1][indice] ?? '')}`,
-    nome: PREPAROS[prestigio-1][indice] ?? '',
+    id: `item.consumivel.p${prestigio}.${slugDeRecurso((PREPAROS[prestigio-1] ?? [])[indice] ?? '')}`,
+    nome: (PREPAROS[prestigio-1] ?? [])[indice] ?? '',
     restaurar: { vida: 35 + prestigio*35 + indice*12, mana: 15 + prestigio*18 + indice*7,
       folego: 20 + prestigio*20 + indice*8 },
   })))
