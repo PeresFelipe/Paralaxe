@@ -57,7 +57,7 @@ function Aplicativo({ repositorioDePartidas }: AplicativoProps) {
     definirMensagem, ultimoResultadoDoTrabalho,
     ausenteResumo, definirAusenteResumo, ehSalvando, riscoAtivo, definirRiscoAtivo,
     tratarCriarPartida, tratarCarregarPartida, tratarIniciarAtividade, tratarIniciarAtividadeSecundaria,
-    tratarPararAtividadeSecundaria, tratarIniciarReceita, tratarIniciarReceitaSecundaria, tratarPararReceitaSecundaria, tratarAlterarPrioridadeDeOficio,
+    tratarPararAtividadeSecundaria, tratarIniciarAtividadeTerciaria, tratarPararAtividadeTerciaria, tratarIniciarReceita, tratarIniciarReceitaSecundaria, tratarPararReceitaSecundaria, tratarIniciarReceitaTerciaria, tratarPararReceitaTerciaria, tratarAlterarPrioridadeDeOficio,
     tratarPararTrabalho, tratarPrestigiarProfissao, tratarEscolherJornadaMeta, tratarEquipar, tratarDistribuirAtributos,
     tratarDesbloquearPrestigioNo, tratarRealizarPersonagemPrestigio, tratarDepositarBancoPilha,
     tratarRetirarBancoPilha, tratarDepositarBancoEquipamento, tratarRetirarBancoEquipamento,
@@ -140,9 +140,13 @@ function Aplicativo({ repositorioDePartidas }: AplicativoProps) {
           aoIniciarAtividade={tratarIniciarAtividade}
           aoIniciarAtividadeSecundaria={tratarIniciarAtividadeSecundaria}
           aoPararAtividadeSecundaria={tratarPararAtividadeSecundaria}
+          aoIniciarAtividadeTerciaria={tratarIniciarAtividadeTerciaria}
+          aoPararAtividadeTerciaria={tratarPararAtividadeTerciaria}
           aoIniciarReceita={tratarIniciarReceita}
           aoIniciarReceitaSecundaria={tratarIniciarReceitaSecundaria}
           aoPararReceitaSecundaria={tratarPararReceitaSecundaria}
+          aoIniciarReceitaTerciaria={tratarIniciarReceitaTerciaria}
+          aoPararReceitaTerciaria={tratarPararReceitaTerciaria}
           aoAlterarPrioridade={tratarAlterarPrioridadeDeOficio}
           aoEscolherMetaDaJornada={tratarEscolherJornadaMeta}
           aoPararTrabalho={tratarPararTrabalho}

@@ -83,9 +83,13 @@ type PropriedadesDeEstruturaDoJogo = {
   aoIniciarAtividade: (idDaDefinicaoDaAtividade: string) => Promise<void>;
   aoIniciarAtividadeSecundaria: (id: string) => Promise<void>;
   aoPararAtividadeSecundaria: () => Promise<void>;
+  aoIniciarAtividadeTerciaria: (id: string) => Promise<void>;
+  aoPararAtividadeTerciaria: () => Promise<void>;
   aoAlterarPrioridade: (prioridade: PrioridadeDeOficio) => Promise<void>;
   aoIniciarReceitaSecundaria: (id: string) => Promise<void>;
   aoPararReceitaSecundaria: () => Promise<void>;
+  aoIniciarReceitaTerciaria: (id: string) => Promise<void>;
+  aoPararReceitaTerciaria: () => Promise<void>;
   aoIniciarReceita: (
     idDaDefinicaoDaReceita: string,
     idDaInstanciaDoEquipamentoAlvo?: string | null,
@@ -161,9 +165,13 @@ export default function EstruturaDoJogo({
   aoIniciarAtividade,
   aoIniciarAtividadeSecundaria,
   aoPararAtividadeSecundaria,
+  aoIniciarAtividadeTerciaria,
+  aoPararAtividadeTerciaria,
   aoIniciarReceita,
   aoIniciarReceitaSecundaria,
   aoPararReceitaSecundaria,
+  aoIniciarReceitaTerciaria,
+  aoPararReceitaTerciaria,
   aoAlterarPrioridade,
   aoEscolherMetaDaJornada,
   aoPararTrabalho,
@@ -408,9 +416,13 @@ export default function EstruturaDoJogo({
               aoIniciarAtividade={aoIniciarAtividade}
               aoIniciarAtividadeSecundaria={aoIniciarAtividadeSecundaria}
               aoPararAtividadeSecundaria={aoPararAtividadeSecundaria}
+              aoIniciarAtividadeTerciaria={aoIniciarAtividadeTerciaria}
+              aoPararAtividadeTerciaria={aoPararAtividadeTerciaria}
               aoIniciarReceita={aoIniciarReceita}
               aoIniciarReceitaSecundaria={aoIniciarReceitaSecundaria}
               aoPararReceitaSecundaria={aoPararReceitaSecundaria}
+              aoIniciarReceitaTerciaria={aoIniciarReceitaTerciaria}
+              aoPararReceitaTerciaria={aoPararReceitaTerciaria}
               aoAlterarPrioridade={aoAlterarPrioridade}
               aoPararTrabalho={aoPararTrabalho}
               aoPrestigiarProfissao={aoPrestigiarProfissao}
