@@ -173,3 +173,15 @@
   .execucaoCabecalho, .confirmarChefe, .painelConclusao { align-items: stretch; flex-direction: column; }
 }
 /* GW-UI-RESPONSIVA-V1: FIM DO REFINAMENTO */
+
+/* O painel de expedição usa texto e ritmo vertical em vez de cartões secundários fortes. */
+.recursoGrade > div {
+  border: 0;
+  border-bottom: var(--ui-size-border) solid var(--ui-color-border);
+  background: transparent;
+}
+.escolhaNarrativa {
+  border: 0;
+  border-left: var(--ui-size-border-emphasis) solid var(--ui-color-warning);
+  background: var(--ui-color-surface-raised);
+}

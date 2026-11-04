@@ -125,3 +125,9 @@
   .legend { flex-wrap: wrap; }
 }
 /* GW-UI-RESPONSIVA-V1: FIM DO REFINAMENTO */
+
+/* Slot vazio é referência de capacidade, não precisa disputar atenção com os itens. */
+.emptySlot { opacity: 0.32; }
+.legend { font-family: var(--ui-font-family-body); font-size: var(--ui-font-size-sm); font-weight: var(--ui-font-weight-semibold); }
+.inspection { background: var(--ui-color-surface-raised); border-left-color: var(--ui-color-primary); }
+.inspection > strong { color: var(--ui-color-text); font-family: var(--ui-font-family-body); font-weight: var(--ui-font-weight-semibold); }

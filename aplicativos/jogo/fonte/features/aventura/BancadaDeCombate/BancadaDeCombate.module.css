@@ -167,3 +167,19 @@
   .consumables { grid-template-columns: minmax(0, 1fr); }
 }
 /* GW-UI-RESPONSIVA-V1: FIM DO REFINAMENTO */
+
+/* Estados e recursos são separados pelo espaçamento, não por caixas dentro de caixas. */
+.resourcePile > div {
+  border: 0;
+  border-bottom: var(--ui-size-border) solid var(--ui-color-border);
+  border-radius: var(--ui-radius-none);
+  background: transparent;
+  padding-inline: var(--ui-space-1);
+}
+.combatGrid :global([data-ui='card']) {
+  box-shadow: none;
+  border-color: var(--ui-color-border);
+}
+.combatGrid .enemy {
+  border-color: var(--ui-color-danger-border);
+}

@@ -10,8 +10,8 @@
   gap: var(--ui-space-2);
   min-width: 0;
   padding: var(--ui-space-2-25) var(--ui-space-2-5);
-  border: var(--ui-size-border) solid var(--ui-color-border);
-  background: var(--ui-color-surface);
+  border-bottom: var(--ui-size-border) solid var(--ui-color-border);
+  background: transparent;
   color: var(--ui-color-text);
 }
 

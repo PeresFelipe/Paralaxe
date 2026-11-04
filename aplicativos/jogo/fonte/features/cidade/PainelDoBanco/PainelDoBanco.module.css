@@ -91,3 +91,7 @@
   .row { align-items: stretch; }
 }
 /* GW-UI-RESPONSIVA-V1: FIM DO REFINAMENTO */
+
+/* Banco: a lista usa uma única superfície e divisórias delicadas. */
+.listCard { box-shadow: none; }
+.row { padding-block: var(--ui-space-2-5); }
