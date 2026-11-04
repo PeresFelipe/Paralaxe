@@ -136,6 +136,10 @@ export function adaptarInimigoParaDificuldade(
       : [NORMAL, DIFICIL, IMPOSSIVEL]
   const habilidadesAdicionais = reforcos.flatMap(x => x[inimigo.id as InimigoDeDunLiath] ?? [])
   const escala = MULTIPLICADORES[dificuldade]
+  // Golpes de fase terminal têm precedência quando a condição de Vida se torna verdadeira.
+  // Sem isso, habilidades-base prontas poderiam impedir "Até o Último" de executar.
+  const prioritarias = habilidadesAdicionais.filter(h => h.ativarQuandoVidaAte !== undefined)
+  const demais = habilidadesAdicionais.filter(h => h.ativarQuandoVidaAte === undefined)
   return {
     ...inimigo,
     vidaMaxima: Math.ceil(inimigo.vidaMaxima * escala),
@@ -143,6 +147,6 @@ export function adaptarInimigoParaDificuldade(
     poder: Math.ceil(inimigo.poder * escala),
     nivelDeCombate: Math.ceil(inimigo.nivelDeCombate * escala),
     recompensaDeXp: Math.ceil(inimigo.recompensaDeXp * escala),
-    habilidades: [...inimigo.habilidades, ...habilidadesAdicionais],
+    habilidades: [...prioritarias, ...inimigo.habilidades, ...demais],
   }
 }
