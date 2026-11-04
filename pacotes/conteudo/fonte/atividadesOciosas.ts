@@ -39,6 +39,16 @@ export const ATIVIDADES_OCIOSAS_INICIAIS = [
     xpDeProfissaoPorAcao: 8,
   },
   {
+    id: "coletar.lenhador.beith",
+    idDaProfissao: "lenhador",
+    nome: 'Cortar Beith',
+    idDaDefinicaoDoItemProduzido: 'material.beith',
+    nomeDoResultado: 'Beith',
+    nivelExigidoDaProfissao: 10,
+    segundosPorAcao: 8,
+    xpDeProfissaoPorAcao: 16,
+  },
+  {
     id: "coletar.pesca.scadan",
     idDaProfissao: "pesca",
     nome: 'Pescar Scadán',
@@ -49,6 +59,16 @@ export const ATIVIDADES_OCIOSAS_INICIAIS = [
     xpDeProfissaoPorAcao: 10,
   },
   {
+    id: "coletar.pesca.breac",
+    idDaProfissao: "pesca",
+    nome: 'Pescar Breac',
+    idDaDefinicaoDoItemProduzido: 'material.breac',
+    nomeDoResultado: 'Breac',
+    nivelExigidoDaProfissao: 10,
+    segundosPorAcao: 9,
+    xpDeProfissaoPorAcao: 18,
+  },
+  {
     id: "coletar.herbologia.neantog",
     idDaProfissao: "herbologia",
     nome: 'Colher Neantóg',
@@ -57,6 +77,16 @@ export const ATIVIDADES_OCIOSAS_INICIAIS = [
     nivelExigidoDaProfissao: 1,
     segundosPorAcao: 4,
     xpDeProfissaoPorAcao: 8,
+  },
+  {
+    id: "coletar.herbologia.seamair",
+    idDaProfissao: "herbologia",
+    nome: 'Colher Seamair',
+    idDaDefinicaoDoItemProduzido: 'material.seamair',
+    nomeDoResultado: 'Seamair',
+    nivelExigidoDaProfissao: 10,
+    segundosPorAcao: 8,
+    xpDeProfissaoPorAcao: 16,
   },
 ] as const satisfies readonly DefinicaoDeAtividadeOciosa[]
 

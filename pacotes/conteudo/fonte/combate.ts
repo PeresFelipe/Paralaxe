@@ -225,6 +225,16 @@ export const CONSUMIVEIS_DE_COMBATE = [
     restaurar: { vida: 35, folego: 20 },
   },
   {
+    id: "item.comida.breac-assado",
+    nome: 'Breac Assado',
+    restaurar: { vida: 45, folego: 25 },
+  },
+  {
+    id: "item.consumivel.infusao-seamair",
+    nome: 'Infusão de Seamair',
+    restaurar: { vida: 35, mana: 20 },
+  },
+  {
     id: "item.consumivel.carmesim-frasco",
     nome: 'Frasco Carmesim',
     restaurar: { vida: 70, mana: 25, folego: 25 },

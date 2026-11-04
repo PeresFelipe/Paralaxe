@@ -13,6 +13,7 @@ export const DEFINICOES_DE_EQUIPAMENTO = [
   { id: "arma.simples-cajado", nome: 'Cajado Simples', espaco: "maoPrincipal", estatisticaPrincipal: { tipo: "ataque", valor: 9 }, combateDaArma: { tipoDeDano: "arcano", intervaloDeAcaoEmSegundos: 2.4, escalonamento: { inteligencia: 'C' } } },
   { id: "armadura.simples-vestes", nome: 'Vestes Simples', espaco: "peitoral", estatisticaPrincipal: { tipo: "defesa", valor: 6 } },
   { id: "arma.curto-arco", nome: 'Arco Curto', espaco: "maoPrincipal", estatisticaPrincipal: { tipo: "ataque", valor: 12 }, combateDaArma: { tipoDeDano: "perfuracao", intervaloDeAcaoEmSegundos: 2.3, escalonamento: { forca: 'D', destreza: 'A' } } },
+  { id: "arma.beith-arco", nome: 'Arco de Beith', espaco: "maoPrincipal", estatisticaPrincipal: { tipo: "ataque", valor: 15 }, combateDaArma: { tipoDeDano: "perfuracao", intervaloDeAcaoEmSegundos: 2.3, escalonamento: { forca: 'D', destreza: 'A' } } },
   { id: "armadura.caca-gibao", nome: 'Gibão de Caça', espaco: "peitoral", estatisticaPrincipal: { tipo: "defesa", valor: 10 } },
   { id: "arma.simples-maca", nome: 'Maça Simples', espaco: "maoPrincipal", estatisticaPrincipal: { tipo: "ataque", valor: 14 }, combateDaArma: { tipoDeDano: "impacto", intervaloDeAcaoEmSegundos: 2.3, escalonamento: { forca: 'C', destreza: 'D' } } },
   { id: "catalisador.simples", nome: 'Catalisador Simples', espaco: "maoSecundaria" },
