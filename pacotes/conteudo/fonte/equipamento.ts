@@ -57,6 +57,8 @@ export const DEFINICOES_DE_EQUIPAMENTO = [
   { id: "arma.patrulha-arco", nome: 'Arco de Patrulha', espaco: "maoPrincipal", estatisticaPrincipal: { tipo: "ataque", valor: 13 }, combateDaArma: { tipoDeDano: "perfuracao", intervaloDeAcaoEmSegundos: 2.25, escalonamento: { forca: 'D', destreza: 'A' } } },
   { id: "arma.campanha-cajado", nome: 'Cajado de Campanha', espaco: "maoPrincipal", estatisticaPrincipal: { tipo: "ataque", valor: 11 }, combateDaArma: { tipoDeDano: "arcano", intervaloDeAcaoEmSegundos: 2.4, escalonamento: { inteligencia: 'B' } } },
   { id: "escudo.vigia-escudo", nome: 'Escudo do Vigia', espaco: "maoSecundaria", estatisticaPrincipal: { tipo: "defesa", valor: 11 } },
+  { id: 'escudo.ultimo-vigia', nome: 'Escudo do Último Vigia', espaco: 'maoSecundaria',
+    estatisticaPrincipal: { tipo: 'defesa', valor: 24 } },
 ] as const satisfies readonly DefinicaoDeEquipamento[]
 
 /** Retorna a definição compartilhada ou null; os consumidores não devem mutar os dados do catálogo. */

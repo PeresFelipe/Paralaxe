@@ -34,10 +34,13 @@ export interface DefinicaoDeSalaDaMasmorra {
   fracaoDeDanoDaArmadilha?: number
 }
 
+export const DIFICULDADES_DE_DUN_LIATH = ['facil', 'normal', 'dificil', 'impossivel'] as const
+export type DificuldadeDaMasmorra = (typeof DIFICULDADES_DE_DUN_LIATH)[number]
+
 export interface DefinicaoDeMasmorra {
   id: string
   nome: string
-  dificuldade: "facil"
+  dificuldade: DificuldadeDaMasmorra
   /** Gerado antes de iniciar a expedição; a definição-base continua sendo o cânone da primeira visita. */
   procedural?: boolean
   salas: readonly DefinicaoDeSalaDaMasmorra[]
@@ -59,7 +62,7 @@ export interface EquipamentoDaExpedicao {
 /** Estado retomável da viagem: semente, caminho escolhido, salas resolvidas, recursos e saque em risco. */
 export interface ExpedicaoNaMasmorra {
   idDaDefinicaoDaMasmorra: string
-  dificuldade: "facil"
+  dificuldade: DificuldadeDaMasmorra
   semente: number
   /** Snapshot imutável do grafo gerado. Saves antigos usam o catálogo fixo sem esta propriedade. */
   grafoGerado?: DefinicaoDeMasmorra | null
@@ -82,6 +85,8 @@ export interface ExpedicaoNaMasmorra {
 export interface EstadoDeProgressoDaMasmorra {
   expedicaoAtiva: ExpedicaoNaMasmorra | null
   dunLiathFacilConquistado: boolean
+  /** Primeiras conclusões por dificuldade. Em saves anteriores, o Fácil é inferido da flag legada. */
+  dificuldadesConcluidas?: DificuldadeDaMasmorra[]
   dunLiathProtetor: "morto" | "poupado" | null
   contratoAceito: boolean
   contratoConcluido: boolean
@@ -304,6 +309,43 @@ export function aceitarContratoDeDunLiath(partida: PartidaLocal, agora: string):
   }
 }
 
+/** Retorna as dificuldades realmente acessíveis, incluindo saves antigos com Fácil concluído. */
+export function obterDificuldadesDesbloqueadasDaMasmorra(estado: EstadoDeProgressoDaMasmorra): DificuldadeDaMasmorra[] {
+  const concluidas = new Set(estado.dificuldadesConcluidas ?? [])
+  if (estado.dunLiathFacilConquistado) concluidas.add('facil')
+  const liberadas: DificuldadeDaMasmorra[] = ['facil']
+  if (concluidas.has('facil')) liberadas.push('normal')
+  if (concluidas.has('normal')) liberadas.push('dificil')
+  if (concluidas.has('dificil')) liberadas.push('impossivel')
+  return liberadas
+}
+
+/** Balanceamento temporário. Novos kits mecânicos de cada dificuldade permanecem pendentes. */
+const ESCALAS_DE_DIFICULDADE: Record<DificuldadeDaMasmorra, number> = {
+  facil: 1, normal: 1.22, dificil: 1.55, impossivel: 1.9,
+}
+
+function catalogoEscaladoParaDificuldade(
+  catalogo: CatalogoDeConteudoDaMasmorra, dificuldade: DificuldadeDaMasmorra,
+): CatalogoDeConteudoDaMasmorra {
+  const escala = ESCALAS_DE_DIFICULDADE[dificuldade]
+  if (escala === 1) return catalogo
+  return {
+    ...catalogo,
+    obterDefinicaoDeInimigo: (id) => {
+      const original = catalogo.obterDefinicaoDeInimigo(id)
+      if (!original) return null
+      return { ...original,
+        vidaMaxima: Math.ceil(original.vidaMaxima * escala),
+        defesa: Math.ceil(original.defesa * escala),
+        poder: Math.ceil(original.poder * escala),
+        nivelDeCombate: Math.ceil(original.nivelDeCombate * escala),
+        recompensaDeXp: Math.ceil(original.recompensaDeXp * escala),
+      }
+    },
+  }
+}
+
 /** Inicializa a rota na entrada e herda uma decisão narrativa anterior, quando já existir. */
 export function criarExpedicaoNaMasmorra(
   partida: PartidaLocal,
@@ -348,6 +390,10 @@ export function iniciarMasmorra(
   if (partida.masmorra.expedicaoAtiva) throw new Error("Já existe uma Expedição na Masmorra ativa.")
   if (!partida.masmorra.contratoAceito && !partida.masmorra.contratoConcluido) {
     throw new Error('Aceite primeiro o Contrato — Fortaleza Cinzenta.')
+  }
+  if (masmorra.id.startsWith('masmorra.dun-liath.') &&
+      !obterDificuldadesDesbloqueadasDaMasmorra(partida.masmorra).includes(masmorra.dificuldade)) {
+    throw new Error(`Conclua a dificuldade anterior antes de acessar ${masmorra.dificuldade}.`)
   }
 
   return {
@@ -421,11 +467,12 @@ function resolverCombateSala(
   // Derivar a semente da viagem e do avanço da rota mantém o encontro reproduzível ao recarregar.
   const encontroSemente = (execucao.semente + execucao.idsDasSalasVisitadas.length * 7919) >>> 0
   const ehFairtheoir = sala.id === "sala.fairtheoir"
+  const catalogoDoEncontro = catalogoEscaladoParaDificuldade(catalogo, execucao.dificuldade)
   const resultadoDeCombate = ehFairtheoir
-    ? simularFairtheoirEncontro(partida, catalogo, encontroSemente, execucao.recursos)
+    ? simularFairtheoirEncontro(partida, catalogoDoEncontro, encontroSemente, execucao.recursos)
     : simularCombate(
         partida,
-        catalogo,
+        catalogoDoEncontro,
         sala.idDaDefinicaoDoInimigo,
         encontroSemente,
         180,
@@ -698,17 +745,32 @@ export function extrairExpedicaoDaMasmorra(partida: PartidaLocal, agora: string)
     inventario = adicionarInventarioPilha(inventario, pilha.idDaDefinicao, pilha.quantidade)
   }
 
+  const anteriores = new Set<DificuldadeDaMasmorra>(partida.masmorra.dificuldadesConcluidas ??
+    (partida.masmorra.dunLiathFacilConquistado ? ['facil'] : []))
+  const primeiraNestaDificuldade = execucao.concluido && !anteriores.has(execucao.dificuldade)
+  const receberLacre = primeiraNestaDificuldade && execucao.dificuldade === 'impossivel'
+  const receberEscudo = primeiraNestaDificuldade && execucao.dificuldade === 'dificil'
+  if (receberLacre) {
+    const previa: PartidaLocal = { ...partida, personagem: { ...partida.personagem, inventario } }
+    verificarCapacidadeParaPilhaNoInventario(previa, 'item.dun-liath.lacre-comandante', 1)
+    inventario = adicionarInventarioPilha(inventario, 'item.dun-liath.lacre-comandante', 1)
+  }
+  const equipamentosDaExtracao: EquipamentoDaExpedicao[] = receberEscudo
+    ? [...execucao.equipamentosDaExpedicao, {
+      idDaDefinicao: 'escudo.ultimo-vigia', raridade: 'comum', idsDosAfixos: ['afixo.defesa-2'],
+    }]
+    : execucao.equipamentosDaExpedicao
   // A prévia já contém as pilhas extraídas, pois elas também consomem espaços que os equipamentos disputam.
   const equipamentoPrevia: PartidaLocal = {
     ...partida,
     personagem: { ...partida.personagem, inventario },
   }
-  if (execucao.equipamentosDaExpedicao.length > 0) {
-    verificarCapacidadeParaEquipamentoNoInventario(equipamentoPrevia, execucao.equipamentosDaExpedicao.length)
+  if (equipamentosDaExtracao.length > 0) {
+    verificarCapacidadeParaEquipamentoNoInventario(equipamentoPrevia, equipamentosDaExtracao.length)
   }
-  const equipamento = materializarExpedicaoEquipamento(partida, execucao.equipamentosDaExpedicao)
+  const equipamento = materializarExpedicaoEquipamento(partida, equipamentosDaExtracao)
   // Flags permanentes separam a conclusão desta viagem das recompensas que só podem ser concedidas uma vez.
-  const primeiroConcluir = execucao.concluido && !partida.masmorra.dunLiathFacilConquistado
+  const primeiroConcluir = execucao.concluido && execucao.dificuldade === 'facil' && !partida.masmorra.dunLiathFacilConquistado
   const jaPossuiRegistroDeDados = inventario.some(
     (pilha) =>
       pilha.idDaDefinicao === "item.guarnicao-suprimento-registroDeDados" && pilha.quantidade > 0,
@@ -735,7 +797,11 @@ export function extrairExpedicaoDaMasmorra(partida: PartidaLocal, agora: string)
     },
     masmorra: {
       expedicaoAtiva: null,
-      dunLiathFacilConquistado: partida.masmorra.dunLiathFacilConquistado || execucao.concluido,
+      dunLiathFacilConquistado: partida.masmorra.dunLiathFacilConquistado ||
+        (execucao.concluido && execucao.dificuldade === 'facil'),
+      dificuldadesConcluidas: primeiraNestaDificuldade
+        ? [...anteriores, execucao.dificuldade]
+        : [...anteriores],
       dunLiathProtetor: partida.masmorra.dunLiathProtetor ?? execucao.decisaoSobreOProtetor,
       contratoAceito: partida.masmorra.contratoAceito,
       contratoConcluido: partida.masmorra.contratoConcluido || contratoPodeConclusao,

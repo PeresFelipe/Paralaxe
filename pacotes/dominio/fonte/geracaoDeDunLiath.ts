@@ -66,7 +66,7 @@ const ID_SEGREDO = 'sala.procedural.segredo'
  */
 export function gerarDunLiathProcedural(base: DefinicaoDeMasmorra, semente: number): DefinicaoDeMasmorra {
   if (!Number.isSafeInteger(semente)) throw new Error('A semente da Masmorra deve ser um inteiro seguro.')
-  if (base.id !== 'masmorra.dun-liath.facil') throw new Error('A geração requer a definição canônica de Dún Liath.')
+  if (!base.id.startsWith('masmorra.dun-liath.')) throw new Error('A geração requer uma definição de Dún Liath.')
   const aleatorio = geradorDeSemente(semente)
   const armadilha = ARMADILHAS[Math.floor(aleatorio() * ARMADILHAS.length)] ?? ARMADILHAS[0]
   const segredo = SEGREDOS[Math.floor(aleatorio() * SEGREDOS.length)] ?? SEGREDOS[0]

@@ -41,6 +41,8 @@ export interface DefinicaoDeReceitaDeFabricacao {
   nome: string
   nivelExigidoDaProfissao: number
   prestigioExigido?: number
+  /** Receita especial liberada após a primeira conclusão da dificuldade indicada. */
+  dificuldadeRequerida?: 'normal' | 'dificil' | 'impossivel'
   segundosPorAcao: number
   xpDeProfissaoPorAcao: number
   ingredientes: readonly IngredienteDaReceita[]
@@ -153,6 +155,9 @@ export function iniciarReceitaDeFabricacao(
   const profissao = partida.profissoes[receita.idDaProfissao]
 
   if (profissao.prestigio < (receita.prestigioExigido ?? 0)) throw new Error(`Esta receita exige Prestígio ${receita.prestigioExigido}.`)
+  if (receita.dificuldadeRequerida && !partida.masmorra.dificuldadesConcluidas?.includes(receita.dificuldadeRequerida)) {
+    throw new Error(`Esta receita exige concluir Dún Liath em ${receita.dificuldadeRequerida}.`)
+  }
   if (profissao.nivel < receita.nivelExigidoDaProfissao) {
     throw new Error(`${receita.nome} exige nível ${receita.nivelExigidoDaProfissao} de Profissão.`)
   }

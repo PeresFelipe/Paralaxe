@@ -23,6 +23,8 @@ import {
   extrairExpedicaoDaMasmorra,
   resolverSalaDaMasmorra,
   gerarDunLiathProcedural,
+  obterDificuldadesDesbloqueadasDaMasmorra,
+  type DificuldadeDaMasmorra,
   retomarTrabalhoAposRisco,
   iniciarMasmorraComContinuidade,
   ensinarEEquiparHabilidadesDeCombate,
@@ -143,11 +145,18 @@ export default function BancadaDaMasmorra({
   const [mensagem, definirMensagem] = useState<string | null>(null);
   const [resultadoDeCombate, definirCombateResultado] = useState<ResultadoDeCombate | null>(null);
   const [ocupado, definirOcupado] = useState(false);
+  const [dificuldadeSelecionada, definirDificuldadeSelecionada] = useState<DificuldadeDaMasmorra>('facil');
   const [preparando, definirPreparando] = useState(false);
 
   const execucao = partida.masmorra.expedicaoAtiva;
+  const dificuldadesDisponiveis = obterDificuldadesDesbloqueadasDaMasmorra(partida.masmorra);
+  const nomesDasDificuldades: Record<DificuldadeDaMasmorra, string> = {
+    facil: 'Fácil', normal: 'Normal', dificil: 'Difícil', impossivel: 'Impossível',
+  };
   // O snapshot é a verdade para uma expedição já iniciada, inclusive após atualizar o catálogo.
-  const mapaDaExpedicao = execucao?.grafoGerado ?? DUN_LIATH_FACIL;
+  const mapaDaExpedicao = execucao?.grafoGerado ??
+    (execucao ? obterDefinicaoDeMasmorra(execucao.idDaDefinicaoDaMasmorra) : null) ??
+    DUN_LIATH_FACIL;
   const atualSala = useMemo<DefinicaoDeSalaDaMasmorra | null>(
     () => execucao
       ? (mapaDaExpedicao.salas.find((sala) => sala.id === execucao.idDaSalaAtual) ?? null)
@@ -231,9 +240,14 @@ export default function BancadaDaMasmorra({
         folegoMaximo: estatisticas.folegoMaximo,
       };
       // A primeira visita é narrativa e fixa. Repetições variam com a semente da viagem.
-      const definicaoDaViagem = riscoPartida.masmorra.dunLiathFacilConquistado
-        ? gerarDunLiathProcedural(DUN_LIATH_FACIL, semente)
-        : DUN_LIATH_FACIL;
+      const baseDaDificuldade = obterDefinicaoDeMasmorra(`masmorra.dun-liath.${dificuldadeSelecionada}`);
+      if (!baseDaDificuldade) throw new Error('A dificuldade escolhida não existe.')
+      if (!obterDificuldadesDesbloqueadasDaMasmorra(riscoPartida.masmorra).includes(dificuldadeSelecionada)) {
+        throw new Error('Conclua a dificuldade anterior antes de entrar.')
+      }
+      const definicaoDaViagem = dificuldadeSelecionada === 'facil' && !riscoPartida.masmorra.dunLiathFacilConquistado
+        ? DUN_LIATH_FACIL
+        : gerarDunLiathProcedural(baseDaDificuldade, semente);
       const proximo = iniciarMasmorraComContinuidade(
         riscoPartida,
         definicaoDaViagem,
@@ -447,6 +461,10 @@ export default function BancadaDaMasmorra({
               <strong>{vazioConsumiveis}</strong>
             </div>
             <div className="informacao-linhaDeDados">
+              <span>Dificuldade</span>
+              <strong>{nomesDasDificuldades[dificuldadeSelecionada]}</strong>
+            </div>
+            <div className="informacao-linhaDeDados">
               <span>Atividade atual</span>
               <strong>{ativoTrabalhoRotulo(partida)}</strong>
             </div>
@@ -567,6 +585,15 @@ export default function BancadaDaMasmorra({
             </div>
           </Card>
           <Card className="risco-painel">
+            <p className="secao-chamada">Dificuldade da expedição</p>
+            <div className="botao-linhaDeDados" role="group" aria-label="Escolher dificuldade">
+              {(['facil','normal','dificil','impossivel'] as const).map(d => (
+                <Button key={d} variant={dificuldadeSelecionada === d ? 'primary' : 'secondary'}
+                  size="sm" disabled={ocupado || !dificuldadesDisponiveis.includes(d)}
+                  onClick={() => definirDificuldadeSelecionada(d)}>{nomesDasDificuldades[d]}</Button>
+              ))}
+            </div>
+            <p className="atenuado">Desbloqueie cada dificuldade concluindo a anterior. Desafios maiores têm inimigos mais fortes.</p>
             <p className="secao-chamada">Riscos conhecidos</p>
             <ul>
               <li>Presença hostil confirmada.</li>
@@ -617,7 +644,7 @@ export default function BancadaDaMasmorra({
     >
       <div className={estilos.execucaoCabecalho}>
         <div>
-          <p className="secao-chamada">Dún Liath · Expedição ativa</p>
+          <p className="secao-chamada">Dún Liath · {nomesDasDificuldades[execucao.dificuldade]} · Expedição ativa</p>
           <h2 id="masmorra-execucao-titulo" className="destaque-titulo">
             {atualSala.nome}
           </h2>

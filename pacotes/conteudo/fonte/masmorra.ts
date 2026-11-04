@@ -33,7 +33,21 @@ export const DUN_LIATH_FACIL = {
   ],
 } as const satisfies DefinicaoDeMasmorra
 
-export const MASMORRAS = [DUN_LIATH_FACIL] as const
+/** Após o Fácil, as outras dificuldades reutilizam a identidade da fortaleza e recebem um grafo próprio por viagem. */
+export const DUN_LIATH_NORMAL = { ...DUN_LIATH_FACIL,
+  id: 'masmorra.dun-liath.normal', nome: 'Dún Liath — Normal',
+  dificuldade: 'normal',
+} as const satisfies DefinicaoDeMasmorra
+export const DUN_LIATH_DIFICIL = { ...DUN_LIATH_FACIL,
+  id: 'masmorra.dun-liath.dificil', nome: 'Dún Liath — Difícil',
+  dificuldade: 'dificil',
+} as const satisfies DefinicaoDeMasmorra
+export const DUN_LIATH_IMPOSSIVEL = { ...DUN_LIATH_FACIL,
+  id: 'masmorra.dun-liath.impossivel', nome: 'Dún Liath — Impossível',
+  dificuldade: 'impossivel',
+} as const satisfies DefinicaoDeMasmorra
+
+export const MASMORRAS = [DUN_LIATH_FACIL, DUN_LIATH_NORMAL, DUN_LIATH_DIFICIL, DUN_LIATH_IMPOSSIVEL] as const
 
 /** Localiza o mapa usado pela expedição persistida; IDs desconhecidos retornam null. */
 export function obterDefinicaoDeMasmorra(masmorraId: string) {

@@ -152,6 +152,22 @@ export const RECEITAS_INICIAIS_DE_FABRICACAO = [
     ],
     saida: { tipo: 'equipamento-reforco', nome: 'Reforço de Dún Liath +2', nivelDeReforcoAlvo: 2 },
   },
+  // GDD §29: receita exclusiva da primeira conclusão Normal, requer componente especial do Chefe.
+  {
+    id: 'receita.forja.reforco-do-vigia',
+    idDaProfissao: 'forja',
+    nome: 'Reforço do Vigia +2',
+    nivelExigidoDaProfissao: 30,
+    dificuldadeRequerida: 'normal',
+    segundosPorAcao: 50,
+    xpDeProfissaoPorAcao: 105,
+    ingredientes: [
+      { idDaDefinicao: 'item.dun-liath.sucata', quantidade: 2 },
+      { idDaDefinicao: 'material.cruach', quantidade: 2 },
+      { idDaDefinicao: 'item.fairtheoir-fragmento', quantidade: 1 },
+    ],
+    saida: { tipo: 'equipamento-reforco', nome: 'Reforço do Vigia +2', nivelDeReforcoAlvo: 2 },
+  },
   // GDD §§12–14: integração do nível 20–30. Valores numéricos e peças são conteúdo provisório.
   {
     id: 'receita.metalurgia.lingote-copar',
