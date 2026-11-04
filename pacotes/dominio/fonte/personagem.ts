@@ -4,6 +4,7 @@
  * do chamador, sem acessar React, relógio global ou armazenamento do navegador.
  */
 import { criarEspacosPadraoDeConsumiveis, type EstadoDeCombate } from './combate'
+import { criarEstadoInicialDoGrupo, type EstadoDoGrupo } from './grupo'
 import { type EstadoDeFabricacao } from './fabricacao'
 import { type EstadoDeProgressoDaMasmorra } from './masmorra'
 import {
@@ -144,7 +145,7 @@ export interface EstadoDoPersonagem {
 }
 
 /** Versão estrutural usada pelas migrações. Traduzir nomes internos não exige mudar o formato persistido. */
-export const VERSAO_DO_ESQUEMA_DA_PARTIDA = 17 as const
+export const VERSAO_DO_ESQUEMA_DA_PARTIDA = 18 as const
 
 /** Agregado salvo como uma unidade: personagem, trabalhos, combate, expedição e metas da jornada. */
 export interface PartidaLocal {
@@ -163,6 +164,7 @@ export interface PartidaLocal {
   minigames?: EstadoDosMinigamesDeOficio
   combate: EstadoDeCombate
   masmorra: EstadoDeProgressoDaMasmorra
+  grupo: EstadoDoGrupo
   jornada: EstadoDaJornada
   codice: EstadoDoCodice
   desafios: EstadoDosDesafios
@@ -313,6 +315,7 @@ export function criarPartidaLocal(entradaDeDados: ParametrosDeCriacaoDaPartidaLo
       ultimaExpedicao: null,
       loboDerrotado: false,
     },
+    grupo: criarEstadoInicialDoGrupo(),
     masmorra: {
       expedicaoAtiva: null,
       incursaoAutomaticaAtiva: null,

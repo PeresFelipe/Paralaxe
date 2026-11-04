@@ -13,6 +13,7 @@ import {
   criarEstadoInicialDaVigilia,
   validarEstadoDaVigilia,
   criarLegadoInicial,
+  criarEstadoInicialDoGrupo,
   validarLegado,
   criarEstadoDosEquipamentosIniciais,
   type EstadoDeCombate,
@@ -266,6 +267,13 @@ function migrarPartidaAnterior(dadosArmazenados: unknown): Omit<PartidaLocal, 'v
     return brutoPartida as PartidaLocal
   }
 
+  if (candidato.versaoDoEsquemaDaPartida === 17) {
+    const anterior = brutoPartida as PartidaLocal
+    validarEstadoDaVigilia(anterior.vigilia)
+    validarLegado(anterior.legado)
+    return { ...anterior, versaoDoEsquemaDaPartida: VERSAO_DO_ESQUEMA_DA_PARTIDA,
+      grupo: criarEstadoInicialDoGrupo() }
+  }
   if (candidato.versaoDoEsquemaDaPartida === 16) {
     const anterior = brutoPartida as PartidaLocal
     validarEstadoDaVigilia(anterior.vigilia)
@@ -454,6 +462,7 @@ function migrarPartida(dadosArmazenados: unknown): PartidaLocal {
   // Todos os legados anteriores ao v14 recebem o segundo espaço vazio sem perder a atividade principal.
   const migrada = {
     ...anterior,
+    grupo: anterior.grupo ?? criarEstadoInicialDoGrupo(),
     masmorra: { ...anterior.masmorra,
       incursaoAutomaticaAtiva: anterior.masmorra.incursaoAutomaticaAtiva ?? null,
       ultimaIncursaoAutomatica: anterior.masmorra.ultimaIncursaoAutomatica ?? null },
