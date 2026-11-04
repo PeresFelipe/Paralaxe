@@ -97,6 +97,39 @@ describe("repositório de partidas em IndexedDB", () => {
     expect(await repositorio.obter('migra-v12-legado')).toEqual(migrado)
   })
 
+
+  it('migra v13 para v14 sem perder o relógio e a experiência do trabalho principal', async () => {
+    const atual = criarPartidaLocal({
+      idDaPartida: 'migra-v13-segundo-relogio',
+      criadoEm: '2026-11-04T12:00:00.000Z',
+      versaoDoConteudo: '0.1.0-dev', nomeDoPersonagem: 'Ailith',
+      classeDoPersonagem, presente,
+    })
+    const atividade = {
+      idDaDefinicaoDaAtividade: 'coletar.mineracao.cloch',
+      iniciadoEm: '2026-11-04T12:00:00.000Z',
+      processadoPorUltimoEm: '2026-11-04T12:00:07.000Z',
+      segundosRestantes: 3,
+    }
+    const antigo = {
+      ...atual,
+      versaoDoEsquemaDaPartida: 13 as const,
+      ocioso: { atividadeAtiva: atividade },
+      profissoes: { ...atual.profissoes, mineracao: { nivel: 39, xp: 37, prestigio: 1 } },
+      personagem: { ...atual.personagem, ouro: 57 },
+    }
+    const repositorio = criarRepositorioDePartidasIndexedDb()
+    await repositorio.salvar(antigo as unknown as PartidaLocal)
+    const migrado = await repositorio.obter('migra-v13-segundo-relogio')
+    expect(migrado?.versaoDoEsquemaDaPartida).toBe(14)
+    expect(migrado?.ocioso.atividadeAtiva).toEqual(atividade)
+    expect(migrado?.ocioso.atividadeSecundaria).toBeNull()
+    expect(migrado?.profissoes.mineracao).toEqual({ nivel: 39, xp: 37, prestigio: 1 })
+    expect(migrado?.personagem.ouro).toBe(57)
+    await repositorio.salvar(migrado!)
+    expect(await repositorio.obter('migra-v13-segundo-relogio')).toEqual(migrado)
+  })
+
   it('migra um save v11 sem inventar sessões de foco', async () => {
     const atual = criarPartidaLocal({
       idDaPartida: 'migra-v11', criadoEm: '2026-10-29T12:00:00.000Z',

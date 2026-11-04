@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { ATIVIDADES_OCIOSAS_INICIAIS, CLASSES_DE_PERSONAGEM, PRESENTES_INICIAIS, VERSAO_DO_CONTEUDO } from '@paralaxe/conteudo'
-import { criarPartidaLocal, iniciarAtividadeOciosa } from '@paralaxe/dominio'
+import { criarPartidaLocal, iniciarAtividadeOciosa, iniciarAtividadeSecundaria } from '@paralaxe/dominio'
 import { atualizarPartidaNaLista, formatarAusencia, processarTrabalhoAtual } from './partida'
 
 function criarPartida(idDaPartida: string) {
@@ -42,6 +42,24 @@ describe('serviço de partida', () => {
 
     expect(resultado.partida.personagem.inventario).toContainEqual({ idDaDefinicao: atividade.idDaDefinicaoDoItemProduzido, quantidade: 1 })
     expect(resultado.textoExibido).toBe('+1 Cloch · +8 XP de Profissão')
+  })
+
+
+  it('integra duas coletas de Prestígio I com retorno offline idempotente', () => {
+    const inicio = '2026-01-01T00:00:00.000Z'
+    const cloch = ATIVIDADES_OCIOSAS_INICIAIS.find(a => a.id === 'coletar.mineracao.cloch')!
+    const stan = ATIVIDADES_OCIOSAS_INICIAIS.find(a => a.id === 'coletar.mineracao.stan')!
+    const base = criarPartida('partida-coleta-paralela')
+    const prestigiado = { ...base, profissoes: { ...base.profissoes, mineracao: { nivel: 10, xp: 0, prestigio: 1 } } }
+    const principal = iniciarAtividadeOciosa(prestigiado, cloch, inicio)
+    const simultaneo = iniciarAtividadeSecundaria(principal, stan, inicio)
+    const resultado = processarTrabalhoAtual(simultaneo, '2026-01-01T00:00:16.000Z')
+    expect(resultado.partida.personagem.inventario).toContainEqual({ idDaDefinicao: 'material.cloch', quantidade: 4 })
+    expect(resultado.partida.personagem.inventario).toContainEqual({ idDaDefinicao: 'material.stan', quantidade: 1 })
+    expect(resultado.textoExibido).toContain('Secundária +1 Stán')
+    const repetido = processarTrabalhoAtual(resultado.partida, '2026-01-01T00:00:16.000Z')
+    expect(repetido.partida.personagem.inventario).toEqual(resultado.partida.personagem.inventario)
+    expect(repetido.partida.profissoes.mineracao.xp).toBe(resultado.partida.profissoes.mineracao.xp)
   })
 
   it('não processa coleta enquanto há expedição ativa', () => {

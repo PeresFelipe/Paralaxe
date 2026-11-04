@@ -14,7 +14,7 @@ Branch exclusiva `develop`, documentação canônica `documentacao/GDD.md`. O pe
 - Faixas normais 75/90 implementadas: 8 recursos, 3 transformações de Metalurgia, 3 equipamentos de Forja e 3 consumíveis de Culinária, com testes de integração específicos (GDD §§11–14).
 - Matriz detalhada em `CONFORMIDADE-INTEGRAL-GDD.md`.
 
-- Prestígio I: foi implementada a segunda coleta do mesmo Ofício com eficiência provisória de 50% e esquema de save v14, mantendo os empregos anteriores no primeiro espaço.
+- Prestígio I: segunda coleta do mesmo Ofício com eficiência provisória de 50% e esquema de save v14, mantendo a atividade anterior no primeiro espaço. Novos testes cobrem os dois relógios, migração v13→v14 e ausência sem pagamento duplicado.
 ## Regras de continuidade
 - Ler o HEAD remoto antes de cada alteração e criar commits de fast-forward (sem force-push).
 - Manter `main` intocada.
