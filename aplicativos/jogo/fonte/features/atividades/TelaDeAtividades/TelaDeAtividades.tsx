@@ -5,7 +5,7 @@
  */
 import { useState } from 'react'
 import { RECEITAS_INICIAIS_DE_FABRICACAO, ATIVIDADES_OCIOSAS_INICIAIS, obterDefinicaoDeEquipamento } from '@paralaxe/conteudo'
-import { NIVEL_MAXIMO_DE_PROFISSAO, type PrioridadeDeOficio, obterBonusDaFerramentaDeColeta, obterOportunidadeDeMinigame, obterXpDeProfissaoParaProximoNivel, type PartidaLocal, type IdDaProfissao } from '@paralaxe/dominio'
+import { NIVEL_MAXIMO_DE_PROFISSAO, type PrioridadeDeOficio, obterBonusDaFerramentaDeColeta, obterOportunidadeDeMinigame, obterXpDeProfissaoParaProximoNivel, type PartidaLocal, type IdDaProfissao, type DefinicaoDeAtividadeOciosa, type DefinicaoDeReceitaDeFabricacao } from '@paralaxe/dominio'
 import IndicadorDeProgressoOcioso from '../IndicadorDeProgressoOcioso'
 import { IconeDoJogo, ComparacaoDeEquipamento } from '@/components/jogo'
 import { obterIconeDoItem, iconeDeProfissaoPorId } from '@/iconesDosRecursos'
@@ -43,9 +43,9 @@ export default function TelaDeAtividades({ partida, ultimoResultadoDoTrabalho, p
   const [acaoErro, definirAcaoErro] = useState<string | null>(null)
   const progresso = partida.profissoes[profissaoSelecionada]
   const proximoNivelXp = obterXpDeProfissaoParaProximoNivel(progresso.nivel)
-  const atividades = ATIVIDADES_OCIOSAS_INICIAIS.filter((atividade) => atividade.idDaProfissao === profissaoSelecionada)
+  const atividades: readonly DefinicaoDeAtividadeOciosa[] = ATIVIDADES_OCIOSAS_INICIAIS.filter((atividade) => atividade.idDaProfissao === profissaoSelecionada)
   // Reforço precisa de uma instância escolhida; sua entrada permanece em Personagem → Equipamento.
-  const receitas = RECEITAS_INICIAIS_DE_FABRICACAO.filter((receita) => receita.idDaProfissao === profissaoSelecionada && receita.saida.tipo !== "equipamento-reforco")
+  const receitas: readonly DefinicaoDeReceitaDeFabricacao[] = RECEITAS_INICIAIS_DE_FABRICACAO.filter((receita) => receita.idDaProfissao === profissaoSelecionada && receita.saida.tipo !== "equipamento-reforco")
   const ocioso = ATIVIDADES_OCIOSAS_INICIAIS.find((atividade) => atividade.id === partida.ocioso.atividadeAtiva?.idDaDefinicaoDaAtividade)
   const secundaria = ATIVIDADES_OCIOSAS_INICIAIS.find(a => a.id === partida.ocioso.atividadeSecundaria?.idDaDefinicaoDaAtividade)
   const terciaria = ATIVIDADES_OCIOSAS_INICIAIS.find(a => a.id === partida.ocioso.atividadeTerciaria?.idDaDefinicaoDaAtividade)
