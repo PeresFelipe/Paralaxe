@@ -82,7 +82,7 @@ describe('compatibilidade com a main anterior à tradução', () => {
     const partida = await repositorio.obter('warrior')
     expect(partida).not.toBeNull()
     await repositorio.salvar(partida!)
-    expect(await lerGravacaoBruta()).toMatchObject({ ...partidaLegadaV10, saveSchemaVersion: 16, codex: { discoveredIds: ['classe.guerreiro'] }, challenges: { completedIds: [] } })
+    expect(await lerGravacaoBruta()).toMatchObject({ ...partidaLegadaV10, saveSchemaVersion: 17, codex: { discoveredIds: ['classe.guerreiro'] }, challenges: { completedIds: [] } })
     expect(partida?.vigilia).toBeDefined()
     expect(await criarRepositorioDePartidasIndexedDb().obter('warrior')).toEqual(partida)
   })
