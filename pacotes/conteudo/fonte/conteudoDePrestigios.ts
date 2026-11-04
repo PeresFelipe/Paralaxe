@@ -70,7 +70,7 @@ export function idDoRecursoDePrestigio(
     if (prestigio === 1) return ultimoNormal[profissao]
     return idDoRecursoDePrestigio(profissao, (prestigio - 1) as 1 | 2, 6)
   }
-  return `material.prestigio.${profissao}.${slugDeRecurso(RECURSOS[profissao][prestigio-1] ?? [])[indice] ?? '')}`
+  return `material.prestigio.${profissao}.${slugDeRecurso((RECURSOS[profissao][prestigio-1] ?? [])[indice] ?? '')}`
 }
 
 function idDaLiga(prestigio: 1 | 2 | 3, indice: number): string {
@@ -84,7 +84,7 @@ function idDaLiga(prestigio: 1 | 2 | 3, indice: number): string {
 export const ATIVIDADES_DE_PRESTIGIO: readonly DefinicaoDeAtividadeOciosa[] =
   COLETAS.flatMap(profissao => ([1, 2, 3] as const).flatMap(prestigio =>
     NIVEIS.map((nivel, indice): DefinicaoDeAtividadeOciosa => ({
-      id: `coletar.${profissao}.p${prestigio}.${slugDeRecurso(RECURSOS[profissao][prestigio-1] ?? [])[indice] ?? '')}`,
+      id: `coletar.${profissao}.p${prestigio}.${slugDeRecurso((RECURSOS[profissao][prestigio-1] ?? [])[indice] ?? '')}`,
       idDaProfissao: profissao,
       nome: `Coletar ${(RECURSOS[profissao][prestigio-1] ?? [])[indice] ?? ''} · Prestígio ${prestigio}`,
       idDaDefinicaoDoItemProduzido: idDoRecursoDePrestigio(profissao, prestigio, indice),
