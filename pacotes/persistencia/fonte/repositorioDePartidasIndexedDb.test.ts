@@ -98,6 +98,40 @@ describe("repositório de partidas em IndexedDB", () => {
   })
 
 
+  it('migra save v14 para v15 sem perder o trabalho de fabricação principal', async () => {
+    const atual = criarPartidaLocal({
+      idDaPartida: 'migra-v14-producao-paralela',
+      criadoEm: '2026-11-04T12:00:00.000Z', versaoDoConteudo: '0.1.0-dev',
+      nomeDoPersonagem: 'Ailith', classeDoPersonagem, presente,
+    })
+    const receitaAtiva = {
+      idDaDefinicaoDaReceita: 'receita.metalurgia.tratada-cloch',
+      iniciadoEm: '2026-11-04T12:00:00.000Z',
+      processadoPorUltimoEm: '2026-11-04T12:00:09.000Z',
+      segundosRestantes: 3,
+      idDaInstanciaDoEquipamentoAlvo: null,
+    }
+    const antigo = {
+      ...atual, versaoDoEsquemaDaPartida: 14 as const,
+      fabricacao: { receitaAtiva },
+      profissoes: { ...atual.profissoes, metalurgia: { nivel: 20, xp: 41, prestigio: 1 } },
+      personagem: { ...atual.personagem, ouro: 121, inventario: [
+        { idDaDefinicao: 'material.cloch', quantidade: 17 },
+      ] },
+    }
+    const repo = criarRepositorioDePartidasIndexedDb()
+    await repo.salvar(antigo as unknown as PartidaLocal)
+    const migrada = await repo.obter('migra-v14-producao-paralela')
+    expect(migrada?.versaoDoEsquemaDaPartida).toBe(15)
+    expect(migrada?.fabricacao.receitaAtiva).toEqual(receitaAtiva)
+    expect(migrada?.fabricacao.receitaSecundaria).toBeNull()
+    expect(migrada?.personagem.ouro).toBe(121)
+    expect(migrada?.personagem.inventario).toEqual(antigo.personagem.inventario)
+    expect(migrada?.profissoes.metalurgia).toEqual(antigo.profissoes.metalurgia)
+    await repo.salvar(migrada!)
+    expect(await repo.obter('migra-v14-producao-paralela')).toEqual(migrada)
+  })
+
   it('migra v13 para v14 sem perder o relógio e a experiência do trabalho principal', async () => {
     const atual = criarPartidaLocal({
       idDaPartida: 'migra-v13-segundo-relogio',
