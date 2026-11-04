@@ -36,6 +36,7 @@ import {
   ResumoDaCidade, PainelDeProjetos, type AcoesDoLegado,
 } from './features/cidade/LegadoDaCidade';
 import PainelDeDesafios from "./features/aventura/PainelDeDesafios";
+import PainelDeGrupo from "./features/aventura/PainelDeGrupo";
 import PainelRapido from "./features/navegacao/PainelRapido";
 import CreditosDosRecursos from "./components/jogo/CreditosDosRecursos";
 import { IconeDoJogo } from "./components/jogo";
@@ -54,7 +55,7 @@ type AbaDoPersonagem =
   | "tecnicas"
   | "inventario"
   | "prestigio";
-type TelaDeAventura = "visaoGeral" | "servico" | "masmorra" | "desafios";
+type TelaDeAventura = "visaoGeral" | "servico" | "masmorra" | "desafios" | "grupo";
 type TelaDaCidade =
   | "visaoGeral"
   | "taverna"
@@ -895,6 +896,9 @@ function ComponenteDaTelaDeAventura({
   aoAlterarEstadoDeRisco: (ativo: boolean) => void;
   aoAlterarEstadoDePreparacao: (ativo: boolean) => void;
 }) {
+  if (telaDoJogo === "grupo") {
+    return <PainelDeGrupo partida={partida} aoPersistir={aoPersistir} aoVoltar={() => aoTelaDoJogo("visaoGeral")} />;
+  }
   if (telaDoJogo === "desafios") {
     return <PainelDeDesafios partida={partida} aoVoltar={() => aoTelaDoJogo("visaoGeral")} />;
   }
@@ -981,6 +985,21 @@ function ComponenteDaTelaDeAventura({
               onClick={() => aoTelaDoJogo("masmorra")}
             >
               {(partida.masmorra.expedicaoAtiva || partida.masmorra.incursaoAutomaticaAtiva) ? "Retomar atividade" : "Ver Dún Liath"}
+            </Button>
+          </Card>
+          <Card className="aventura-cartao">
+            <p className="secao-chamada">Grupo · Ameaça</p>
+            <h2>Parceiros e formação</h2>
+            <p className="atenuado">
+              Prepare até três parceiros, conheça as regras de foco dos inimigos
+              e acompanhe a jornada de Mira após Dún Liath.
+            </p>
+            <div className="informacao-linhaDeDados">
+              <span>Parceiros ativos</span>
+              <strong>{partida.grupo.idsDosParceirosAtivos.length}/3</strong>
+            </div>
+            <Button variant="secondary" size="sm" onClick={() => aoTelaDoJogo("grupo")}>
+              Consultar Grupo
             </Button>
           </Card>
           <Card className="aventura-cartao">
