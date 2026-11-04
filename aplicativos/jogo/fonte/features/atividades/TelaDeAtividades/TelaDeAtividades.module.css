@@ -200,3 +200,22 @@
   .optionsHeading { flex-wrap: wrap; }
 }
 
+
+/* Consulta avançada sob demanda; a ação principal permanece fora do painel. */
+.recipeDetails {
+  margin-block: var(--ui-space-2) var(--ui-space-3);
+  border-top: var(--ui-size-border) solid var(--ui-color-border);
+  border-bottom: var(--ui-size-border) solid var(--ui-color-border);
+  padding: var(--ui-space-2) var(--ui-space-0);
+}
+.recipeDetails > summary {
+  color: var(--ui-color-warning-text);
+  font-family: var(--ui-font-family-body);
+  font-size: var(--ui-font-size-sm);
+  cursor: pointer;
+}
+.recipeDetails > summary:focus-visible {
+  outline: var(--ui-size-focus-ring) solid var(--ui-color-focus);
+  outline-offset: var(--ui-space-1);
+}
+.recipeDetails[open] > summary { margin-bottom: var(--ui-space-2); }

@@ -572,11 +572,6 @@ export default function EstruturaDoJogo({
             <span>AGORA</span>
             <strong>{trabalho?.titulo ?? "Sem atividade automática"}</strong>
           </div>
-          <div className="jornada-secao">
-            <span>{jornada.rotulo}</span>
-            <strong>{jornada.titulo}</strong>
-            <p>{jornada.corpo}</p>
-          </div>
           {partida.combate.loboDerrotado || partida.masmorra.contratoConcluido ? (
             <Button
               variant="secondary"

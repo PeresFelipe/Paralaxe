@@ -46,8 +46,7 @@ export default function BancadaDoMercado({ partida, aoComprarOferta }: Proprieda
         <div>
           <p className="secao-chamada">Cidade · Mercado</p>
           <h2 id="mercado-titulo" className="destaque-titulo">Comprar</h2>
-          <p className="atenuado">Preços e consequências aparecem antes da compra.</p>
-        </div>
+         </div>
         <div className="moedaCorrente-selo" aria-label={`${partida.personagem.ouro} moedas`}>
           <span aria-hidden="true">◇</span>
           <strong>{partida.personagem.ouro}</strong>
@@ -62,11 +61,10 @@ export default function BancadaDoMercado({ partida, aoComprarOferta }: Proprieda
           // O saldo orienta a interface; a capacidade do inventário continua sendo validada pela regra de compra.
           const podePagar = partida.personagem.ouro >= oferta.preco
           return (
-            <Card className="item-cartao" key={oferta.id}>
+            <Card appearance="soft" className="item-cartao" key={oferta.id}>
               <div className="item-miniatura" aria-hidden="true">{oferta.nome.slice(0, 1)}</div>
               <div className="item-cartaoCorpo">
-                <p className="secao-chamada">Mercado</p>
-                <h3>{oferta.nome}</h3>
+                 <h3>{oferta.nome}</h3>
                 <p className="atenuado">
                   {oferta.produto.tipo === "equipamento"
                     ? `Equipamento · ${oferta.produto.espaco}`

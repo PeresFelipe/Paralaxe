@@ -69,7 +69,7 @@ export default function TelaDeAtividades({ partida, ultimoResultadoDoTrabalho, p
         <div className="atividades-areaDeTrabalho" aria-busy={pendente}>
           <div className={`atividade-etapa ${estilos.stage}`}>
             <CenaDoOficio profissao={profissaoSelecionada} legenda={atividades[0]?.nome ?? rotulosDasProfissoes[profissaoSelecionada]} />
-            <Card className="atividade-atualizado">
+            <Card appearance="soft" className="atividade-atualizado">
               {ativoProfissao === profissaoSelecionada ? <IndicadorDeProgressoOcioso partida={partida} /> : <div className="atividade-pronto">
                 <p className="secao-chamada">{receitas.length ? 'Na bancada' : 'No campo'}</p>
                 <h2>{receitas.length ? 'Tudo começa com os materiais.' : 'O próximo ciclo começa com você.'}</h2>
@@ -93,7 +93,7 @@ export default function TelaDeAtividades({ partida, ultimoResultadoDoTrabalho, p
             {atividades.map((atividade) => {
               const ativo = ocioso?.id === atividade.id
               const desbloqueado = progresso.nivel >= atividade.nivelExigidoDaProfissao
-              return <Card className={`${estilos.option} ${ativo ? "selecionado-cartao" : ''}`} key={atividade.id}>
+              return <Card appearance="soft" className={`${estilos.option} ${ativo ? "selecionado-cartao" : ''}`} key={atividade.id}>
                 <div className="item-miniatura" aria-hidden="true"><IconeDoJogo icone={obterIconeDoItem(atividade.idDaDefinicaoDoItemProduzido)} tamanho={40} /></div>
                 <div className={estilos.optionBody}>
                   <div className={estilos.optionTitle}><h2>{atividade.nomeDoResultado}</h2><span>Possuído: <strong>{possuido(atividade.idDaDefinicaoDoItemProduzido)}</strong></span></div>
@@ -109,12 +109,14 @@ export default function TelaDeAtividades({ partida, ultimoResultadoDoTrabalho, p
               // Esta verificação orienta os botões. O domínio revalida os ingredientes ao executar a operação sobre o estado atual.
               const suficiente = receita.ingredientes.every((ingrediente) => possuido(ingrediente.idDaDefinicao) >= ingrediente.quantidade)
               const desbloqueado = progresso.nivel >= receita.nivelExigidoDaProfissao
-              return <Card className={`${estilos.option} ${ativo ? "selecionado-cartao" : ''}`} key={receita.id}>
+              return <Card appearance="soft" className={`${estilos.option} ${ativo ? "selecionado-cartao" : ''}`} key={receita.id}>
                 <div className="item-miniatura" aria-hidden="true"><IconeDoJogo icone={receita.saida.tipo === 'item' ? obterIconeDoItem(receita.saida.idDaDefinicao) : iconeDeProfissaoPorId[profissaoSelecionada]} tamanho={40} /></div>
                 <div className={estilos.optionBody}>
                   <h2>{receita.nome}</h2>
                   <p className={estilos.yield}>{receita.segundosPorAcao}s por ciclo · +{receita.xpDeProfissaoPorAcao} XP</p>
-                  <ComparacaoDeEquipamento partida={partida} idDaReceita={receita.id} />
+                  <details className={estilos.recipeDetails}>
+                    <summary>Materiais e comparação · {receita.ingredientes.filter((ingrediente) => possuido(ingrediente.idDaDefinicao) < ingrediente.quantidade).length} pendente(s)</summary>
+                    <ComparacaoDeEquipamento partida={partida} idDaReceita={receita.id} />
                   <div className={estilos.ingredients}>
                     {receita.ingredientes.map((ingrediente) => {
                       const quantidade = possuido(ingrediente.idDaDefinicao)
@@ -126,6 +128,7 @@ export default function TelaDeAtividades({ partida, ultimoResultadoDoTrabalho, p
                       return <div className={estilos.ingredientRow} key={ingrediente.idDaDefinicao}><span>{rotulosDosItens[ingrediente.idDaDefinicao] ?? ingrediente.idDaDefinicao} <strong>{quantidade} / {ingrediente.quantidade}</strong>{faltante ? <small>Faltam {faltante}</small> : null}</span>{faltante && origemProfissao ? <Button variant="secondary" size="sm" onClick={() => escolherProfissao(origemProfissao)}>Ver {rotulosDasProfissoes[origemProfissao]} →</Button> : null}</div>
                     })}
                   </div>
+                  </details>
                   {!desbloqueado ? <p className="informacao-alerta">Requer {rotulosDasProfissoes[profissaoSelecionada]} no nível {receita.nivelExigidoDaProfissao}.</p> : null}
                   {trabalho && !ativo ? <p className={estilos.replacement}>Ao iniciar, substitui {trabalho}.</p> : null}
                   <div className="botao-linhaDeDados"><Button variant={ativo ? 'secondary' : 'primary'} size="sm" disabled={pendente || (!ativo && (!suficiente || !desbloqueado))} onClick={() => void agir(ativo ? aoPararTrabalho : () => aoIniciarReceita(receita.id))}>{ativo ? 'Em curso · Parar' : suficiente ? 'Iniciar produção' : 'Faltam materiais'}</Button>

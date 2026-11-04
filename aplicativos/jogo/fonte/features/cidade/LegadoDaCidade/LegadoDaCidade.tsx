@@ -57,7 +57,7 @@ export function ResumoDaCidade({ partida, aoAbrirProjetos }: { partida: PartidaL
   return (
     <section className={estilos.resumo} aria-label="Legado da Cidade Livre">
       <CenaDaCidade partida={partida} />
-      <Card className={estilos.cartaoPrincipal}>
+      <Card appearance="soft" className={estilos.cartaoPrincipal}>
         <div className={estilos.tituloDeSecao}>
           <img src={`${CAMINHO}cidade-reconstrucao.png`} alt="" decoding="async" />
           <div><p className="secao-chamada">CIDADE VIVA · RECONSTRUÇÃO</p><h2>Legado da Cidade Livre</h2></div>
@@ -141,13 +141,15 @@ export function PainelDeProjetos({ partida, aoVoltar, aoConcluirProjeto }: { par
       </nav>
       <div className={estilos.grade}>
         {listados.map(({ definicao: projeto, consulta }) => (
-          <Card key={projeto.id} className={estilos.projeto}>
+          <Card appearance="soft" key={projeto.id} className={estilos.projeto}>
             <div className={estilos.topoProjeto}>
               <img src={`${CAMINHO}${ICONES[projeto.distrito]}`} alt="" loading="lazy" decoding="async" />
               <div><p className="secao-chamada">{DISTRITOS_DA_CIDADE.find(d => d.id === projeto.distrito)?.nome} · Nível {projeto.nivel}/4</p><h2>{projeto.nome}</h2></div>
             </div>
             <p className="atenuado">{projeto.descricao}</p>
             <p className={estilos.estado} data-situacao={consulta.situacao}>{ROTULOS[consulta.situacao]}</p>
+            <details className={estilos.detalhesProjeto}>
+              <summary>Requisitos e materiais <span>{consulta.materiais.length} materiais</span></summary>
             {consulta.requisitos.length > 0 ? <ul className={estilos.requisitos} aria-label="Conquistas necessárias">
               {consulta.requisitos.map((r, i) => <li key={`${projeto.id}-${i}`}><span aria-hidden="true">{r.cumprido ? '✓' : '◇'}</span> {r.nome} {r.cumprido ? '(concluído)' : '(pendente)'}</li>)}
             </ul> : null}
@@ -159,6 +161,7 @@ export function PainelDeProjetos({ partida, aoVoltar, aoConcluirProjeto }: { par
               <div className={estilos.linhaOuro}><span>Ouro</span><strong>{consulta.ouroDisponivel}/{consulta.ouroNecessario}</strong></div>
               {consulta.descontoEmOuro > 0 ? <small>Desconto de {consulta.descontoEmOuro} ouro por {consulta.creditosAplicaveis} créditos históricos.</small> : null}
             </div>
+            </details>
             {consulta.situacao === 'pronto' ? (
               confirmando === projeto.id ? <div className={estilos.confirmacao}>
                 <p>Confirmar a entrega dos materiais do inventário e banco e o pagamento de {consulta.ouroNecessario} moedas?</p>

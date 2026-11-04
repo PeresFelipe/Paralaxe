@@ -96,3 +96,29 @@
   .cabecalhoProjetos .ornamento { max-inline-size: 40%; }
   .legenda { padding: var(--ui-space-1) var(--ui-space-2); font-size: var(--ui-font-size-xs); }
 }
+
+/* Projetos mostram situação e ação primeiro; materiais ficam à disposição por demanda. */
+.detalhesProjeto {
+  min-width: 0;
+  border-top: var(--ui-size-border) solid var(--ui-color-border);
+  padding-top: var(--ui-space-2);
+}
+.detalhesProjeto > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ui-space-2);
+  color: var(--ui-color-text);
+  font-family: var(--ui-font-family-body);
+  font-size: var(--ui-font-size-sm);
+  cursor: pointer;
+}
+.detalhesProjeto > summary:focus-visible {
+  outline: var(--ui-size-focus-ring) solid var(--ui-color-focus);
+  outline-offset: var(--ui-space-1);
+}
+.detalhesProjeto > summary span {
+  color: var(--ui-color-text-muted);
+  font-size: var(--ui-font-size-xs);
+}
+.detalhesProjeto[open] > summary { margin-bottom: var(--ui-space-3); }
