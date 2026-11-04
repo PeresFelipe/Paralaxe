@@ -17,6 +17,11 @@ import {
 } from "@paralaxe/conteudo";
 import {
   aceitarContratoDeDunLiath,
+  iniciarIncursaoAutomatica,
+  finalizarIncursaoAutomatica,
+  cancelarIncursaoAutomatica,
+  consultarResultadoDaIncursaoAutomatica,
+  type PresetDeIncursao,
   escolherCaminhoNaMasmorra,
   decidirDestinoDoProtetor,
   derivarEstatisticasDeCombateDoJogador,
@@ -151,8 +156,24 @@ export default function BancadaDaMasmorra({
   const [ocupado, definirOcupado] = useState(false);
   const [dificuldadeSelecionada, definirDificuldadeSelecionada] = useState<DificuldadeDaMasmorra>('facil');
   const [preparando, definirPreparando] = useState(false);
+  const [presetDeIncursao, definirPresetDeIncursao] = useState<PresetDeIncursao>('cautelosa');
+  const [relogioIncursao, definirRelogioIncursao] = useState(() => Date.now());
 
   const execucao = partida.masmorra.expedicaoAtiva;
+  const incursaoAtiva = partida.masmorra.incursaoAutomaticaAtiva ?? null;
+  const resultadoDaIncursao = incursaoAtiva
+    ? consultarResultadoDaIncursaoAutomatica(incursaoAtiva, new Date(relogioIncursao).toISOString())
+    : null;
+  const duracaoDaIncursao = incursaoAtiva
+    ? Date.parse(incursaoAtiva.terminaEm) - Date.parse(incursaoAtiva.iniciadaEm)
+    : 1;
+  const progressoDaIncursao = incursaoAtiva
+    ? Math.max(0, Math.min(100,
+        100 * (relogioIncursao - Date.parse(incursaoAtiva.iniciadaEm)) / Math.max(1, duracaoDaIncursao)))
+    : 0;
+  const nomesDosPresets: Record<PresetDeIncursao, string> = {
+    cautelosa: 'Cautelosa', equilibrada: 'Equilibrada', ousada: 'Ousada',
+  };
   const dificuldadesDisponiveis = obterDificuldadesDesbloqueadasDaMasmorra(partida.masmorra);
   const nomesDasDificuldades: Record<DificuldadeDaMasmorra, string> = {
     facil: 'Fácil', normal: 'Normal', dificil: 'Difícil', impossivel: 'Impossível',
@@ -173,10 +194,18 @@ export default function BancadaDaMasmorra({
 
   // Mantém a estrutura principal ciente do risco persistido, inclusive quando uma partida é reaberta no meio da viagem.
   useEffect(() => {
-    aoAlterarEstadoDeRisco?.(Boolean(execucao));
-  }, [aoAlterarEstadoDeRisco, execucao]);
+    aoAlterarEstadoDeRisco?.(Boolean(execucao || incursaoAtiva));
+  }, [aoAlterarEstadoDeRisco, execucao, incursaoAtiva]);
 
   useEffect(() => () => aoAlterarEstadoDeRisco?.(false), [aoAlterarEstadoDeRisco]);
+
+  // Somente o indicador visual recebe ticks; a conclusão usa o horário no save.
+  useEffect(() => {
+    if (!incursaoAtiva) return;
+    definirRelogioIncursao(Date.now());
+    const temporizador = window.setInterval(() => definirRelogioIncursao(Date.now()), 1000);
+    return () => window.clearInterval(temporizador);
+  }, [incursaoAtiva]);
 
   // Preparação altera a apresentação, mas ainda não pausa o trabalho; a pausa ocorre ao confirmar a entrada.
   useEffect(() => {
@@ -412,8 +441,63 @@ export default function BancadaDaMasmorra({
     }
   }
 
+  async function tratarIniciarIncursao() {
+    if (ocupado || incursaoAtiva || execucao) return;
+    definirOcupado(true);
+    try {
+      if (!partida.masmorra.dunLiathFacilConquistado) {
+        throw new Error('Conclua Dún Liath Fácil antes de iniciar Incursão Automática.');
+      }
+      const preparada = await prepararRisco();
+      const agora = new Date().toISOString();
+      // Bônus por nível é um parâmetro provisório que não muda o esquema de atributos.
+      const iniciada = iniciarIncursaoAutomatica(
+        preparada, presetDeIncursao, preparada.personagem.nivel, Date.now() >>> 0, agora,
+      );
+      await persistir(iniciada, 'Incursão Automática iniciada. Os trabalhos serão retomados ao resgatar ou cancelar.');
+      definirRelogioIncursao(Date.now());
+      aoAlterarEstadoDeRisco?.(true);
+    } catch (erro) {
+      definirMensagem(erro instanceof Error ? erro.message : 'Não foi possível iniciar a incursão.');
+      aoAlterarEstadoDeRisco?.(false);
+    } finally {
+      definirOcupado(false);
+    }
+  }
+
+  async function tratarFinalizarIncursao() {
+    if (ocupado || !incursaoAtiva) return;
+    definirOcupado(true);
+    try {
+      const encerrada = finalizarIncursaoAutomatica(partida, new Date().toISOString());
+      const resumo = encerrada.masmorra.ultimaIncursaoAutomatica;
+      await persistir(encerrada, resumo?.sucesso
+        ? 'Incursão concluída! Recompensa comum no Inventário; seus trabalhos foram retomados.'
+        : 'A incursão falhou, sem perder itens seguros. Seus trabalhos foram retomados.');
+      aoAlterarEstadoDeRisco?.(false);
+    } catch (erro) {
+      definirMensagem(erro instanceof Error ? erro.message : 'Não foi possível resgatar a incursão.');
+    } finally {
+      definirOcupado(false);
+    }
+  }
+
+  async function tratarCancelarIncursao() {
+    if (ocupado || !incursaoAtiva) return;
+    definirOcupado(true);
+    try {
+      await persistir(cancelarIncursaoAutomatica(partida, new Date().toISOString()),
+        'Incursão cancelada sem recompensas. Seus trabalhos foram retomados.');
+      aoAlterarEstadoDeRisco?.(false);
+    } catch (erro) {
+      definirMensagem(erro instanceof Error ? erro.message : 'Não foi possível cancelar a incursão.');
+    } finally {
+      definirOcupado(false);
+    }
+  }
+
   // A preparação só existe sem viagem ativa e informa as consequências antes de chamar tratarIniciar.
-  if (!execucao && preparando) {
+  if (!execucao && !incursaoAtiva && preparando) {
     const vazioTecnicas = partida.personagem.espacosDeHabilidadesAtivas.filter(
       (espaco) => !espaco,
     ).length;
@@ -533,6 +617,49 @@ export default function BancadaDaMasmorra({
     );
   }
 
+  if (incursaoAtiva) {
+    const segundosRestantes = Math.max(0, Math.ceil((Date.parse(incursaoAtiva.terminaEm) - relogioIncursao) / 1000));
+    return (
+      <section className="funcionalidade-telaDoJogo" aria-labelledby="incursao-em-curso">
+        <div className="telaDoJogo-tituloDaSecao">
+          <div>
+            <p className="secao-chamada">Dún Liath · Incursão Automática</p>
+            <h2 id="incursao-em-curso" className="destaque-titulo">Incursão em andamento</h2>
+            <p className="atenuado">Este modo não percorre a Masmorra manual. As atividades de Ofício estão pausadas.</p>
+          </div>
+        </div>
+        <Card className={estilos.incursaoPainel}>
+          <h3>Preset {nomesDosPresets[incursaoAtiva.preset]}</h3>
+          <div className="informacao-linhaDeDados">
+            <span>Chance calculada ao iniciar</span>
+            <strong>{Math.round(incursaoAtiva.chanceDeSucesso * 100)}%</strong>
+          </div>
+          <div className="informacao-linhaDeDados">
+            <span>{resultadoDaIncursao?.concluida ? 'Resultado disponível' : 'Tempo restante'}</span>
+            <strong>{resultadoDaIncursao?.concluida ? 'Pronto para resgatar' :
+              Math.floor(segundosRestantes / 60) + 'm ' + String(segundosRestantes % 60).padStart(2, '0') + 's'}</strong>
+          </div>
+          <progress className={estilos.incursaoBarra} value={progressoDaIncursao} max={100}
+            aria-label="Progresso da Incursão Automática" />
+          <p className="atenuado">
+            Recompensa possível: {incursaoAtiva.recompensaPossivel.map(item =>
+              item.quantidade + '× ' + itemRotulo(item.idDaDefinicao)).join(', ')}.
+            A chance e o saque ficam fixos na partida. Sem recompensas exclusivas do Chefe ou Relíquias.
+          </p>
+          <div className="botao-linhaDeDados">
+            {resultadoDaIncursao?.concluida ? (
+              <Button variant="primary" size="sm" disabled={ocupado}
+                onClick={() => void tratarFinalizarIncursao()}>Resgatar resultado</Button>
+            ) : null}
+            <Button variant="secondary" size="sm" disabled={ocupado}
+              onClick={() => void tratarCancelarIncursao()}>Cancelar sem recompensas</Button>
+          </div>
+        </Card>
+        {mensagem ? <p className="emLinha-mensagem" role="status">{mensagem}</p> : null}
+      </section>
+    );
+  }
+
   if (!execucao) {
     return (
       <section
@@ -627,6 +754,41 @@ export default function BancadaDaMasmorra({
                 Preparar expedição
               </Button>
             )}
+          </Card>
+        </div>
+        <div className="secao-espacamento">
+          <Card className={estilos.incursaoPainel}>
+            <p className="secao-chamada">Modo separado · Incursão Automática</p>
+            <h3>Uma incursão sem explorar salas manualmente</h3>
+            <p className="atenuado">
+              Liberada após concluir Dún Liath Fácil. Presets definem duração, chance e recompensas.
+              Sua atividade atual será pausada. Sem segredos, Relíquias ou itens exclusivos do Chefe.
+            </p>
+            <div className="botao-linhaDeDados" role="group" aria-label="Preset da incursão">
+              {(['cautelosa', 'equilibrada', 'ousada'] as const).map(preset => (
+                <Button key={preset} size="sm"
+                  variant={presetDeIncursao === preset ? 'primary' : 'secondary'}
+                  disabled={ocupado || !partida.masmorra.dunLiathFacilConquistado}
+                  onClick={() => definirPresetDeIncursao(preset)}>
+                  {nomesDosPresets[preset]}
+                </Button>
+              ))}
+            </div>
+            <p className="atenuado">
+              {presetDeIncursao === 'cautelosa' ? '15 min · 82% base · 1 Viga' :
+                presetDeIncursao === 'equilibrada' ? '30 min · 67% base · 2 Vigas' :
+                  '60 min · 52% base · 3 Vigas'} · bônus provisório de nível até 12 p.p.
+            </p>
+            <Button variant="primary" size="sm" disabled={ocupado || !partida.masmorra.dunLiathFacilConquistado}
+              onClick={() => void tratarIniciarIncursao()}>
+              {partida.masmorra.dunLiathFacilConquistado ? 'Iniciar Incursão Automática' : 'Conclua Dún Liath Fácil'}
+            </Button>
+            {partida.masmorra.ultimaIncursaoAutomatica ? (
+              <p className="atenuado">
+                Última incursão: {partida.masmorra.ultimaIncursaoAutomatica.sucesso ? 'Sucesso' : 'Falha'}
+                {' · '}{nomesDosPresets[partida.masmorra.ultimaIncursaoAutomatica.preset]}
+              </p>
+            ) : null}
           </Card>
         </div>
       </section>

@@ -185,3 +185,8 @@
   border-left: var(--ui-size-border-emphasis) solid var(--ui-color-warning);
   background: var(--ui-color-surface-raised);
 }
+
+/* Presets e progresso da incursão: conteúdo compacto e adaptável. */
+.incursaoPainel { display: grid; gap: var(--ui-space-3); min-inline-size: 0; }
+.incursaoPainel > * { min-inline-size: 0; }
+.incursaoBarra { width: 100%; height: var(--ui-space-2); accent-color: var(--ui-color-warning); }
