@@ -6,6 +6,24 @@ import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
 import { VitePWA } from 'vite-plugin-pwa'
 import { fileURLToPath } from 'node:url'
+import { execFileSync } from 'node:child_process'
+
+/** Prepara arquivos derivados antes de servir ou compilar (inclusive ao abrir pelo .bat). */
+const animacoes = {
+  name: 'preparar-animacoes-dos-oficios',
+  buildStart() {
+    execFileSync(process.execPath, ['ferramentas/prepararAnimacoesDeOficios.mjs'], {
+      cwd: fileURLToPath(new URL('../../', import.meta.url)),
+      stdio: 'inherit',
+    })
+  },
+  configureServer() {
+    execFileSync(process.execPath, ['ferramentas/prepararAnimacoesDeOficios.mjs'], {
+      cwd: fileURLToPath(new URL('../../', import.meta.url)),
+      stdio: 'inherit',
+    })
+  },
+}
 
 export default defineConfig({
   // Recursos desta pasta são copiados sem transformação: /arte/... aponta para publico/arte/....
@@ -23,7 +41,7 @@ export default defineConfig({
   preview: {
     host: '127.0.0.1',
   },
-  plugins: [react(), VitePWA({
+  plugins: [animacoes, react(), VitePWA({
     // Uma nova versão aguarda a confirmação apresentada por EstadoDoJogoWeb.
     registerType: 'prompt',
     includeAssets: ['favicon.svg'],

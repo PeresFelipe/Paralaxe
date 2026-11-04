@@ -5,7 +5,7 @@ name: Validar versão 0.1
 
 on:
   push:
-    branches: [main, codex/vigilia-cidade-evolutiva-2026-11-03, codex/vigilia-cidade-artes-completas-2026-11-03, codex/legado-cidade-viva, Develop]
+    branches: [main, develop]
   pull_request:
     branches: [main]
 
@@ -29,6 +29,9 @@ jobs:
       # A opção atual permite ajustar a resolução do lockfile durante a instalação da automação.
       - name: Instalar dependências
         run: pnpm install --no-frozen-lockfile
+
+      - name: Verificar cadência dos GIFs originais e derivados
+        run: node --test ferramentas/prepararAnimacoesDeOficios.test.mjs
 
       # pnpm verificar também confere a cobertura do catálogo de créditos e os avisos locais.
       - name: Verificar código, tipos e testes

@@ -36,6 +36,7 @@ echo.
 set "VITE_ENTRY=aplicativos\jogo\node_modules\vite\bin\vite.js"
 
 if not exist "%VITE_ENTRY%" (
+
   echo Dependencias nao encontradas. Tentando instalar com pnpm...
   echo.
   where pnpm >nul 2>&1
@@ -62,6 +63,23 @@ if not exist "%VITE_ENTRY%" (
       if errorlevel 1 goto :falha
     )
   )
+)
+
+REM Ao atualizar a branch, pode haver dependencias novas mesmo que o Vite ja exista.
+if not exist "aplicativos\\jogo\\node_modules\\@radix-ui\\react-select" (
+  echo Atualizando dependencias do seletor de oficios...
+  where pnpm >nul 2>&1
+  if not errorlevel 1 (
+    call pnpm install --no-frozen-lockfile
+  ) else (
+    where corepack >nul 2>&1
+    if not errorlevel 1 (
+      call corepack pnpm install --no-frozen-lockfile
+    ) else (
+      call npx --yes pnpm@12.3.4 install --no-frozen-lockfile
+    )
+  )
+  if errorlevel 1 goto :falha
 )
 
 if not exist "%VITE_ENTRY%" (
