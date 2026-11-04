@@ -6,6 +6,7 @@
 import type { PilhaDoInventario, PartidaLocal } from './personagem'
 import { obterEspacoParaPilhaNoInventario } from './armazenamento'
 import type { DefinicaoDeEquipamento, EspacoDeFerramenta } from './equipamento'
+import { segundosPorAcaoComPrioridade, type PrioridadeDeOficio } from './prioridadesDeOficio'
 
 export const IDS_DAS_PROFISSOES = [
   "mineracao",
@@ -51,6 +52,7 @@ export interface EstadoOcioso {
   atividadeAtiva: AtividadeOciosaAtiva | null
   /** Segundo espaço do Prestígio I. Saves antigos são normalizados para null na migração. */
   atividadeSecundaria?: AtividadeOciosaAtiva | null
+  prioridade?: PrioridadeDeOficio
 }
 
 /** Combina a nova partida com um resumo usado nas mensagens de retorno e interrupção. */
@@ -102,8 +104,17 @@ export function obterBonusDaFerramentaDeColeta(
 export const EFICIENCIA_SECUNDARIA_PRESTIGIO_I = 0.5
 
 /** A atividade secundária mantém o mesmo produto e XP, mas exige mais tempo por ciclo. */
-export function ajustarAtividadeParaSegundoEspaco(atividade: DefinicaoDeAtividadeOciosa): DefinicaoDeAtividadeOciosa {
-  return { ...atividade, segundosPorAcao: Math.ceil(atividade.segundosPorAcao / EFICIENCIA_SECUNDARIA_PRESTIGIO_I) }
+export function ajustarAtividadeParaSegundoEspaco(atividade: DefinicaoDeAtividadeOciosa, prioridade?: PrioridadeDeOficio): DefinicaoDeAtividadeOciosa {
+  return { ...atividade, segundosPorAcao: segundosPorAcaoComPrioridade(atividade.segundosPorAcao, prioridade, 'secundaria') }
+}
+export function ajustarAtividadePrincipalPorPrioridade(atividade: DefinicaoDeAtividadeOciosa, prioridade?: PrioridadeDeOficio): DefinicaoDeAtividadeOciosa {
+  return { ...atividade, segundosPorAcao: segundosPorAcaoComPrioridade(atividade.segundosPorAcao, prioridade, 'principal') }
+}
+export function configurarPrioridadeDaColeta(partida: PartidaLocal, prioridade: PrioridadeDeOficio, agora: string): PartidaLocal {
+  const id = partida.ocioso.atividadeAtiva?.idDaDefinicaoDaAtividade
+  const oficio = id?.split('.')[1] as IdDaProfissao | undefined
+  if (!oficio || partida.profissoes[oficio]?.prestigio < 2) throw new Error('Prioridade exige Prestígio II com coleta principal ativa.')
+  return { ...partida, atualizadoEm: agora, ocioso: { ...partida.ocioso, prioridade } }
 }
 
 /** Inicia somente o segundo espaço, sem interromper o principal e sem criar um relógio global. */
@@ -152,7 +163,7 @@ export function processarProgressoDaAtividadeSecundaria(
       segundosLimitados: 0, interrompidoPorCapacidade: false }
   }
   const simulada: PartidaLocal = { ...partida, ocioso: { ...partida.ocioso, atividadeAtiva: secundaria } }
-  const resultado = processarProgressoOcioso(simulada, ajustarAtividadeParaSegundoEspaco(atividade), agora, resolverEquipamento)
+  const resultado = processarProgressoOcioso(simulada, ajustarAtividadeParaSegundoEspaco(atividade, partida.ocioso.prioridade), agora, resolverEquipamento)
   return {
     ...resultado,
     partida: {

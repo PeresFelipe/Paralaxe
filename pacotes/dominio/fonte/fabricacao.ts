@@ -7,6 +7,7 @@ import type { PilhaDoInventario, PartidaLocal } from './personagem'
 import { aplicarXpDeProfissao, obterLimiteDeAusenciaEmSegundos, type IdDaProfissao } from './ocioso'
 import { obterEspacoParaEquipamentoNoInventario, obterEspacoParaPilhaNoInventario } from './armazenamento'
 import { registrarFabricacaoDaJornada } from './jornada'
+import { segundosPorAcaoComPrioridade, type PrioridadeDeOficio } from './prioridadesDeOficio'
 
 export interface IngredienteDaReceita {
   idDaDefinicao: string
@@ -57,6 +58,7 @@ export interface EstadoDeFabricacao {
   receitaAtiva: ReceitaDeFabricacaoAtiva | null
   /** Prestígio I: segundo relógio independente; nos saves v14 é inicializado como null. */
   receitaSecundaria?: ReceitaDeFabricacaoAtiva | null
+  prioridade?: PrioridadeDeOficio
 }
 
 export interface ResultadoDoProgressoDeFabricacao {
@@ -193,8 +195,17 @@ export function iniciarReceitaDeFabricacao(
 /** P1: velocidade secundária provisória; a quantidade e o XP por ciclo não mudam. */
 export const EFICIENCIA_PRODUCAO_SECUNDARIA_PRESTIGIO_I = 0.5
 
-export function ajustarReceitaParaSegundoEspaco(receita: DefinicaoDeReceitaDeFabricacao): DefinicaoDeReceitaDeFabricacao {
-  return { ...receita, segundosPorAcao: Math.ceil(receita.segundosPorAcao / EFICIENCIA_PRODUCAO_SECUNDARIA_PRESTIGIO_I) }
+export function ajustarReceitaParaSegundoEspaco(receita: DefinicaoDeReceitaDeFabricacao, prioridade?: PrioridadeDeOficio): DefinicaoDeReceitaDeFabricacao {
+  return { ...receita, segundosPorAcao: segundosPorAcaoComPrioridade(receita.segundosPorAcao, prioridade, 'secundaria') }
+}
+export function ajustarReceitaPrincipalPorPrioridade(receita: DefinicaoDeReceitaDeFabricacao, prioridade?: PrioridadeDeOficio): DefinicaoDeReceitaDeFabricacao {
+  return { ...receita, segundosPorAcao: segundosPorAcaoComPrioridade(receita.segundosPorAcao, prioridade, 'principal') }
+}
+export function configurarPrioridadeDaFabricacao(partida: PartidaLocal, receita: DefinicaoDeReceitaDeFabricacao, prioridade: PrioridadeDeOficio, agora: string): PartidaLocal {
+  if (partida.fabricacao.receitaAtiva?.idDaDefinicaoDaReceita !== receita.id || partida.profissoes[receita.idDaProfissao].prestigio < 2) {
+    throw new Error('Prioridade exige Prestígio II com produção principal ativa.')
+  }
+  return { ...partida, atualizadoEm: agora, fabricacao: { ...partida.fabricacao, prioridade } }
 }
 
 /**
@@ -259,7 +270,7 @@ export function processarProgressoDaReceitaSecundaria(
   }
   if (receita.saida.tipo === 'equipamento-reforco') throw new Error('Reforço secundário inválido.')
   const simulada: PartidaLocal = { ...partida, fabricacao: { ...partida.fabricacao, receitaAtiva: secundaria } }
-  const resultado = processarProgressoDeFabricacao(simulada, ajustarReceitaParaSegundoEspaco(receita), agora)
+  const resultado = processarProgressoDeFabricacao(simulada, ajustarReceitaParaSegundoEspaco(receita, partida.fabricacao.prioridade), agora)
   return {
     ...resultado,
     partida: {

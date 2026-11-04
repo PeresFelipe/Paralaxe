@@ -6,6 +6,8 @@ import {
 import {
   processarProgressoDeFabricacao,
   processarProgressoDaReceitaSecundaria,
+  ajustarReceitaPrincipalPorPrioridade,
+  ajustarAtividadePrincipalPorPrioridade,
   processarProgressoOcioso,
   processarProgressoDaAtividadeSecundaria,
   type PartidaLocal,
@@ -52,12 +54,19 @@ export function processarTrabalhoAtual(
   if (ativoOciosoId) {
     const atividade = obterDefinicaoDeAtividadeOciosa(ativoOciosoId)
     if (atividade) {
-      const resultado = processarProgressoOcioso(partida, atividade, agora, obterDefinicaoDeEquipamento)
-      const secundariaId = resultado.partida.ocioso.atividadeSecundaria?.idDaDefinicaoDaAtividade
+      const secundariaId = partida.ocioso.atividadeSecundaria?.idDaDefinicaoDaAtividade
       const secundaria = secundariaId ? obterDefinicaoDeAtividadeOciosa(secundariaId) : null
-      const adicional = secundaria
-        ? processarProgressoDaAtividadeSecundaria(resultado.partida, secundaria, agora, obterDefinicaoDeEquipamento)
+      const primeira = partida.ocioso.prioridade === 'secundaria' && secundaria
+        ? processarProgressoDaAtividadeSecundaria(partida, secundaria, agora, obterDefinicaoDeEquipamento)
         : null
+      const resultado = processarProgressoOcioso(
+        primeira?.partida ?? partida,
+        ajustarAtividadePrincipalPorPrioridade(atividade, partida.ocioso.prioridade),
+        agora, obterDefinicaoDeEquipamento,
+      )
+      const adicional = primeira ?? (secundaria
+        ? processarProgressoDaAtividadeSecundaria(resultado.partida, secundaria, agora, obterDefinicaoDeEquipamento)
+        : null)
       const processada = adicional?.partida ?? resultado.partida
       // Quando a principal para por capacidade, credita primeiro o tempo secundário;
       // em seguida encerra o segundo espaço para não deixar atividade órfã.
@@ -94,10 +103,19 @@ export function processarTrabalhoAtual(
   if (ativoReceitaId) {
     const receita = obterDefinicaoDeReceitaDeFabricacao(ativoReceitaId)
     if (receita) {
-      const resultado = processarProgressoDeFabricacao(partida, receita, agora)
-      const secundariaId = resultado.partida.fabricacao.receitaSecundaria?.idDaDefinicaoDaReceita
+      const secundariaId = partida.fabricacao.receitaSecundaria?.idDaDefinicaoDaReceita
       const secundaria = secundariaId ? obterDefinicaoDeReceitaDeFabricacao(secundariaId) : null
-      const adicional = secundaria ? processarProgressoDaReceitaSecundaria(resultado.partida, secundaria, agora) : null
+      const primeira = partida.fabricacao.prioridade === 'secundaria' && secundaria
+        ? processarProgressoDaReceitaSecundaria(partida, secundaria, agora)
+        : null
+      const resultado = processarProgressoDeFabricacao(
+        primeira?.partida ?? partida,
+        ajustarReceitaPrincipalPorPrioridade(receita, partida.fabricacao.prioridade),
+        agora,
+      )
+      const adicional = primeira ?? (secundaria
+        ? processarProgressoDaReceitaSecundaria(resultado.partida, secundaria, agora)
+        : null)
       const processada = adicional?.partida ?? resultado.partida
       const proxima = !processada.fabricacao.receitaAtiva && processada.fabricacao.receitaSecundaria
         ? { ...processada, fabricacao: { ...processada.fabricacao, receitaSecundaria: null } }
