@@ -4,7 +4,7 @@
  * O modo demonstração é explicitamente não narrativo, sem convocar ou recrutar PNJs.
  */
 import type { PartidaLocal } from './personagem'
-import { derivarEstatisticasDeCombateDoJogador, type CatalogoDeConteudoDeCombate } from './combate'
+import { derivarEstatisticasDeCombateDoJogador, type CatalogoDeConteudoDeCombate, type DefinicaoDeHabilidadeDoInimigo } from './combate'
 import { criarEstadoDeAmeaca, escolherAlvoDaAmeaca, provocarInimigo, registrarAmeaca,
   type EstadoDeAmeaca, type AlvoDaAmeaca } from './ameaca'
 
@@ -159,7 +159,7 @@ export function simularCombateEmGrupo(
     }
     if (inimigoVida <= 0) break
     if (proximoAtaqueInimigo <= segundo + 1e-7) {
-      const habilidade = aviso?.habilidade ??
+      const habilidade: DefinicaoDeHabilidadeDoInimigo | undefined = aviso?.habilidade ??
         inimigo.habilidades.find(h => (recargasInimigo.get(h.id) ?? 0) <= segundo + 1e-7)
       if (!aviso && habilidade?.segundosDeAvisoDeAtaque && habilidade.segundosDeAvisoDeAtaque > 0) {
         aviso = { habilidade }

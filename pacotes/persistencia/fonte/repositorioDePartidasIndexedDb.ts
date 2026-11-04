@@ -253,7 +253,7 @@ function migrarLegadoPersonagem(personagem: EstadoLegadoDoPersonagem): PartidaLo
  * Primeiro traduz o vocabulário, depois escolhe a migração pela versão do esquema.
  * Versões reconhecidas recebem somente os estados que lhes faltavam; versões desconhecidas são rejeitadas.
  */
-function migrarPartidaAnterior(dadosArmazenados: unknown): Omit<PartidaLocal, 'vigilia' | 'legado'> {
+function migrarPartidaAnterior(dadosArmazenados: unknown): Omit<PartidaLocal, 'vigilia' | 'legado' | 'grupo'> & Partial<Pick<PartidaLocal, 'grupo'>> {
   const brutoPartida = lerFormatoLegado(dadosArmazenados)
   if (!brutoPartida || typeof brutoPartida !== 'object') {
     throw new Error("Partida local inválido.")
