@@ -22,8 +22,13 @@ export function criarEstadoInicialDoGrupo(): EstadoDoGrupo {
 /** Eventos pertencem à segunda Masmorra ainda não detalhada; Dún Liath não os aciona. */
 export function registrarMarcoDeMira(partida: PartidaLocal, proximo: Exclude<MarcoDeMira,'desconhecida'>, agora: string): PartidaLocal {
   if (!partida.masmorra.dunLiathFacilConquistado) throw new Error('Mira aparece depois de Dún Liath.')
-  if (partida.masmorra.expedicaoAtiva?.idDaDefinicaoDaMasmorra.startsWith('masmorra.dun-liath.')) {
-    throw new Error('Mira não aparece em Dún Liath.')
+  const exigeSegundaMasmorra = proximo !== 'reencontro-na-taverna' && proximo !== 'recrutavel'
+  const expedicao = partida.masmorra.expedicaoAtiva
+  if (exigeSegundaMasmorra && (!expedicao || expedicao.idDaDefinicaoDaMasmorra.startsWith('masmorra.dun-liath.'))) {
+    throw new Error('Os primeiros marcos de Mira exigem a segunda Masmorra ativa.')
+  }
+  if (!exigeSegundaMasmorra && (expedicao || partida.personagem.idDaLocalizacaoAtual !== 'cidade-livre.taverna')) {
+    throw new Error('O reencontro e o recrutamento de Mira acontecem na Taverna após a Masmorra.')
   }
   const grupo = partida.grupo
   if (MARCOS_DE_MIRA.indexOf(proximo) !== MARCOS_DE_MIRA.indexOf(grupo.marcoDeMira) + 1) {
