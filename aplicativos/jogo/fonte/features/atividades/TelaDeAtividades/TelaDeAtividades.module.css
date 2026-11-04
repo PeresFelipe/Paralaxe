@@ -12,55 +12,6 @@
   flex: 0 0 auto;
 }
 
-/* Um único seletor para desktop e mobile; categorias e teclado ficam a cargo do select nativo. */
-.layout {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: var(--ui-space-3);
-  min-width: 0;
-}
-
-.selector {
-  display: flex;
-  align-items: end;
-  gap: var(--ui-space-3);
-  width: min(100%, 32rem);
-  min-width: 0;
-  padding: var(--ui-space-3);
-  border: var(--ui-size-border) solid var(--ui-color-border);
-  border-radius: var(--ui-radius-lg);
-  background: var(--ui-color-surface);
-}
-
-.selectorIcon {
-  display: grid;
-  place-items: center;
-  flex: 0 0 2.5rem;
-  height: 2.5rem;
-  border-radius: var(--ui-radius-md);
-  background: var(--ui-color-primary-soft);
-}
-
-.selectorField {
-  flex: 1 1 auto;
-  min-width: 0;
-}
-
-.selectorField :global(select) {
-  min-width: 0;
-  max-width: 100%;
-  font-size: var(--ui-font-size-sm);
-  color: var(--ui-color-text);
-}
-
-.selectorLevel {
-  flex: 0 0 auto;
-  margin-bottom: var(--ui-space-2);
-  color: var(--ui-color-warning-text);
-  font: var(--ui-font-weight-semibold) var(--ui-font-size-xs) var(--ui-font-family-body);
-  white-space: nowrap;
-}
-
 /* A arte fica ao lado do progresso em telas largas, sem crescer com a janela. */
 :global(.atividades-telaDoJogo) .stage {
   display: grid;
@@ -68,28 +19,6 @@
   align-items: start;
   gap: var(--ui-space-3);
   min-width: 0;
-}
-
-:global(.atividades-telaDoJogo) .sceneFrame {
-  box-sizing: border-box;
-  width: min(100%, 14rem);
-  max-width: 100%;
-  padding: var(--ui-space-1-5);
-}
-
-:global(.atividades-telaDoJogo) .scene {
-  display: block;
-  width: 100%;
-  max-width: 100%;
-  aspect-ratio: 16 / 9;
-  max-height: 8rem;
-  overflow: hidden;
-}
-
-:global(.atividades-telaDoJogo) .scene :global(picture),
-:global(.atividades-telaDoJogo) .scene :global(img) {
-  max-width: 100%;
-  max-height: 100%;
 }
 
 @media (max-width: 540px) {

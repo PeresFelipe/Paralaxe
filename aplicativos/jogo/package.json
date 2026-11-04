@@ -12,6 +12,7 @@
     "verificar:tipos": "tsc -b"
   },
   "dependencies": {
+    "@radix-ui/react-select": "^2.4.1",
     "@paralaxe/conteudo": "workspace:*",
     "@paralaxe/dominio": "workspace:*",
     "@paralaxe/persistencia": "workspace:*",

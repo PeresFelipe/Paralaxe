@@ -10,19 +10,10 @@ import IndicadorDeProgressoOcioso from '../IndicadorDeProgressoOcioso'
 import { IconeDoJogo, ComparacaoDeEquipamento } from '@/components/jogo'
 import { obterIconeDoItem, iconeDeProfissaoPorId } from '@/iconesDosRecursos'
 import { coletaProfissoes, rotulosDosItens, producaoProfissoes, rotulosDasProfissoes } from '@/rotulosDoJogo'
-import { Button, Card, ProgressBar, SelectField } from '@/components/ui'
+import { Button, Card, ProgressBar } from '@/components/ui'
+import { SeletorDeOficios } from '../SeletorDeOficios/SeletorDeOficios'
+import { CenaDoOficio } from '../CenaDoOficio/CenaDoOficio'
 import estilos from './TelaDeAtividades.module.css'
-
-/** Catálogo estável: usar GIF na consulta e uma alternativa estática para movimento reduzido. */
-const arteDasProfissoes: Partial<Record<IdDaProfissao, { movimento: string; estatico: string }>> = {
-  mineracao: { movimento: '/arte/atividades/mineracao.gif?v=3', estatico: '/arte/atividades/mineracao-estatico.png?v=2' },
-  lenhador: { movimento: '/arte/atividades/lenhador.gif?v=3', estatico: '/arte/atividades/lenhador-estatico.png?v=2' },
-  pesca: { movimento: '/arte/atividades/pesca.gif?v=3', estatico: '/arte/atividades/pesca-estatico.png?v=2' },
-  herbologia: { movimento: '/arte/atividades/herbologia.gif?v=3', estatico: '/arte/atividades/herbologia-estatico.png?v=2' },
-  metalurgia: { movimento: '/arte/atividades/metalurgia.gif?v=3', estatico: '/arte/atividades/metalurgia-estatico.png?v=2' },
-  forja: { movimento: '/arte/atividades/forja.gif?v=3', estatico: '/arte/atividades/forja-estatico.png?v=2' },
-  culinaria: { movimento: '/arte/atividades/culinaria.gif?v=3', estatico: '/arte/atividades/culinaria-estatico.png?v=2' },
-}
 
 type PropriedadesDeTelaDeAtividades = {
   partida: PartidaLocal
@@ -49,7 +40,6 @@ export default function TelaDeAtividades({ partida, ultimoResultadoDoTrabalho, p
   const fabricar = RECEITAS_INICIAIS_DE_FABRICACAO.find((receita) => receita.id === partida.fabricacao.receitaAtiva?.idDaDefinicaoDaReceita)
   const trabalho = ocioso?.nomeDoResultado ?? fabricar?.nome
   const ativoProfissao = ocioso?.idDaProfissao ?? fabricar?.idDaProfissao
-  const animadoArte = arteDasProfissoes[profissaoSelecionada]
   const possuido = (id: string) => partida.personagem.inventario.find((pilha) => pilha.idDaDefinicao === id)?.quantidade ?? 0
 
   /** Bloqueia repetição enquanto a Promise está pendente, apresenta a falha local e libera os controles no finally. */
@@ -75,34 +65,10 @@ export default function TelaDeAtividades({ partida, ultimoResultadoDoTrabalho, p
         <span className={`atividade-estado ${ativoProfissao === profissaoSelecionada ? "atividade-estado--executando" : ''}`}>{ativoProfissao === profissaoSelecionada ? 'EM ATIVIDADE' : 'EM CONSULTA'}</span>
       </div>
       <div className={estilos.layout}>
-        <div className={estilos.selector} role="group" aria-label="Consultar ofícios">
-          <span className={estilos.selectorIcon} aria-hidden="true">
-            <IconeDoJogo icone={iconeDeProfissaoPorId[profissaoSelecionada]} tamanho={28} />
-          </span>
-          <SelectField className={estilos.selectorField} label="Selecionar ofício" value={profissaoSelecionada} onChange={(evento) => escolherProfissao(evento.target.value as IdDaProfissao)}>
-            {([['Coleta', coletaProfissoes], ['Produção', producaoProfissoes]] as const).map(([rotulo, profissoes]) => (
-              <optgroup label={rotulo} key={rotulo}>
-                {profissoes.map((profissao) => (
-                  <option key={profissao} value={profissao}>
-                    {rotulosDasProfissoes[profissao]} · Nv. {partida.profissoes[profissao].nivel}{ativoProfissao === profissao ? ' · Em curso' : ''}
-                  </option>
-                ))}
-              </optgroup>
-            ))}
-          </SelectField>
-          <span className={estilos.selectorLevel}>Nv. {progresso.nivel}</span>
-        </div>
+        <SeletorDeOficios selecionado={profissaoSelecionada} profissoes={partida.profissoes} emCurso={ativoProfissao} aoSelecionar={escolherProfissao} />
         <div className="atividades-areaDeTrabalho" aria-busy={pendente}>
           <div className={`atividade-etapa ${estilos.stage}`}>
-            <div className={`atividade-cena-envoltorio ${estilos.sceneFrame}`}>
-            <div className={`contexto-arte atividade-cena ${estilos.scene}${animadoArte ? " contexto-arte--individual" : ''}`} data-profissao={profissaoSelecionada} aria-hidden="true">
-              {animadoArte ? <picture>
-                <source media="(prefers-reduced-motion: reduce)" srcSet={animadoArte.estatico} />
-                <img src={animadoArte.movimento} alt="" width={480} height={270} decoding="async" loading="lazy" />
-              </picture> : null}
-            </div>
-            <p className="atividade-cena-legenda">{atividades[0]?.nome ?? rotulosDasProfissoes[profissaoSelecionada]}</p>
-            </div>
+            <CenaDoOficio profissao={profissaoSelecionada} legenda={atividades[0]?.nome ?? rotulosDasProfissoes[profissaoSelecionada]} />
             <Card className="atividade-atualizado">
               {ativoProfissao === profissaoSelecionada ? <IndicadorDeProgressoOcioso partida={partida} /> : <div className="atividade-pronto">
                 <p className="secao-chamada">{receitas.length ? 'Na bancada' : 'No campo'}</p>

@@ -1,0 +1,140 @@
+.raiz {
+  display: grid;
+  gap: .4rem;
+  width: min(100%, 25rem);
+  min-width: 0;
+  margin-bottom: .2rem;
+  font-family: var(--ui-font-family-body);
+}
+.rotulo {
+  color: var(--ui-color-warning-text);
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .11em;
+  text-transform: uppercase;
+}
+.gatilho {
+  display: flex;
+  align-items: center;
+  gap: .85rem;
+  width: 100%;
+  min-width: 0;
+  min-height: 4.25rem;
+  padding: .5rem .75rem;
+  border: 1px solid #bcb19a;
+  border-radius: .85rem;
+  background: linear-gradient(140deg, #fffdf6, #f1e9d9);
+  color: #302d26;
+  box-shadow: 0 2px 0 rgb(112 91 60 / 12%), 0 7px 20px rgb(52 53 42 / 8%);
+  text-align: left;
+  cursor: pointer;
+  transition: box-shadow 180ms ease, border-color 180ms ease, transform 180ms ease;
+}
+.gatilho:hover,
+.gatilho[data-state='open'] {
+  border-color: #88704b;
+  box-shadow: 0 0 0 2px rgb(148 116 66 / 12%), 0 9px 24px rgb(52 53 42 / 12%);
+}
+.gatilho:focus-visible {
+  outline: 3px solid var(--ui-color-focus);
+  outline-offset: 3px;
+}
+.icone, .iconeItem {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+  border: 1px solid #d2c4a5;
+  border-radius: .65rem;
+  background: linear-gradient(140deg, #f2e7cf, #e6dbc5);
+}
+.dados, .itemDados { display: grid; gap: .25rem; min-width: 0; flex: 1; }
+.nome { font-size: 1rem; font-weight: 700; overflow-wrap: anywhere; }
+.subtitulo, .itemDados small { color: #796d5a; font-size: .77rem; }
+.selo, .emCurso {
+  flex: none;
+  padding: .28rem .45rem;
+  border: 1px solid #c2ceb4;
+  border-radius: .35rem;
+  background: #edf2e6;
+  color: #3c6245;
+  font-size: .66rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.seta { flex: none; color: #705b3c; font-size: 1.8rem; line-height: 1; transition: transform 180ms ease; }
+.gatilho[data-state='open'] .seta { transform: rotate(180deg); }
+.menu {
+  z-index: 70;
+  min-width: min(var(--radix-select-trigger-width), calc(100vw - 24px));
+  width: min(25rem, calc(100vw - 24px));
+  max-width: calc(100vw - 24px);
+  max-height: var(--radix-select-content-available-height);
+  overflow: hidden;
+  border: 1px solid #b7a88b;
+  border-radius: .9rem;
+  background: #faf7ef;
+  color: #343329;
+  box-shadow: 0 18px 48px rgb(35 30 21 / 24%), 0 2px 8px rgb(35 30 21 / 10%);
+  font-family: var(--ui-font-family-body);
+  transform-origin: var(--radix-select-content-transform-origin);
+  animation: aparecer 170ms cubic-bezier(.2,.75,.2,1);
+}
+.lista { padding: .45rem; max-height: min(27rem, calc(100vh - 48px)); overflow: auto; }
+.categoria {
+  padding: .7rem .75rem .4rem;
+  color: #796341;
+  font-size: .68rem;
+  font-weight: 800;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+.divisor { height: 1px; margin: .55rem .6rem .2rem; background: #dfd5c3; }
+.item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  min-height: 3.75rem;
+  margin: .1rem 0;
+  padding: .35rem 1.85rem .35rem .45rem;
+  border: 1px solid transparent;
+  border-radius: .55rem;
+  outline: none;
+  cursor: pointer;
+  user-select: none;
+}
+.item[data-highlighted] {
+  background: #eee5d2;
+  border-color: #d1c09f;
+}
+.item[data-state='checked'] {
+  background: #e7deca;
+  border-color: #bda77d;
+}
+.item[data-highlighted][data-state='checked'] { background: #ded0ae; }
+.iconeItem { width: 2.75rem; height: 2.75rem; border-radius: .5rem; }
+.itemDados { gap: .15rem; font-size: .9rem; font-weight: 650; }
+.itemDados small { font-weight: 400; }
+.indicador {
+  position: absolute;
+  right: .55rem;
+  color: #725736;
+  font-size: .95rem;
+  font-weight: 800;
+}
+.emCurso { margin-inline-start: auto; }
+.rolagem { display: grid; place-items: center; height: 1.2rem; color: #705b3c; background: #faf7ef; }
+@keyframes aparecer {
+  from { opacity: 0; transform: translateY(5px) scale(.985); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+@media (max-width: 375px) {
+  .selo { display: none; }
+  .gatilho { gap: .6rem; padding: .45rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .menu { animation: none; }
+  .gatilho, .seta { transition: none; }
+}
