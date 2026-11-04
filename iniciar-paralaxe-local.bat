@@ -44,13 +44,23 @@ if not exist "%VITE_ENTRY%" (
     if errorlevel 1 goto :falha
   ) else (
     where corepack >nul 2>&1
-    if errorlevel 1 (
-      echo [ERRO] pnpm e Corepack nao foram encontrados.
-      echo        Instale o pnpm conforme o README do projeto e execute novamente.
-      goto :falha
+    if not errorlevel 1 (
+      call corepack pnpm install --no-frozen-lockfile
+      if errorlevel 1 goto :falha
+    ) else (
+      REM O npm/npx costuma acompanhar o Node.js no Windows.
+      REM Usar a versao fixada em package.json evita instalacao global.
+      where npx >nul 2>&1
+      if errorlevel 1 (
+        echo [ERRO] pnpm, Corepack e npx nao foram encontrados.
+        echo        Instale o Node.js com npm incluido e tente novamente.
+        goto :falha
+      )
+      echo pnpm e Corepack ausentes. Usando npx para instalar as dependencias...
+      echo A primeira execucao precisa de conexao com a internet.
+      call npx --yes pnpm@12.3.4 install --no-frozen-lockfile
+      if errorlevel 1 goto :falha
     )
-    call corepack pnpm install --no-frozen-lockfile
-    if errorlevel 1 goto :falha
   )
 )
 
