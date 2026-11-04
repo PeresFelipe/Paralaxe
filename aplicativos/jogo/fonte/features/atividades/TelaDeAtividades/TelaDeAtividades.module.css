@@ -25,24 +25,6 @@
   :global(.atividades-telaDoJogo) .stage {
     grid-template-columns: minmax(0, 1fr);
   }
-
-  :global(.atividades-telaDoJogo) .sceneFrame {
-    width: min(100%, 12rem);
-  }
-
-  .selector {
-    gap: var(--ui-space-2);
-    padding: var(--ui-space-2);
-  }
-
-  .selectorIcon {
-    flex-basis: 2rem;
-    height: 2rem;
-  }
-
-  .selectorLevel {
-    font-size: var(--ui-font-size-2xs);
-  }
 }
 
 .options {
