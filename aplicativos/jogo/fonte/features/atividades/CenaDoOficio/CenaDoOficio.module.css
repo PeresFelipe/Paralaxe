@@ -1,11 +1,11 @@
 .moldura {
   box-sizing: border-box;
-  width: min(100%, 14rem);
+  width: min(100%, var(--ui-oficios-medida-90));
   min-width: 0;
   margin: 0;
-  padding: .4rem;
-  border: 1px solid var(--ui-color-border);
-  border-radius: 1rem;
+  padding: var(--ui-oficios-medida-31);
+  border: var(--ui-oficios-medida-40) solid var(--ui-color-border);
+  border-radius: var(--ui-oficios-medida-51);
   background: var(--ui-color-surface-sunken);
   box-shadow: var(--ui-shadow-sm);
 }
@@ -14,10 +14,10 @@
   place-items: center;
   width: 100%;
   aspect-ratio: 16 / 9;
-  max-height: 7.875rem;
+  max-height: var(--ui-oficios-medida-91);
   overflow: hidden;
-  border-radius: .7rem;
-  background: #1c1d1a;
+  border-radius: var(--ui-oficios-medida-64);
+  background: var(--ui-oficios-cor-89);
 }
 .palco picture, .palco img {
   display: block;
@@ -26,12 +26,12 @@
 }
 .palco img { object-fit: contain; object-position: center; image-rendering: pixelated; }
 .legenda {
-  margin: .45rem .2rem .12rem;
+  margin: var(--ui-oficios-medida-54) var(--ui-oficios-medida-33) var(--ui-oficios-medida-92);
   color: var(--ui-color-text-muted);
   font-family: var(--ui-font-family-body);
-  font-size: .73rem;
+  font-size:var(--ui-oficios-fonte-96);
   text-align: left;
 }
-@media (max-width: 540px) {
-  .moldura { width: min(100%, 12rem); }
+@media (max-width: var(--ui-oficios-medida-94)) {
+  .moldura { width: min(100%, var(--ui-oficios-medida-95)); }
 }

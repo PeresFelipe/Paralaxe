@@ -1,138 +1,138 @@
 .raiz {
   display: grid;
-  gap: .4rem;
-  width: min(100%, 25rem);
+  gap: var(--ui-oficios-medida-31);
+  width: min(100%, var(--ui-oficios-medida-32));
   min-width: 0;
-  margin-bottom: .2rem;
+  margin-bottom: var(--ui-oficios-medida-33);
   font-family: var(--ui-font-family-body);
 }
 .rotulo {
   color: var(--ui-color-warning-text);
-  font-size: .72rem;
-  font-weight: 700;
-  letter-spacing: .11em;
+  font-size:var(--ui-oficios-fonte-78);
+  font-weight: var(--ui-oficios-peso-82);
+  letter-spacing:var(--ui-oficios-linha-86);
   text-transform: uppercase;
 }
 .gatilho {
   display: flex;
   align-items: center;
-  gap: .85rem;
+  gap: var(--ui-oficios-medida-36);
   width: 100%;
   min-width: 0;
-  min-height: 4.25rem;
-  padding: .5rem .75rem;
-  border: 1px solid #bcb19a;
-  border-radius: .85rem;
-  background: linear-gradient(140deg, #fffdf6, #f1e9d9);
-  color: #302d26;
-  box-shadow: 0 2px 0 rgb(112 91 60 / 12%), 0 7px 20px rgb(52 53 42 / 8%);
+  min-height: var(--ui-oficios-medida-37);
+  padding: var(--ui-oficios-medida-38) var(--ui-oficios-medida-39);
+  border: var(--ui-oficios-medida-40) solid var(--ui-oficios-cor-1);
+  border-radius: var(--ui-oficios-medida-36);
+  background: linear-gradient(140deg, var(--ui-oficios-cor-2), var(--ui-oficios-cor-3));
+  color: var(--ui-oficios-cor-4);
+  box-shadow: 0 var(--ui-oficios-medida-41) 0 var(--ui-oficios-cor-5), 0 var(--ui-oficios-medida-42) var(--ui-oficios-medida-43) var(--ui-oficios-cor-6);
   text-align: left;
   cursor: pointer;
-  transition: box-shadow 180ms ease, border-color 180ms ease, transform 180ms ease;
+  transition: box-shadow var(--ui-oficios-medida-44) ease, border-color var(--ui-oficios-medida-44) ease, transform var(--ui-oficios-medida-44) ease;
 }
 .gatilho:hover,
 .gatilho[data-state='open'] {
-  border-color: #88704b;
-  box-shadow: 0 0 0 2px rgb(148 116 66 / 12%), 0 9px 24px rgb(52 53 42 / 12%);
+  border-color: var(--ui-oficios-cor-7);
+  box-shadow: 0 0 0 var(--ui-oficios-medida-41) var(--ui-oficios-cor-8), 0 var(--ui-oficios-medida-45) var(--ui-oficios-medida-46) var(--ui-oficios-cor-9);
 }
 .gatilho:focus-visible {
-  outline: 3px solid var(--ui-color-focus);
-  outline-offset: 3px;
+  outline: var(--ui-oficios-medida-47) solid var(--ui-color-focus);
+  outline-offset: var(--ui-oficios-medida-47);
 }
 .icone, .iconeItem {
   flex: none;
   display: grid;
   place-items: center;
-  width: 3rem;
-  height: 3rem;
-  border: 1px solid #d2c4a5;
-  border-radius: .65rem;
-  background: linear-gradient(140deg, #f2e7cf, #e6dbc5);
+  width: var(--ui-oficios-medida-48);
+  height: var(--ui-oficios-medida-48);
+  border: var(--ui-oficios-medida-40) solid var(--ui-oficios-cor-10);
+  border-radius: var(--ui-oficios-medida-49);
+  background: linear-gradient(140deg, var(--ui-oficios-cor-11), var(--ui-oficios-cor-12));
 }
-.dados, .itemDados { display: grid; gap: .25rem; min-width: 0; flex: 1; }
-.nome { font-size: 1rem; font-weight: 700; overflow-wrap: anywhere; }
-.subtitulo, .itemDados small { color: #796d5a; font-size: .77rem; }
+.dados, .itemDados { display: grid; gap: var(--ui-oficios-medida-50); min-width: 0; flex: 1; }
+.nome { font-size: var(--ui-oficios-medida-51); font-weight: 700; overflow-wrap: anywhere; }
+.subtitulo, .itemDados small { color: var(--ui-oficios-cor-13); font-size: var(--ui-oficios-medida-52); }
 .selo, .emCurso {
   flex: none;
-  padding: .28rem .45rem;
-  border: 1px solid #c2ceb4;
-  border-radius: .35rem;
-  background: #edf2e6;
-  color: #3c6245;
-  font-size: .66rem;
-  font-weight: 700;
+  padding: var(--ui-oficios-medida-53) var(--ui-oficios-medida-54);
+  border: var(--ui-oficios-medida-40) solid var(--ui-oficios-cor-14);
+  border-radius: var(--ui-oficios-medida-55);
+  background: var(--ui-oficios-cor-15);
+  color: var(--ui-oficios-cor-16);
+  font-size:var(--ui-oficios-fonte-79);
+  font-weight: var(--ui-oficios-peso-83);
   white-space: nowrap;
 }
-.seta { flex: none; color: #705b3c; font-size: 1.8rem; line-height: 1; transition: transform 180ms ease; }
+.seta { flex: none; color: var(--ui-oficios-cor-17); font-size: var(--ui-oficios-medida-57); line-height: 1; transition: transform var(--ui-oficios-medida-44) ease; }
 .gatilho[data-state='open'] .seta { transform: rotate(180deg); }
 .menu {
-  z-index: 70;
-  min-width: min(var(--radix-select-trigger-width), calc(100vw - 24px));
-  width: min(25rem, calc(100vw - 24px));
-  max-width: calc(100vw - 24px);
+  z-index: var(--ui-oficios-camada-88);
+  min-width: min(var(--radix-select-trigger-width), calc(100vw - var(--ui-oficios-medida-46)));
+  width: min(var(--ui-oficios-medida-32), calc(100vw - var(--ui-oficios-medida-46)));
+  max-width: calc(100vw - var(--ui-oficios-medida-46));
   max-height: var(--radix-select-content-available-height);
   overflow: hidden;
-  border: 1px solid #b7a88b;
-  border-radius: .9rem;
-  background: #faf7ef;
-  color: #343329;
-  box-shadow: 0 18px 48px rgb(35 30 21 / 24%), 0 2px 8px rgb(35 30 21 / 10%);
+  border: var(--ui-oficios-medida-40) solid var(--ui-oficios-cor-18);
+  border-radius: var(--ui-oficios-medida-58);
+  background: var(--ui-oficios-cor-19);
+  color: var(--ui-oficios-cor-20);
+  box-shadow: 0 var(--ui-oficios-medida-59) var(--ui-oficios-medida-60) var(--ui-oficios-cor-21), 0 var(--ui-oficios-medida-41) var(--ui-oficios-medida-61) var(--ui-oficios-cor-22);
   font-family: var(--ui-font-family-body);
   transform-origin: var(--radix-select-content-transform-origin);
-  animation: aparecer 170ms cubic-bezier(.2,.75,.2,1);
+  animation: aparecer var(--ui-oficios-medida-62) cubic-bezier(.2,.75,.2,1);
 }
-.lista { padding: .45rem; max-height: min(27rem, calc(100vh - 48px)); overflow: auto; }
+.lista { padding: var(--ui-oficios-medida-54); max-height: min(var(--ui-oficios-medida-63), calc(100vh - var(--ui-oficios-medida-60))); overflow: auto; }
 .categoria {
-  padding: .7rem .75rem .4rem;
-  color: #796341;
-  font-size: .68rem;
-  font-weight: 800;
-  letter-spacing: .14em;
+  padding: var(--ui-oficios-medida-64) var(--ui-oficios-medida-39) var(--ui-oficios-medida-31);
+  color: var(--ui-oficios-cor-23);
+  font-size:var(--ui-oficios-fonte-80);
+  font-weight: var(--ui-oficios-peso-84);
+  letter-spacing:var(--ui-oficios-linha-87);
   text-transform: uppercase;
 }
-.divisor { height: 1px; margin: .55rem .6rem .2rem; background: #dfd5c3; }
+.divisor { height: var(--ui-oficios-medida-40); margin: var(--ui-oficios-medida-67) var(--ui-oficios-medida-68) var(--ui-oficios-medida-33); background: var(--ui-oficios-cor-24); }
 .item {
   position: relative;
   display: flex;
   align-items: center;
-  gap: .75rem;
-  min-height: 3.75rem;
-  margin: .1rem 0;
-  padding: .35rem 1.85rem .35rem .45rem;
-  border: 1px solid transparent;
-  border-radius: .55rem;
+  gap: var(--ui-oficios-medida-39);
+  min-height: var(--ui-oficios-medida-69);
+  margin: var(--ui-oficios-medida-70) 0;
+  padding: var(--ui-oficios-medida-55) var(--ui-oficios-medida-71) var(--ui-oficios-medida-55) var(--ui-oficios-medida-54);
+  border: var(--ui-oficios-medida-40) solid transparent;
+  border-radius: var(--ui-oficios-medida-67);
   outline: none;
   cursor: pointer;
   user-select: none;
 }
 .item[data-highlighted] {
-  background: #eee5d2;
-  border-color: #d1c09f;
+  background: var(--ui-oficios-cor-25);
+  border-color: var(--ui-oficios-cor-26);
 }
 .item[data-state='checked'] {
-  background: #e7deca;
-  border-color: #bda77d;
+  background: var(--ui-oficios-cor-27);
+  border-color: var(--ui-oficios-cor-28);
 }
-.item[data-highlighted][data-state='checked'] { background: #ded0ae; }
-.iconeItem { width: 2.75rem; height: 2.75rem; border-radius: .5rem; }
-.itemDados { gap: .15rem; font-size: .9rem; font-weight: 650; }
+.item[data-highlighted][data-state='checked'] { background: var(--ui-oficios-cor-29); }
+.iconeItem { width: var(--ui-oficios-medida-72); height: var(--ui-oficios-medida-72); border-radius: var(--ui-oficios-medida-38); }
+.itemDados { gap: var(--ui-oficios-medida-73); font-size: var(--ui-oficios-medida-58); font-weight: 650; }
 .itemDados small { font-weight: 400; }
 .indicador {
   position: absolute;
-  right: .55rem;
-  color: #725736;
-  font-size: .95rem;
-  font-weight: 800;
+  right: var(--ui-oficios-medida-67);
+  color: var(--ui-oficios-cor-30);
+  font-size:var(--ui-oficios-fonte-81);
+  font-weight: var(--ui-oficios-peso-85);
 }
 .emCurso { margin-inline-start: auto; }
-.rolagem { display: grid; place-items: center; height: 1.2rem; color: #705b3c; background: #faf7ef; }
+.rolagem { display: grid; place-items: center; height: var(--ui-oficios-medida-75); color: var(--ui-oficios-cor-17); background: var(--ui-oficios-cor-19); }
 @keyframes aparecer {
-  from { opacity: 0; transform: translateY(5px) scale(.985); }
+  from { opacity: 0; transform: translateY(var(--ui-oficios-medida-76)) scale(.985); }
   to { opacity: 1; transform: translateY(0) scale(1); }
 }
-@media (max-width: 375px) {
+@media (max-width: var(--ui-oficios-medida-77)) {
   .selo { display: none; }
-  .gatilho { gap: .6rem; padding: .45rem; }
+  .gatilho { gap: var(--ui-oficios-medida-68); padding: var(--ui-oficios-medida-54); }
 }
 @media (prefers-reduced-motion: reduce) {
   .menu { animation: none; }

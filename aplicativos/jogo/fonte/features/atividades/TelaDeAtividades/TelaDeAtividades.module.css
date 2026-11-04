@@ -1,27 +1,27 @@
 /* A escala medieval é limitada apenas nesta tela: preserva Antiquity Print nos demais módulos. */
 :global(.atividades-telaDoJogo) .pageTitle {
   font-family: var(--ui-font-family-display);
-  font-size: clamp(1.25rem, 1.1rem + 0.65vw, 1.65rem);
-  line-height: 1.35;
-  letter-spacing: var(--ui-letter-spacing-display);
+  font-size:var(--ui-oficios-fonte-103);
+  line-height: var(--ui-oficios-linha-114);
+  letter-spacing:var(--ui-oficios-linha-115);
 }
 
 :global(.atividades-telaDoJogo) .pageTitle :global(.jogo-icone) {
-  width: 1.5rem;
-  height: 1.5rem;
+  width: var(--ui-oficios-medida-98);
+  height: var(--ui-oficios-medida-98);
   flex: 0 0 auto;
 }
 
 /* A arte fica ao lado do progresso em telas largas, sem crescer com a janela. */
 :global(.atividades-telaDoJogo) .stage {
   display: grid;
-  grid-template-columns: minmax(0, 14rem) minmax(0, 1fr);
+  grid-template-columns: minmax(0, var(--ui-oficios-medida-90)) minmax(0, 1fr);
   align-items: start;
   gap: var(--ui-space-3);
   min-width: 0;
 }
 
-@media (max-width: 540px) {
+@media (max-width: var(--ui-oficios-medida-94)) {
   :global(.atividades-telaDoJogo) .stage {
     grid-template-columns: minmax(0, 1fr);
   }
@@ -44,12 +44,12 @@
 .optionsHeading h2 {
   margin: 0;
   color: var(--ui-color-text);
-  font-size: var(--ui-font-size-md);
+  font-size:var(--ui-oficios-fonte-104);
 }
 
 .optionsHeading > span {
   color: var(--ui-color-text-muted);
-  font-size: var(--ui-font-size-caption);
+  font-size:var(--ui-oficios-fonte-105);
 }
 
 .option {
@@ -88,7 +88,7 @@
 
 .optionTitle > span {
   color: var(--ui-color-text-muted);
-  font-size: var(--ui-font-size-compact);
+  font-size:var(--ui-oficios-fonte-106);
 }
 
 .optionTitle > span strong {
@@ -98,13 +98,13 @@
 .yield {
   margin: var(--ui-space-1) 0 var(--ui-space-2-5);
   color: var(--ui-color-text-muted);
-  font-size: var(--ui-font-size-xs);
+  font-size:var(--ui-oficios-fonte-107);
 }
 
 .replacement {
   margin: var(--ui-space-1-5) 0;
   color: var(--ui-color-text-muted);
-  font-size: var(--ui-font-size-xs);
+  font-size:var(--ui-oficios-fonte-108);
 }
 
 .ingredients {
@@ -119,7 +119,7 @@
   padding: var(--ui-space-1-25) 0;
   border-bottom: var(--ui-size-border) solid var(--ui-color-border);
   background: var(--ui-color-surface-raised);
-  font-size: var(--ui-font-size-sm);
+  font-size:var(--ui-oficios-fonte-109);
 }
 
 .ingredientRow > span {
@@ -137,7 +137,7 @@
 .ingredientRow small {
   display: block;
   color: var(--ui-color-warning-text);
-  font-size: var(--ui-font-size-xs);
+  font-size:var(--ui-oficios-fonte-110);
 }
 
 .result {
@@ -151,18 +151,18 @@
 
 .result > span {
   color: var(--ui-color-text-muted);
-  font-size: var(--ui-font-size-caption-large);
-  letter-spacing: var(--ui-letter-spacing-relaxed);
+  font-size:var(--ui-oficios-fonte-111);
+  letter-spacing:var(--ui-oficios-linha-116);
   text-transform: uppercase;
 }
 
 .result > strong {
   color: var(--ui-color-text);
-  font-size: var(--ui-font-size-body-small);
-  font-weight: var(--ui-font-weight-medium);
+  font-size:var(--ui-oficios-fonte-112);
+  font-weight:var(--ui-oficios-peso-113);
 }
 
-@media (max-width: 720px) {
+@media (max-width: var(--ui-oficios-medida-99)) {
   .optionsHeading > span {
     display: none;
   }
@@ -179,7 +179,7 @@
   }
 }
 
-@media (max-width: 440px) {
+@media (max-width: var(--ui-oficios-medida-100)) {
   .optionTitle {
     flex-direction: column;
     align-items: flex-start;
@@ -191,11 +191,11 @@
 .options, .option, .optionBody { min-inline-size: 0; max-inline-size: 100%; }
 .option { grid-template-columns: minmax(0, var(--ui-size-activity-option-icon)) minmax(0, 1fr); }
 .optionBody :where(h2, strong, p) { overflow-wrap: anywhere; }
-@media (max-width: 45rem) {
+@media (max-width: var(--ui-oficios-medida-101)) {
   .option { grid-template-columns: minmax(0, var(--ui-size-activity-option-icon-compact)) minmax(0, 1fr); }
   .optionTitle { flex-wrap: wrap; }
 }
-@media (max-width: 23rem) {
+@media (max-width: var(--ui-oficios-medida-102)) {
   .option { gap: var(--ui-space-2); }
   .optionsHeading { flex-wrap: wrap; }
 }
