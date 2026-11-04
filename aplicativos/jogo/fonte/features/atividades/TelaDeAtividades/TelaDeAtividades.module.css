@@ -1,47 +1,119 @@
-.professionGroup {
+/* A escala medieval é limitada apenas nesta tela: preserva Antiquity Print nos demais módulos. */
+:global(.atividades-telaDoJogo) .pageTitle {
+  font-family: var(--ui-font-family-display);
+  font-size: clamp(1.25rem, 1.1rem + 0.65vw, 1.65rem);
+  line-height: 1.35;
+  letter-spacing: var(--ui-letter-spacing-display);
+}
+
+:global(.atividades-telaDoJogo) .pageTitle :global(.jogo-icone) {
+  width: 1.5rem;
+  height: 1.5rem;
   flex: 0 0 auto;
+}
+
+/* Um único seletor para desktop e mobile; categorias e teclado ficam a cargo do select nativo. */
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--ui-space-3);
   min-width: 0;
-  padding: var(--ui-space-0);
-  border: 0;
-  border-radius: var(--ui-radius-none);
-  background: transparent;
-  box-shadow: none;
 }
 
-.professionHeading {
-  margin: var(--ui-space-0) var(--ui-space-0) var(--ui-space-2);
-  padding-left: var(--ui-space-2);
-  color: var(--ui-color-warning-text);
-  font-size: var(--ui-font-size-caption);
-  letter-spacing: var(--ui-letter-spacing-extra-wide);
-  text-transform: uppercase;
-}
-
-.professionGrid {
+.selector {
   display: flex;
-  gap: var(--ui-space-1-5);
+  align-items: end;
+  gap: var(--ui-space-3);
+  width: min(100%, 32rem);
+  min-width: 0;
+  padding: var(--ui-space-3);
+  border: var(--ui-size-border) solid var(--ui-color-border);
+  border-radius: var(--ui-radius-lg);
+  background: var(--ui-color-surface);
 }
 
-.professionLabel {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--ui-space-2);
+.selectorIcon {
+  display: grid;
+  place-items: center;
+  flex: 0 0 2.5rem;
+  height: 2.5rem;
+  border-radius: var(--ui-radius-md);
+  background: var(--ui-color-primary-soft);
+}
+
+.selectorField {
+  flex: 1 1 auto;
   min-width: 0;
 }
 
-.professionLabel > span:last-child {
+.selectorField :global(select) {
   min-width: 0;
+  max-width: 100%;
+  font-size: var(--ui-font-size-sm);
+  color: var(--ui-color-text);
 }
 
-.professionLabel :global(.jogo-icone) {
-  width: var(--ui-size-inventory-icon);
-  height: var(--ui-size-inventory-icon);
-}
-
-.executingBadge {
-  display: none;
+.selectorLevel {
+  flex: 0 0 auto;
+  margin-bottom: var(--ui-space-2);
   color: var(--ui-color-warning-text);
-  font-size: var(--ui-font-size-3xs);
+  font: var(--ui-font-weight-semibold) var(--ui-font-size-xs) var(--ui-font-family-body);
+  white-space: nowrap;
+}
+
+/* A arte fica ao lado do progresso em telas largas, sem crescer com a janela. */
+:global(.atividades-telaDoJogo) .stage {
+  display: grid;
+  grid-template-columns: minmax(0, 14rem) minmax(0, 1fr);
+  align-items: start;
+  gap: var(--ui-space-3);
+  min-width: 0;
+}
+
+:global(.atividades-telaDoJogo) .sceneFrame {
+  box-sizing: border-box;
+  width: min(100%, 14rem);
+  max-width: 100%;
+  padding: var(--ui-space-1-5);
+}
+
+:global(.atividades-telaDoJogo) .scene {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  aspect-ratio: 16 / 9;
+  max-height: 8rem;
+  overflow: hidden;
+}
+
+:global(.atividades-telaDoJogo) .scene :global(picture),
+:global(.atividades-telaDoJogo) .scene :global(img) {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+@media (max-width: 540px) {
+  :global(.atividades-telaDoJogo) .stage {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  :global(.atividades-telaDoJogo) .sceneFrame {
+    width: min(100%, 12rem);
+  }
+
+  .selector {
+    gap: var(--ui-space-2);
+    padding: var(--ui-space-2);
+  }
+
+  .selectorIcon {
+    flex-basis: 2rem;
+    height: 2rem;
+  }
+
+  .selectorLevel {
+    font-size: var(--ui-font-size-2xs);
+  }
 }
 
 .options {
@@ -204,9 +276,8 @@
   }
 }
 
-/* GW-UI-RESPONSIVA-V1: INÍCIO DO REFINAMENTO */
-.professionGrid { flex-wrap: wrap; min-inline-size: 0; }
-.professionGroup, .options, .option, .optionBody { min-inline-size: 0; max-inline-size: 100%; }
+/* Ajustes de largura dos cartões existentes. */
+.options, .option, .optionBody { min-inline-size: 0; max-inline-size: 100%; }
 .option { grid-template-columns: minmax(0, var(--ui-size-activity-option-icon)) minmax(0, 1fr); }
 .optionBody :where(h2, strong, p) { overflow-wrap: anywhere; }
 @media (max-width: 45rem) {
@@ -217,4 +288,4 @@
   .option { gap: var(--ui-space-2); }
   .optionsHeading { flex-wrap: wrap; }
 }
-/* GW-UI-RESPONSIVA-V1: FIM DO REFINAMENTO */
+
