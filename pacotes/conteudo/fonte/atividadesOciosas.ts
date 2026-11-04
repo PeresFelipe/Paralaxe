@@ -1,5 +1,5 @@
 /**
- * @file Catálogo das quatro coletas iniciais: Mineração, Lenhador, Pesca e Herbologia.
+ * @file Catálogo de coleta: os quatro recursos iniciais e os marcos de progressão adicionados.
  * Define produto, nível exigido, duração em segundos e XP por ação; o domínio transforma
  * esses dados em progresso, sem que este arquivo execute ou salve a coleta.
  */
@@ -16,6 +16,17 @@ export const ATIVIDADES_OCIOSAS_INICIAIS = [
     nivelExigidoDaProfissao: 1,
     segundosPorAcao: 4,
     xpDeProfissaoPorAcao: 8,
+  },
+  // Primeiro desbloqueio além do recurso inicial: Stán entra no nível 10 da Mineração.
+  {
+    id: "coletar.mineracao.stan",
+    idDaProfissao: "mineracao",
+    nome: 'Extrair Stán',
+    idDaDefinicaoDoItemProduzido: 'material.stan',
+    nomeDoResultado: 'Stán',
+    nivelExigidoDaProfissao: 10,
+    segundosPorAcao: 8,
+    xpDeProfissaoPorAcao: 16,
   },
   {
     id: "coletar.lenhador.giuis",

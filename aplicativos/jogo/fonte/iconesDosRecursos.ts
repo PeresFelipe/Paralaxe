@@ -70,6 +70,8 @@ export const iconeDoPainelPorId = {
 /** Associação de definições de itens empilháveis e de missão. */
 export const iconeDeItemPorId: Record<string, NomeDoIconeShikashi> = {
   "material.cloch": "pedra",
+  "material.stan": "pedra",
+  "material.lingote-stan": "ouro-lingote",
   "material.giuis": "madeira",
   "material.scadan": "peixe",
   "material.neantog": "erva",
@@ -101,6 +103,7 @@ export const iconeDeEquipamentoPorId: Record<string, NomeDoIconeShikashi> = {
   "armadura.simples-luvas": "manopla-couro",
   "armadura.simples-botas": "botas-couro",
   "armadura.giuis-bracadeiras": "manopla-couro",
+  "armadura.stan-bracadeiras-rebitadas": "manopla-metal",
   "item.equipamento.viajante-anel": "anel",
   "armadura.guarnicao-elmo": "elmo-barbuta",
   "armadura.guarnicao-luvas": "manopla-metal",

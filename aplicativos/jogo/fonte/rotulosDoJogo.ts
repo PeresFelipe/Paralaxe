@@ -32,6 +32,8 @@ export const producaoProfissoes: IdDaProfissao[] = [
 /** Tradução visual dos IDs de itens, incluindo recompensas de missões e masmorra. */
 export const rotulosDosItens: Record<string, string> = {
   "material.cloch": "Cloch",
+  "material.stan": "Stán",
+  "material.lingote-stan": "Lingote de Stán",
   "material.giuis": "Giúis",
   "material.scadan": "Scadán",
   "material.neantog": "Neantóg",

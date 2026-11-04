@@ -1,5 +1,5 @@
 /**
- * @file Receitas iniciais de Metalurgia, Forja e Culinária.
+ * @file Catálogo de receitas de Metalurgia, Forja e Culinária, com desbloqueios por nível.
  * Ingredientes são consumidos por ciclo; a saída distingue item empilhável, equipamento
  * novo e reforço de uma instância escolhida. Duração e XP são parâmetros de balanceamento.
  */
@@ -17,6 +17,17 @@ export const RECEITAS_INICIAIS_DE_FABRICACAO = [
     ingredientes: [{ idDaDefinicao: 'material.cloch', quantidade: 3 }],
     saida: { tipo: 'item', idDaDefinicao: "material.tratada-cloch", nome: 'Cloch Tratada', quantidade: 1 },
   },
+  // Stán reforça a etapa de Metalurgia do nível 10: 3 unidades por lingote.
+  {
+    id: "receita.metalurgia.lingote-stan",
+    idDaProfissao: "metalurgia",
+    nome: 'Lingote de Stán',
+    nivelExigidoDaProfissao: 10,
+    segundosPorAcao: 12,
+    xpDeProfissaoPorAcao: 24,
+    ingredientes: [{ idDaDefinicao: 'material.stan', quantidade: 3 }],
+    saida: { tipo: 'item', idDaDefinicao: 'material.lingote-stan', nome: 'Lingote de Stán', quantidade: 1 },
+  },
   {
     id: "receita.forja.giuis-bracadeiras",
     idDaProfissao: "forja",
@@ -26,6 +37,20 @@ export const RECEITAS_INICIAIS_DE_FABRICACAO = [
     xpDeProfissaoPorAcao: 24,
     ingredientes: [{ idDaDefinicao: 'material.giuis', quantidade: 6 }],
     saida: { tipo: "equipamento", idDaDefinicao: "armadura.giuis-bracadeiras", nome: 'Braçadeiras de Giúis' },
+  },
+  // A Forja usa o metal processado e Giúis para criar uma peça de proteção equipável.
+  {
+    id: "receita.forja.bracadeiras-rebitadas-stan",
+    idDaProfissao: "forja",
+    nome: 'Braçadeiras Rebitadas de Stán',
+    nivelExigidoDaProfissao: 10,
+    segundosPorAcao: 20,
+    xpDeProfissaoPorAcao: 40,
+    ingredientes: [
+      { idDaDefinicao: 'material.lingote-stan', quantidade: 2 },
+      { idDaDefinicao: 'material.giuis', quantidade: 4 },
+    ],
+    saida: { tipo: 'equipamento', idDaDefinicao: 'armadura.stan-bracadeiras-rebitadas', nome: 'Braçadeiras Rebitadas de Stán' },
   },
   {
     id: "receita.culinaria.assado-scadan",

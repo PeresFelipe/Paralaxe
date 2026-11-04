@@ -24,6 +24,7 @@ export const DEFINICOES_DE_EQUIPAMENTO = [
   { id: "armadura.simples-luvas", nome: 'Luvas Simples', espaco: "luvas", estatisticaPrincipal: { tipo: "defesa", valor: 4 } },
   { id: "armadura.simples-botas", nome: 'Botas Simples', espaco: "botas", estatisticaPrincipal: { tipo: "defesa", valor: 4 } },
   { id: "armadura.giuis-bracadeiras", nome: 'Braçadeiras de Giúis', espaco: "luvas", estatisticaPrincipal: { tipo: "defesa", valor: 6 } },
+  { id: "armadura.stan-bracadeiras-rebitadas", nome: 'Braçadeiras Rebitadas de Stán', espaco: "luvas", estatisticaPrincipal: { tipo: "defesa", valor: 9 } },
   { id: "item.equipamento.viajante-anel", nome: 'Anel do Viajante', espaco: "anel1", bonusDeRecursos: { vidaMaxima: 8, manaMaxima: 5, folegoMaximo: 8 } },
 
   // A partir daqui ficam as peças dos conjuntos de saque de Dún Liath, referenciadas pelo motor da masmorra.
