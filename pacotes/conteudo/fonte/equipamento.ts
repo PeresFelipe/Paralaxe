@@ -15,6 +15,10 @@ export const DEFINICOES_DE_EQUIPAMENTO = [
   { id: 'escudo.fearn-broquel', nome: 'Broquel Trançado de Fearn', espaco: 'maoSecundaria', estatisticaPrincipal: { tipo: 'defesa', valor: 14 } },
   { id: 'armadura.iarann-couraca', nome: 'Couraça de Iarann', espaco: 'peitoral', estatisticaPrincipal: { tipo: 'defesa', valor: 26 } },
   { id: 'arma.saileach-arco', nome: 'Arco de Saileach', espaco: 'maoPrincipal', estatisticaPrincipal: { tipo: 'ataque', valor: 22 }, combateDaArma: { tipoDeDano: 'perfuracao', intervaloDeAcaoEmSegundos: 2.25, escalonamento: { forca: 'D', destreza: 'A' } } },
+  // Proteções, arma e joia de níveis 45–60; não são Relíquias.
+  { id: 'armadura.fundicao-pesada-peitoral', nome: 'Peitoral de Fundição Pesada', espaco: 'peitoral', estatisticaPrincipal: { tipo: 'defesa', valor: 36 } },
+  { id: 'arma.fuinseog-arco', nome: 'Arco de Fuinseog', espaco: 'maoPrincipal', estatisticaPrincipal: { tipo: 'ataque', valor: 29 }, combateDaArma: { tipoDeDano: 'perfuracao', intervaloDeAcaoEmSegundos: 2.25, escalonamento: { forca: 'D', destreza: 'A' } } },
+  { id: 'item.equipamento.airgead-anel', nome: 'Anel de Airgead', espaco: 'anel1', bonusDeRecursos: { vidaMaxima: 20, manaMaxima: 20, folegoMaximo: 15 } },
   { id: "arma.milicia-espada", nome: 'Espada de Milícia', espaco: "maoPrincipal", estatisticaPrincipal: { tipo: "ataque", valor: 14 }, combateDaArma: { tipoDeDano: "corte", intervaloDeAcaoEmSegundos: 2.1, escalonamento: { forca: 'B', destreza: 'C' } } },
   { id: "escudo.milicia-escudo", nome: 'Escudo de Milícia', espaco: "maoSecundaria", estatisticaPrincipal: { tipo: "defesa", valor: 8 } },
   { id: "armadura.milicia-peitoral", nome: 'Peitoral de Milícia', espaco: "peitoral", estatisticaPrincipal: { tipo: "defesa", valor: 18 } },

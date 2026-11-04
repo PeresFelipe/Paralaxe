@@ -17,7 +17,7 @@ Referência canônica: `documentacao/GDD.md`, 75 seções. Base de código: bran
 | 4 | Nível geral 1–99, pontos de atributo | Parcial | `pacotes/dominio/fonte/progressao.ts`, `progressao.test.ts` | Validar balanceamento definitivo, progressão narrativa e pacing |
 | 5–6 | Classes e presentes | Base implementada | `pacotes/conteudo/fonte/criacaoDePersonagem.ts` | Refinamento de conteúdo/UX |
 | 7–9 | Sete Ofícios 1–99, Prestígios, ferramentas e minigames | Parcial | `ocioso.ts`, `ocioso.test.ts`, `equipamento.ts`, `ferramentasDeColeta.test.ts` | Ferramentas base implementadas com XP; faltam gradações/raridade procedural, conteúdo 11–99, 2/3 trabalhos simultâneos, prioridades e minigames |
-| 10–14 | Convenções, coleta/Metalurgia/Forja/Culinária | Parcial | `atividadesOciosas.ts`, `receitasDeFabricacao.ts`, `progressoOficiosNiveis20e30.test.ts` | Marcos normais de coleta até nível 30 com fabricação e consumíveis; faltam níveis 45–99, mais receitas e caminhos dos Prestígios I–III |
+| 10–14 | Convenções, coleta/Metalurgia/Forja/Culinária | Parcial | `atividadesOciosas.ts`, `receitasDeFabricacao.ts`, `progressoOficiosNiveis20e30.test.ts` | Marcos normais de coleta até nível 60 com fabricação e consumíveis; faltam níveis 75–99, especializações de receitas e caminhos dos Prestígios I–III |
 | 15 | Reforços sem falha +0 → +2 | Parcial | `fabricacao.ts`, `equipamento.ts` | Reforço +2 com componente especial, ferramentas e raridades de fabricação |
 | 16–17 | Prestígio do personagem e ausência | Parcial | `prestigio.ts`, `ocioso.ts` | Integração do conteúdo e balanceamento amplo para 99 níveis |
 | 18–20 | Combate, estados, resistências e chefes | Parcial | `combate.ts` domínio/conteúdo | Conteúdo completo, estratégias e mecânicas de níveis avançados |
@@ -73,6 +73,16 @@ Arquivos: `pacotes/conteudo/fonte/atividadesOciosas.ts`, `receitasDeFabricacao.t
 - Culinária: Sairdín em Conserva, Infusão de Caisearbhán e Ensopado de Ronnach e Fraoch, consumíveis com efeitos definidos.
 - Novos nomes/ícones, integração ao Códice e testes de desbloqueio/produção; não há mudança de formato de save.
 - **Escopo:** os nomes/níveis dos recursos e as etapas temáticas vêm do GDD; nomes das peças, composição exata de receitas, tempos, XP e atributos são conteúdo provisório, pendente de balanceamento.
+
+### Entrega E — níveis 45 e 60 (coleta → produção → uso)
+
+- **GDD §11:** Luaidhe, Coll, Trosc e Aiteann no nível 45; Airgead, Fuinseog, Bradán e Raithneach no nível 60.
+- **GDD §12:** lingotes de Luaidhe e Airgead, Fundição Pesada (placas) e Cruach, aproveitando também Iarann e Coll.
+- **GDD §13:** Peitoral de Fundição Pesada, Arco de Fuinseog e Anel de Airgead.
+- **GDD §14:** Trosc Defumado, Extrato de Aiteann e Refeição de Bradán e Raithneach.
+- Os catálogos existentes fornecem desbloqueios, ciclos offline, Códice e interfaces. Os IDs de saves anteriores permanecem inalterados e nenhuma migração estrutural é necessária.
+- **Ainda provisório:** custos, cadências, XP, peças novas e efeitos de equipamento/consumíveis. Não foram definidos como cânone pelo GDD.
+- Testes: `pacotes/conteudo/fonte/progressoOficiosNiveis45e60.test.ts` (bloqueios, consumo, saída, Códice e compatibilidade com saves).
 
 ## Dependências e riscos não encerrados
 

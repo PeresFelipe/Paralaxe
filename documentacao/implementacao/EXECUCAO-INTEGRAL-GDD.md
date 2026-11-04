@@ -10,6 +10,7 @@ Branch exclusiva `develop`, documentação canônica `documentacao/GDD.md`. O pe
 - `ad53e5a`: catálogo e motor das quatro ferramentas com slots profissionais; XP adicional de coleta, fabricação, ícones e serviço de processamento.
 - Integração de troca de ferramenta, interface e testes complementares no commit seguinte.
 - Expansão dos marcos normais dos níveis 20 e 30: Copar/Iarann, Fearn/Saileach, Sairdín/Ronnach, Caisearbhán/Fraoch; novos lingotes, Cré-Umha, fabricação de equipamentos e receitas de Culinária.
+- Faixas 45–60 implementadas nesta etapa: oito recursos, quatro receitas de Metalurgia, três de Forja e três de Culinária, com testes próprios (GDD §§11–14).
 - Matriz detalhada em `CONFORMIDADE-INTEGRAL-GDD.md`.
 
 ## Regras de continuidade
@@ -22,7 +23,7 @@ Branch exclusiva `develop`, documentação canônica `documentacao/GDD.md`. O pe
 
 ## Ainda falta
 - Expansão das ferramentas profissionais para raridades/afixos procedurais e efeitos adicionais; slots básicos existentes.
-- Profissões: recursos e cadeias produtivas entre 45 e 99, receitas adicionais de níveis 20–30 e todo o Prestígio I–III, incluindo 2–3 atividades.
+- Profissões: recursos e cadeias produtivas dos níveis 75 e 90, expansão de receitas/efeitos até 99 e todo o Prestígio I–III, incluindo 2–3 atividades.
 - Minigames opcionais.
 - Reforços +2, novos itens especiais, raridade procedural completa.
 - Dún Liath procedural, dificuldades, segredos, recompensas e automação.
@@ -33,4 +34,4 @@ Branch exclusiva `develop`, documentação canônica `documentacao/GDD.md`. O pe
 - Decisões pendentes no GDD e testes visuais/jogabilidade de longo prazo.
 
 ## Estado da conclusão
-**Parcial.** Progressão até 99 e cadeias produtivas normais até nível 30 começaram a funcionar, mas a profundidade do conteúdo ainda é limitada. O restante do GDD exige trabalho adicional e decisões canônicas explícitas.
+**Parcial.** Progressão até 99 e cadeias produtivas normais até nível 60 começaram a funcionar, mas a profundidade do conteúdo ainda é limitada. O restante do GDD exige trabalho adicional e decisões canônicas explícitas.

@@ -238,6 +238,10 @@ export const CONSUMIVEIS_DE_COMBATE = [
   { id: 'item.comida.conserva-sairdin', nome: 'Sairdín em Conserva', restaurar: { vida: 50, folego: 30 } },
   { id: 'item.consumivel.infusao-caisearbhan', nome: 'Infusão de Caisearbhán', restaurar: { vida: 40, mana: 35 } },
   { id: 'item.comida.ensopado-ronnach-fraoch', nome: 'Ensopado de Ronnach e Fraoch', restaurar: { vida: 65, mana: 20, folego: 35 } },
+  // Culinária 45/60: itens determinísticos de recuperação; sem raridade procedural.
+  { id: 'item.comida.trosc-defumado', nome: 'Trosc Defumado', restaurar: { vida: 75, folego: 40 } },
+  { id: 'item.consumivel.extrato-aiteann', nome: 'Extrato de Aiteann', restaurar: { mana: 55 } },
+  { id: 'item.comida.bradan-raithneach', nome: 'Refeição de Bradán e Raithneach', restaurar: { vida: 90, mana: 30, folego: 50 } },
   {
     id: "item.consumivel.carmesim-frasco",
     nome: 'Frasco Carmesim',
