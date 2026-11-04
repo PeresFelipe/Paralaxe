@@ -618,7 +618,7 @@ function TelaDoPersonagem({
   aoRealizarPrestigioDoPersonagem: () => Promise<void>;
   aoDesbloquearNoDePrestigio: (noId: string) => Promise<void>;
 }) {
-  const reforcoReceita = RECEITAS_INICIAIS_DE_FABRICACAO.find(
+  const reforcos = RECEITAS_INICIAIS_DE_FABRICACAO.filter(
     (receita) => receita.saida.tipo === "equipamento-reforco",
   );
 
@@ -746,6 +746,10 @@ function TelaDoPersonagem({
               definicao,
               instancia.nivelDeReforco,
             );
+            const reforcoReceita = reforcos.find(receita =>
+              receita.saida.tipo === 'equipamento-reforco' &&
+              (receita.saida.nivelDeReforcoAlvo ?? 1) === instancia.nivelDeReforco + 1,
+            );
             return (
               <article
                 className={`item-cartao ${equipado ? "selecionado-cartao" : ""}`}
@@ -779,7 +783,7 @@ function TelaDoPersonagem({
                       {equipado ? "Equipado" : "Equipar"}
                     </Button>
                     {reforcoReceita &&
-                    instancia.nivelDeReforco === 0 &&
+                    instancia.nivelDeReforco < 2 &&
                     definicao.estatisticaPrincipal ? (
                       <Button
                         variant="secondary"
@@ -791,7 +795,7 @@ function TelaDoPersonagem({
                           )
                         }
                       >
-                        Reforçar +1
+                        Reforçar +{instancia.nivelDeReforco + 1}
                       </Button>
                     ) : null}
                   </div>

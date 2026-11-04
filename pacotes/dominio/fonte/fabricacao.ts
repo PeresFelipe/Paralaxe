@@ -29,6 +29,8 @@ export type ResultadoDaReceita =
   | {
       tipo: "equipamento-reforco"
       nome: string
+      /** Nível de destino explícito; receitas antigas sem essa propriedade continuam +1. */
+      nivelDeReforcoAlvo?: 1 | 2
     }
 
 export interface DefinicaoDeReceitaDeFabricacao {
@@ -166,8 +168,9 @@ export function iniciarReceitaDeFabricacao(
       throw new Error('Equipamento selecionado para reforço não foi encontrado.')
     }
 
-    if (alvo.nivelDeReforco !== 0) {
-      throw new Error("Na Versão 0.1, o Reforço Simples só pode elevar equipamento +0 para +1.")
+    const anterior = receita.saida.nivelDeReforcoAlvo === 2 ? 1 : 0
+    if (alvo.nivelDeReforco !== anterior) {
+      throw new Error(`Este reforço exige equipamento +${anterior}.`)
     }
   }
 
@@ -385,9 +388,11 @@ export function processarProgressoDeFabricacao(
     } else {
       const alvoId = ativo.idDaInstanciaDoEquipamentoAlvo
       if (!alvoId) throw new Error('Produção de reforço perdeu a referência do equipamento alvo.')
+      const anterior = receita.saida.nivelDeReforcoAlvo === 2 ? 1 : 0
+      const novoNivel = receita.saida.nivelDeReforcoAlvo === 2 ? 2 as const : 1 as const
       itensDeEquipamento = itensDeEquipamento.map((instancia) =>
-        instancia.idDaInstancia === alvoId && instancia.nivelDeReforco === 0
-          ? { ...instancia, nivelDeReforco: 1 as const }
+        instancia.idDaInstancia === alvoId && instancia.nivelDeReforco === anterior
+          ? { ...instancia, nivelDeReforco: novoNivel }
           : instancia,
       )
       equipamentosReforcados = 1

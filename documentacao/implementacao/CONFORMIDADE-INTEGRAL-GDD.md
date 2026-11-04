@@ -18,7 +18,7 @@ Referência canônica: `documentacao/GDD.md`, 75 seções. Base de código: bran
 | 5–6 | Classes e presentes | Base implementada | `pacotes/conteudo/fonte/criacaoDePersonagem.ts` | Refinamento de conteúdo/UX |
 | 7–9 | Sete Ofícios 1–99, Prestígios, ferramentas e minigames | Parcial | `ocioso.ts`, `ocioso.test.ts`, `equipamento.ts`, `ferramentasDeColeta.test.ts` | Ferramentas base implementadas com XP; faltam gradações/raridade procedural, conteúdo 11–99, segunda coleta de Prestígio I implementada; produção paralela do Prestígio I implementada; faltam prioridades do Prestígio II, terceira atividade do III e minigames |
 | 10–14 | Convenções, coleta/Metalurgia/Forja/Culinária | Parcial | `atividadesOciosas.ts`, `receitasDeFabricacao.ts`, `progressoOficiosNiveis20e30.test.ts` | Oito recursos normais cobrem os marcos 1–90 em cada coleta; Metalurgia 75/90 e receitas utilizáveis de Forja/Culinária foram adicionadas. Faltam aprofundamento até 99, receitas raras/especiais e Prestígios I–III |
-| 15 | Reforços sem falha +0 → +2 | Parcial | `fabricacao.ts`, `equipamento.ts` | Reforço +2 com componente especial, ferramentas e raridades de fabricação |
+| 15 | Reforços sem falha +0 → +2 | Parcial | `fabricacao.ts`, `equipamento.ts`, `fabricacao.test.ts` | Reforço +2 usa fragmento de Fairtheoir, sem falha ou reroll; faltam reforços especiais e raridades completas |
 | 16–17 | Prestígio do personagem e ausência | Parcial | `prestigio.ts`, `ocioso.ts` | Integração do conteúdo e balanceamento amplo para 99 níveis |
 | 18–20 | Combate, estados, resistências e chefes | Parcial | `combate.ts` domínio/conteúdo | Conteúdo completo, estratégias e mecânicas de níveis avançados |
 | 21–22 | Grupo, Ameaça e Mira | Pendente | Sem agregado funcional de Grupo | Até 3 parceiros, IA multiagente, aggro e introdução narrativa |
@@ -114,6 +114,13 @@ Arquivos: `pacotes/conteudo/fonte/atividadesOciosas.ts`, `receitasDeFabricacao.t
 - Interface permite acompanhar, iniciar ou interromper a produção secundária. A continuidade pausa ambos os relógios em risco.
 - Migração v14 → v15 cria receita secundária vazia sem perder trabalho, inventário ou XP.
 - **Ainda falta:** prioridades do Prestígio II, terceira atividade do III e conteúdo exclusivo de Prestígios.
+
+### Entrega I — reforço +2 do GDD §15
+
+- Receita de Forja nível 20: **Reforço de Dún Liath +2**, requer equipamento +1, Lingote de Iarann e **Fragmento de Fairtheoir** (saque de chefe), sem ouro ou falha.
+- Reforço +1 mantém a regra histórica. +2 usa um multiplicador provisório de 30% sobre a propriedade-base, sem modificar afixos, raridade ou efeitos únicos.
+- A interface oferece o reforço correspondente ao nível atual da instância. Não existe durabilidade.
+- O campo `nivelDeReforco` continua na mesma estrutura persistida; aceita agora 0, 1 ou 2, sem migração do save para essa funcionalidade.
 
 ## Dependências e riscos não encerrados
 

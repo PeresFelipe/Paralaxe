@@ -32,7 +32,7 @@ export type EspacoDeEquipamento = (typeof ESPACOS_DE_EQUIPAMENTO)[number]
 export type ConjuntoDeEquipamentosIniciais = Partial<Record<EspacoDeEquipamento, string>>
 export type IdsDosItensEquipados = Partial<Record<EspacoDeEquipamento, string>>
 
-export type NivelDeReforcoDoEquipamento = 0 | 1
+export type NivelDeReforcoDoEquipamento = 0 | 1 | 2
 export type TipoDeEstatisticaPrincipalDoEquipamento = "ataque" | "defesa"
 export type RaridadeDoEquipamento = "comum" | "incomum" | "raro"
 export type GrauDeEscalonamento = 'S' | 'A' | 'B' | 'C' | 'D' | 'E'
@@ -101,7 +101,7 @@ export function criarEstadoDosEquipamentosIniciais(
   return { equipado, itensDeEquipamento, proximaSequenciaDeEquipamento }
 }
 
-/** Aplica a regra atual do reforço +1: aumento de 15%, arredondado para cima; ausência de estatística retorna null. */
+/** Reforços +1/+2 alteram somente a estatística-base; afixos e raridade da instância permanecem intactos. */
 export function obterValorPrincipalDoEquipamento(
   definicao: DefinicaoDeEquipamento,
   nivelDeReforco: NivelDeReforcoDoEquipamento,
@@ -111,7 +111,7 @@ export function obterValorPrincipalDoEquipamento(
 
   if (nivelDeReforco === 0) return baseValor
 
-  return Math.ceil(baseValor * 1.15)
+  return Math.ceil(baseValor * (nivelDeReforco === 1 ? 1.15 : 1.3))
 }
 
 /**

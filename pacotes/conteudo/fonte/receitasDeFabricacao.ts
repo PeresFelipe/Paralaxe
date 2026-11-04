@@ -135,7 +135,21 @@ export const RECEITAS_INICIAIS_DE_FABRICACAO = [
     segundosPorAcao: 15,
     xpDeProfissaoPorAcao: 30,
     ingredientes: [{ idDaDefinicao: "material.tratada-cloch", quantidade: 2 }],
-    saida: { tipo: "equipamento-reforco", nome: 'Reforço Simples +1' },
+    saida: { tipo: "equipamento-reforco", nome: 'Reforço Simples +1', nivelDeReforcoAlvo: 1 },
+  },
+  // GDD §15: o fragmento é um componente especial recuperado do chefe Fairtheoir, não um recurso aleatório da coleta.
+  {
+    id: 'receita.forja.reforco-dun-liath-2',
+    idDaProfissao: 'forja',
+    nome: 'Reforço de Dún Liath +2',
+    nivelExigidoDaProfissao: 20,
+    segundosPorAcao: 45,
+    xpDeProfissaoPorAcao: 90,
+    ingredientes: [
+      { idDaDefinicao: 'item.fairtheoir-fragmento', quantidade: 1 },
+      { idDaDefinicao: 'material.lingote-iarann', quantidade: 2 },
+    ],
+    saida: { tipo: 'equipamento-reforco', nome: 'Reforço de Dún Liath +2', nivelDeReforcoAlvo: 2 },
   },
   // GDD §§12–14: integração do nível 20–30. Valores numéricos e peças são conteúdo provisório.
   {

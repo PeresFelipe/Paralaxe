@@ -127,6 +127,48 @@ describe("fabricação", () => {
     expect(resultado.partida.fabricacao.receitaAtiva).toBeNull()
   })
 
+
+  it('exige componente especial de chefe para +2 e preserva afixos e raridade', () => {
+    const base = criarPartida()
+    const alvoId = base.personagem.equipamento.maoPrincipal
+    if (!alvoId) throw new Error('Equipamento inicial ausente.')
+    const receitaEspecial: DefinicaoDeReceitaDeFabricacao = {
+      id: 'receita.forja.reforco-dun-liath-2', idDaProfissao: 'forja',
+      nome: 'Reforço de Dún Liath +2', nivelExigidoDaProfissao: 1,
+      segundosPorAcao: 45, xpDeProfissaoPorAcao: 90,
+      ingredientes: [
+        { idDaDefinicao: 'item.fairtheoir-fragmento', quantidade: 1 },
+        { idDaDefinicao: 'material.lingote-iarann', quantidade: 2 },
+      ],
+      saida: { tipo: 'equipamento-reforco', nome: 'Reforço +2', nivelDeReforcoAlvo: 2 },
+    }
+    const comItens = {
+      ...base, personagem: {
+        ...base.personagem,
+        inventario: [{ idDaDefinicao: 'item.fairtheoir-fragmento', quantidade: 1 }, { idDaDefinicao: 'material.lingote-iarann', quantidade: 2 }],
+        itensDeEquipamento: base.personagem.itensDeEquipamento.map(i => i.idDaInstancia === alvoId
+          ? { ...i, nivelDeReforco: 1 as const, raridade: 'raro' as const, idsDosAfixos: ['afixo.vigor-1'] } : i),
+      },
+    }
+    expect(() => iniciarReceitaDeFabricacao(base, receitaEspecial, '2026-09-09T12:00:00.000Z', alvoId)).toThrow('Materiais insuficientes')
+    const semNivel = { ...comItens, personagem: { ...comItens.personagem,
+      itensDeEquipamento: comItens.personagem.itensDeEquipamento.map(i => i.idDaInstancia === alvoId
+        ? { ...i, nivelDeReforco: 0 as const } : i) } }
+    expect(() => iniciarReceitaDeFabricacao(semNivel, receitaEspecial, '2026-09-09T12:00:00.000Z', alvoId)).toThrow('exige equipamento +1')
+    const pronto = iniciarReceitaDeFabricacao(comItens, receitaEspecial, '2026-09-09T12:00:00.000Z', alvoId)
+    const resultado = processarProgressoDeFabricacao(pronto, receitaEspecial, '2026-09-09T12:00:45.000Z')
+    const reforcado = resultado.partida.personagem.itensDeEquipamento.find(i => i.idDaInstancia === alvoId)
+    expect(reforcado).toEqual({ idDaInstancia: alvoId, idDaDefinicao: reforcado?.idDaDefinicao,
+      nivelDeReforco: 2, raridade: 'raro', idsDosAfixos: ['afixo.vigor-1'] })
+    expect(resultado.equipamentosReforcados).toBe(1)
+    expect(resultado.partida.fabricacao.receitaAtiva).toBeNull()
+    expect(resultado.partida.personagem.inventario).toEqual([])
+    expect(() => iniciarReceitaDeFabricacao(resultado.partida, receitaEspecial, '2026-09-09T12:01:00.000Z', alvoId)).toThrow()
+    const lanca: DefinicaoDeEquipamento = { id: 'arma.teste', nome: 'Teste', espaco: 'maoPrincipal',
+      estatisticaPrincipal: { tipo: 'ataque', valor: 13 } }
+    expect(obterValorPrincipalDoEquipamento(lanca, 2)).toBe(17)
+  })
+
   it("aplica a regra provisória de +15% à estatística principal com arredondamento para cima", () => {
     const lanca: DefinicaoDeEquipamento = {
       id: "arma.viagem-lanca",
