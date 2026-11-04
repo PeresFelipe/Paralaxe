@@ -8,6 +8,7 @@ import { aplicarXpDeProfissao, obterLimiteDeAusenciaEmSegundos, type IdDaProfiss
 import { obterEspacoParaEquipamentoNoInventario, obterEspacoParaPilhaNoInventario } from './armazenamento'
 import { registrarFabricacaoDaJornada } from './jornada'
 import { segundosPorAcaoComPrioridade, type PrioridadeDeOficio } from './prioridadesDeOficio'
+import { obterBonusXpDoMinigame } from './minigamesDeOficio'
 
 export interface IngredienteDaReceita {
   idDaDefinicao: string
@@ -468,7 +469,8 @@ export function processarProgressoDeFabricacao(
   }
   if (interrompidoPorCapacidade || interrompidoPorMateriais) naoPodeRepetir = true
 
-  const profissaoXp = acoesConcluidas * receita.xpDeProfissaoPorAcao
+  const bonusInterativo = obterBonusXpDoMinigame(partida, receita.idDaProfissao, ativo.processadoPorUltimoEm, agora)
+  const profissaoXp = acoesConcluidas * (receita.xpDeProfissaoPorAcao + bonusInterativo)
   const profissaoResultado = aplicarXpDeProfissao(partida.profissoes[receita.idDaProfissao], profissaoXp)
   const geralXp = profissaoResultado.niveisGanhos * 5
   // O resto do tempo acompanha apenas uma receita que pode continuar; uma receita encerrada perde o saldo.

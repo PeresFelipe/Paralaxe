@@ -17,6 +17,7 @@ import { criarProgressoInicialDasProfissoes, type EstadoOcioso, type ProgressoDe
 import { criarJornadaInicial, type EstadoDaJornada } from './jornada'
 import { criarEstadoInicialDaVigilia, type EstadoDaVigilia } from './vigiliaDaCidade'
 import { criarLegadoInicial, type EstadoDoLegado } from './legadoDaCidade'
+import { criarEstadoInicialDosMinigames, type EstadoDosMinigamesDeOficio } from './minigamesDeOficio'
 
 /** Ordem comum à criação, distribuição de pontos e validação dos sete atributos. */
 export const CHAVES_DOS_ATRIBUTOS = [
@@ -158,6 +159,8 @@ export interface PartidaLocal {
   profissoes: ProgressoDeProfissaoPorId
   ocioso: EstadoOcioso
   fabricacao: EstadoDeFabricacao
+  /** Campo opcional para saves v16 existentes; inicializado na próxima gravação interativa. */
+  minigames?: EstadoDosMinigamesDeOficio
   combate: EstadoDeCombate
   masmorra: EstadoDeProgressoDaMasmorra
   jornada: EstadoDaJornada
@@ -295,6 +298,7 @@ export function criarPartidaLocal(entradaDeDados: ParametrosDeCriacaoDaPartidaLo
     profissoes: criarProgressoInicialDasProfissoes(),
     ocioso: { atividadeAtiva: null, atividadeSecundaria: null, atividadeTerciaria: null, prioridade: 'equilibrado' },
     fabricacao: { receitaAtiva: null, receitaSecundaria: null, receitaTerciaria: null, prioridade: 'equilibrado' },
+    minigames: criarEstadoInicialDosMinigames(),
     jornada: criarJornadaInicial(),
     codice: { idsDescobertos: [`classe.${entradaDeDados.classeDoPersonagem.id}`] },
     desafios: { idsConcluidos: [] },

@@ -7,6 +7,7 @@ import type { PilhaDoInventario, PartidaLocal } from './personagem'
 import { obterEspacoParaPilhaNoInventario } from './armazenamento'
 import type { DefinicaoDeEquipamento, EspacoDeFerramenta } from './equipamento'
 import { segundosPorAcaoComPrioridade, type PrioridadeDeOficio } from './prioridadesDeOficio'
+import { obterBonusXpDoMinigame } from './minigamesDeOficio'
 
 export const IDS_DAS_PROFISSOES = [
   "mineracao",
@@ -407,7 +408,8 @@ export function processarProgressoOcioso(
   const segundosRestantes = interrompidoPorCapacidade ? 0 : totalSegundos % atividade.segundosPorAcao
 
   const bonusFerramenta = obterBonusDaFerramentaDeColeta(partida, atividade, resolverEquipamento)
-  const profissaoXp = acoesConcluidas * (atividade.xpDeProfissaoPorAcao + bonusFerramenta)
+  const bonusInterativo = obterBonusXpDoMinigame(partida, atividade.idDaProfissao, ativo.processadoPorUltimoEm, agora)
+  const profissaoXp = acoesConcluidas * (atividade.xpDeProfissaoPorAcao + bonusFerramenta + bonusInterativo)
   const atualProfissao = partida.profissoes[atividade.idDaProfissao]
   const profissaoResultado = aplicarXpDeProfissao(atualProfissao, profissaoXp)
   // Cada nível de profissão concede 5 XP gerais. Aqui só o total de XP é somado,
