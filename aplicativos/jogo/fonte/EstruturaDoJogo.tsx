@@ -189,12 +189,12 @@ export default function EstruturaDoJogo({
 }: PropriedadesDeEstruturaDoJogo) {
   // Uma expedição persistida reabre diretamente em Aventura; as demais partidas começam na visão do personagem.
   const [destino, definirDestino] = useState<DestinoPrincipal>(
-    partida.masmorra.expedicaoAtiva ? "aventura" : "personagem",
+    (partida.masmorra.expedicaoAtiva || partida.masmorra.incursaoAutomaticaAtiva) ? "aventura" : "personagem",
   );
   const [personagemAba, definirPersonagemAba] = useState<AbaDoPersonagem>("visaoGeral");
   const [profissaoSelecionada, definirSelecionadoProfissao] = useState<IdDaProfissao>("mineracao");
   const [aventuraTelaDoJogo, definirAventuraTelaDoJogo] = useState<TelaDeAventura>(
-    partida.masmorra.expedicaoAtiva ? "masmorra" : "visaoGeral",
+    (partida.masmorra.expedicaoAtiva || partida.masmorra.incursaoAutomaticaAtiva) ? "masmorra" : "visaoGeral",
   );
   const [cidadeTelaDoJogo, definirCidadeTelaDoJogo] = useState<TelaDaCidade>("visaoGeral");
   const [rapidoPainel, definirRapidoPainel] = useState<PainelRapidoAtivo>(null);
@@ -209,7 +209,7 @@ export default function EstruturaDoJogo({
   )?.nome;
   const trabalho = ativoTrabalho(partida);
   const jornada = obterHistoriaDaJornada(partida);
-  const masmorraAtivo = Boolean(partida.masmorra.expedicaoAtiva);
+  const masmorraAtivo = Boolean(partida.masmorra.expedicaoAtiva || partida.masmorra.incursaoAutomaticaAtiva);
   // O risco temporário do combate e a expedição persistida bloqueiam a navegação e pausam a barra de trabalho.
   const focadoRisco = riscoAtivo || masmorraAtivo;
 
@@ -380,7 +380,7 @@ export default function EstruturaDoJogo({
           <span>ESTADO DE RISCO</span>
           <strong>
             {masmorraAtivo
-              ? "Dún Liath · Ocioso pausado"
+              ? (partida.masmorra.incursaoAutomaticaAtiva ? "Incursão Automática · Ocioso pausado" : "Dún Liath · Ocioso pausado")
               : "Combate · Ocioso pausado"}
           </strong>
         </div>
@@ -603,7 +603,7 @@ export default function EstruturaDoJogo({
             variant="secondary"
             fullWidth
             onClick={() =>
-              abrirAventura(partida.masmorra.expedicaoAtiva ? "masmorra" : "visaoGeral")
+              abrirAventura((partida.masmorra.expedicaoAtiva || partida.masmorra.incursaoAutomaticaAtiva) ? "masmorra" : "visaoGeral")
             }
           >
             Ver em Aventura
@@ -980,7 +980,7 @@ function ComponenteDaTelaDeAventura({
               size="sm"
               onClick={() => aoTelaDoJogo("masmorra")}
             >
-              {partida.masmorra.expedicaoAtiva ? "Retomar expedição" : "Ver Dún Liath"}
+              {(partida.masmorra.expedicaoAtiva || partida.masmorra.incursaoAutomaticaAtiva) ? "Retomar atividade" : "Ver Dún Liath"}
             </Button>
           </Card>
           <Card className="aventura-cartao">

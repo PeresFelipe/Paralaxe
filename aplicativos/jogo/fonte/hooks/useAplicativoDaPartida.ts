@@ -163,7 +163,7 @@ export function useAplicativoDaPartida(repositorioDePartidas: RepositorioDeParti
   // O intervalo apenas solicita atualização a cada cinco segundos; as regras usam horários, não a quantidade de disparos.
   useEffect(() => {
     if (tela !== "jogo" || !partidaAtiva) return;
-    if (riscoAtivo || partidaAtiva.masmorra.expedicaoAtiva) return;
+    if (riscoAtivo || partidaAtiva.masmorra.expedicaoAtiva || partidaAtiva.masmorra.incursaoAutomaticaAtiva) return;
     if (!partidaAtiva.ocioso.atividadeAtiva && !partidaAtiva.fabricacao.receitaAtiva)
       return;
 
@@ -283,13 +283,15 @@ export function useAplicativoDaPartida(repositorioDePartidas: RepositorioDeParti
 
       const armazenado = atualizarCodiceEDesafios(partidaLida)
 
-      if (armazenado.masmorra.expedicaoAtiva) {
+      if (armazenado.masmorra.expedicaoAtiva || armazenado.masmorra.incursaoAutomaticaAtiva) {
         if (armazenado !== partidaLida) await repositorioDePartidas.salvar(armazenado)
         selecionarPartidaAtiva(armazenado);
         definirPartidas((atual) => atualizarPartidaNaLista(atual, armazenado));
         definirRiscoAtivo(true);
         definirMensagem(
-          "Expedição em Dún Liath em andamento. Retome do ponto em que parou.",
+          armazenado.masmorra.incursaoAutomaticaAtiva
+            ? "Incursão Automática em andamento. Seu progresso foi preservado."
+            : "Expedição em Dún Liath em andamento. Retome do ponto em que parou.",
         );
         definirTela("jogo");
         return;

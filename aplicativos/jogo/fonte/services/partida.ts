@@ -50,7 +50,7 @@ export function processarTrabalhoAtual(
   agora: string,
 ): { partida: PartidaLocal; textoExibido: string | null } {
   // A expedição ativa pausa o acúmulo sem apagar a referência do trabalho ocioso.
-  if (partida.masmorra.expedicaoAtiva) return { partida, textoExibido: null }
+  if (partida.masmorra.expedicaoAtiva || partida.masmorra.incursaoAutomaticaAtiva) return { partida, textoExibido: null }
 
   const ativoOciosoId = partida.ocioso.atividadeAtiva?.idDaDefinicaoDaAtividade
   if (ativoOciosoId) {
