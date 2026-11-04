@@ -234,6 +234,10 @@ export const CONSUMIVEIS_DE_COMBATE = [
     nome: 'Infusão de Seamair',
     restaurar: { vida: 35, mana: 20 },
   },
+  // Consumíveis dos Ofícios 20–30: efeitos fixos, sem raridade e sem atributo permanente.
+  { id: 'item.comida.conserva-sairdin', nome: 'Sairdín em Conserva', restaurar: { vida: 50, folego: 30 } },
+  { id: 'item.consumivel.infusao-caisearbhan', nome: 'Infusão de Caisearbhán', restaurar: { vida: 40, mana: 35 } },
+  { id: 'item.comida.ensopado-ronnach-fraoch', nome: 'Ensopado de Ronnach e Fraoch', restaurar: { vida: 65, mana: 20, folego: 35 } },
   {
     id: "item.consumivel.carmesim-frasco",
     nome: 'Frasco Carmesim',

@@ -11,6 +11,10 @@ export const DEFINICOES_DE_EQUIPAMENTO = [
   { id: 'ferramenta.lenhador.machado-corte', nome: 'Machado de Corte', espaco: 'ferramentaLenhador', bonusDeColeta: { idDaProfissao: 'lenhador', xpAdicionalPorAcao: 2 } },
   { id: 'ferramenta.pesca.equipamento-pesca', nome: 'Equipamento de Pesca', espaco: 'ferramentaPesca', bonusDeColeta: { idDaProfissao: 'pesca', xpAdicionalPorAcao: 3 } },
   { id: 'ferramenta.herbologia.kit-herbologia', nome: 'Kit de Herbologia', espaco: 'ferramentaHerbologia', bonusDeColeta: { idDaProfissao: 'herbologia', xpAdicionalPorAcao: 2 } },
+  // Progressão normal de Forja (níveis 20 e 30). Não são Relíquias.
+  { id: 'escudo.fearn-broquel', nome: 'Broquel Trançado de Fearn', espaco: 'maoSecundaria', estatisticaPrincipal: { tipo: 'defesa', valor: 14 } },
+  { id: 'armadura.iarann-couraca', nome: 'Couraça de Iarann', espaco: 'peitoral', estatisticaPrincipal: { tipo: 'defesa', valor: 26 } },
+  { id: 'arma.saileach-arco', nome: 'Arco de Saileach', espaco: 'maoPrincipal', estatisticaPrincipal: { tipo: 'ataque', valor: 22 }, combateDaArma: { tipoDeDano: 'perfuracao', intervaloDeAcaoEmSegundos: 2.25, escalonamento: { forca: 'D', destreza: 'A' } } },
   { id: "arma.milicia-espada", nome: 'Espada de Milícia', espaco: "maoPrincipal", estatisticaPrincipal: { tipo: "ataque", valor: 14 }, combateDaArma: { tipoDeDano: "corte", intervaloDeAcaoEmSegundos: 2.1, escalonamento: { forca: 'B', destreza: 'C' } } },
   { id: "escudo.milicia-escudo", nome: 'Escudo de Milícia', espaco: "maoSecundaria", estatisticaPrincipal: { tipo: "defesa", valor: 8 } },
   { id: "armadura.milicia-peitoral", nome: 'Peitoral de Milícia', espaco: "peitoral", estatisticaPrincipal: { tipo: "defesa", valor: 18 } },

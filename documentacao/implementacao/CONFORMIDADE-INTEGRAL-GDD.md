@@ -17,7 +17,7 @@ Referência canônica: `documentacao/GDD.md`, 75 seções. Base de código: bran
 | 4 | Nível geral 1–99, pontos de atributo | Parcial | `pacotes/dominio/fonte/progressao.ts`, `progressao.test.ts` | Validar balanceamento definitivo, progressão narrativa e pacing |
 | 5–6 | Classes e presentes | Base implementada | `pacotes/conteudo/fonte/criacaoDePersonagem.ts` | Refinamento de conteúdo/UX |
 | 7–9 | Sete Ofícios 1–99, Prestígios, ferramentas e minigames | Parcial | `ocioso.ts`, `ocioso.test.ts`, `equipamento.ts`, `ferramentasDeColeta.test.ts` | Ferramentas base implementadas com XP; faltam gradações/raridade procedural, conteúdo 11–99, 2/3 trabalhos simultâneos, prioridades e minigames |
-| 10–14 | Convenções, coleta/Metalurgia/Forja/Culinária | Parcial | `atividadesOciosas.ts`, `receitasDeFabricacao.ts` | Recursos, receitas e caminhos dos Prestígios I–III; etapas avançadas das profissões |
+| 10–14 | Convenções, coleta/Metalurgia/Forja/Culinária | Parcial | `atividadesOciosas.ts`, `receitasDeFabricacao.ts`, `progressoOficiosNiveis20e30.test.ts` | Marcos normais de coleta até nível 30 com fabricação e consumíveis; faltam níveis 45–99, mais receitas e caminhos dos Prestígios I–III |
 | 15 | Reforços sem falha +0 → +2 | Parcial | `fabricacao.ts`, `equipamento.ts` | Reforço +2 com componente especial, ferramentas e raridades de fabricação |
 | 16–17 | Prestígio do personagem e ausência | Parcial | `prestigio.ts`, `ocioso.ts` | Integração do conteúdo e balanceamento amplo para 99 níveis |
 | 18–20 | Combate, estados, resistências e chefes | Parcial | `combate.ts` domínio/conteúdo | Conteúdo completo, estratégias e mecânicas de níveis avançados |
@@ -64,6 +64,15 @@ Arquivos: `pacotes/conteudo/fonte/atividadesOciosas.ts`, `receitasDeFabricacao.t
 - Mineração, Metalurgia e Forja já possuem a cadeia **Stán → Lingote de Stán → Braçadeiras Rebitadas de Stán**, implementada em entrega anterior.
 - XP, durações, custos e efeitos de produtos novos são **provisórios** e não são apresentados como valores definitivos do GDD.
 - Não foram removidas ou renomeadas definições existentes.
+
+### Entrega D — nível 20–30 dos quatro Ofícios e cadeias de produção
+
+- Coleta normal dos oito recursos previstos no GDD §11: Copar, Iarann, Fearn, Saileach, Sairdín, Ronnach, Caisearbhán e Fraoch.
+- Metalurgia: Lingote de Copar, Lingote de Iarann e a liga Cré-Umha (a última usa Stán e Copar processados).
+- Forja: Broquel Trançado de Fearn, Couraça de Iarann e Arco de Saileach, todos equipáveis pelo motor existente.
+- Culinária: Sairdín em Conserva, Infusão de Caisearbhán e Ensopado de Ronnach e Fraoch, consumíveis com efeitos definidos.
+- Novos nomes/ícones, integração ao Códice e testes de desbloqueio/produção; não há mudança de formato de save.
+- **Escopo:** os nomes/níveis dos recursos e as etapas temáticas vêm do GDD; nomes das peças, composição exata de receitas, tempos, XP e atributos são conteúdo provisório, pendente de balanceamento.
 
 ## Dependências e riscos não encerrados
 

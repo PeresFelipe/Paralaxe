@@ -9,6 +9,7 @@ Branch exclusiva `develop`, documentação canônica `documentacao/GDD.md`. O pe
 - `0c1e3f2`: Beith, Breac e Seamair no nível 10, respectivamente Arco de Beith, Breac Assado e Infusão de Seamair, rótulos/ícones, catálogo de combate e testes integrados.
 - `ad53e5a`: catálogo e motor das quatro ferramentas com slots profissionais; XP adicional de coleta, fabricação, ícones e serviço de processamento.
 - Integração de troca de ferramenta, interface e testes complementares no commit seguinte.
+- Expansão dos marcos normais dos níveis 20 e 30: Copar/Iarann, Fearn/Saileach, Sairdín/Ronnach, Caisearbhán/Fraoch; novos lingotes, Cré-Umha, fabricação de equipamentos e receitas de Culinária.
 - Matriz detalhada em `CONFORMIDADE-INTEGRAL-GDD.md`.
 
 ## Regras de continuidade
@@ -21,7 +22,7 @@ Branch exclusiva `develop`, documentação canônica `documentacao/GDD.md`. O pe
 
 ## Ainda falta
 - Expansão das ferramentas profissionais para raridades/afixos procedurais e efeitos adicionais; slots básicos existentes.
-- Profissões: recursos, receitas e equipamento por faixas até 99; todo o Prestígio I–III, incluindo 2–3 atividades.
+- Profissões: recursos e cadeias produtivas entre 45 e 99, receitas adicionais de níveis 20–30 e todo o Prestígio I–III, incluindo 2–3 atividades.
 - Minigames opcionais.
 - Reforços +2, novos itens especiais, raridade procedural completa.
 - Dún Liath procedural, dificuldades, segredos, recompensas e automação.
@@ -32,4 +33,4 @@ Branch exclusiva `develop`, documentação canônica `documentacao/GDD.md`. O pe
 - Decisões pendentes no GDD e testes visuais/jogabilidade de longo prazo.
 
 ## Estado da conclusão
-**Parcial.** O sistema de progressão recebeu fundação técnica e o nível 10 ganhou novas cadeias produtivas. O restante do GDD exige trabalho adicional e decisões canônicas explícitas.
+**Parcial.** Progressão até 99 e cadeias produtivas normais até nível 30 começaram a funcionar, mas a profundidade do conteúdo ainda é limitada. O restante do GDD exige trabalho adicional e decisões canônicas explícitas.
