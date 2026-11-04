@@ -23,9 +23,13 @@ type PropriedadesDeTelaDeAtividades = {
   aoIniciarAtividade: (id: string) => Promise<void>
   aoIniciarAtividadeSecundaria: (id: string) => Promise<void>
   aoPararAtividadeSecundaria: () => Promise<void>
+  aoIniciarAtividadeTerciaria: (id: string) => Promise<void>
+  aoPararAtividadeTerciaria: () => Promise<void>
   aoIniciarReceita: (id: string) => Promise<void>
   aoIniciarReceitaSecundaria: (id: string) => Promise<void>
   aoPararReceitaSecundaria: () => Promise<void>
+  aoIniciarReceitaTerciaria: (id: string) => Promise<void>
+  aoPararReceitaTerciaria: () => Promise<void>
   aoAlterarPrioridade: (prioridade: PrioridadeDeOficio) => Promise<void>
   aoPararTrabalho: () => Promise<void>
   aoPrestigiarProfissao: (id: IdDaProfissao) => Promise<void>
@@ -33,7 +37,7 @@ type PropriedadesDeTelaDeAtividades = {
 }
 
 /** Filtra o catálogo pela profissão selecionada e combina requisitos com o inventário para explicar as ações disponíveis. */
-export default function TelaDeAtividades({ partida, ultimoResultadoDoTrabalho, profissaoSelecionada, aoSelecionarProfissao, aoIniciarAtividade, aoIniciarAtividadeSecundaria, aoPararAtividadeSecundaria, aoIniciarReceita, aoIniciarReceitaSecundaria, aoPararReceitaSecundaria, aoAlterarPrioridade, aoPararTrabalho, aoPrestigiarProfissao, aoTrilhaReceita }: PropriedadesDeTelaDeAtividades) {
+export default function TelaDeAtividades({ partida, ultimoResultadoDoTrabalho, profissaoSelecionada, aoSelecionarProfissao, aoIniciarAtividade, aoIniciarAtividadeSecundaria, aoPararAtividadeSecundaria, aoIniciarAtividadeTerciaria, aoPararAtividadeTerciaria, aoIniciarReceita, aoIniciarReceitaSecundaria, aoPararReceitaSecundaria, aoIniciarReceitaTerciaria, aoPararReceitaTerciaria, aoAlterarPrioridade, aoPararTrabalho, aoPrestigiarProfissao, aoTrilhaReceita }: PropriedadesDeTelaDeAtividades) {
   const [pendente, definirPendente] = useState(false)
   const [acaoErro, definirAcaoErro] = useState<string | null>(null)
   const progresso = partida.profissoes[profissaoSelecionada]
@@ -43,8 +47,10 @@ export default function TelaDeAtividades({ partida, ultimoResultadoDoTrabalho, p
   const receitas = RECEITAS_INICIAIS_DE_FABRICACAO.filter((receita) => receita.idDaProfissao === profissaoSelecionada && receita.saida.tipo !== "equipamento-reforco")
   const ocioso = ATIVIDADES_OCIOSAS_INICIAIS.find((atividade) => atividade.id === partida.ocioso.atividadeAtiva?.idDaDefinicaoDaAtividade)
   const secundaria = ATIVIDADES_OCIOSAS_INICIAIS.find(a => a.id === partida.ocioso.atividadeSecundaria?.idDaDefinicaoDaAtividade)
+  const terciaria = ATIVIDADES_OCIOSAS_INICIAIS.find(a => a.id === partida.ocioso.atividadeTerciaria?.idDaDefinicaoDaAtividade)
   const fabricar = RECEITAS_INICIAIS_DE_FABRICACAO.find((receita) => receita.id === partida.fabricacao.receitaAtiva?.idDaDefinicaoDaReceita)
   const receitaSecundaria = RECEITAS_INICIAIS_DE_FABRICACAO.find(r => r.id === partida.fabricacao.receitaSecundaria?.idDaDefinicaoDaReceita)
+  const receitaTerciaria = RECEITAS_INICIAIS_DE_FABRICACAO.find(r => r.id === partida.fabricacao.receitaTerciaria?.idDaDefinicaoDaReceita)
   const trabalho = ocioso?.nomeDoResultado ?? fabricar?.nome
   const ativoProfissao = ocioso?.idDaProfissao ?? fabricar?.idDaProfissao
   const possuido = (id: string) => partida.personagem.inventario.find((pilha) => pilha.idDaDefinicao === id)?.quantidade ?? 0
@@ -84,10 +90,20 @@ export default function TelaDeAtividades({ partida, ultimoResultadoDoTrabalho, p
                   <IndicadorDeProgressoOcioso partida={{ ...partida, ocioso: { ...partida.ocioso, atividadeAtiva: partida.ocioso.atividadeSecundaria ?? null } }} compacto />
                   <Button variant="secondary" size="sm" disabled={pendente} onClick={() => void agir(aoPararAtividadeSecundaria)}>Parar coleta secundária</Button>
                 </div> : null}
+                {terciaria ? <div aria-label="Coleta terciária em andamento">
+                  <p className="secao-chamada">Prestígio III · Terceira coleta (33% de eficiência)</p>
+                  <IndicadorDeProgressoOcioso partida={{ ...partida, ocioso: { ...partida.ocioso, atividadeAtiva: partida.ocioso.atividadeTerciaria ?? null } }} compacto />
+                  <Button variant="secondary" size="sm" disabled={pendente} onClick={() => void agir(aoPararAtividadeTerciaria)}>Parar terceira coleta</Button>
+                </div> : null}
                 {receitaSecundaria ? <div aria-label="Produção secundária em andamento">
                   <p className="secao-chamada">Prestígio I · Produção secundária a 50% de eficiência</p>
                   <IndicadorDeProgressoOcioso partida={{ ...partida, fabricacao: { ...partida.fabricacao, receitaAtiva: partida.fabricacao.receitaSecundaria ?? null } }} compacto />
                   <Button variant="secondary" size="sm" disabled={pendente} onClick={() => void agir(aoPararReceitaSecundaria)}>Parar produção secundária</Button>
+                </div> : null}
+                {receitaTerciaria ? <div aria-label="Produção terciária em andamento">
+                  <p className="secao-chamada">Prestígio III · Terceira produção (33% de eficiência)</p>
+                  <IndicadorDeProgressoOcioso partida={{ ...partida, fabricacao: { ...partida.fabricacao, receitaAtiva: partida.fabricacao.receitaTerciaria ?? null } }} compacto />
+                  <Button variant="secondary" size="sm" disabled={pendente} onClick={() => void agir(aoPararReceitaTerciaria)}>Parar terceira produção</Button>
                 </div> : null}
               </> : <div className="atividade-pronto">
                 <p className="secao-chamada">{receitas.length ? 'Na bancada' : 'No campo'}</p>
@@ -115,7 +131,7 @@ export default function TelaDeAtividades({ partida, ultimoResultadoDoTrabalho, p
               </div>
             ) : null}
             <details><summary>Detalhes</summary><p>Prestígio: {progresso.prestigio}. Ao alcançar Prestígio I, você pode manter duas coletas do mesmo Ofício; a secundária opera a 50% de eficiência (provisório).</p></details>
-            {progresso.nivel >= NIVEL_MAXIMO_DE_PROFISSAO && progresso.prestigio < 3 ? <Button variant="primary" disabled={pendente || Boolean(partida.ocioso.atividadeAtiva || partida.ocioso.atividadeSecundaria || partida.fabricacao.receitaAtiva || partida.fabricacao.receitaSecundaria)} onClick={() => void agir(() => aoPrestigiarProfissao(profissaoSelecionada))}>Realizar Prestígio {progresso.prestigio + 1} · reiniciar ofício</Button> : null}
+            {progresso.nivel >= NIVEL_MAXIMO_DE_PROFISSAO && progresso.prestigio < 3 ? <Button variant="primary" disabled={pendente || Boolean(partida.ocioso.atividadeAtiva || partida.ocioso.atividadeSecundaria || partida.ocioso.atividadeTerciaria || partida.fabricacao.receitaAtiva || partida.fabricacao.receitaSecundaria || partida.fabricacao.receitaTerciaria)} onClick={() => void agir(() => aoPrestigiarProfissao(profissaoSelecionada))}>Realizar Prestígio {progresso.prestigio + 1} · reiniciar ofício</Button> : null}
           </div>
           {acaoErro ? <p className="informacao-alerta" role="alert">{acaoErro}</p> : null}
           <div className={estilos.options}>
@@ -123,7 +139,9 @@ export default function TelaDeAtividades({ partida, ultimoResultadoDoTrabalho, p
             {atividades.map((atividade) => {
               const ativo = ocioso?.id === atividade.id
               const ativaSecundaria = secundaria?.id === atividade.id
-              const podeIniciarSecundaria = progresso.prestigio >= 1 && ocioso?.idDaProfissao === profissaoSelecionada && !ativo && !ativaSecundaria
+              const ativaTerciaria = terciaria?.id === atividade.id
+              const podeIniciarTerciaria = progresso.prestigio >= 3 && !!secundaria && ocioso?.idDaProfissao === profissaoSelecionada && !ativo && !ativaSecundaria && !ativaTerciaria
+              const podeIniciarSecundaria = progresso.prestigio >= 1 && ocioso?.idDaProfissao === profissaoSelecionada && !ativo && !ativaSecundaria && !terciaria
               const desbloqueado = progresso.nivel >= atividade.nivelExigidoDaProfissao
               const bonusFerramenta = obterBonusDaFerramentaDeColeta(partida, atividade, obterDefinicaoDeEquipamento)
               return <Card appearance="soft" className={`${estilos.option} ${ativo ? "selecionado-cartao" : ''}`} key={atividade.id}>
@@ -134,6 +152,8 @@ export default function TelaDeAtividades({ partida, ultimoResultadoDoTrabalho, p
                   {!desbloqueado ? <p className="informacao-alerta">Requer {rotulosDasProfissoes[profissaoSelecionada]} no nível {atividade.nivelExigidoDaProfissao}.</p> : null}
                   {trabalho && !ativo && !ativaSecundaria ? <p className={estilos.replacement}>Iniciar como principal substitui {trabalho} e encerra a secundária.</p> : null}
                   <Button variant={ativo ? 'secondary' : 'primary'} size="sm" disabled={pendente || !desbloqueado} onClick={() => void agir(ativo ? aoPararTrabalho : () => aoIniciarAtividade(atividade.id))}>{ativo ? 'Em curso · Parar' : `Coletar ${atividade.nomeDoResultado}`}</Button>
+                  {ativaTerciaria ? <Button variant="secondary" size="sm" disabled={pendente} onClick={() => void agir(aoPararAtividadeTerciaria)}>Terciária · Parar</Button>
+                    : podeIniciarTerciaria ? <Button variant="secondary" size="sm" disabled={pendente || !desbloqueado} onClick={() => void agir(() => aoIniciarAtividadeTerciaria(atividade.id))}>Adicionar terceira coleta</Button> : null}
                   {ativaSecundaria ? <Button variant="secondary" size="sm" disabled={pendente} onClick={() => void agir(aoPararAtividadeSecundaria)}>Secundária · Parar</Button>
                     : podeIniciarSecundaria ? <Button variant="secondary" size="sm" disabled={pendente || !desbloqueado} onClick={() => void agir(() => aoIniciarAtividadeSecundaria(atividade.id))}>Adicionar coleta secundária</Button> : null}
                 </div>
@@ -142,9 +162,11 @@ export default function TelaDeAtividades({ partida, ultimoResultadoDoTrabalho, p
             {receitas.map((receita) => {
               const ativo = fabricar?.id === receita.id
               const ativaSecundaria = receitaSecundaria?.id === receita.id
+              const ativaTerciaria = receitaTerciaria?.id === receita.id
+              const podeIniciarTerciaria = progresso.prestigio >= 3 && !!receitaSecundaria && fabricar?.idDaProfissao === profissaoSelecionada && receita.saida.tipo !== 'equipamento-reforco' && !ativo && !ativaSecundaria && !ativaTerciaria
               const podeIniciarSecundaria = progresso.prestigio >= 1 && fabricar?.idDaProfissao === profissaoSelecionada
                 && fabricar.saida.tipo !== 'equipamento-reforco' && receita.saida.tipo !== 'equipamento-reforco'
-                && !ativo && !ativaSecundaria
+                && !ativo && !ativaSecundaria && !receitaTerciaria
               // Esta verificação orienta os botões. O domínio revalida os ingredientes ao executar a operação sobre o estado atual.
               const suficiente = receita.ingredientes.every((ingrediente) => possuido(ingrediente.idDaDefinicao) >= ingrediente.quantidade)
               const desbloqueado = progresso.nivel >= receita.nivelExigidoDaProfissao
@@ -171,6 +193,8 @@ export default function TelaDeAtividades({ partida, ultimoResultadoDoTrabalho, p
                   {!desbloqueado ? <p className="informacao-alerta">Requer {rotulosDasProfissoes[profissaoSelecionada]} no nível {receita.nivelExigidoDaProfissao}.</p> : null}
                   {trabalho && !ativo && !ativaSecundaria ? <p className={estilos.replacement}>Iniciar como principal substitui {trabalho} e encerra a secundária.</p> : null}
                   <div className="botao-linhaDeDados"><Button variant={ativo ? 'secondary' : 'primary'} size="sm" disabled={pendente || (!ativo && (!suficiente || !desbloqueado))} onClick={() => void agir(ativo ? aoPararTrabalho : () => aoIniciarReceita(receita.id))}>{ativo ? 'Em curso · Parar' : suficiente ? 'Iniciar produção' : 'Faltam materiais'}</Button>
+                    {ativaTerciaria ? <Button variant="secondary" size="sm" disabled={pendente} onClick={() => void agir(aoPararReceitaTerciaria)}>Terciária · Parar</Button>
+                      : podeIniciarTerciaria ? <Button variant="secondary" size="sm" disabled={pendente || !desbloqueado || !suficiente} onClick={() => void agir(() => aoIniciarReceitaTerciaria(receita.id))}>Adicionar terceira produção</Button> : null}
                     {ativaSecundaria ? <Button variant="secondary" size="sm" disabled={pendente} onClick={() => void agir(aoPararReceitaSecundaria)}>Secundária · Parar</Button>
                       : podeIniciarSecundaria ? <Button variant="secondary" size="sm" disabled={pendente || !desbloqueado || !suficiente} onClick={() => void agir(() => aoIniciarReceitaSecundaria(receita.id))}>Adicionar produção secundária</Button> : null}
                     <Button variant="secondary" size="sm" disabled={pendente || !desbloqueado} onClick={() => void agir(() => aoTrilhaReceita(receita.id))}>{partida.jornada.meta?.idDaDefinicaoDaReceita === receita.id ? 'Ver meta na Jornada' : 'Acompanhar na Jornada'}</Button></div>
