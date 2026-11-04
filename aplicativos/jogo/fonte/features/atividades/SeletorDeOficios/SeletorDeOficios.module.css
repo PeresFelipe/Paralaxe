@@ -50,7 +50,7 @@
   background: linear-gradient(140deg, var(--ui-oficios-cor-11), var(--ui-oficios-cor-12));
 }
 .dados, .itemDados { display: grid; gap: var(--ui-oficios-medida-50); min-width: 0; flex: 1; }
-.nome { font-size: var(--ui-oficios-medida-51); font-weight: 700; overflow-wrap: anywhere; }
+.nome { font-size: var(--ui-oficios-medida-51); font-weight: var(--ui-font-weight-bold); overflow-wrap: anywhere; }
 .subtitulo, .itemDados small { color: var(--ui-oficios-cor-13); font-size: var(--ui-oficios-medida-52); }
 .selo, .emCurso {
   flex: none;
@@ -63,7 +63,7 @@
   font-weight: var(--ui-oficios-peso-83);
   white-space: nowrap;
 }
-.seta { flex: none; color: var(--ui-oficios-cor-17); font-size: var(--ui-oficios-medida-57); line-height: 1; transition: transform var(--ui-oficios-medida-44) ease; }
+.seta { flex: none; color: var(--ui-oficios-cor-17); font-size: var(--ui-oficios-medida-57); line-height: var(--ui-line-height-dense); transition: transform var(--ui-oficios-medida-44) ease; }
 .gatilho[data-state='open'] .seta { transform: rotate(180deg); }
 .menu {
   z-index: var(--ui-oficios-camada-88);
@@ -115,8 +115,8 @@
 }
 .item[data-highlighted][data-state='checked'] { background: var(--ui-oficios-cor-29); }
 .iconeItem { width: var(--ui-oficios-medida-72); height: var(--ui-oficios-medida-72); border-radius: var(--ui-oficios-medida-38); }
-.itemDados { gap: var(--ui-oficios-medida-73); font-size: var(--ui-oficios-medida-58); font-weight: 650; }
-.itemDados small { font-weight: 400; }
+.itemDados { gap: var(--ui-oficios-medida-73); font-size: var(--ui-oficios-medida-58); font-weight: var(--ui-font-weight-semibold); }
+.itemDados small { font-weight: var(--ui-font-weight-regular); }
 .indicador {
   position: absolute;
   right: var(--ui-oficios-medida-67);
