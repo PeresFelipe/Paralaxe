@@ -153,7 +153,7 @@ export default function PainelDeGrupo({ partida, aoPersistir, aoVoltar }: Propri
             não podem ser antecipados por esta bancada.
           </p>
         </Card>
-        <Card className={estilos.painel}>
+        <Card className={estilos.painel ?? ''}>
           <p className="secao-chamada">Ensaio técnico de combate</p>
           <h3>Testar foco e Ameaça</h3>
           <p className="atenuado">
