@@ -36,6 +36,8 @@ export interface DefinicaoDeAtividadeOciosa {
   idDaDefinicaoDoItemProduzido: string
   nomeDoResultado: string
   nivelExigidoDaProfissao: number
+  /** Requisito adicional para as linhas exclusivas dos Prestígios. */
+  prestigioExigido?: number
   segundosPorAcao: number
   xpDeProfissaoPorAcao: number
 }
@@ -131,6 +133,9 @@ export function iniciarAtividadeSecundaria(
   if (principalProfissao !== atividade.idDaProfissao) throw new Error('A coleta secundária deve pertencer ao mesmo Ofício da principal.')
   const progresso = partida.profissoes[atividade.idDaProfissao]
   if (progresso.prestigio < 1) throw new Error('A segunda atividade exige Prestígio I desse Ofício.')
+  if (progresso.prestigio < (atividade.prestigioExigido ?? 0)) {
+    throw new Error(`Esta coleta exige Prestígio ${atividade.prestigioExigido}.`)
+  }
   if (progresso.nivel < atividade.nivelExigidoDaProfissao) {
     throw new Error(`${atividade.nome} exige nível ${atividade.nivelExigidoDaProfissao} de Profissão.`)
   }
@@ -188,6 +193,7 @@ export function iniciarAtividadeTerciaria(partida: PartidaLocal, atividade: Defi
       b.idDaDefinicaoDaAtividade.split('.')[1] !== atividade.idDaProfissao) throw new Error('Os três recursos devem ser do mesmo Ofício.')
   const progresso = partida.profissoes[atividade.idDaProfissao]
   if (progresso.prestigio < 3) throw new Error('Terceira coleta exige Prestígio III.')
+  if (progresso.prestigio < (atividade.prestigioExigido ?? 0)) throw new Error(`Esta coleta exige Prestígio ${atividade.prestigioExigido}.`)
   if (progresso.nivel < atividade.nivelExigidoDaProfissao) throw new Error(`Requer nível ${atividade.nivelExigidoDaProfissao} da profissão.`)
   if (obterEspacoParaPilhaNoInventario(partida, atividade.idDaDefinicaoDoItemProduzido) <= 0) throw new Error('Inventário sem capacidade.')
   return { ...partida, atualizadoEm: agora, ocioso: { ...partida.ocioso, atividadeTerciaria: {
@@ -305,6 +311,9 @@ export function iniciarAtividadeOciosa(
 
   const profissao = partida.profissoes[atividade.idDaProfissao]
 
+  if (profissao.prestigio < (atividade.prestigioExigido ?? 0)) {
+    throw new Error(`Esta coleta exige Prestígio ${atividade.prestigioExigido}.`)
+  }
   if (profissao.nivel < atividade.nivelExigidoDaProfissao) {
     throw new Error(`${atividade.nome} exige nível ${atividade.nivelExigidoDaProfissao} de Profissão.`)
   }

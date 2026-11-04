@@ -4,9 +4,11 @@
  * do jogador. Os valores aqui alimentam a derivação de estatísticas no domínio.
  */
 import type { DefinicaoDeEquipamento } from '@paralaxe/dominio'
+import { EQUIPAMENTOS_DE_PRESTIGIO } from './conteudoDePrestigios'
 
 /** Armas definem dano, cadência e escalonamento; armaduras fornecem defesa e acessórios podem aumentar recursos. */
 export const DEFINICOES_DE_EQUIPAMENTO = [
+  ...EQUIPAMENTOS_DE_PRESTIGIO,
   { id: 'ferramenta.mineracao.picareta', nome: 'Picareta de Campo', espaco: 'ferramentaMineracao', bonusDeColeta: { idDaProfissao: 'mineracao', xpAdicionalPorAcao: 2 } },
   { id: 'ferramenta.lenhador.machado-corte', nome: 'Machado de Corte', espaco: 'ferramentaLenhador', bonusDeColeta: { idDaProfissao: 'lenhador', xpAdicionalPorAcao: 2 } },
   { id: 'ferramenta.pesca.equipamento-pesca', nome: 'Equipamento de Pesca', espaco: 'ferramentaPesca', bonusDeColeta: { idDaProfissao: 'pesca', xpAdicionalPorAcao: 3 } },

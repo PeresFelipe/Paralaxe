@@ -4,6 +4,7 @@
  * novo e reforço de uma instância escolhida. Duração e XP são parâmetros de balanceamento.
  */
 import type { DefinicaoDeReceitaDeFabricacao } from '@paralaxe/dominio'
+import { RECEITAS_DE_PRESTIGIO } from './conteudoDePrestigios'
 
 /** Encadeia coleta e produção: Cloch vira material tratado, que também serve de ingrediente para o reforço. */
 export const RECEITAS_INICIAIS_DE_FABRICACAO = [
@@ -436,6 +437,7 @@ export const RECEITAS_INICIAIS_DE_FABRICACAO = [
     ingredientes: [{ idDaDefinicao: 'material.maros', quantidade: 4 }, { idDaDefinicao: 'material.saiste', quantidade: 2 }],
     saida: { tipo: 'item', idDaDefinicao: 'item.consumivel.elixir-maros', nome: 'Elixir de Marós', quantidade: 1 },
   },
+  ...RECEITAS_DE_PRESTIGIO,
 ] as const satisfies readonly DefinicaoDeReceitaDeFabricacao[]
 
 /** Consulta pela identidade estável da receita, usada tanto no trabalho salvo quanto na meta da jornada. */

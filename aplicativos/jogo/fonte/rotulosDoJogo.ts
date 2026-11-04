@@ -3,6 +3,7 @@
  * Os IDs continuam sendo as chaves do domínio; estes textos não definem receitas nem recompensas.
  */
 import type { IdDaProfissao } from "@paralaxe/dominio";
+import { ATIVIDADES_DE_PRESTIGIO, RECEITAS_DE_PRESTIGIO } from "@paralaxe/conteudo";
 
 /** Nomes legíveis com acentuação para todas as profissões. */
 export const rotulosDasProfissoes: Record<IdDaProfissao, string> = {
@@ -31,6 +32,8 @@ export const producaoProfissoes: IdDaProfissao[] = [
 
 /** Tradução visual dos IDs de itens, incluindo recompensas de missões e masmorra. */
 export const rotulosDosItens: Record<string, string> = {
+  ...Object.fromEntries(ATIVIDADES_DE_PRESTIGIO.map(a => [a.idDaDefinicaoDoItemProduzido, a.nomeDoResultado])),
+  ...Object.fromEntries(RECEITAS_DE_PRESTIGIO.filter(r => r.saida.tipo === 'item').map(r => [r.saida.tipo === 'item' ? r.saida.idDaDefinicao : '', r.nome])),
   "material.cloch": "Cloch",
   "material.stan": "Stán",
   "material.beith": "Beith",

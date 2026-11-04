@@ -3,6 +3,7 @@
  * Poder, custo, recarga e intervalos são parâmetros consumidos pelo simulador; este
  * arquivo não sorteia ataques nem altera partidas. Os IDs também são usados nas partidas salvas.
  */
+import { CONSUMIVEIS_DE_PRESTIGIO } from './conteudoDePrestigios'
 import type {
   IdDaClasseDoPersonagem,
   DefinicaoDeHabilidadeDeCombate,
@@ -209,6 +210,7 @@ export function obterConjuntoDeHabilidadesAntesDaMasmorra(idDaClasse: IdDaClasse
 
 /** Quantidades de restauração por uso. O motor limita a recuperação aos máximos e debita o item consumido. */
 export const CONSUMIVEIS_DE_COMBATE = [
+  ...CONSUMIVEIS_DE_PRESTIGIO,
   {
     id: "item.consumivel.campo-preparacao",
     nome: 'Preparado de Campo',

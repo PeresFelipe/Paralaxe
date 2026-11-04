@@ -39,6 +39,7 @@ export interface DefinicaoDeReceitaDeFabricacao {
   idDaProfissao: IdDaProfissao
   nome: string
   nivelExigidoDaProfissao: number
+  prestigioExigido?: number
   segundosPorAcao: number
   xpDeProfissaoPorAcao: number
   ingredientes: readonly IngredienteDaReceita[]
@@ -150,6 +151,7 @@ export function iniciarReceitaDeFabricacao(
 
   const profissao = partida.profissoes[receita.idDaProfissao]
 
+  if (profissao.prestigio < (receita.prestigioExigido ?? 0)) throw new Error(`Esta receita exige Prestígio ${receita.prestigioExigido}.`)
   if (profissao.nivel < receita.nivelExigidoDaProfissao) {
     throw new Error(`${receita.nome} exige nível ${receita.nivelExigidoDaProfissao} de Profissão.`)
   }
@@ -232,6 +234,7 @@ export function iniciarReceitaSecundaria(
   }
   const progresso = partida.profissoes[secundaria.idDaProfissao]
   if (progresso.prestigio < 1) throw new Error('Produção paralela exige Prestígio I desse Ofício.')
+  if (progresso.prestigio < (secundaria.prestigioExigido ?? 0)) throw new Error(`Esta receita exige Prestígio ${secundaria.prestigioExigido}.`)
   if (progresso.nivel < secundaria.nivelExigidoDaProfissao) {
     throw new Error(`${secundaria.nome} exige nível ${secundaria.nivelExigidoDaProfissao} de Profissão.`)
   }
@@ -256,6 +259,7 @@ export function iniciarReceitaTerciaria(partida: PartidaLocal, principal: Defini
   if ([principal, secundaria, terceira].some(r => r.saida.tipo === 'equipamento-reforco')) throw new Error('Reforços não são paralelizáveis.')
   const prog = partida.profissoes[terceira.idDaProfissao]
   if (prog.prestigio < 3) throw new Error('Terceira receita exige Prestígio III.')
+  if (prog.prestigio < (terceira.prestigioExigido ?? 0)) throw new Error(`Esta receita exige Prestígio ${terceira.prestigioExigido}.`)
   if (prog.nivel < terceira.nivelExigidoDaProfissao) throw new Error(`Requer nível ${terceira.nivelExigidoDaProfissao}.`)
   if (obterMaximoFabricavelCiclos(partida.personagem.inventario, terceira.ingredientes) < 1) throw new Error('Materiais insuficientes para terceira receita.')
   return { ...partida, atualizadoEm: agora, fabricacao: { ...partida.fabricacao, receitaTerciaria: {

@@ -4,6 +4,7 @@
  * esses dados em progresso, sem que este arquivo execute ou salve a coleta.
  */
 import type { DefinicaoDeAtividadeOciosa } from '@paralaxe/dominio'
+import { ATIVIDADES_DE_PRESTIGIO } from './conteudoDePrestigios'
 
 /** Cada ação completa entrega uma unidade do recurso; o tempo e a experiência variam por atividade. */
 export const ATIVIDADES_OCIOSAS_INICIAIS = [
@@ -340,6 +341,7 @@ export const ATIVIDADES_OCIOSAS_INICIAIS = [
     segundosPorAcao: 27,
     xpDeProfissaoPorAcao: 66,
   },
+  ...ATIVIDADES_DE_PRESTIGIO,
 ] as const satisfies readonly DefinicaoDeAtividadeOciosa[]
 
 /** Resolve o ID persistido da atividade; null permite ao chamador tratar referências fora do catálogo atual. */
