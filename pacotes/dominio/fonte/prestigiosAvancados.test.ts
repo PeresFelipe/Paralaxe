@@ -43,7 +43,7 @@ const coletas = ['cloch', 'stan', 'copar'].map((slug, indice) => ({
   nivelExigidoDaProfissao: indice === 2 ? 20 : 1, segundosPorAcao: 8,
   xpDeProfissaoPorAcao: 8,
 })) as [DefinicaoDeAtividadeOciosa, DefinicaoDeAtividadeOciosa, DefinicaoDeAtividadeOciosa]
-const receitas = ['alpha', 'beta', 'gama'].map((slug, indice) => ({
+const receitas = ['alpha', 'beta', 'gama'].map((slug, indice): DefinicaoDeReceitaDeFabricacao => ({
   id: `receita.metalurgia.${slug}`, idDaProfissao: 'metalurgia',
   nome: slug, nivelExigidoDaProfissao: 1, segundosPorAcao: 8, xpDeProfissaoPorAcao: 8,
   ingredientes: [{ idDaDefinicao: (['material.cloch', 'material.stan', 'material.copar'] as const)[indice] ?? 'material.cloch', quantidade: 2 }],
