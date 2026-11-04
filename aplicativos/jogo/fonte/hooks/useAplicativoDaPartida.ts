@@ -29,6 +29,7 @@ import {
   interromperReceitaTerciaria,
   configurarPrioridadeDaColeta,
   configurarPrioridadeDaFabricacao,
+  responderMinigameDeOficio,
   type PrioridadeDeOficio,
   interromperAtividadeSecundaria,
   realizarPrestigioDaProfissao,
@@ -423,6 +424,19 @@ export function useAplicativoDaPartida(repositorioDePartidas: RepositorioDeParti
     }, 'Produção secundária interrompida.')
   }
 
+  /** O desafio opcional é resolvido sem prejudicar o progresso ocioso. */
+  async function tratarResponderMinigame(id: IdDaProfissao, resposta: number) {
+    if (riscoAtivo) throw new Error('Minigame indisponível durante combate.')
+    let acertou = false
+    await aplicarAlteracaoNaPartidaAtiva(atual => {
+      const agora = new Date().toISOString()
+      const anterior = processarTrabalhoAtual(atual, agora).partida
+      const resultado = responderMinigameDeOficio(anterior, id, resposta, agora)
+      acertou = resultado.acertou
+      return resultado.partida
+    }, () => acertou ? 'Minigame concluído: +4 XP por ciclo nos próximos minutos.' : 'Desafio encerrado; o trabalho automático continua normalmente.')
+  }
+
   /** Prestígio II: processa o saldo antes de mudar a distribuição de produtividade. */
   async function tratarAlterarPrioridadeDeOficio(prioridade: PrioridadeDeOficio) {
     await aplicarAlteracaoNaPartidaAtiva(atual => {
@@ -782,6 +796,7 @@ export function useAplicativoDaPartida(repositorioDePartidas: RepositorioDeParti
     tratarIniciarReceitaTerciaria,
     tratarPararReceitaTerciaria,
     tratarAlterarPrioridadeDeOficio,
+    tratarResponderMinigame,
     tratarPararTrabalho,
     tratarPrestigiarProfissao,
     tratarConcluirProjeto,
