@@ -59,6 +59,7 @@ export interface EstadoDeFabricacao {
   /** Prestígio I: segundo relógio independente; nos saves v14 é inicializado como null. */
   receitaSecundaria?: ReceitaDeFabricacaoAtiva | null
   prioridade?: PrioridadeDeOficio
+  receitaTerciaria?: ReceitaDeFabricacaoAtiva | null
 }
 
 export interface ResultadoDoProgressoDeFabricacao {
@@ -181,6 +182,7 @@ export function iniciarReceitaDeFabricacao(
     atualizadoEm: agora,
     fabricacao: {
       receitaSecundaria: null,
+      receitaTerciaria: null,
       prioridade: 'equilibrado',
       receitaAtiva: {
         idDaDefinicaoDaReceita: receita.id,
@@ -238,7 +240,7 @@ export function iniciarReceitaSecundaria(
   }
   return {
     ...partida, atualizadoEm: agora,
-    fabricacao: { ...partida.fabricacao, receitaSecundaria: {
+    fabricacao: { ...partida.fabricacao, receitaTerciaria: null, receitaSecundaria: {
       idDaDefinicaoDaReceita: secundaria.id, iniciadoEm: agora,
       processadoPorUltimoEm: agora, segundosRestantes: 0,
       idDaInstanciaDoEquipamentoAlvo: null,
@@ -246,9 +248,43 @@ export function iniciarReceitaSecundaria(
   }
 }
 
+export function iniciarReceitaTerciaria(partida: PartidaLocal, principal: DefinicaoDeReceitaDeFabricacao, secundaria: DefinicaoDeReceitaDeFabricacao, terceira: DefinicaoDeReceitaDeFabricacao, agora: string): PartidaLocal {
+  if (partida.fabricacao.receitaAtiva?.idDaDefinicaoDaReceita !== principal.id ||
+      partida.fabricacao.receitaSecundaria?.idDaDefinicaoDaReceita !== secundaria.id) throw new Error('Inicie duas receitas antes da terceira.')
+  if ([principal.id, secundaria.id].includes(terceira.id)) throw new Error('A terceira receita deve ser diferente.')
+  if (principal.idDaProfissao !== secundaria.idDaProfissao || principal.idDaProfissao !== terceira.idDaProfissao) throw new Error('As três receitas devem ser do mesmo Ofício.')
+  if ([principal, secundaria, terceira].some(r => r.saida.tipo === 'equipamento-reforco')) throw new Error('Reforços não são paralelizáveis.')
+  const prog = partida.profissoes[terceira.idDaProfissao]
+  if (prog.prestigio < 3) throw new Error('Terceira receita exige Prestígio III.')
+  if (prog.nivel < terceira.nivelExigidoDaProfissao) throw new Error(`Requer nível ${terceira.nivelExigidoDaProfissao}.`)
+  if (obterMaximoFabricavelCiclos(partida.personagem.inventario, terceira.ingredientes) < 1) throw new Error('Materiais insuficientes para terceira receita.')
+  return { ...partida, atualizadoEm: agora, fabricacao: { ...partida.fabricacao, receitaTerciaria: {
+    idDaDefinicaoDaReceita: terceira.id, iniciadoEm: agora, processadoPorUltimoEm: agora,
+    segundosRestantes: 0, idDaInstanciaDoEquipamentoAlvo: null,
+  } } }
+}
+export function interromperReceitaTerciaria(partida: PartidaLocal, agora: string): PartidaLocal {
+  return { ...partida, atualizadoEm: agora, fabricacao: { ...partida.fabricacao, receitaTerciaria: null } }
+}
+export function processarProgressoDaReceitaTerciaria(partida: PartidaLocal, receita: DefinicaoDeReceitaDeFabricacao, agora: string): ResultadoDoProgressoDeFabricacao {
+  const terceira = partida.fabricacao.receitaTerciaria
+  if (!terceira || terceira.idDaDefinicaoDaReceita !== receita.id) {
+    return { partida, acoesConcluidas: 0, itensProduzidos: 0, equipamentosProduzidos: 0, equipamentosReforcados: 0,
+      xpDeProfissaoConcedido: 0, xpGeralConcedido: 0, niveisDeProfissaoGanhos: 0, segundosProcessados: 0,
+      segundosLimitados: 0, interrompidoPorMateriais: false, interrompidoPorCapacidade: false }
+  }
+  if (receita.saida.tipo === 'equipamento-reforco') throw new Error('Reforço terciário inválido.')
+  const adaptada = { ...receita, segundosPorAcao: segundosPorAcaoComPrioridade(receita.segundosPorAcao, partida.fabricacao.prioridade, 'terciaria') }
+  const sim: PartidaLocal = { ...partida, fabricacao: { ...partida.fabricacao, receitaAtiva: terceira } }
+  const res = processarProgressoDeFabricacao(sim, adaptada, agora)
+  return { ...res, partida: { ...res.partida, fabricacao: {
+    ...partida.fabricacao, receitaAtiva: partida.fabricacao.receitaAtiva,
+    receitaTerciaria: res.partida.fabricacao.receitaAtiva,
+  } } }
+}
 /** Encerra só o segundo relógio após a aplicação registrar os ciclos pendentes. */
 export function interromperReceitaSecundaria(partida: PartidaLocal, agora: string): PartidaLocal {
-  return { ...partida, atualizadoEm: agora, fabricacao: { ...partida.fabricacao, receitaSecundaria: null } }
+  return { ...partida, atualizadoEm: agora, fabricacao: { ...partida.fabricacao, receitaSecundaria: null, receitaTerciaria: null } }
 }
 
 /**
@@ -290,7 +326,7 @@ export function interromperReceitaDeFabricacao(partida: PartidaLocal, agora: str
   return {
     ...partida,
     atualizadoEm: agora,
-    fabricacao: { ...partida.fabricacao, receitaAtiva: null, receitaSecundaria: null },
+    fabricacao: { ...partida.fabricacao, receitaAtiva: null, receitaSecundaria: null, receitaTerciaria: null },
   }
 }
 
