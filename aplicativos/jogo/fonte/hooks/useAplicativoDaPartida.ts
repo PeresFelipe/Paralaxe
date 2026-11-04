@@ -435,12 +435,13 @@ export function useAplicativoDaPartida(repositorioDePartidas: RepositorioDeParti
     try {
       await aplicarAlteracaoNaPartidaAtiva(
         (atual) =>
-          equiparItem(
-            atual,
-            idDaInstancia,
-            definicao,
-            new Date().toISOString(),
-          ),
+          (() => {
+            const agora = new Date().toISOString();
+            // Fecha o período anterior com a ferramenta anteriormente equipada;
+            // novas ferramentas não podem conceder XP retroativo.
+            const atualizado = processarTrabalhoAtual(atual, agora).partida;
+            return equiparItem(atualizado, idDaInstancia, definicao, agora);
+          })(),
         `${definicao.nome} equipado.`,
       );
     } catch (erro) {

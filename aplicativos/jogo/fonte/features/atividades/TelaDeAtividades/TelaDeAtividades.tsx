@@ -4,8 +4,8 @@
  * iniciar/parar alteram o trabalho; navegar ou consultar ingredientes mantém a atividade em andamento.
  */
 import { useState } from 'react'
-import { RECEITAS_INICIAIS_DE_FABRICACAO, ATIVIDADES_OCIOSAS_INICIAIS } from '@paralaxe/conteudo'
-import { NIVEL_MAXIMO_DE_PROFISSAO, obterXpDeProfissaoParaProximoNivel, type PartidaLocal, type IdDaProfissao } from '@paralaxe/dominio'
+import { RECEITAS_INICIAIS_DE_FABRICACAO, ATIVIDADES_OCIOSAS_INICIAIS, obterDefinicaoDeEquipamento } from '@paralaxe/conteudo'
+import { NIVEL_MAXIMO_DE_PROFISSAO, obterBonusDaFerramentaDeColeta, obterXpDeProfissaoParaProximoNivel, type PartidaLocal, type IdDaProfissao } from '@paralaxe/dominio'
 import IndicadorDeProgressoOcioso from '../IndicadorDeProgressoOcioso'
 import { IconeDoJogo, ComparacaoDeEquipamento } from '@/components/jogo'
 import { obterIconeDoItem, iconeDeProfissaoPorId } from '@/iconesDosRecursos'
@@ -93,11 +93,12 @@ export default function TelaDeAtividades({ partida, ultimoResultadoDoTrabalho, p
             {atividades.map((atividade) => {
               const ativo = ocioso?.id === atividade.id
               const desbloqueado = progresso.nivel >= atividade.nivelExigidoDaProfissao
+              const bonusFerramenta = obterBonusDaFerramentaDeColeta(partida, atividade, obterDefinicaoDeEquipamento)
               return <Card appearance="soft" className={`${estilos.option} ${ativo ? "selecionado-cartao" : ''}`} key={atividade.id}>
                 <div className="item-miniatura" aria-hidden="true"><IconeDoJogo icone={obterIconeDoItem(atividade.idDaDefinicaoDoItemProduzido)} tamanho={40} /></div>
                 <div className={estilos.optionBody}>
                   <div className={estilos.optionTitle}><h2>{atividade.nomeDoResultado}</h2><span>Possuído: <strong>{possuido(atividade.idDaDefinicaoDoItemProduzido)}</strong></span></div>
-                  <p className={estilos.yield}>+1 por ciclo · {atividade.segundosPorAcao}s · +{atividade.xpDeProfissaoPorAcao} XP</p>
+                  <p className={estilos.yield}>+1 por ciclo · {atividade.segundosPorAcao}s · +{atividade.xpDeProfissaoPorAcao + bonusFerramenta} XP{bonusFerramenta ? ` (ferramenta +${bonusFerramenta})` : ''}</p>
                   {!desbloqueado ? <p className="informacao-alerta">Requer {rotulosDasProfissoes[profissaoSelecionada]} no nível {atividade.nivelExigidoDaProfissao}.</p> : null}
                   {trabalho && !ativo ? <p className={estilos.replacement}>Ao iniciar, substitui {trabalho}.</p> : null}
                   <Button variant={ativo ? 'secondary' : 'primary'} size="sm" disabled={pendente || !desbloqueado} onClick={() => void agir(ativo ? aoPararTrabalho : () => aoIniciarAtividade(atividade.id))}>{ativo ? 'Em curso · Parar' : `Coletar ${atividade.nomeDoResultado}`}</Button>

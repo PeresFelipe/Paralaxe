@@ -7,6 +7,8 @@ Branch exclusiva `develop`, documentação canônica `documentacao/GDD.md`. O pe
 - `d9dc509` (entrega anterior): Stán → Lingote de Stán → Braçadeiras Rebitadas.
 - `a96e097`: fundação dos níveis gerais e dos sete Ofícios de 1 a 99, Prestígio de profissão condicionado ao nível 99, testes para curva e limites.
 - `0c1e3f2`: Beith, Breac e Seamair no nível 10, respectivamente Arco de Beith, Breac Assado e Infusão de Seamair, rótulos/ícones, catálogo de combate e testes integrados.
+- `ad53e5a`: catálogo e motor das quatro ferramentas com slots profissionais; XP adicional de coleta, fabricação, ícones e serviço de processamento.
+- Integração de troca de ferramenta, interface e testes complementares no commit seguinte.
 - Matriz detalhada em `CONFORMIDADE-INTEGRAL-GDD.md`.
 
 ## Regras de continuidade
@@ -18,7 +20,7 @@ Branch exclusiva `develop`, documentação canônica `documentacao/GDD.md`. O pe
 - Manter valores provisórios separados das regras canônicas.
 
 ## Ainda falta
-- Quatro ferramentas equipáveis com save/migração.
+- Expansão das ferramentas profissionais para raridades/afixos procedurais e efeitos adicionais; slots básicos existentes.
 - Profissões: recursos, receitas e equipamento por faixas até 99; todo o Prestígio I–III, incluindo 2–3 atividades.
 - Minigames opcionais.
 - Reforços +2, novos itens especiais, raridade procedural completa.

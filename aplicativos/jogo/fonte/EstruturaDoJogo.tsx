@@ -751,9 +751,11 @@ function TelaDoPersonagem({
                     {definicao.nome} +{instancia.nivelDeReforco}
                   </h3>
                   <p className="atenuado">
-                    {principal !== null
-                      ? `${definicao.estatisticaPrincipal?.tipo === "ataque" ? "Poder" : "Defesa"} ${principal}`
-                      : "Sem valor primário"}
+                    {definicao.bonusDeColeta
+                      ? `+${definicao.bonusDeColeta.xpAdicionalPorAcao} XP de ${definicao.bonusDeColeta.idDaProfissao} por ciclo, sem durabilidade`
+                      : principal !== null
+                        ? `${definicao.estatisticaPrincipal?.tipo === "ataque" ? "Poder" : "Defesa"} ${principal}`
+                        : "Sem valor primário"}
                   </p>
                   <div className="botao-linhaDeDados">
                     <Button
