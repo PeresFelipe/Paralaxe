@@ -49,7 +49,7 @@ describe("criação de personagem", () => {
     })
 
     expect(partida.modoDaPartida).toBe("LOCAL")
-    expect(partida.versaoDoEsquemaDaPartida).toBe(17)
+    expect(partida.versaoDoEsquemaDaPartida).toBe(18)
     expect(partida.ocioso.atividadeSecundaria).toBeNull()
     expect(partida.jornada).toEqual({ meta: null, idsDasReceitasFabricadas: [] })
     expect(partida.personagem.prestigio).toEqual({ nivel: 0, pontos: 0, idsDosNosDesbloqueados: [] })

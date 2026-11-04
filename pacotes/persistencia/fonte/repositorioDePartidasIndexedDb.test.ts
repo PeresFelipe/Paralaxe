@@ -89,7 +89,7 @@ describe("repositório de partidas em IndexedDB", () => {
     const repositorio = criarRepositorioDePartidasIndexedDb()
     await repositorio.salvar(anterior as unknown as PartidaLocal)
     const migrado = await repositorio.obter('migra-v12-legado')
-    expect(migrado?.versaoDoEsquemaDaPartida).toBe(17)
+    expect(migrado?.versaoDoEsquemaDaPartida).toBe(18)
     expect(migrado?.legado.distritos.ferreiro).toBe(2)
     expect(migrado?.legado.distritos.taverna).toBe(1)
     expect(migrado?.legado.creditosDeTransicao).toBe(9)
@@ -115,7 +115,7 @@ describe("repositório de partidas em IndexedDB", () => {
     const repo = criarRepositorioDePartidasIndexedDb()
     await repo.salvar(antigo as unknown as PartidaLocal)
     const atual = await repo.obter('migra-v15-terceiro-relogio')
-    expect(atual?.versaoDoEsquemaDaPartida).toBe(17)
+    expect(atual?.versaoDoEsquemaDaPartida).toBe(18)
     expect(atual?.ocioso.atividadeAtiva).toEqual(primeira)
     expect(atual?.ocioso.atividadeSecundaria).toEqual(segunda)
     expect(atual?.ocioso.atividadeTerciaria).toBeNull()
@@ -150,7 +150,7 @@ describe("repositório de partidas em IndexedDB", () => {
     const repo = criarRepositorioDePartidasIndexedDb()
     await repo.salvar(antigo as unknown as PartidaLocal)
     const migrada = await repo.obter('migra-v14-producao-paralela')
-    expect(migrada?.versaoDoEsquemaDaPartida).toBe(17)
+    expect(migrada?.versaoDoEsquemaDaPartida).toBe(18)
     expect(migrada?.fabricacao.receitaAtiva).toEqual(receitaAtiva)
     expect(migrada?.fabricacao.receitaSecundaria).toBeNull()
     expect(migrada?.personagem.ouro).toBe(121)
@@ -183,7 +183,7 @@ describe("repositório de partidas em IndexedDB", () => {
     const repositorio = criarRepositorioDePartidasIndexedDb()
     await repositorio.salvar(antigo as unknown as PartidaLocal)
     const migrado = await repositorio.obter('migra-v13-segundo-relogio')
-    expect(migrado?.versaoDoEsquemaDaPartida).toBe(17)
+    expect(migrado?.versaoDoEsquemaDaPartida).toBe(18)
     expect(migrado?.ocioso.atividadeAtiva).toEqual(atividade)
     expect(migrado?.ocioso.atividadeSecundaria).toBeNull()
     expect(migrado?.profissoes.mineracao).toEqual({ nivel: 39, xp: 37, prestigio: 1 })
@@ -204,7 +204,7 @@ describe("repositório de partidas em IndexedDB", () => {
     const repositorio = criarRepositorioDePartidasIndexedDb()
     await repositorio.salvar(legado as unknown as PartidaLocal)
     const restaurado = await repositorio.obter('migra-v11')
-    expect(restaurado?.versaoDoEsquemaDaPartida).toBe(17)
+    expect(restaurado?.versaoDoEsquemaDaPartida).toBe(18)
     expect(restaurado?.vigilia.sessoesConcluidas).toBe(0)
     expect(restaurado?.vigilia.saldoBrasas).toBe(0)
     expect(restaurado?.vigilia.sessaoAtiva).toBeNull()
@@ -253,7 +253,7 @@ describe("repositório de partidas em IndexedDB", () => {
     const repositorioAposRecarregar = criarRepositorioDePartidasIndexedDb()
     const carregado = await repositorioAposRecarregar.obter(partida.idDaPartida)
 
-    expect(carregado?.versaoDoEsquemaDaPartida).toBe(17)
+    expect(carregado?.versaoDoEsquemaDaPartida).toBe(18)
     expect(carregado?.personagem.prestigio).toEqual({ nivel: 0, pontos: 0, idsDosNosDesbloqueados: [] })
     expect(carregado?.personagem.banco).toEqual({ inventario: [], itensDeEquipamento: [] })
     expect(carregado?.masmorra.contratoAceito).toBe(true)
@@ -292,7 +292,7 @@ describe("repositório de partidas em IndexedDB", () => {
     const anelId = carregado?.personagem.equipamento.anel1
     const anel = carregado?.personagem.itensDeEquipamento.find((item) => item.idDaInstancia === anelId)
 
-    expect(carregado?.versaoDoEsquemaDaPartida).toBe(17)
+    expect(carregado?.versaoDoEsquemaDaPartida).toBe(18)
     expect(carregado?.personagem.prestigio).toEqual({ nivel: 0, pontos: 0, idsDosNosDesbloqueados: [] })
     expect(anel?.idDaDefinicao).toBe("item.equipamento.viajante-anel")
     expect(carregado?.personagem.inventario.some((pilha) => pilha.idDaDefinicao === "item.equipamento.viajante-anel")).toBe(false)
@@ -319,7 +319,7 @@ describe("repositório de partidas em IndexedDB", () => {
     await repositorio.salvar(legado as unknown as PartidaLocal)
     const carregado = await repositorio.obter("legado-prestigio")
 
-    expect(carregado?.versaoDoEsquemaDaPartida).toBe(17)
+    expect(carregado?.versaoDoEsquemaDaPartida).toBe(18)
     expect(carregado?.personagem.prestigio).toEqual({ nivel: 0, pontos: 0, idsDosNosDesbloqueados: [] })
   })
 
@@ -329,7 +329,7 @@ describe("repositório de partidas em IndexedDB", () => {
     const repositorio = criarRepositorioDePartidasIndexedDb()
     await repositorio.salvar({ ...legado, versaoDoEsquemaDaPartida: 10 } as unknown as PartidaLocal)
     const migrado = await repositorio.obter(original.idDaPartida)
-    expect(migrado?.versaoDoEsquemaDaPartida).toBe(17)
+    expect(migrado?.versaoDoEsquemaDaPartida).toBe(18)
     expect(migrado?.jornada).toEqual(original.jornada)
     expect(migrado?.codice).toEqual({ idsDescobertos: ['classe.errante'] })
     expect(migrado?.desafios).toEqual({ idsConcluidos: [] })
@@ -342,7 +342,7 @@ describe("repositório de partidas em IndexedDB", () => {
     const repositorio = criarRepositorioDePartidasIndexedDb()
     await repositorio.salvar({ ...legado, versaoDoEsquemaDaPartida: 9 } as unknown as PartidaLocal)
     const migrado = await repositorio.obter(original.idDaPartida)
-    expect(migrado?.versaoDoEsquemaDaPartida).toBe(17)
+    expect(migrado?.versaoDoEsquemaDaPartida).toBe(18)
     expect(migrado?.personagem).toEqual(original.personagem)
     expect(migrado?.jornada).toEqual({ meta: null, idsDasReceitasFabricadas: [] })
     if (!migrado) throw new Error("Partida ausente")
@@ -362,7 +362,7 @@ describe("repositório de partidas em IndexedDB", () => {
     const repo = criarRepositorioDePartidasIndexedDb()
     await repo.salvar(antiga as unknown as PartidaLocal)
     const migrada = await repo.obter('incursao-reabertura')
-    expect(migrada?.versaoDoEsquemaDaPartida).toBe(17)
+    expect(migrada?.versaoDoEsquemaDaPartida).toBe(18)
     expect(migrada?.masmorra.incursaoAutomaticaAtiva).toBeNull()
     expect(migrada?.masmorra.dunLiathFacilConquistado).toBe(true)
     expect(migrada?.personagem.atributos).toEqual(base.personagem.atributos)
@@ -376,6 +376,29 @@ describe("repositório de partidas em IndexedDB", () => {
     expect(revisitada?.masmorra.incursaoAutomaticaAtiva).toBeNull()
     expect(revisitada?.masmorra.ultimaIncursaoAutomatica).toEqual(encerrada.masmorra.ultimaIncursaoAutomatica)
     expect(() => finalizarIncursaoAutomatica(revisitada!, '2026-11-04T12:27:00Z')).toThrow('Não existe')
+  })
+
+  it('migra v17 preservando Incursão Automática, inventário e progresso de Dún Liath', async () => {
+    const base = criarPartidaLocal({ idDaPartida: 'grupo-migracao-v17',
+      criadoEm: '2026-11-04T12:00:00.000Z', versaoDoConteudo: 'test',
+      nomeDoPersonagem: 'Ailith', classeDoPersonagem, presente })
+    const plano = { preset: 'cautelosa' as const, iniciadaEm: base.criadoEm,
+      terminaEm: '2026-11-04T12:15:00.000Z', semente: 20, chanceDeSucesso: 0.83,
+      recompensaPossivel: [{ idDaDefinicao: 'item.dun-liath.viga', quantidade: 1 }] }
+    const v17 = { ...base, versaoDoEsquemaDaPartida: 17,
+      personagem: { ...base.personagem, ouro: 127 },
+      masmorra: { ...base.masmorra, dunLiathFacilConquistado: true, incursaoAutomaticaAtiva: plano } }
+    delete (v17 as Partial<PartidaLocal>).grupo
+    const repo = criarRepositorioDePartidasIndexedDb()
+    await repo.salvar(v17 as unknown as PartidaLocal)
+    const atual = await repo.obter('grupo-migracao-v17')
+    expect(atual?.versaoDoEsquemaDaPartida).toBe(18)
+    expect(atual?.grupo.idsDosParceirosAtivos).toEqual([])
+    expect(atual?.grupo.marcoDeMira).toBe('desconhecida')
+    expect(atual?.personagem.ouro).toBe(127)
+    expect(atual?.masmorra.incursaoAutomaticaAtiva).toEqual(plano)
+    await repo.salvar(atual!)
+    expect(await repo.obter('grupo-migracao-v17')).toEqual(atual)
   })
 
 })

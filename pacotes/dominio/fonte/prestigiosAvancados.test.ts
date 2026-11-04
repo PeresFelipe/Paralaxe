@@ -80,7 +80,7 @@ describe('GDD §9: Prestígios II e III', () => {
     const repetido = processarProgressoDaAtividadeTerciaria(tres.partida, coletas[2], tempo(32))
     expect(repetido.acoesConcluidas).toBe(0)
     expect(repetido.partida.ocioso.atividadeAtiva).toEqual(tres.partida.ocioso.atividadeAtiva)
-    expect(tres.partida.versaoDoEsquemaDaPartida).toBe(17)
+    expect(tres.partida.versaoDoEsquemaDaPartida).toBe(18)
     const pausa = pausarTrabalhoAtualDuranteRisco(tres.partida, tempo(100))
     expect(pausa.ocioso.atividadeTerciaria?.processadoPorUltimoEm).toBe(tempo(100))
   })

@@ -171,7 +171,7 @@ export function simularCombateEmGrupo(
         const vivos = atores.filter(a => a.vida > 0).map(a => a.id)
         const foco = escolherAlvoDaAmeaca(ameaca, vivos, segundo, Boolean(habilidade?.ignorarAmeaca))
         ameaca = foco.estado
-        if (foco.alvo.mudouFoco) registro.push({ segundo, tipo: 'foco', alvoId: foco.alvo.id ?? undefined,
+        if (foco.alvo.mudouFoco) registro.push({ segundo, tipo: 'foco', ...(foco.alvo.id ? { alvoId: foco.alvo.id } : {}),
           mensagem: inimigo.nome + ' muda o alvo para ' + (atores.find(a => a.id === foco.alvo.id)?.nome ?? 'ninguém') + '.' })
         const alvo = atores.find(a => a.id === foco.alvo.id)
         if (alvo && aleatorio() < Math.max(0.05, Math.min(0.98, 0.85 + (inimigo.precisao - alvo.evasao) * 0.005))) {
