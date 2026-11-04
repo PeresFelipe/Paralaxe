@@ -16,6 +16,12 @@ Branch exclusiva `develop`, documentação canônica `documentacao/GDD.md`. O pe
 
 - Prestígio I: segunda coleta do mesmo Ofício com eficiência provisória de 50% e esquema de save v14, mantendo a atividade anterior no primeiro espaço.
 - Prestígio I: segunda linha de fabricação (Metalurgia, Forja e Culinária); esquema v15, inventário e IDs partilhados, pausa durante risco, interface e testes.
+- Prestígio II: três prioridades configuráveis no motor e na interface, com cadências provisórias; processa pendências antes de alterar a preferência.
+- Prestígio III: terceiro trabalho de coleta ou fabricação e save v16, migração de dados antigos sem perder relógios ou prioridades.
+- Prestígios I–III: catálogos exclusivos de 84 coletas, 63 receitas, 21 equipamentos e 21 consumíveis (parâmetros provisórios).
+- Sete microdesafios opcionais de Ofício com janela temporária; sucesso dá XP adicional por ciclo e erro não penaliza idle.
+- Reforço +2: exige fragmento do chefe Fairtheoir, +1 anterior, ausência de falha e de ouro.
+
 ## Regras de continuidade
 - Ler o HEAD remoto antes de cada alteração e criar commits de fast-forward (sem force-push).
 - Manter `main` intocada.
@@ -26,9 +32,9 @@ Branch exclusiva `develop`, documentação canônica `documentacao/GDD.md`. O pe
 
 ## Ainda falta
 - Expansão das ferramentas profissionais para raridades/afixos procedurais e efeitos adicionais; slots básicos existentes.
-- Profissões: os marcos de coleta Normal 1–90 foram cadastrados; faltam aprofundamento de receitas até 99 e todo o conteúdo de Prestígio I–III, incluindo 2–3 atividades simultâneas.
-- Minigames opcionais.
-- Reforços +2, novos itens especiais, raridade procedural completa.
+- Profissões: os marcos normais de coleta e linhas de Prestígios I–III foram cadastrados; faltam aprofundamentos, variantes de habilidades e balanceamento até o nível 99.
+- Aprofundar os sete microdesafios temáticos (atualmente escolhas rápidas) para interações ricas de habilidade, sem prejudicar a automação.
+- Ampliar os materiais especiais de reforço e as raridades/afixos procedurais além do reforço +2 básico.
 - Dún Liath procedural, dificuldades, segredos, recompensas e automação.
 - Grupo, Ameaça, Mira, segunda Masmorra.
 - Relíquias e Relicário.
@@ -37,4 +43,4 @@ Branch exclusiva `develop`, documentação canônica `documentacao/GDD.md`. O pe
 - Decisões pendentes no GDD e testes visuais/jogabilidade de longo prazo.
 
 ## Estado da conclusão
-**Parcial.** Progressão até 99 e marcos de recursos normais 1–90 foram implementados; a profundidade da produção e os Prestígios seguem incompletos, mas a profundidade do conteúdo ainda é limitada. O restante do GDD exige trabalho adicional e decisões canônicas explícitas.
+**Parcial.** Base de Prestígios I–III (incluindo prioridades e três trabalhos), catálogos exclusivos e reforço +2 implantados; profundidade das técnicas, minigames e balanceamento ainda pendem refinamento. O restante do GDD exige trabalho adicional e decisões canônicas explícitas.

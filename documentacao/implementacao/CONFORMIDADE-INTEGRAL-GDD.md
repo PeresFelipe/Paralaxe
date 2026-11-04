@@ -16,9 +16,9 @@ Referência canônica: `documentacao/GDD.md`, 75 seções. Base de código: bran
 | 1–3 | Nome, escopo e filosofia | Parcial | `documentacao/GDD.md`, shell do jogo | Confirmar pontos em aberto da seção 46 |
 | 4 | Nível geral 1–99, pontos de atributo | Parcial | `pacotes/dominio/fonte/progressao.ts`, `progressao.test.ts` | Validar balanceamento definitivo, progressão narrativa e pacing |
 | 5–6 | Classes e presentes | Base implementada | `pacotes/conteudo/fonte/criacaoDePersonagem.ts` | Refinamento de conteúdo/UX |
-| 7–9 | Sete Ofícios 1–99, Prestígios, ferramentas e minigames | Parcial | `ocioso.ts`, `ocioso.test.ts`, `equipamento.ts`, `ferramentasDeColeta.test.ts` | Ferramentas base implementadas com XP; faltam gradações/raridade procedural, conteúdo 11–99, segunda coleta de Prestígio I implementada; produção paralela do Prestígio I implementada; faltam prioridades do Prestígio II, terceira atividade do III e minigames |
-| 10–14 | Convenções, coleta/Metalurgia/Forja/Culinária | Parcial | `atividadesOciosas.ts`, `receitasDeFabricacao.ts`, `progressoOficiosNiveis20e30.test.ts` | Oito recursos normais cobrem os marcos 1–90 em cada coleta; Metalurgia 75/90 e receitas utilizáveis de Forja/Culinária foram adicionadas. Faltam aprofundamento até 99, receitas raras/especiais e Prestígios I–III |
-| 15 | Reforços sem falha +0 → +2 | Parcial | `fabricacao.ts`, `equipamento.ts`, `fabricacao.test.ts` | Reforço +2 usa fragmento de Fairtheoir, sem falha ou reroll; faltam reforços especiais e raridades completas |
+| 7–9 | Sete Ofícios 1–99, Prestígios, ferramentas e minigames | Parcial | `ocioso.ts`, `fabricacao.ts`, `prioridadesDeOficio.ts`, `minigamesDeOficio.ts`, `prestigiosAvancados.test.ts`, `minigamesDeOficio.test.ts` | Prestígio I–III: dois ou três trabalhos e prioridades implementados; sete desafios opcionais de escolha integrados. Pendem balanceamento, profundidade dos minigames, raridades e mais ferramentas |
+| 10–14 | Convenções, coleta/Metalurgia/Forja/Culinária | Parcial | `atividadesOciosas.ts`, `receitasDeFabricacao.ts`, `conteudoDePrestigios.ts`, `conteudoDePrestigios.test.ts` | Marcos normais até 90 e catálogos exclusivos I–III implantados: 84 coletas, 63 receitas, 21 equipamentos e 21 consumíveis. Faltam profundidade de técnicas, decisões de balanceamento e condições especiais das linhas |
+| 15 | Reforços sem falha +0 → +2 | Implementado na trilha básica | `fabricacao.ts`, `equipamento.ts`, `fabricacao.test.ts`, `receitasDeFabricacao.ts` | +0→+1 e +1→+2 funcionais, sem falha, com fragmento especial de Fairtheoir. Ainda pendem variações de materiais e ajustes finais de balanceamento |
 | 16–17 | Prestígio do personagem e ausência | Parcial | `prestigio.ts`, `ocioso.ts` | Integração do conteúdo e balanceamento amplo para 99 níveis |
 | 18–20 | Combate, estados, resistências e chefes | Parcial | `combate.ts` domínio/conteúdo | Conteúdo completo, estratégias e mecânicas de níveis avançados |
 | 21–22 | Grupo, Ameaça e Mira | Pendente | Sem agregado funcional de Grupo | Até 3 parceiros, IA multiagente, aggro e introdução narrativa |
@@ -121,6 +121,21 @@ Arquivos: `pacotes/conteudo/fonte/atividadesOciosas.ts`, `receitasDeFabricacao.t
 - Reforço +1 mantém a regra histórica. +2 usa um multiplicador provisório de 30% sobre a propriedade-base, sem modificar afixos, raridade ou efeitos únicos.
 - A interface oferece o reforço correspondente ao nível atual da instância. Não existe durabilidade.
 - O campo `nivelDeReforco` continua na mesma estrutura persistida; aceita agora 0, 1 ou 2, sem migração do save para essa funcionalidade.
+
+
+### Entregas J–M — cinco frentes do GDD (04/11/2026)
+
+**Prestígio II — prioridades:** o jogador escolhe Equilibrado, Principal ou Secundária. Os dois relógios ajustam cadência e, quando a prioridade é Secundária, ela consome recursos antes da principal. Percentuais 100/50, 125/35 e 80/75 são **provisórios**, não números canônicos. A preferência é registrada na partida e mudanças processam o tempo pendente antes de trocar a configuração.
+
+**Prestígio III — terceiro espaço:** coleta e fabricação receberam relógio terciário, com 33% de velocidade provisória, exigindo PIII e três atividades/receitas diferentes do mesmo Ofício. O motor mantém relógios, saldo parcial, capacidade de inventário e IDs de equipamentos distintos; risco pausa os três. Esquema de save **v16**, migração v15→v16 preserva os dois relógios já gravados.
+
+**Conteúdo exclusivo I–III:** catálogos orientados a dados seguindo os nomes e marcos de níveis 1, 15, 30, 45, 60, 75, 90 do GDD: 84 atividades de coleta, 63 receitas (Metalurgia, Forja, Culinária), 21 equipamentos e 21 consumíveis. Primeiro recurso de cada camada reaproveita o último da anterior. Requisitos de Prestígio são validados no domínio e na interface, inclusive ao iniciar tarefas adicionais. Todas as quantidades, atributos e receitas não expressamente definidas no GDD são **provisórias**; as técnicas especiais e sua variedade ainda podem exigir aprofundamento.
+
+**Minigames dos sete Ofícios:** primeira implementação jogável com um microdesafio temático de três escolhas por Ofício. A janela aparece após 60s de trabalho e aceita uma tentativa por intervalo de 3min; a resposta certa ativa +4 XP por ciclo por tempo limitado, sem efeito retroativo. Resposta errada não retira itens, não reduz produção ou XP-base, nem encerra o trabalho idle. O estado é opcional no save v16 e é criado ao iniciar uma partida nova; jogos antigos continuam legíveis. Esses são microdesafios de escolha, **não minigames profundos de timing ou habilidade** — aprofundamento futuro permanece recomendável.
+
+**Reforço +2:** receita adicional de Forja para elevar somente +1→+2, usando Fragmento de Fairtheoir (chefe de Dún Liath) e Lingote de Iarann. Nunca falha, não exige ouro e mantém afixos/raridade. Bônus-base +30% é provisório. Não foi criado sistema de durabilidade.
+
+**Validação:** matriz de testes `prestigiosAvancados.test.ts`, `conteudoDePrestigios.test.ts`, `minigamesDeOficio.test.ts`, `fabricacao.test.ts` e migrações IndexedDB. A pipeline de TypeScript, lint, testes automatizados e build deve ser verificada pelo SHA de HEAD publicado. Não alegar validação manual de navegador, balanceamento de longo prazo ou segurança econômica Conectada.
 
 ## Dependências e riscos não encerrados
 
