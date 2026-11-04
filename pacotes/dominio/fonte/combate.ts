@@ -71,6 +71,8 @@ export interface DefinicaoDeHabilidadeDoInimigo {
   tipoDeDano?: TipoDeDano
   segundosDeAvisoDeAtaque?: number
   interrompivel?: boolean
+  /** Ignora a tabela de Ameaça apenas neste ataque de Grupo. */
+  ignorarAmeaca?: boolean
   /** A habilidade só entra na rotação quando a Vida do inimigo cai a esta fração. */
   ativarQuandoVidaAte?: number
   aplicacoesDeEfeito?: readonly DefinicaoDeAplicacaoDeEfeito[]
