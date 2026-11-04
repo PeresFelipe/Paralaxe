@@ -44,7 +44,7 @@ export default function GradeDoInventario({ partida, compacto = false, aoEquipar
   const visivel = compacto ? exibido.slice(0, 8) : exibido
   const selecionadoItem = itens.find((item) => item.id === selecionado)
   // Espaços vazios completam somente a visão de todos os itens; filtros não devem parecer aumentar a capacidade disponível.
-  const vazio = filtro === "todos" ? Math.max(0, (compacto ? 8 : LIMITE_DE_ESPACOS_DO_INVENTARIO_V01) - visivel.length) : 0
+  const vazio = filtro === "todos" ? Math.max(0, (compacto ? 8 : 0) - visivel.length) : 0
 
   /** Espera a alteração persistida antes de fechar a inspeção e preserva uma mensagem local em caso de falha. */
   async function equipar(id: string) {
@@ -62,11 +62,11 @@ export default function GradeDoInventario({ partida, compacto = false, aoEquipar
       {([["todos", 'Tudo'], ['material', 'Materiais'], ["consumivel", 'Outros itens'], ["equipamento", 'Equipamentos']] as const).map(([id, rotulo]) =>
         <Button key={id} variant="filter" aria-pressed={filtro === id} onClick={() => { definirFiltro(id); definirSelecionado(null) }}>{rotulo}</Button>)}
     </div> : null}
-    <div className={estilos.spaces} aria-label="Itens carregados">
-      {visivel.map((item) => <Button key={item.id} variant="inventory" icon={<IconeDoJogo icone={item.icone} tamanho={32} />}
+    <div className={compacto ? estilos.spaces : estilos.namedSpaces} aria-label="Itens carregados">
+      {visivel.map((item) => <Button key={item.id} variant={compacto ? "inventory" : selecionado === item.id ? "primary" : "secondary"} icon={<IconeDoJogo icone={item.icone} tamanho={32} />}
         aria-label={`${item.nome}, quantidade ${item.quantidade}`} aria-pressed={selecionado === item.id}
         title={`${item.nome} ×${item.quantidade}`} data-compact={compacto ? 'true' : 'false'} onClick={() => { definirSelecionado(item.id); definirErro(null) }}>
-        <span>{item.quantidade}</span>
+        <span>{compacto ? item.quantidade : `${item.nome} ×${item.quantidade}`}</span>
       </Button>)}
       {Array.from({ length: vazio }, (_, indice) => <span className={estilos.emptySlot} key={`vazio-${indice}`} aria-hidden="true" />)}
     </div>
@@ -79,3 +79,4 @@ export default function GradeDoInventario({ partida, compacto = false, aoEquipar
     {erro ? <p role="alert" className="informacao-alerta">{erro}</p> : null}
   </div>
 }
+

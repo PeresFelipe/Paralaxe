@@ -131,3 +131,13 @@
 .legend { font-family: var(--ui-font-family-body); font-size: var(--ui-font-size-sm); font-weight: var(--ui-font-weight-semibold); }
 .inspection { background: var(--ui-color-surface-raised); border-left-color: var(--ui-color-primary); }
 .inspection > strong { color: var(--ui-color-text); font-family: var(--ui-font-family-body); font-weight: var(--ui-font-weight-semibold); }
+
+
+.namedSpaces {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--ui-space-2);
+}
+@media (max-width: 45rem) {
+  .namedSpaces { grid-template-columns: minmax(0, 1fr); }
+}

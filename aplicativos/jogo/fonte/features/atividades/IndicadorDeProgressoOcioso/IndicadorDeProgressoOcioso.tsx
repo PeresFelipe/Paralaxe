@@ -4,90 +4,26 @@
  * Não concede itens, experiência nem grava partidas: essa responsabilidade continua no domínio e em Aplicativo.
  */
 import { useEffect, useMemo, useRef, useState } from "react";
-import {
-  RECEITAS_INICIAIS_DE_FABRICACAO,
-  ATIVIDADES_OCIOSAS_INICIAIS,
-} from "@paralaxe/conteudo";
-import type { PartidaLocal, IdDaProfissao } from "@paralaxe/dominio";
-
-import { rotulosDosItens, rotulosDasProfissoes } from "@/rotulosDoJogo";
+import type { PartidaLocal } from "@paralaxe/dominio";
+import { obterProgressoDoTrabalho, type EspacoDoTrabalho } from '@/services/visualizacaoDoTrabalho';
+import { rotulosDasProfissoes } from '@/rotulosDoJogo';
 import estilos from "./IndicadorDeProgressoOcioso.module.css";
 
 export type PropriedadesDeIndicadorDeProgressoOcioso = {
   partida: PartidaLocal;
   compacto?: boolean;
   pausado?: boolean;
+  espaco?: EspacoDoTrabalho;
 };
-
-type ProgressoDoTrabalho = {
-  titulo: string;
-  idDaProfissao: IdDaProfissao;
-  segundosPorAcao: number;
-  segundosRestantes: number;
-  processadoPorUltimoEm: string;
-  proximoResultado: string;
-};
-
-function rotuloPara(idDaDefinicao: string) {
-  return rotulosDosItens[idDaDefinicao] ?? idDaDefinicao;
-}
-
-/** Uniformiza coleta e receita em um modelo de apresentação com duração, saldo de tempo e próximo resultado. */
-function obterProgressoDoTrabalho(partida: PartidaLocal): ProgressoDoTrabalho | null {
-  const ativoOcioso = partida.ocioso.atividadeAtiva;
-  if (ativoOcioso) {
-    const atividade = ATIVIDADES_OCIOSAS_INICIAIS.find(
-      (candidato) => candidato.id === ativoOcioso.idDaDefinicaoDaAtividade,
-    );
-    if (!atividade) return null;
-    return {
-      titulo: `${rotulosDasProfissoes[atividade.idDaProfissao]} · ${atividade.nomeDoResultado}`,
-      idDaProfissao: atividade.idDaProfissao,
-      segundosPorAcao: atividade.segundosPorAcao,
-      segundosRestantes: ativoOcioso.segundosRestantes,
-      processadoPorUltimoEm: ativoOcioso.processadoPorUltimoEm,
-      proximoResultado: `+1 ${atividade.nomeDoResultado} · +${atividade.xpDeProfissaoPorAcao} XP`,
-    };
-  }
-
-  const receitaAtiva = partida.fabricacao.receitaAtiva;
-  if (receitaAtiva) {
-    const receita = RECEITAS_INICIAIS_DE_FABRICACAO.find(
-      (candidato) => candidato.id === receitaAtiva.idDaDefinicaoDaReceita,
-    );
-    if (!receita) return null;
-    const ingredientes = receita.ingredientes
-      .map(
-        (ingrediente) =>
-          `${ingrediente.quantidade} ${rotuloPara(ingrediente.idDaDefinicao)}`,
-      )
-      .join(" + ");
-    const saida =
-      receita.saida.tipo === "item"
-        ? `${receita.saida.quantidade} ${receita.saida.nome}`
-        : receita.saida.tipo === "equipamento"
-          ? `1 ${receita.saida.nome}`
-          : receita.saida.nome;
-    return {
-      titulo: `${rotulosDasProfissoes[receita.idDaProfissao]} · ${receita.nome}`,
-      idDaProfissao: receita.idDaProfissao,
-      segundosPorAcao: receita.segundosPorAcao,
-      segundosRestantes: receitaAtiva.segundosRestantes,
-      processadoPorUltimoEm: receitaAtiva.processadoPorUltimoEm,
-      proximoResultado: `${ingredientes || "Materiais"} → ${saida} · +${receita.xpDeProfissaoPorAcao} XP`,
-    };
-  }
-
-  return null;
-}
 
 /** Apresenta o mesmo ciclo em versão completa ou compacta, podendo congelá-lo durante risco. */
 export default function IndicadorDeProgressoOcioso({
   partida,
   compacto = false,
   pausado = false,
+  espaco = "principal",
 }: PropriedadesDeIndicadorDeProgressoOcioso) {
-  const trabalho = useMemo(() => obterProgressoDoTrabalho(partida), [partida]);
+  const trabalho = useMemo(() => obterProgressoDoTrabalho(partida, espaco), [partida, espaco]);
   const [agoraMs, definirAgoraMs] = useState(() => Date.now());
   const preenchimentoReferencia = useRef<HTMLSpanElement>(null);
   const segundosPorAcao = trabalho?.segundosPorAcao ?? 1;
@@ -234,3 +170,4 @@ export default function IndicadorDeProgressoOcioso({
     </div>
   );
 }
+

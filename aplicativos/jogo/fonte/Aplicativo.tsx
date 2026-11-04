@@ -127,6 +127,7 @@ function Aplicativo({ repositorioDePartidas }: AplicativoProps) {
       <>
         <EstadoDoJogoWeb podeAtualizar={false} />
         <EstruturaDoJogo
+          key={partidaAtiva.idDaPartida}
           partida={partidaAtiva}
           mensagem={mensagem}
           tipoDaMensagem={aviso?.tipo ?? "informacao"}
@@ -441,3 +442,4 @@ function Aplicativo({ repositorioDePartidas }: AplicativoProps) {
 }
 
 export default Aplicativo;
+

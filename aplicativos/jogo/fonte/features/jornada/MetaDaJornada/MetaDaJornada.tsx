@@ -4,7 +4,7 @@
  */
 import { useState } from 'react'
 import { RECEITAS_INICIAIS_DE_FABRICACAO, ATIVIDADES_OCIOSAS_INICIAIS, obterDefinicaoDeReceitaDeFabricacao } from '@paralaxe/conteudo'
-import { obterProgressoDaMetaDaJornada, type PartidaLocal, type IdDaProfissao } from '@paralaxe/dominio'
+import { obterProgressoDaMetaDaJornada, type PartidaLocal, type IdDaProfissao, type DefinicaoDeReceitaDeFabricacao } from '@paralaxe/dominio'
 import { ComparacaoDeEquipamento, IconeDoJogo } from '@/components/jogo'
 import { obterIconeDoEquipamento, obterIconeDoItem } from '@/iconesDosRecursos'
 import { rotulosDosItens, rotulosDasProfissoes } from '@/rotulosDoJogo'
@@ -19,7 +19,7 @@ type Propriedades = {
 }
 
 /** O reforço exige uma instância de equipamento e não é uma opção de meta geral. */
-const receitas = RECEITAS_INICIAIS_DE_FABRICACAO.filter((receita) => receita.saida.tipo !== 'equipamento-reforco')
+const receitas: readonly DefinicaoDeReceitaDeFabricacao[] = RECEITAS_INICIAIS_DE_FABRICACAO.filter((receita) => receita.saida.tipo !== 'equipamento-reforco')
 const finalidades: Record<string, string> = {
   'receita.forja.giuis-bracadeiras': 'Forje uma peça e compare a proteção com seu equipamento.',
   'receita.metalurgia.tratada-cloch': 'Prepare material usado no Reforço Simples +1 de equipamentos.',
@@ -86,7 +86,12 @@ export default function MetaDaJornada({ partida, aoEscolherMeta, aoAbrirProfissa
           <div className={estilos.options} role="group" aria-label="Receitas disponíveis">
             {receitas.map((candidato) => {
               const nivelAtual = partida.profissoes[candidato.idDaProfissao].nivel
-              const bloqueado = nivelAtual < candidato.nivelExigidoDaProfissao
+              const requisitos = [
+                nivelAtual < candidato.nivelExigidoDaProfissao ? `Nível ${candidato.nivelExigidoDaProfissao}` : null,
+                partida.profissoes[candidato.idDaProfissao].prestigio < (candidato.prestigioExigido ?? 0) ? `Prestígio ${candidato.prestigioExigido}` : null,
+                candidato.dificuldadeRequerida && !partida.masmorra.dificuldadesConcluidas?.includes(candidato.dificuldadeRequerida) ? `Dún Liath ${candidato.dificuldadeRequerida}` : null,
+              ].filter(Boolean)
+              const bloqueado = requisitos.length > 0
               return (
                 <Button
                   variant="ghost"
@@ -101,7 +106,7 @@ export default function MetaDaJornada({ partida, aoEscolherMeta, aoAbrirProfissa
                   <span className={estilos.opcaoDescricao}>{finalidades[candidato.id] ?? 'Prepare uma nova criação para sua jornada.'}</span>
                   <span className={estilos.opcaoRodape}>
                     <span>{rotulosDasProfissoes[candidato.idDaProfissao]} · {candidato.segundosPorAcao}s por fabricação</span>
-                    <strong>{bloqueado ? `Requer Nv. ${candidato.nivelExigidoDaProfissao}` : receita?.id === candidato.id ? 'Atual' : 'Escolher →'}</strong>
+                    <strong>{bloqueado ? `Requer ${requisitos.join(" · ")}` : receita?.id === candidato.id ? 'Atual' : 'Escolher →'}</strong>
                   </span>
                 </Button>
               )
@@ -129,6 +134,8 @@ export default function MetaDaJornada({ partida, aoEscolherMeta, aoAbrirProfissa
               <ul className={estilos.ingredients}>
                 {progresso.ingredientes.map((ingrediente) => {
                   const origem = ATIVIDADES_OCIOSAS_INICIAIS.find((atividade) => atividade.idDaDefinicaoDoItemProduzido === ingrediente.idDaDefinicao)
+                  const producaoOrigem = RECEITAS_INICIAIS_DE_FABRICACAO.find(r => r.saida.tipo === 'item' && r.saida.idDaDefinicao === ingrediente.idDaDefinicao)
+                  const oficioOrigem = origem?.idDaProfissao ?? producaoOrigem?.idDaProfissao
                   // Ingredientes usados na fabricação precisam estar no inventário, não apenas no Banco.
                   const guardadoNoBanco = partida.personagem.banco.inventario.find((pilha) => pilha.idDaDefinicao === ingrediente.idDaDefinicao)?.quantidade ?? 0
                   return (
@@ -137,7 +144,7 @@ export default function MetaDaJornada({ partida, aoEscolherMeta, aoAbrirProfissa
                         <strong>{rotulosDosItens[ingrediente.idDaDefinicao] ?? ingrediente.idDaDefinicao}</strong>
                         <span>{ingrediente.possuido} / {ingrediente.quantidade}{ingrediente.faltante ? ` · faltam ${ingrediente.faltante}` : ' · reunido'}{ingrediente.faltante && guardadoNoBanco ? ` · ${guardadoNoBanco} no Banco` : ''}</span>
                       </div>
-                      {ingrediente.faltante && origem ? <Button variant="ghost" size="sm" onClick={() => aoAbrirProfissao(origem.idDaProfissao)}>Ver {rotulosDasProfissoes[origem.idDaProfissao]} →</Button> : null}
+                      {ingrediente.faltante && oficioOrigem ? <Button variant="ghost" size="sm" onClick={() => aoAbrirProfissao(oficioOrigem)}>Ver {rotulosDasProfissoes[oficioOrigem]} →</Button> : null}
                     </li>
                   )
                 })}
@@ -170,3 +177,4 @@ export default function MetaDaJornada({ partida, aoEscolherMeta, aoAbrirProfissa
     </section>
   )
 }
+

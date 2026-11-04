@@ -641,7 +641,7 @@ summary:focus-visible,
 
 .informacoes-gradeVisual strong {
   color: var(--ui-color-text);
-  font: var(--ui-font-size-xl) var(--ui-font-family-display);
+  font: var(--ui-font-size-xl) var(--ui-font-family-body);
 }
 
 .profissao-resumo-gradeVisual {
@@ -1342,3 +1342,4 @@ summary:focus-visible,
   }
 
 }
+

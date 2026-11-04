@@ -4,6 +4,7 @@
  * transitório de apresentação. Consultar outra tela não inicia nem cancela um trabalho.
  */
 import { useMemo, useState } from "react";
+import { usePreferenciaDeTela } from "./hooks/usePreferenciaDeTela";
 import {
   CLASSES_DE_PERSONAGEM,
   RECEITAS_INICIAIS_DE_FABRICACAO,
@@ -188,16 +189,24 @@ export default function EstruturaDoJogo({
   aoDepositarEquipamentoNoBanco,
   aoRetirarEquipamentoDoBanco,
 }: PropriedadesDeEstruturaDoJogo) {
-  // Uma expedição persistida reabre diretamente em Aventura; as demais partidas começam na visão do personagem.
-  const [destino, definirDestino] = useState<DestinoPrincipal>(
-    (partida.masmorra.expedicaoAtiva || partida.masmorra.incursaoAutomaticaAtiva) ? "aventura" : "personagem",
+  // Preferências de interface não modificam o save; risco persistido sempre prevalece.
+  const restaurarTela = !partida.masmorra.expedicaoAtiva && !partida.masmorra.incursaoAutomaticaAtiva;
+  const chaveDaTela = partida.idDaPartida;
+  const [destino, definirDestino] = usePreferenciaDeTela<DestinoPrincipal>(
+    `${chaveDaTela}.destino`, restaurarTela ? "personagem" : "aventura", ["personagem", "atividades", "aventura", "cidade"], restaurarTela,
   );
-  const [personagemAba, definirPersonagemAba] = useState<AbaDoPersonagem>("visaoGeral");
-  const [profissaoSelecionada, definirSelecionadoProfissao] = useState<IdDaProfissao>("mineracao");
-  const [aventuraTelaDoJogo, definirAventuraTelaDoJogo] = useState<TelaDeAventura>(
-    (partida.masmorra.expedicaoAtiva || partida.masmorra.incursaoAutomaticaAtiva) ? "masmorra" : "visaoGeral",
+  const [personagemAba, definirPersonagemAba] = usePreferenciaDeTela<AbaDoPersonagem>(
+    `${chaveDaTela}.personagem`, "visaoGeral", ["visaoGeral", "atributos", "equipamento", "tecnicas", "inventario", "prestigio"],
   );
-  const [cidadeTelaDoJogo, definirCidadeTelaDoJogo] = useState<TelaDaCidade>("visaoGeral");
+  const [profissaoSelecionada, definirSelecionadoProfissao] = usePreferenciaDeTela<IdDaProfissao>(
+    `${chaveDaTela}.oficio`, ativoTrabalho(partida)?.idDaProfissao ?? "mineracao", ["mineracao", "lenhador", "pesca", "herbologia", "metalurgia", "forja", "culinaria"],
+  );
+  const [aventuraTelaDoJogo, definirAventuraTelaDoJogo] = usePreferenciaDeTela<TelaDeAventura>(
+    `${chaveDaTela}.aventura`, restaurarTela ? "visaoGeral" : "masmorra", ["visaoGeral", "servico", "masmorra", "desafios", "grupo"], restaurarTela,
+  );
+  const [cidadeTelaDoJogo, definirCidadeTelaDoJogo] = usePreferenciaDeTela<TelaDaCidade>(
+    `${chaveDaTela}.cidade`, "visaoGeral", ["visaoGeral", "taverna", "mercado", "ferreiro", "banco", "relicario", "codice", "reconstrucao"],
+  );
   const [rapidoPainel, definirRapidoPainel] = useState<PainelRapidoAtivo>(null);
   const [preparacaoAtivo, definirPreparacaoAtivo] = useState(false);
 
@@ -219,8 +228,7 @@ export default function EstruturaDoJogo({
     if (focadoRisco) return;
     definirDestino(proximo);
     definirRapidoPainel(null);
-    if (proximo === "aventura") definirAventuraTelaDoJogo("visaoGeral");
-    if (proximo === "cidade") definirCidadeTelaDoJogo("visaoGeral");
+
   }
 
   /** Direciona para uma bancada específica de Aventura e fecha a consulta rápida que originou a navegação. */
@@ -384,6 +392,7 @@ export default function EstruturaDoJogo({
               ? (partida.masmorra.incursaoAutomaticaAtiva ? "Incursão Automática · Ocioso pausado" : "Dún Liath · Ocioso pausado")
               : "Combate · Ocioso pausado"}
           </strong>
+          <p>A navegação está bloqueada durante o risco. Use as ações deste encontro para concluir ou retornar quando permitido.</p>
         </div>
       ) : null}
 
@@ -397,6 +406,30 @@ export default function EstruturaDoJogo({
           ) : null}
 
           {/* As telas recebem intenções de alteração; a coordenação superior mantém a ordem das gravações. */}
+          {destino === "personagem" && personagemAba === "visaoGeral" && !focadoRisco ? (
+            <section className="sessao-resumo" aria-label="Resumo da sessão">
+              <Card appearance="soft">
+                <p className="secao-chamada">Agora</p>
+                <h2>{trabalho ? "Seu trabalho continua" : "Escolha seu próximo trabalho"}</h2>
+                <IndicadorDeProgressoOcioso partida={partida} compacto />
+                <p className="atenuado">{trabalho ? "Consultar outras telas seguras mantém a atividade em execução." : "Mineração, Lenhador, Pesca e Herbologia são caminhos iniciais. Você escolhe por onde começar."}</p>
+                <Button variant="primary" onClick={() => abrirProfissao(trabalho?.idDaProfissao ?? profissaoSelecionada)}>
+                  {trabalho ? "Acompanhar trabalho" : "Escolher um ofício"}
+                </Button>
+              </Card>
+              <Card appearance="soft">
+                <p className="secao-chamada">Minha Jornada</p>
+                <h2>{jornada.titulo}</h2>
+                <p className="atenuado">{jornada.corpo}</p>
+                <div className="botao-linhaDeDados">
+                  <Button variant="secondary" onClick={partida.combate.loboDerrotado && !partida.masmorra.contratoAceito ? abrirTaverna : () => abrirAventura(partida.masmorra.contratoAceito ? "masmorra" : "servico")}>
+                    {partida.combate.loboDerrotado && !partida.masmorra.contratoAceito ? "Conversar na Taverna" : "Consultar preparação"}
+                  </Button>
+                  <Button variant="ghost" aria-haspopup="dialog" onClick={() => definirRapidoPainel("jornada")}>Ver meta de fabricação</Button>
+                </div>
+              </Card>
+            </section>
+          ) : null}
           {destino === "personagem" ? (
             <TelaDoPersonagem
               partida={partida}
@@ -1208,3 +1241,4 @@ function ComponenteDaTelaDaCidade({
     </section>
   );
 }
+

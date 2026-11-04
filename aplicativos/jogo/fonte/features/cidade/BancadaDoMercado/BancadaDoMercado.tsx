@@ -5,7 +5,7 @@
  */
 import { useState } from 'react'
 import { OFERTAS_INICIAIS_DO_MERCADO_DE_PNJ } from '@paralaxe/conteudo'
-import type { PartidaLocal } from '@paralaxe/dominio'
+import { obterUsoDeEspacosDoInventario, LIMITE_DE_ESPACOS_DO_INVENTARIO_V01, type PartidaLocal } from '@paralaxe/dominio'
 import { Button, Card } from '@/components/ui'
 import estilos from './BancadaDoMercado.module.css'
 
@@ -54,12 +54,16 @@ export default function BancadaDoMercado({ partida, aoComprarOferta }: Proprieda
         </div>
       </div>
 
+      <p className="atenuado">Inventário: {obterUsoDeEspacosDoInventario(partida)} / {LIMITE_DE_ESPACOS_DO_INVENTARIO_V01} espaços. A compra entrega o item na bolsa.</p>
       {mensagem ? <p className="emLinha-mensagem" role="status">{mensagem}</p> : null}
 
       <div className={estilos.offers}>
         {OFERTAS_INICIAIS_DO_MERCADO_DE_PNJ.map((oferta) => {
           // O saldo orienta a interface; a capacidade do inventário continua sendo validada pela regra de compra.
           const podePagar = partida.personagem.ouro >= oferta.preco
+          const possuido = oferta.produto.tipo === 'equipamento'
+            ? partida.personagem.itensDeEquipamento.filter(i => i.idDaDefinicao === oferta.produto.idDaDefinicao).length
+            : partida.personagem.inventario.find(i => i.idDaDefinicao === oferta.produto.idDaDefinicao)?.quantidade ?? 0
           return (
             <Card appearance="soft" className="item-cartao" key={oferta.id}>
               <div className="item-miniatura" aria-hidden="true">{oferta.nome.slice(0, 1)}</div>
@@ -71,6 +75,7 @@ export default function BancadaDoMercado({ partida, aoComprarOferta }: Proprieda
                     : `${oferta.produto.quantidade} unidade(s)`}
                 </p>
                 <div className="informacao-linhaDeDados"><span>Preço</span><strong>{oferta.preco} moedas</strong></div>
+                <p className="atenuado">Você possui {possuido}. {podePagar ? `Saldo após compra: ${partida.personagem.ouro - oferta.preco} moedas.` : ''}</p>
                 {!podePagar ? <p className="informacao-alerta">Faltam {oferta.preco - partida.personagem.ouro} moedas.</p> : null}
                 <Button
                   variant="primary"
@@ -78,7 +83,7 @@ export default function BancadaDoMercado({ partida, aoComprarOferta }: Proprieda
                   disabled={ocupado || !podePagar}
                   onClick={() => void comprar(oferta.id)}
                 >
-                  Comprar
+                  Comprar por {oferta.preco} moedas
                 </Button>
               </div>
             </Card>
@@ -88,3 +93,4 @@ export default function BancadaDoMercado({ partida, aoComprarOferta }: Proprieda
     </section>
   )
 }
+

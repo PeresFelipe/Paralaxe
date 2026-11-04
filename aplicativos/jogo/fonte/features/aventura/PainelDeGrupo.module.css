@@ -10,3 +10,23 @@
 .log { margin: 0; padding-inline-start: var(--ui-space-5); font-size: var(--ui-font-size-body-small); }
 .log li { overflow-wrap: anywhere; margin-block-end: var(--ui-space-1); }
 @media (max-width: 62rem) { .grade { grid-template-columns: minmax(0, 1fr); } }
+
+
+.formacao {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--ui-space-2);
+  padding: 0;
+  margin: 0;
+}
+.formacao li {
+  display: grid;
+  gap: var(--ui-space-1);
+  padding: var(--ui-space-3);
+  border: var(--ui-size-border) solid var(--ui-color-border);
+  border-radius: var(--ui-radius-md);
+  overflow-wrap: anywhere;
+}
+.formacao span { color: var(--ui-color-text-muted); font-size: var(--ui-font-size-sm); }
+@media (max-width: 23rem) { .formacao { grid-template-columns: minmax(0, 1fr); } }

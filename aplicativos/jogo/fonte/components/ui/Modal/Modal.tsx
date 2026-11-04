@@ -22,10 +22,12 @@ export function Modal({
   ...props
 }: ModalProps) {
   const reference = useRef<HTMLDialogElement>(null)
+  // Capture before React commits autoFocus descendants into the portal.
+  const triggerReference = useRef(typeof document === 'undefined' ? null : document.activeElement)
 
   useEffect(() => {
     const dialog = reference.current
-    const trigger = document.activeElement
+    const trigger = triggerReference.current
     dialog?.showModal()
     return () => {
       dialog?.close()
@@ -60,3 +62,4 @@ export function Modal({
     document.body,
   )
 }
+

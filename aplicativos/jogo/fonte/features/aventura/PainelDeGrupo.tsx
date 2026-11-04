@@ -112,15 +112,15 @@ export default function PainelDeGrupo({ partida, aoPersistir, aoVoltar }: Propri
       </div>
       <div className={estilos.grade ?? ""}>
         <Card className={estilos.painel ?? ""}>
-          <p className="secao-chamada">Formação persistida</p>
+          <p className="secao-chamada">Seu grupo</p>
           <h3>{ativos.length}/3 parceiros</h3>
-          <p className="atenuado">Posição inicial: {partida.personagem.nome} (líder).</p>
-          {ativos.map(id => (
-            <div className="informacao-linhaDeDados" key={id}>
-              <span>Parceiro</span>
-              <strong>{obterDefinicaoDeParceiro(id)?.nome ?? id}</strong>
-            </div>
-          ))}
+          <ol className={estilos.formacao} aria-label="Ordem da formação">
+            <li><span>Líder</span><strong>{partida.personagem.nome}</strong></li>
+            {[0, 1, 2].map(indice => {
+              const id = ativos[indice]
+              return <li key={indice}><span>Parceiro · posição {indice + 1}</span><strong>{id ? obterDefinicaoDeParceiro(id)?.nome ?? id : 'Espaço livre'}</strong></li>
+            })}
+          </ol>
           {ativos.length === 0 ? <p className="atenuado">Nenhum parceiro ativo.</p> : null}
           <div className="informacao-linhaDeDados">
             <span>{miraConhecida ? 'Mira' : 'Primeira parceira'}</span>
@@ -150,11 +150,11 @@ export default function PainelDeGrupo({ partida, aoPersistir, aoVoltar }: Propri
           )}
           <p className="atenuado">
             A história de Mira começa na segunda Masmorra. Recrutamento e evolução do vínculo
-            não podem ser antecipados por esta bancada.
+            não podem ser antecipados por esta tela.
           </p>
         </Card>
         <Card className={estilos.painel ?? ''}>
-          <p className="secao-chamada">Ensaio técnico de combate</p>
+          <p className="secao-chamada">Treinamento opcional</p>
           <h3>Testar foco e Ameaça</h3>
           <p className="atenuado">
             Demonstração sem consequências, contra um Crúbach. Quando não há parceiros recrutados,
@@ -195,3 +195,4 @@ export default function PainelDeGrupo({ partida, aoPersistir, aoVoltar }: Propri
     </section>
   )
 }
+

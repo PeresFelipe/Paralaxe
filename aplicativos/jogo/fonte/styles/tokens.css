@@ -1,27 +1,27 @@
 /* Fonte única para os valores visuais compartilhados da interface. */
 :root {
-  color-scheme: light;
+  color-scheme: dark;
 
   /* Cores semânticas */
-  --ui-color-primary: #705b3c;
-  --ui-color-primary-hover: #5d4b32;
-  --ui-color-primary-text: #fbf9f1;
-  --ui-color-primary-soft: #f0eadb;
-  --ui-color-primary-outline: rgb(112 91 60 / 10%);
-  --ui-color-secondary: #f1f0e8;
-  --ui-color-secondary-hover: #e7e5db;
-  --ui-color-danger: #9e4f49;
-  --ui-color-danger-hover: #843e39;
+  --ui-color-primary: #c4a46b;
+  --ui-color-primary-hover: #dfbc7d;
+  --ui-color-primary-text: #15191b;
+  --ui-color-primary-soft: #302b22;
+  --ui-color-primary-outline: rgb(196 164 107 / 20%);
+  --ui-color-secondary: #293237;
+  --ui-color-secondary-hover: #354047;
+  --ui-color-danger: #a74343;
+  --ui-color-danger-hover: #8f3434;
   --ui-color-resource-mana: #4b83a5;
-  --ui-color-success: #48664d;
-  --ui-color-success-surface: #edf1e8;
-  --ui-color-success-border: #b8c7b2;
-  --ui-color-warning: #947442;
-  --ui-color-warning-text: #705b3c;
-  --ui-color-warning-surface: color-mix(in srgb, #947442 6%, #fbfaf5);
-  --ui-color-danger-text: #843e39;
-  --ui-color-danger-surface: color-mix(in srgb, #9e4f49 7%, #fbfaf5);
-  --ui-color-danger-border: #c8a6a1;
+  --ui-color-success: #9fcca7;
+  --ui-color-success-surface: #1c3024;
+  --ui-color-success-border: #51775a;
+  --ui-color-warning: #e1bc77;
+  --ui-color-warning-text: #e1bc77;
+  --ui-color-warning-surface: #30291e;
+  --ui-color-danger-text: #ffb4aa;
+  --ui-color-danger-surface: #352121;
+  --ui-color-danger-border: #90504b;
   --ui-color-resource-health: #b57a75;
   --ui-color-resource-breath: #8a8b64;
   --ui-color-scene-deep: #141b1e;
@@ -30,20 +30,20 @@
   --ui-color-scene-cool-glow: rgb(75 131 165 / 24%);
   --ui-color-scene-warm-glow: rgb(148 116 66 / 18%);
   --ui-color-scene-danger-glow: rgb(158 79 73 / 16%);
-  --ui-color-text: #34382f;
-  --ui-color-text-muted: #707267;
-  --ui-color-text-metal: #707267;
-  --ui-color-text-inverse: #fbfaf5;
-  --ui-color-background: #eeece3;
-  --ui-color-background-glow: #e5e1d5;
-  --ui-color-card-shadow: rgb(52 53 42 / 7%);
-  --ui-color-surface: #fbfaf5;
-  --ui-color-surface-raised: #f1f0e8;
-  --ui-color-surface-sunken: #e7e5db;
-  --ui-color-border: #d6d3c5;
-  --ui-color-border-strong: #b7b29f;
-  --ui-color-focus: #947442;
-  --ui-color-overlay: rgb(26 28 22 / 58%);
+  --ui-color-text: #eee8dc;
+  --ui-color-text-muted: #b6bbb9;
+  --ui-color-text-metal: #b6bbb9;
+  --ui-color-text-inverse: #fff8ea;
+  --ui-color-background: #101416;
+  --ui-color-background-glow: #20272a;
+  --ui-color-card-shadow: rgb(0 0 0 / 18%);
+  --ui-color-surface: #191f22;
+  --ui-color-surface-raised: #232b2f;
+  --ui-color-surface-sunken: #12181a;
+  --ui-color-border: #485258;
+  --ui-color-border-strong: #6b777c;
+  --ui-color-focus: #f5ce82;
+  --ui-color-overlay: rgb(5 8 10 / 76%);
   --ui-color-inventory-text: #f0e4c9;
   --ui-color-inventory-slot: #181f14;
   --ui-color-inventory-slot-raised: #3e4731;
@@ -72,8 +72,8 @@
   --ui-size-activity-max-width: 34rem;
   --ui-size-location-card: 7rem;
   --ui-size-dialog-lg: 53.75rem;
-  --ui-size-control-sm: 2rem;
-  --ui-size-button-md: 2.5rem;
+  --ui-size-control-sm: 2.75rem;
+  --ui-size-button-md: 2.75rem;
   --ui-size-button-lg: 3rem;
   --ui-size-profession-icon: 1.375rem;
   --ui-size-creation-art-column: 10rem;
@@ -101,7 +101,7 @@
   --ui-size-border: 1px;
   --ui-size-border-strong: 0.1875rem;
   --ui-size-focus-ring: 0.125rem;
-  --ui-size-field-control: 2.5rem;
+  --ui-size-field-control: 2.75rem;
   --ui-size-ui-kit-column: 20rem;
 
   /* Camadas do shell da aplicação. O diálogo nativo usa a top layer do navegador. */
@@ -493,3 +493,4 @@
   --ui-oficios-linha-115: var(--ui-letter-spacing-display);
   --ui-oficios-linha-116: var(--ui-letter-spacing-relaxed);
 }
+

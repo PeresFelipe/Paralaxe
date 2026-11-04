@@ -782,6 +782,11 @@
 }
 
 @media (max-width: 42rem) {
+  .navigation { font-size: var(--ui-font-size-3xs); padding-inline: var(--ui-space-0); }
+  .navigation > .label { white-space: nowrap; overflow-wrap: normal; }
+  .hud { font-size: var(--ui-font-size-xs); }
+  .hud > .label { white-space: nowrap; overflow-wrap: normal; }
+
   .journey {
     gap:var(--ui-space-3);
     margin-bottom:var(--ui-space-5);
@@ -808,7 +813,7 @@
 
 @media (max-width: 42rem) {
   :global(.global-recursos) > .icon {
-    display: none;
+    display: inline-flex;
   }
 }
 
@@ -845,7 +850,7 @@
 }
 .fullWidth { inline-size: 100%; max-inline-size: 100%; }
 @media (max-width: 25rem) {
-  .sm, .md, .lg { padding-inline: var(--ui-space-3); }
+  .sm:not(.navigation), .md:not(.navigation), .lg:not(.navigation) { padding-inline: var(--ui-space-3); }
 }
 @media (pointer: coarse) {
   .sm:not(.inventory):not(.navigation):not(.icon) {
@@ -853,3 +858,4 @@
   }
 }
 /* GW-UI-RESPONSIVA-V1: FIM DO REFINAMENTO */
+

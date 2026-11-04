@@ -3,6 +3,7 @@
  * A tela mostra capacidades calculadas pelo domínio e envia quantidade ou ID de instância
  * aos callbacks; estoque e validação de espaço permanecem na camada de regras.
  */
+import { useState } from "react";
 import { obterDefinicaoDeEquipamento } from "@paralaxe/conteudo";
 import {
   LIMITE_DE_ESPACOS_DO_BANCO_V01,
@@ -15,6 +16,7 @@ import { IconeDoJogo } from "@/components/jogo";
 import { obterIconeDoEquipamento, obterIconeDoItem } from "@/iconesDosRecursos";
 import { Button, Card } from '@/components/ui'
 import { rotulosDaInterface } from '@/rotulosDaInterface'
+import { rotulosDosItens } from '@/rotulosDoJogo'
 import estilos from './PainelDoBanco.module.css'
 
 type PropriedadesDePainelDoBanco = {
@@ -24,24 +26,6 @@ type PropriedadesDePainelDoBanco = {
   aoDepositarEquipamento: (idDaInstancia: string) => Promise<void>;
   aoRetirarEquipamento: (idDaInstancia: string) => Promise<void>;
   aoVoltar: () => void;
-};
-
-const rotulosDosItens: Record<string, string> = {
-  "material.cloch": "Cloch",
-  "material.giuis": "Giúis",
-  "material.scadan": "Scadán",
-  "material.neantog": "Neantóg",
-  "material.tratada-cloch": "Cloch Tratada",
-  "item.comida.assado-scadan": "Scadán Assado",
-  "item.consumivel.neantog-preparacao": "Preparado de Neantóg",
-  "item.consumivel.campo-preparacao": "Preparado de Campo",
-  "item.consumivel.carmesim-frasco": "Frasco Carmesim",
-  "item.chave.enferrujada": "Chave Enferrujada",
-  "item.missao.semNome-pedra": "Pedra Sem Nome",
-  "item.equipamento.viajante-anel": "Anel do Viajante",
-  "item.guarnicao-suprimento-registroDeDados": "Registro de Suprimentos",
-  "item.tratado-fragmento": "Fragmento do Tratado",
-  "item.fairtheoir-fragmento": "Fragmento de Fairtheoir",
 };
 
 function itemNome(idDaDefinicao: string) {
@@ -57,6 +41,18 @@ export default function PainelDoBanco({
   aoRetirarEquipamento,
   aoVoltar,
 }: PropriedadesDePainelDoBanco) {
+  const [pendente, definirPendente] = useState(false);
+  const [mensagem, definirMensagem] = useState<string | null>(null);
+  const [erro, definirErro] = useState(false);
+  async function transferir(acao: () => Promise<void>) {
+    if (pendente) return;
+    definirPendente(true);
+    definirMensagem(null);
+    definirErro(false);
+    try { await acao(); definirMensagem('Transferência concluída. As quantidades foram atualizadas.'); }
+    catch (causa) { definirErro(true); definirMensagem(causa instanceof Error ? causa.message : 'Não foi possível transferir o item. Tente novamente.'); }
+    finally { definirPendente(false); }
+  }
   const equipadoIds = new Set(Object.values(partida.personagem.equipamento));
   // Equipamentos vestidos não aparecem como candidatos ao depósito; o domínio também impede guardá-los enquanto equipados.
   const desequipadoEquipamento = partida.personagem.itensDeEquipamento.filter(
@@ -81,6 +77,7 @@ export default function PainelDoBanco({
         </Button>
       </div>
 
+      {mensagem ? <p className="emLinha-mensagem" role={erro ? "alert" : "status"}>{mensagem}</p> : null}
       <div className={estilos.capacities}>
         <Card className={estilos.capacity}>
           <span className="secao-chamada">Inventário</span>
@@ -122,7 +119,8 @@ export default function PainelDoBanco({
                   <Button
                     variant="secondary"
                     size="sm"
-                    onClick={() => void aoDepositarPilha(pilha.idDaDefinicao, 1)}
+                    disabled={pendente}
+                    onClick={() => void transferir(() => aoDepositarPilha(pilha.idDaDefinicao, 1))}
                   >
                     Depositar 1
                   </Button>
@@ -130,11 +128,12 @@ export default function PainelDoBanco({
                     <Button
                       variant="secondary"
                       size="sm"
+                    disabled={pendente}
                       onClick={() =>
-                        void aoDepositarPilha(pilha.idDaDefinicao, pilha.quantidade)
+                        void transferir(() => aoDepositarPilha(pilha.idDaDefinicao, pilha.quantidade))
                       }
                     >
-                      Tudo
+                      Transferir tudo ({pilha.quantidade})
                     </Button>
                   ) : null}
                 </div>
@@ -159,7 +158,8 @@ export default function PainelDoBanco({
                   <Button
                     variant="secondary"
                     size="sm"
-                    onClick={() => void aoDepositarEquipamento(instancia.idDaInstancia)}
+                    disabled={pendente}
+                    onClick={() => void transferir(() => aoDepositarEquipamento(instancia.idDaInstancia))}
                   >
                     Depositar
                   </Button>
@@ -197,7 +197,8 @@ export default function PainelDoBanco({
                   <Button
                     variant="secondary"
                     size="sm"
-                    onClick={() => void aoRetirarPilha(pilha.idDaDefinicao, 1)}
+                    disabled={pendente}
+                    onClick={() => void transferir(() => aoRetirarPilha(pilha.idDaDefinicao, 1))}
                   >
                     Retirar 1
                   </Button>
@@ -205,11 +206,12 @@ export default function PainelDoBanco({
                     <Button
                       variant="secondary"
                       size="sm"
+                    disabled={pendente}
                       onClick={() =>
-                        void aoRetirarPilha(pilha.idDaDefinicao, pilha.quantidade)
+                        void transferir(() => aoRetirarPilha(pilha.idDaDefinicao, pilha.quantidade))
                       }
                     >
-                      Tudo
+                      Transferir tudo ({pilha.quantidade})
                     </Button>
                   ) : null}
                 </div>
@@ -234,8 +236,9 @@ export default function PainelDoBanco({
                   <Button
                     variant="secondary"
                     size="sm"
+                    disabled={pendente}
                     onClick={() =>
-                      void aoRetirarEquipamento(instancia.idDaInstancia)
+                      void transferir(() => aoRetirarEquipamento(instancia.idDaInstancia))
                     }
                   >
                     Retirar
@@ -253,3 +256,4 @@ export default function PainelDoBanco({
     </section>
   );
 }
+

@@ -270,8 +270,8 @@ body {
 .lateral-folha .jornada-secao p { color: var(--ui-color-text-muted); }
 
 @media (max-width: 720px) {
-  .jogo-estrutura { padding-bottom:calc(var(--ui-space-39-5) + env(safe-area-inset-bottom)); }
-  .jogo-barraSuperior { padding:var(--ui-space-2-75) var(--ui-space-3-25) var(--ui-space-2-5); gap:var(--ui-space-2); border-radius:var(--ui-radius-none) var(--ui-radius-none) var(--ui-radius-xl) var(--ui-radius-xl); }
+  .jogo-estrutura { padding-bottom:calc(var(--ui-space-39-5) + var(--ui-size-hud-control) + env(safe-area-inset-bottom)); }
+  .jogo-barraSuperior { grid-template-columns: minmax(0, 1fr); padding:var(--ui-space-2-75) var(--ui-space-3-25) var(--ui-space-2-5); gap:var(--ui-space-2); border-radius:var(--ui-radius-none) var(--ui-radius-none) var(--ui-radius-xl) var(--ui-radius-xl); }
   .jogo-disposicao { padding:var(--ui-space-2-5) var(--ui-space-3) var(--ui-space-5-5); }
   .jogo-conteudo,
   .jogo-estrutura--risco .jogo-conteudo { padding:var(--ui-space-1-5) var(--ui-space-pixel) var(--ui-space-6-5); }
@@ -280,7 +280,12 @@ body {
   .principal-navegacao,
   .jogo-estrutura--risco .principal-navegacao { bottom: calc(var(--ui-dimension-8px) + env(safe-area-inset-bottom)); height: var(--ui-dimension-68px); min-height: var(--ui-dimension-68px); }
   .continuidade-barra,
-  .jogo-estrutura--risco .continuidade-barra { bottom: calc(var(--ui-dimension-84px) + env(safe-area-inset-bottom)); height: var(--ui-dimension-58px); padding:var(--ui-space-1-25) var(--ui-space-2); }
+  .jogo-estrutura--risco .continuidade-barra { bottom: calc(var(--ui-dimension-84px) + env(safe-area-inset-bottom)); display: grid; grid-template-columns: minmax(0, 1fr); height: auto; padding:var(--ui-space-1-25) var(--ui-space-2); }
+  .jogo-aviso { bottom: calc(var(--ui-dimension-178px) + var(--ui-size-hud-control)); }
+  .continuidade-acoes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .global-recursos > div { grid-template-columns: minmax(0, 1fr); grid-template-areas: "label" "value"; }
+  .global-recursos .recurso-simbolo { display: none; }
+  .global-recursos small { overflow-wrap: normal; }
   .contexto-arte,
   .cidade-visaoGeral-disposicao > .contexto-arte,
   .aventura-visaoGeral-disposicao > .contexto-arte { aspect-ratio: 1.38 / 1; border-radius:var(--ui-radius-xl); }
@@ -503,7 +508,7 @@ body {
 
 }
 
-/* O assistente de criação e a seleção de partidas acompanham a paleta clara do jogo. */
+/* O assistente de criação e a seleção de partidas acompanham a paleta do jogo. */
 .criacao-foco {
   border: var(--ui-size-border) solid var(--ui-color-border);
   border-image: none;
@@ -563,6 +568,23 @@ body {
   .criacao-classe-sprite { animation: none; }
 }
 
+/* Visão de sessão: duas decisões próximas, com reflow sem largura mínima. */
+.sessao-resumo {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--ui-space-3);
+  margin-block-end: var(--ui-space-4);
+}
+.sessao-resumo > * { min-inline-size: 0; }
+.sessao-resumo h2 {
+  font-family: var(--ui-font-family-body);
+  font-size: var(--ui-font-size-md);
+  line-height: var(--ui-line-height-reading);
+}
+@media (max-width: 48rem) {
+  .sessao-resumo { grid-template-columns: minmax(0, 1fr); }
+}
+
 /* Hierarquia global: títulos de tela medievais; dados de cartões usam fonte de leitura. */
 .funcionalidade-telaDoJogo [data-ui="card"] h2,
 .funcionalidade-telaDoJogo [data-ui="card"] h3 {
@@ -589,3 +611,4 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .jogo-conteudo > :not([data-meta-resumo]) { animation: none; }
 }
+
