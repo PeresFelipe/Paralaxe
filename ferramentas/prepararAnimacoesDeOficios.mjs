@@ -5,7 +5,7 @@
  */
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
-import { join } from 'node:path'
+import { join, resolve } from 'node:path'
 
 const pasta = fileURLToPath(new URL('../aplicativos/jogo/publico/arte/atividades/', import.meta.url))
 const nomes = ['mineracao', 'lenhador', 'pesca', 'herbologia', 'metalurgia', 'forja', 'culinaria']
@@ -125,6 +125,6 @@ export function prepararAnimacoesDeOficios() {
   return relatorio
 }
 
-if (process.argv[1] && fileURLToPath(import.meta.url) === fileURLToPath(new URL(`file://${process.argv[1].replaceAll('\\', '/')}`))) {
+if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   prepararAnimacoesDeOficios()
 }
