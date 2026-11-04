@@ -639,7 +639,7 @@ export default function BancadaDaMasmorra({
             <strong>{resultadoDaIncursao?.concluida ? 'Pronto para resgatar' :
               Math.floor(segundosRestantes / 60) + 'm ' + String(segundosRestantes % 60).padStart(2, '0') + 's'}</strong>
           </div>
-          <ProgressBar className={estilos.incursaoBarra} value={progressoDaIncursao} max={100}
+          <ProgressBar className={estilos.incursaoBarra ?? ''} value={progressoDaIncursao} max={100}
             label="Progresso da Incursão Automática" />
           <p className="atenuado">
             Recompensa possível: {incursaoAtiva.recompensaPossivel.map(item =>
