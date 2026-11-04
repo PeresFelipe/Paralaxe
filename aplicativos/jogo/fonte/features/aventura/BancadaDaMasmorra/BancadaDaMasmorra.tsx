@@ -38,7 +38,7 @@ import {
   type DefinicaoDeMasmorra,
   type PartidaLocal,
 } from "@paralaxe/dominio";
-import { Button, Card } from "@/components/ui";
+import { Button, Card, ProgressBar } from "@/components/ui";
 import { rotulosDaInterface } from "@/rotulosDaInterface";
 import estilos from "./BancadaDaMasmorra.module.css";
 
@@ -639,8 +639,8 @@ export default function BancadaDaMasmorra({
             <strong>{resultadoDaIncursao?.concluida ? 'Pronto para resgatar' :
               Math.floor(segundosRestantes / 60) + 'm ' + String(segundosRestantes % 60).padStart(2, '0') + 's'}</strong>
           </div>
-          <progress className={estilos.incursaoBarra} value={progressoDaIncursao} max={100}
-            aria-label="Progresso da Incursão Automática" />
+          <ProgressBar className={estilos.incursaoBarra} value={progressoDaIncursao} max={100}
+            label="Progresso da Incursão Automática" />
           <p className="atenuado">
             Recompensa possível: {incursaoAtiva.recompensaPossivel.map(item =>
               item.quantidade + '× ' + itemRotulo(item.idDaDefinicao)).join(', ')}.
