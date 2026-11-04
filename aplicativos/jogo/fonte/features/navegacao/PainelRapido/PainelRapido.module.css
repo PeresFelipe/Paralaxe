@@ -1,18 +1,21 @@
+/* A folha é uma estrutura, não uma página com tudo rolando junto. */
 .panel {
   position: fixed;
   inset: 0 0 0 auto;
   z-index: var(--ui-z-panel);
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
   width: min(var(--ui-size-panel-width), 100%);
   max-width: 100%;
   height: 100dvh;
   max-height: 100dvh;
+  min-width: 0;
   margin: 0;
-  padding: var(--ui-space-5-5);
-  overflow-y: auto;
-  overscroll-behavior: contain;
+  padding: 0;
+  overflow: hidden;
   border: 0;
   border-left: var(--ui-size-border) solid var(--ui-color-border);
-  border-radius: var(--ui-radius-3xl) var(--ui-radius-none) var(--ui-radius-none) var(--ui-radius-3xl);
+  border-radius: var(--ui-radius-2xl) var(--ui-radius-none) var(--ui-radius-none) var(--ui-radius-2xl);
   background: var(--ui-color-surface);
   color: var(--ui-color-text);
   box-shadow: var(--ui-shadow-lg);
@@ -25,36 +28,101 @@
 
 .panel[open] {
   animation: panelEnter var(--ui-transition-panel) both;
-  transform-origin: right center;
 }
 
-.panel[open] > * {
-  animation: contentEnter var(--ui-transition-panel-content) both;
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ui-space-3);
+  min-width: 0;
+  padding: max(var(--ui-space-4), env(safe-area-inset-top)) var(--ui-space-4) var(--ui-space-3);
+  background: var(--ui-color-surface);
+  border-bottom: var(--ui-size-border) solid var(--ui-color-border);
 }
 
-.panel[open] > :nth-child(1) { animation-delay: var(--ui-transition-stagger-short); }
-.panel[open] > :nth-child(2) { animation-delay: var(--ui-transition-stagger-medium); }
-.panel[open] > :nth-child(3) { animation-delay: var(--ui-transition-stagger-long); }
-.panel[open] > :nth-child(n + 4) { animation-delay: var(--ui-transition-stagger-final); }
-
-.panel[open] :global(.jornada-meta) > * {
-  animation: contentEnter var(--ui-transition-panel-content) both;
+.identity {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-2-5);
+  min-width: 0;
 }
 
-.panel[open] :global(.jornada-meta) > :nth-child(1) { animation-delay: var(--ui-transition-stagger-panel-short); }
-.panel[open] :global(.jornada-meta) > :nth-child(2) { animation-delay: var(--ui-transition-stagger-panel-medium); }
-.panel[open] :global(.jornada-meta) > :nth-child(3) { animation-delay: var(--ui-transition-stagger-panel-long); }
+.icone {
+  display: grid;
+  place-items: center;
+  flex: 0 0 var(--ui-dimension-42px);
+  height: var(--ui-dimension-42px);
+  border-radius: var(--ui-radius-lg);
+  background: var(--ui-color-surface-raised);
+}
+
+.titulos {
+  display: grid;
+  gap: var(--ui-space-0-5);
+  min-width: 0;
+}
+
+.contexto {
+  color: var(--ui-color-warning-text);
+  font: var(--ui-font-weight-semibold) var(--ui-font-size-2xs)/var(--ui-line-height-normal) var(--ui-font-family-body);
+  letter-spacing: var(--ui-letter-spacing-caps);
+  text-transform: uppercase;
+}
+
+.titulo,
+.panel :global(.lateral-folha) .titulo {
+  margin: 0;
+  color: var(--ui-color-text);
+  font: var(--ui-font-weight-semibold) var(--ui-font-size-xl)/var(--ui-line-height-display) var(--ui-font-family-display);
+  overflow-wrap: anywhere;
+}
+
+.fechar {
+  display: grid;
+  place-items: center;
+  flex: 0 0 var(--ui-dimension-44px);
+  width: var(--ui-dimension-44px);
+  height: var(--ui-dimension-44px);
+  border: var(--ui-size-border) solid var(--ui-color-border);
+  border-radius: var(--ui-radius-md);
+  background: var(--ui-color-surface-raised);
+  color: var(--ui-color-text);
+  font: var(--ui-font-weight-regular) var(--ui-font-size-xl)/var(--ui-line-height-tight) var(--ui-font-family-body);
+  cursor: pointer;
+}
+
+.fechar:hover { background: var(--ui-color-secondary); }
+.fechar:focus-visible {
+  outline: var(--ui-size-focus-ring) solid var(--ui-color-focus);
+  outline-offset: var(--ui-space-1);
+}
+
+.corpo {
+  min-width: 0;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  padding: var(--ui-space-3) var(--ui-space-4) max(var(--ui-space-5), env(safe-area-inset-bottom));
+}
+.corpo > * { min-width: 0; }
+.corpo :where(img, picture, video) { max-width: 100%; }
+.corpo :global(.jornada-secao) {
+  margin-block: var(--ui-space-3);
+  padding: var(--ui-space-2) 0;
+  border: 0;
+  border-top: var(--ui-size-border) solid var(--ui-color-border);
+  border-radius: var(--ui-radius-none);
+  box-shadow: none;
+  background: transparent;
+}
 
 @keyframes panelEnter {
-  from { opacity: 0; transform: translateX(var(--ui-motion-panel-distance)) scale(.975); }
-  to { opacity: 1; transform: translateX(0) scale(1); }
+  from { opacity: 0; transform: translateX(var(--ui-motion-panel-distance)); }
+  to { opacity: 1; transform: translateX(0); }
 }
-
-@keyframes contentEnter {
-  from { opacity: 0; transform: translateY(var(--ui-motion-content-distance)); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
 @keyframes backdropEnter {
   from { opacity: 0; }
   to { opacity: 1; }
@@ -62,24 +130,26 @@
 
 @media (max-width: 720px) {
   .panel {
-    padding-top: max(var(--ui-space-5-5), env(safe-area-inset-top));
-    padding-bottom: max(var(--ui-space-5-5), env(safe-area-inset-bottom));
+    inset: auto 0 0 0;
+    width: 100%;
+    height: min(92dvh, calc(100dvh - env(safe-area-inset-top) - var(--ui-space-2)));
+    max-height: 100dvh;
+    border-left: 0;
+    border-top: var(--ui-size-border) solid var(--ui-color-border);
+    border-radius: var(--ui-radius-2xl) var(--ui-radius-2xl) var(--ui-radius-none) var(--ui-radius-none);
   }
+  .header { padding: var(--ui-space-3) var(--ui-space-3) var(--ui-space-2); }
+  .corpo { padding: var(--ui-space-3) var(--ui-space-3) max(var(--ui-space-5), env(safe-area-inset-bottom)); }
+  .panel[open] { animation: mobileEnter var(--ui-transition-panel) both; }
 }
-
-@media (prefers-reduced-motion: reduce) {
-  .panel,
-  .panel::backdrop,
-  .panel[open] > *,
-  .panel[open] :global(.jornada-meta) > * {
-    animation: none;
-  }
-}
-
-/* GW-UI-RESPONSIVA-V1: INÍCIO DO REFINAMENTO */
-.panel { box-sizing: border-box; min-inline-size: 0; max-inline-size: 100%; }
-.panel :where(img, picture, video) { max-inline-size: 100%; }
 @media (max-width: 23rem) {
-  .panel { inline-size: 100%; padding-inline: var(--ui-space-3); }
+  .icone { display: none; }
 }
-/* GW-UI-RESPONSIVA-V1: FIM DO REFINAMENTO */
+@keyframes mobileEnter {
+  from { opacity: 0; transform: translateY(var(--ui-motion-content-distance)); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .panel[open],
+  .panel::backdrop { animation: none; }
+}

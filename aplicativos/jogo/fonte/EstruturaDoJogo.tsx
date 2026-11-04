@@ -528,18 +528,10 @@ export default function EstruturaDoJogo({
       {/* Consultas rápidas são diálogos de contexto seguro e não criam outra cópia da partida. */}
       {rapidoPainel === "inventario" && !focadoRisco ? (
         <PainelRapido
-          rotulo="Inventário rápido"
+          rotulo="Inventário"
+          icone={<IconeDoJogo icone="armadura-sobreposta" tamanho={26} />}
           aoFechar={() => definirRapidoPainel(null)}
         >
-          <Button
-            variant="icon"
-            onClick={() => definirRapidoPainel(null)}
-            aria-label="Fechar"
-          >
-            ×
-          </Button>
-          <p className="secao-chamada">Consulta rápida</p>
-          <h2 className="destaque-titulo">Inventário</h2>
           <GradeDoInventario partida={partida} compacto aoEquipar={aoEquipar} />
           <Button
             variant="secondary"
@@ -552,16 +544,11 @@ export default function EstruturaDoJogo({
       ) : null}
 
       {rapidoPainel === "jornada" && !focadoRisco ? (
-        <PainelRapido rotulo="Jornada" aoFechar={() => definirRapidoPainel(null)}>
-          <Button
-            variant="icon"
-            onClick={() => definirRapidoPainel(null)}
-            aria-label="Fechar"
-          >
-            ×
-          </Button>
-          <p className="secao-chamada">Continuidade</p>
-          <h2 className="destaque-titulo">Jornada</h2>
+        <PainelRapido
+          rotulo="Jornada"
+          icone={<IconeDoJogo icone="livro-abrir" tamanho={26} />}
+          aoFechar={() => definirRapidoPainel(null)}
+        >
           <MetaDaJornada
             partida={partida}
             aoEscolherMeta={aoEscolherMetaDaJornada}
