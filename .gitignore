@@ -10,3 +10,6 @@ coverage/
 !.env.example
 
 node_modules
+
+# GIFs derivados automaticamente a partir dos originais pelo Vite.
+aplicativos/jogo/publico/arte/atividades/*-suave.gif
