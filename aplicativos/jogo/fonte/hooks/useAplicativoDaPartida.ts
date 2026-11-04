@@ -23,6 +23,10 @@ import {
   interromperReceitaSecundaria,
   iniciarAtividadeOciosa,
   iniciarAtividadeSecundaria,
+  iniciarAtividadeTerciaria,
+  interromperAtividadeTerciaria,
+  iniciarReceitaTerciaria,
+  interromperReceitaTerciaria,
   configurarPrioridadeDaColeta,
   configurarPrioridadeDaFabricacao,
   type PrioridadeDeOficio,
@@ -357,6 +361,21 @@ export function useAplicativoDaPartida(repositorioDePartidas: RepositorioDeParti
     }, `Coleta secundária iniciada: ${atividade.nomeDoResultado}.`)
   }
 
+  async function tratarIniciarAtividadeTerciaria(id: string) {
+    const atividade = obterDefinicaoDeAtividadeOciosa(id)
+    if (!atividade) throw new Error('Recurso indisponível.')
+    await aplicarAlteracaoNaPartidaAtiva(atual => {
+      const agora = new Date().toISOString()
+      return iniciarAtividadeTerciaria(processarTrabalhoAtual(atual, agora).partida, atividade, agora)
+    }, 'Terceira coleta iniciada.')
+  }
+  async function tratarPararAtividadeTerciaria() {
+    await aplicarAlteracaoNaPartidaAtiva(atual => {
+      const agora = new Date().toISOString()
+      return interromperAtividadeTerciaria(processarTrabalhoAtual(atual, agora).partida, agora)
+    }, 'Terceira coleta interrompida.')
+  }
+
   async function tratarPararAtividadeSecundaria() {
     await aplicarAlteracaoNaPartidaAtiva(atual => {
       const agora = new Date().toISOString()
@@ -375,6 +394,26 @@ export function useAplicativoDaPartida(repositorioDePartidas: RepositorioDeParti
       if (!principal || !secundaria) throw new Error('Receita principal ou secundária indisponível.')
       return iniciarReceitaSecundaria(partida, principal, secundaria, agora)
     }, 'Produção secundária iniciada.')
+  }
+
+  async function tratarIniciarReceitaTerciaria(id: string) {
+    await aplicarAlteracaoNaPartidaAtiva(atual => {
+      const agora = new Date().toISOString()
+      const partida = processarTrabalhoAtual(atual, agora).partida
+      const a = partida.fabricacao.receitaAtiva?.idDaDefinicaoDaReceita
+      const b = partida.fabricacao.receitaSecundaria?.idDaDefinicaoDaReceita
+      const principal = a ? obterDefinicaoDeReceitaDeFabricacao(a) : null
+      const secundaria = b ? obterDefinicaoDeReceitaDeFabricacao(b) : null
+      const terceira = obterDefinicaoDeReceitaDeFabricacao(id)
+      if (!principal || !secundaria || !terceira) throw new Error('Selecione duas receitas antes da terceira.')
+      return iniciarReceitaTerciaria(partida, principal, secundaria, terceira, agora)
+    }, 'Terceira produção iniciada.')
+  }
+  async function tratarPararReceitaTerciaria() {
+    await aplicarAlteracaoNaPartidaAtiva(atual => {
+      const agora = new Date().toISOString()
+      return interromperReceitaTerciaria(processarTrabalhoAtual(atual, agora).partida, agora)
+    }, 'Terceira produção interrompida.')
   }
 
   async function tratarPararReceitaSecundaria() {
@@ -735,9 +774,13 @@ export function useAplicativoDaPartida(repositorioDePartidas: RepositorioDeParti
     tratarIniciarAtividade,
     tratarIniciarAtividadeSecundaria,
     tratarPararAtividadeSecundaria,
+    tratarIniciarAtividadeTerciaria,
+    tratarPararAtividadeTerciaria,
     tratarIniciarReceita,
     tratarIniciarReceitaSecundaria,
     tratarPararReceitaSecundaria,
+    tratarIniciarReceitaTerciaria,
+    tratarPararReceitaTerciaria,
     tratarAlterarPrioridadeDeOficio,
     tratarPararTrabalho,
     tratarPrestigiarProfissao,
