@@ -183,8 +183,9 @@ export default function TelaDeAtividades({ partida, ultimoResultadoDoTrabalho, p
                 && !ativo && !ativaSecundaria && !receitaTerciaria
               // Esta verificação orienta os botões. O domínio revalida os ingredientes ao executar a operação sobre o estado atual.
               const suficiente = receita.ingredientes.every((ingrediente) => possuido(ingrediente.idDaDefinicao) >= ingrediente.quantidade)
-              const dificuldadeLiberada = !receita.dificuldadeRequerida ||
-                Boolean(partida.masmorra.dificuldadesConcluidas?.includes(receita.dificuldadeRequerida))
+              const dificuldadeRequerida = 'dificuldadeRequerida' in receita ? receita.dificuldadeRequerida : null
+              const dificuldadeLiberada = !dificuldadeRequerida ||
+                Boolean(partida.masmorra.dificuldadesConcluidas?.includes(dificuldadeRequerida))
               const desbloqueado = progresso.nivel >= receita.nivelExigidoDaProfissao &&
                 progresso.prestigio >= (receita.prestigioExigido ?? 0) && dificuldadeLiberada
               return <Card appearance="soft" className={`${estilos.option} ${ativo ? "selecionado-cartao" : ''}`} key={receita.id}>
@@ -208,8 +209,8 @@ export default function TelaDeAtividades({ partida, ultimoResultadoDoTrabalho, p
                   </div>
                   </details>
 
-                  {!dificuldadeLiberada && receita.dificuldadeRequerida
-                    ? <p className="informacao-alerta">Requer concluir Dún Liath na dificuldade {receita.dificuldadeRequerida}.</p>
+                  {!dificuldadeLiberada && dificuldadeRequerida
+                    ? <p className="informacao-alerta">Requer concluir Dún Liath na dificuldade {dificuldadeRequerida}.</p>
                     : null}                  {!desbloqueado ? <p className="informacao-alerta">Requer {rotulosDasProfissoes[profissaoSelecionada]} no nível {receita.nivelExigidoDaProfissao}{receita.prestigioExigido ? ` e Prestígio ${receita.prestigioExigido}` : ''}.</p> : null}
                   {trabalho && !ativo && !ativaSecundaria ? <p className={estilos.replacement}>Iniciar como principal substitui {trabalho} e encerra a secundária.</p> : null}
                   <div className="botao-linhaDeDados"><Button variant={ativo ? 'secondary' : 'primary'} size="sm" disabled={pendente || (!ativo && (!suficiente || !desbloqueado))} onClick={() => void agir(ativo ? aoPararTrabalho : () => aoIniciarReceita(receita.id))}>{ativo ? 'Em curso · Parar' : suficiente ? 'Iniciar produção' : 'Faltam materiais'}</Button>
