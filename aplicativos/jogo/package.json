@@ -4,11 +4,11 @@
   "version": "0.0.1",
   "type": "module",
   "scripts": {
-    "desenvolver": "vite",
+    "desenvolver": "vite --host 127.0.0.1",
     "compilar": "tsc -b && vite build",
     "analisar": "oxlint fonte vite.config.ts",
     "testar": "vitest run --pool=threads --maxWorkers=1",
-    "visualizar": "vite preview",
+    "visualizar": "vite preview --host 127.0.0.1",
     "verificar:tipos": "tsc -b"
   },
   "dependencies": {

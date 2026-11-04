@@ -15,9 +15,13 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./fonte', import.meta.url)),
     },
   },
+  // Desenvolvimento e preview acessíveis apenas na própria máquina.
+  // Não expor o servidor na LAN por padrão.
   server: {
-    host: '0.0.0.0',
-    allowedHosts: ['terminal.local'],
+    host: '127.0.0.1',
+  },
+  preview: {
+    host: '127.0.0.1',
   },
   plugins: [react(), VitePWA({
     // Uma nova versão aguarda a confirmação apresentada por EstadoDoJogoWeb.

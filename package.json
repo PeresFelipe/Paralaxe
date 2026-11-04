@@ -8,7 +8,7 @@
     "node": "^20.19.0 || >=22.12.0"
   },
   "scripts": {
-    "desenvolver": "node aplicativos/jogo/node_modules/vite/bin/vite.js aplicativos/jogo --config aplicativos/jogo/vite.config.ts",
+    "desenvolver": "node aplicativos/jogo/node_modules/vite/bin/vite.js aplicativos/jogo --config aplicativos/jogo/vite.config.ts --host 127.0.0.1",
     "compilar": "pnpm --filter @greywake/jogo compilar",
     "analisar": "node ferramentas/verificarArquitetura.mjs && pnpm -r --if-present run analisar",
     "verificar:tipos": "pnpm -r --if-present run verificar:tipos",

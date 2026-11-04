@@ -1,5 +1,6 @@
-/* Arquivo: Carregamento da fonte licenciada Antiquity Print e estilos tipográficos básicos.
-   O tema posterior redefine parte dos títulos; a marca continua usando a fonte decorativa. */
+/* Carrega a Antiquity Print local, utilizada pelos títulos através de
+   --ui-font-family-display; textos extensos continuam com a fonte de leitura.
+   O fallback serifado cobre caracteres acentuados ausentes na fonte original. */
 /* Antiquity Print, de SciGho — CC BY 4.0. Consulte publico/fontes/antiquity-print-LICENSE.txt. */
 /* font-display: swap mantém o texto legível enquanto a fonte local é carregada. */
 @font-face {

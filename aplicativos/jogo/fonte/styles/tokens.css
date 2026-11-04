@@ -267,7 +267,7 @@
 
   /* Tipografia */
   --ui-font-family-body: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  --ui-font-family-display: Georgia, "Times New Roman", serif;
+  --ui-font-family-display: "Antiquity Print", Georgia, "Times New Roman", serif;
   --ui-font-family-antiquity: "Antiquity Print", Georgia, serif;
   --ui-font-size-xs: 0.75rem;
   --ui-font-size-3xs: 0.625rem;
