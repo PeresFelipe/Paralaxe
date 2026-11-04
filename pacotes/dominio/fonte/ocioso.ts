@@ -367,7 +367,7 @@ export function processarProgressoOcioso(
     },
     ocioso: {
       ...partida.ocioso,
-      atividadeSecundaria: interrompidoPorCapacidade ? null : partida.ocioso.atividadeSecundaria,
+      atividadeSecundaria: partida.ocioso.atividadeSecundaria ?? null,
       atividadeAtiva: interrompidoPorCapacidade
         ? null
         : {
