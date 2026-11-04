@@ -91,6 +91,21 @@ describe('GDD: sete minigames de profissão', () => {
     expect(novaPartida().minigames).toEqual(criarEstadoInicialDosMinigames())
   })
 
+  it('não permite repetir janelas anteriores após mudar o relógio para trás', () => {
+    const base = emAtividade('forja')
+    const primeiro = obterOportunidadeDeMinigame(base, 'forja', tempo(61))
+    if (!primeiro) throw new Error('Primeira janela não encontrada')
+    const usado = responderMinigameDeOficio(base, 'forja', primeiro.respostaCorreta, tempo(61)).partida
+    const futuro = new Date((primeiro.janela + 2) * DURACAO_DA_JANELA_DE_MINIGAME_MS + 65000).toISOString()
+    const segundo = obterOportunidadeDeMinigame(usado, 'forja', futuro)
+    if (!segundo) throw new Error('Segunda janela não encontrada')
+    const novamenteUsado = responderMinigameDeOficio(usado, 'forja', segundo.respostaCorreta, futuro).partida
+    expect(novamenteUsado.minigames?.ultimasJanelasUsadas.forja).toBe(segundo.janela)
+    expect(obterOportunidadeDeMinigame(novamenteUsado, 'forja', tempo(61))).toBeNull()
+    expect(() => responderMinigameDeOficio(novamenteUsado, 'forja', primeiro.respostaCorreta, tempo(61)))
+      .toThrow('expirou')
+  })
+
   it('recusa entrada inválida ou jogo durante expedição ativa', () => {
     const p = emAtividade('mineracao')
     expect(() => responderMinigameDeOficio(p,'mineracao',-1,tempo(61))).toThrow('inválida')

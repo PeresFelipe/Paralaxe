@@ -44,3 +44,8 @@ Branch exclusiva `develop`, documentação canônica `documentacao/GDD.md`. O pe
 
 ## Estado da conclusão
 **Parcial.** Base de Prestígios I–III (incluindo prioridades e três trabalhos), catálogos exclusivos e reforço +2 implantados; profundidade das técnicas, minigames e balanceamento ainda pendem refinamento. O restante do GDD exige trabalho adicional e decisões canônicas explícitas.
+
+## Revisão incremental de integridade dos minigames
+- As sete oportunidades opcionais permanecem sem penalidade no Ocioso.
+- A janela resolvida funciona como marca d'água por profissão: atrasar o relógio local não reabre desafios antigos nem recria bônus de XP.
+- Teste de regressão reproduz resposta futura seguida de retorno a janela anterior.

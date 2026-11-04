@@ -81,7 +81,10 @@ export function obterOportunidadeDeMinigame(
   if (!ativo || ativo.profissao !== profissao || !Number.isFinite(agoraMs) ||
       agoraMs - Date.parse(ativo.iniciadoEm) < TEMPO_MINIMO_DE_TRABALHO_PARA_MINIGAME_MS) return null
   const janela = Math.floor(agoraMs / DURACAO_DA_JANELA_DE_MINIGAME_MS)
-  if (partida.minigames?.ultimasJanelasUsadas[profissao] === janela) return null
+  // Não permite reabrir janelas anteriores ao último desafio resolvido ao atrasar o relógio local.
+  // O maior índice de janela permanece como marca d'água por Ofício.
+  const ultimaJanela = partida.minigames?.ultimasJanelasUsadas[profissao]
+  if (ultimaJanela !== undefined && janela <= ultimaJanela) return null
   const tema = TEMAS[profissao]
   const rotacao = (janela + ORDEM_DOS_OFICIOS.indexOf(profissao)) % 3
   const opcoes = [...tema.opcoes.slice(rotacao), ...tema.opcoes.slice(0, rotacao)]
