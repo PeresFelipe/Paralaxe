@@ -458,7 +458,8 @@ body {
 /* Desktop: os painéis acompanham o contêiner central definido pelos tokens, não as bordas da janela.
    O recuo mínimo protege o conteúdo nas larguras intermediárias. */
 @media (min-width: 1100px) {
-  .jogo-estrutura {
+  /* EstruturaDoJogo renderiza .game-shell; o token precisa existir no ancestral real. */
+  .game-shell {
     --jogo-recuo-paineis: max(
       var(--ui-dimension-16px),
       calc((100vw - var(--ui-dimension-760px)) / 2 - var(--ui-dimension-230px) - var(--ui-space-4))
@@ -467,7 +468,7 @@ body {
 
   .continuidade-barra,
   .jogo-estrutura--risco .continuidade-barra {
-    inset: 50% auto auto var(--jogo-recuo-paineis);
+    inset: 50% auto auto var(--jogo-recuo-paineis, var(--ui-dimension-16px));
     display: flex;
     flex-direction: column;
     align-items: stretch;
@@ -488,7 +489,7 @@ body {
 
   .principal-navegacao,
   .jogo-estrutura--risco .principal-navegacao {
-    inset: 50% var(--jogo-recuo-paineis) auto auto;
+    inset: 50% var(--jogo-recuo-paineis, var(--ui-dimension-16px)) auto auto;
     flex-direction: column;
     align-items: stretch;
     justify-content: center;
