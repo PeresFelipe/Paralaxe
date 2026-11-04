@@ -169,3 +169,12 @@ Arquivos: `pacotes/conteudo/fonte/atividadesOciosas.ts`, `receitasDeFabricacao.t
 7. Relíquias, narrativa, finais e eventual modo Conectado sob decisões aprovadas.
 
 **Não declarar o GDD integralmente implementado antes de completar e verificar cada requisito.**
+
+### Entrega O — Perfis de combate por dificuldade e Arquivo Selado (04/11/2026)
+
+- **GDD §33:** os 5 perfis de inimigos (Crúbach, Tromghiallach, Cosantóir e duas fases de Fairtheoir) agora recebem habilidades adicionais ao desbloquear Normal, Difícil e Impossível. Os pacotes anteriores acumulam-se e o Fácil conserva suas definições originais.
+- **Mecânicas aplicadas:** sangramento, Atordoamento, posturas defensivas, avisos de ataque interrompíveis, vulnerabilidade posterior e ações mais rápidas. Em Impossível, 'Até o Último' ativa apenas com Vida ≤20% e recebe prioridade para não ficar impedido por habilidades básicas.
+- **Limite mecânico explícito:** técnicas táticas de proteção entre aliados/formaçōes do GDD não podem produzir efeitos de Grupo enquanto o combate solo não sustentar múltiplos agentes. As versões atuais são aproximações de postura ou ataque; números são provisórios.
+- **GDD §30:** grafo procedural oferece opcionalmente Arquivo Selado para portadores do Lacre do Comandante; sem o Lacre, a rota normal continua válida. A sala produz Registro do Arquivo Selado na Bolsa, sem Relíquia automática. O Lacre permanece no inventário.
+- **Verificações:** `kitsDeDunLiath.test.ts`, `geracaoDeDunLiath.test.ts` e `dificuldadesDeDunLiath.test.ts` incluem kits, determinismo, limiares, proteção de sala, obtenção e perda do documento.
+- **Ainda pendem:** sinergias reais de formações e Ameaça, narrativa variável mais profunda, condição de descoberta do Selo, Incursão Automática, testes visuais e balanceamento manual.

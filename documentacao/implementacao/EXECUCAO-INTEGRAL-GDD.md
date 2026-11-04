@@ -53,3 +53,9 @@ Branch exclusiva `develop`, documentação canônica `documentacao/GDD.md`. O pe
 - As sete oportunidades opcionais permanecem sem penalidade no Ocioso.
 - A janela resolvida funciona como marca d'água por profissão: atrasar o relógio local não reabre desafios antigos nem recria bônus de XP.
 - Teste de regressão reproduz resposta futura seguida de retorno a janela anterior.
+
+## Entrega posterior — Aprofundamento de Dún Liath
+- As quatro dificuldades receberam kits adicionais próprios e acumulativos, incluindo o comportamento condicional 'Até o Último' na fase final de Fairtheoir.
+- Arquivo Selado após obter o Lacre do Comandante, com rota opcional e documento protegido somente pela extração segura; a Relíquia não foi inventada.
+- Corrigido teste de tipagem em `dificuldadesDeDunLiath.test.ts` identificado nos logs do CI, sem alterar o domínio da receita.
+- Validação automatizada: aguardar o CI do SHA final antes de considerar aprovada. A validade dos números, formações entre aliados e interface visual ainda requer revisão.
