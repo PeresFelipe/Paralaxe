@@ -41,7 +41,7 @@ export default function EstadoDoJogoWeb({ podeAtualizar }: { podeAtualizar: bool
   if (!podeAtualizar || (!ausentePronto && !precisaAtualizarExibicao && !instalarSolicitacao && !erro)) return null
 
   return <div className={estilos.status}>
-    <p role="status">{erro ?? (precisaAtualizarExibicao ? 'Uma nova versão de Greywake está disponível.' : ausentePronto ? "Pronto para jogar sem conexão neste dispositivo." : 'Greywake pode ser instalado neste dispositivo.')}</p>
+    <p role="status">{erro ?? (precisaAtualizarExibicao ? 'Uma nova versão de Paralaxe está disponível.' : ausentePronto ? "Pronto para jogar sem conexão neste dispositivo." : 'Paralaxe pode ser instalado neste dispositivo.')}</p>
     {precisaAtualizarExibicao ? <Button variant="secondary" disabled={atualizando} onClick={async () => {
       definirAtualizando(true)
       try { await updateServiceWorker(true) }
@@ -49,8 +49,8 @@ export default function EstadoDoJogoWeb({ podeAtualizar }: { podeAtualizar: bool
     }}>{atualizando ? 'Atualizando…' : 'Atualizar jogo'}</Button> : null}
     {instalarSolicitacao ? <Button variant="secondary" onClick={async () => {
       try { await instalarSolicitacao.prompt() }
-      catch { definirErro('Use o menu do navegador para instalar Greywake.') }
+      catch { definirErro('Use o menu do navegador para instalar Paralaxe.') }
       finally { definirInstalarSolicitacao(null) }
-    }}>Instalar Greywake</Button> : null}
+    }}>Instalar Paralaxe</Button> : null}
   </div>
 }

@@ -1,12 +1,12 @@
 # Teste com jogadores UX — Alta fidelidade v0.2
 
-Este roteiro valida `greywake-fluxo-alta-fidelidade-v0.2.html` durante o **M5.5 — Fundamentos de UX**.
+Este roteiro valida `paralaxe-fluxo-alta-fidelidade-v0.2.html` durante o **M5.5 — Fundamentos de UX**.
 
 O objetivo é observar compreensão, orientação, confiança, risco e modelo mental. Não é uma votação estética.
 
 ## Preparação
 
-- abrir `greywake-fluxo-alta-fidelidade-v0.2.html` em navegador;
+- abrir `paralaxe-fluxo-alta-fidelidade-v0.2.html` em navegador;
 - começar em **Mineração**;
 - não explicar previamente onde cada função está;
 - usar o seletor `PROTÓTIPO` apenas para posicionar o participante em uma tela quando o cenário exigir;

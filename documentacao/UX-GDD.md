@@ -1,20 +1,20 @@
-# Greywake — Especificação Canônica de UX
+# Paralaxe — Especificação Canônica de UX
 
 > Este documento aprofunda a seção **41. UX e interface** do GDD e registra a fundação canônica de experiência aprovada durante o M5.5 — Fundamentos de UX.
 >
 > Ele descreve arquitetura de informação, comportamento entre estados, fluxos, linguagem de interação, responsividade, acessibilidade e regras de apresentação. Valores de pixel, componentes concretos de framework e decisões de implementação permanecem fora desta especificação.
 >
-> **Greywake é o nome de trabalho utilizado nesta especificação; o nome definitivo do jogo permanece A definir no GDD.**
+> **Paralaxe é o nome do jogo definido no GDD.**
 
 ---
 
 # 1. Objetivo da UX
 
-Greywake é um Ocioso RPG Fantasia Sombria de longa duração, Web como prioridade, 2D e centrado na interface.
+Paralaxe é um Ocioso RPG Fantasia Sombria de longa duração, Web como prioridade, 2D e centrado na interface.
 
 A interface é parte central do jogabilidade. O jogador administra progressão, configuração, recursos, preparação, combate automático, Masmorras e decisões principalmente através dela, mas isso não significa adotar uma linguagem de dashboard genérico.
 
-> **A complexidade de Greywake deve vir da profundidade de suas decisões, não da dificuldade de encontrar, lembrar ou compreender as informações necessárias para tomá-las.**
+> **A complexidade de Paralaxe deve vir da profundidade de suas decisões, não da dificuldade de encontrar, lembrar ou compreender as informações necessárias para tomá-las.**
 
 > **A interface esclarece fatos, estados e consequências conhecidas; ela não escolhe a estratégia pelo jogador.**
 
@@ -30,7 +30,7 @@ As referências abaixo definem princípios, não identidade visual, recursos vis
 
 ## Ocioso games
 
-Greywake absorve:
+Paralaxe absorve:
 
 - progressão persistente;
 - baixa exigência contínua de atenção;
@@ -39,11 +39,11 @@ Greywake absorve:
 - evolução do jogador de execução para decisão estratégica;
 - continuidade entre sessões.
 
-Greywake não deve depender da densidade típica de dashboards de ocioso games como linguagem principal da experiência.
+Paralaxe não deve depender da densidade típica de dashboards de ocioso games como linguagem principal da experiência.
 
 ## Apple
 
-Greywake absorve:
+Paralaxe absorve:
 
 - arquitetura de informação;
 - hierarquia clara;
@@ -57,7 +57,7 @@ Greywake absorve:
 
 ## Nintendo
 
-Greywake absorve:
+Paralaxe absorve:
 
 - aprender jogando;
 - introdução gradual de complexidade;
@@ -68,7 +68,7 @@ Greywake absorve:
 
 ## Hideo Kojima — Metal Gear Solid 4 / Death Stranding
 
-Greywake absorve:
+Paralaxe absorve:
 
 - informação contextual e orientada ao estado;
 - interface com significado dentro da ficção;
@@ -159,12 +159,12 @@ Um mesmo conteúdo pode pertencer a mais de um conceito sem exigir destinos dupl
 
 # 5. Arquitetura de informação principal
 
-Greywake adota uma arquitetura **system-first em acesso e navegação**, sem ser dashboard-first em apresentação.
+Paralaxe adota uma arquitetura **system-first em acesso e navegação**, sem ser dashboard-first em apresentação.
 
 No estado seguro, a navegação principal possui exatamente quatro destinos conceituais:
 
 ```text
-GREYWAKE
+PARALAXE
 
 NAVEGAÇÃO PRINCIPAL
 ├── Personagem
@@ -186,7 +186,7 @@ Masmorras também não substituem Aventura como destino permanente; a expediçã
 
 # 6. Três horizontes de informação
 
-Greywake organiza progresso conceitualmente em três horizontes.
+Paralaxe organiza progresso conceitualmente em três horizontes.
 
 ## Agora
 
@@ -659,7 +659,7 @@ Exemplos:
 
 # 15. Recognition over recall e informação contextual
 
-Greywake deve reduzir memorização desnecessária.
+Paralaxe deve reduzir memorização desnecessária.
 
 Quando apropriado:
 
@@ -1337,7 +1337,7 @@ Não inventar tarefas ou recompensas apenas para preencher visualmente um estado
 
 # 27. Linguagem de overlays e superfícies
 
-Greywake utiliza uma gramática consistente:
+Paralaxe utiliza uma gramática consistente:
 
 ```text
 PÁGINA
@@ -1438,7 +1438,7 @@ Informação essencial, valores, requisitos e textos de sistema nunca dependem d
 
 # 29. Responsividade
 
-Greywake usa uma arquitetura responsiva, não três experiências conceitualmente diferentes.
+Paralaxe usa uma arquitetura responsiva, não três experiências conceitualmente diferentes.
 
 ## Computador
 
@@ -1804,7 +1804,7 @@ O jogador deve sentir visualmente a diferença entre navegar, preparar-se e assu
 
 ## Telegraphs
 
-Telegraphs são uma assinatura visual importante de Greywake.
+Telegraphs são uma assinatura visual importante de Paralaxe.
 
 Um aviso de ataque perigoso combina, quando aplicável:
 

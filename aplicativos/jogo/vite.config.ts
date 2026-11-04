@@ -30,8 +30,8 @@ export default defineConfig({
     // Metadados usados pelo navegador ao instalar o jogo e criar seu atalho.
     manifest: {
       id: '/',
-      name: 'Greywake',
-      short_name: 'Greywake',
+      name: 'Paralaxe',
+      short_name: 'Paralaxe',
       description: 'RPG de progressão automática e fantasia sombria. Colete, produza e prepare sua próxima expedição.',
       lang: 'pt-BR',
       start_url: '/',
@@ -40,8 +40,8 @@ export default defineConfig({
       background_color: '#10130f',
       theme_color: '#171d14',
       icons: [
-        { src: '/icones/greywake-192.png', sizes: '192x192', type: 'image/png' },
-        { src: '/icones/greywake-512.png', sizes: '512x512', type: 'image/png', purpose: 'any maskable' },
+        { src: '/icones/paralaxe-192.png', sizes: '192x192', type: 'image/png' },
+        { src: '/icones/paralaxe-512.png', sizes: '512x512', type: 'image/png', purpose: 'any maskable' },
       ],
     },
     workbox: {

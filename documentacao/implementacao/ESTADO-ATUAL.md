@@ -2,7 +2,7 @@
 
 ## Projeto
 
-**Greywake** — título provisório.
+**Paralaxe** — título provisório.
 
 ## Versão
 

@@ -4,8 +4,8 @@
  * a nova partida com débito e entrega, que é enviada ao callback de persistência.
  */
 import { useState } from 'react'
-import { OFERTAS_INICIAIS_DO_MERCADO_DE_PNJ } from '@greywake/conteudo'
-import type { PartidaLocal } from '@greywake/dominio'
+import { OFERTAS_INICIAIS_DO_MERCADO_DE_PNJ } from '@paralaxe/conteudo'
+import type { PartidaLocal } from '@paralaxe/dominio'
 import { Button, Card } from '@/components/ui'
 import estilos from './BancadaDoMercado.module.css'
 

@@ -3,7 +3,7 @@
  * Este catálogo descreve o modelo; reforço, raridade e afixos pertencem às instâncias
  * do jogador. Os valores aqui alimentam a derivação de estatísticas no domínio.
  */
-import type { DefinicaoDeEquipamento } from '@greywake/dominio'
+import type { DefinicaoDeEquipamento } from '@paralaxe/dominio'
 
 /** Armas definem dano, cadência e escalonamento; armaduras fornecem defesa e acessórios podem aumentar recursos. */
 export const DEFINICOES_DE_EQUIPAMENTO = [

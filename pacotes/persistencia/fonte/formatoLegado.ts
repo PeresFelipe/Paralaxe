@@ -5,11 +5,11 @@
  */
 /**
  * Fronteira com as partidas publicadas antes da tradução.
- * O esquema 13 mantém a base "greywake", o armazenamento "saves" e a chave "saveId".
+ * O esquema 13 mantém a base "paralaxe", o armazenamento "saves" e a chave "saveId".
  * Apenas este adaptador e as amostras de regressão conhecem o vocabulário anterior.
  * A versão 13 não garante leitura por versões anteriores; backup recomendado.
  */
-import type { PartidaLocal } from '@greywake/dominio'
+import type { PartidaLocal } from '@paralaxe/dominio'
 
 /** Mapeia nomes estruturais recebidos do armazenamento para os nomes internos atuais. */
 const CAMPOS_LEGADOS: Readonly<Record<string, string>> = {

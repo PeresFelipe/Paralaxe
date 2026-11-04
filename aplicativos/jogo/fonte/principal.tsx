@@ -4,7 +4,7 @@
  */
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import { criarRepositorioDePartidasIndexedDb } from '@greywake/persistencia'
+import { criarRepositorioDePartidasIndexedDb } from '@paralaxe/persistencia'
 import Aplicativo from './Aplicativo'
 import { KitDeInterface } from './features/ui-kit/KitDeInterface'
 // A ordem das folhas importa: a base vem primeiro, seguida dos ajustes de disposição,

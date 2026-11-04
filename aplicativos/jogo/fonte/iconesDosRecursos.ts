@@ -2,7 +2,7 @@
  * @file Mapeamento entre identificadores do jogo e os ícones de Shikashi.
  * Os nomes descrevem arquivos visuais; trocar uma associação não muda atributos ou recompensas.
  */
-import type { IdDaProfissao } from "@greywake/dominio";
+import type { IdDaProfissao } from "@paralaxe/dominio";
 
 /** Nomes aceitos para os PNGs publicados em publico/arte/icones/shikashi. */
 export type NomeDoIconeShikashi =

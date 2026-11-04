@@ -21,10 +21,11 @@ import {
   type PartidaLocal,
   type ProgressoDeProfissaoPorId,
   type ConjuntoDeEquipamentosIniciais,
-} from '@greywake/dominio'
-import type { RepositorioDePartidasLocais } from '@greywake/interface'
+} from '@paralaxe/dominio'
+import type { RepositorioDePartidasLocais } from '@paralaxe/interface'
 
 /** Nome já publicado no navegador; alterá-lo criaria outro banco e ocultaria as partidas existentes. */
+/** Nome historico do IndexedDB: manter para que partidas antigas continuem acessiveis apos a renomeacao da marca. */
 const NOME_DO_BANCO_DE_DADOS = 'greywake'
 /** Versão das estruturas do IndexedDB, independente da versão do esquema de cada partida. */
 const VERSAO_DO_BANCO_DE_DADOS = 1

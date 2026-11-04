@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import { ATIVIDADES_OCIOSAS_INICIAIS, CLASSES_DE_PERSONAGEM, PRESENTES_INICIAIS, VERSAO_DO_CONTEUDO } from '@greywake/conteudo'
-import { criarPartidaLocal, iniciarAtividadeOciosa } from '@greywake/dominio'
+import { ATIVIDADES_OCIOSAS_INICIAIS, CLASSES_DE_PERSONAGEM, PRESENTES_INICIAIS, VERSAO_DO_CONTEUDO } from '@paralaxe/conteudo'
+import { criarPartidaLocal, iniciarAtividadeOciosa } from '@paralaxe/dominio'
 import { atualizarPartidaNaLista, formatarAusencia, processarTrabalhoAtual } from './partida'
 
 function criarPartida(idDaPartida: string) {

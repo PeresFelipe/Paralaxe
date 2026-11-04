@@ -1,5 +1,5 @@
 /** @file Contratos que ficam entre a aplicação e seus adaptadores. */
-import type { PartidaLocal } from '@greywake/dominio'
+import type { PartidaLocal } from '@paralaxe/dominio'
 
 export const DIRECAO_DA_INTERFACE = "web-prioritaria-2d-centrada-na-interface" as const
 

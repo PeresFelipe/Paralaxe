@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { PROJETOS_DA_CIDADE, obterProjetoDaCidade } from './projetosDaCidade'
-import { IDS_DOS_DISTRITOS, criarLegadoInicial, concluirProjeto, consultarProjeto, estagioDoLegado, type PartidaLocal } from '@greywake/dominio'
+import { IDS_DOS_DISTRITOS, criarLegadoInicial, concluirProjeto, consultarProjeto, estagioDoLegado, type PartidaLocal } from '@paralaxe/dominio'
 
 function partidaConquistadora(): PartidaLocal {
   const ids = ['material.cloch', 'material.giuis', 'material.scadan', 'material.neantog']

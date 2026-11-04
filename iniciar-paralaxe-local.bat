@@ -1,19 +1,19 @@
 @echo off
 setlocal EnableExtensions
 chcp 65001 >nul
-title Greywake - Servidor de desenvolvimento local
+title Paralaxe - Servidor de desenvolvimento local
 
 REM Coloque este .bat na raiz do repositorio, ao lado de package.json.
 cd /d "%~dp0"
 
 if not exist "package.json" (
-  echo [ERRO] Coloque este arquivo .bat na pasta principal do Greywake,
+  echo [ERRO] Coloque este arquivo .bat na pasta principal do Paralaxe,
   echo        na mesma pasta do package.json.
   goto :falha
 )
 if not exist "aplicativos\jogo\vite.config.ts" (
   echo [ERRO] Nao encontrei aplicativos\jogo\vite.config.ts.
-  echo        Confirme que esta usando a raiz do repositorio Greywake.
+  echo        Confirme que esta usando a raiz do repositorio Paralaxe.
   goto :falha
 )
 
@@ -26,7 +26,7 @@ if errorlevel 1 (
 )
 
 echo ==========================================
-echo           GREYWAKE - MODO LOCAL
+echo           PARALAXE - MODO LOCAL
 echo ==========================================
 echo.
 echo Node encontrado:
@@ -60,7 +60,7 @@ if not exist "%VITE_ENTRY%" (
   goto :falha
 )
 
-echo Iniciando o Greywake somente nesta maquina...
+echo Iniciando o Paralaxe somente nesta maquina...
 echo Acesse: http://127.0.0.1:5173/
 echo Para encerrar o servidor, pressione CTRL+C nesta janela.
 echo.

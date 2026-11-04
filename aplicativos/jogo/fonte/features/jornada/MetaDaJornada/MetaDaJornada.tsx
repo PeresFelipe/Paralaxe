@@ -4,8 +4,8 @@
  * persistidas. Abrir uma profissão pelo painel não inicia sua atividade automaticamente.
  */
 import { useState } from 'react'
-import { RECEITAS_INICIAIS_DE_FABRICACAO, ATIVIDADES_OCIOSAS_INICIAIS, obterDefinicaoDeReceitaDeFabricacao } from '@greywake/conteudo'
-import { obterProgressoDaMetaDaJornada, type PartidaLocal, type IdDaProfissao } from '@greywake/dominio'
+import { RECEITAS_INICIAIS_DE_FABRICACAO, ATIVIDADES_OCIOSAS_INICIAIS, obterDefinicaoDeReceitaDeFabricacao } from '@paralaxe/conteudo'
+import { obterProgressoDaMetaDaJornada, type PartidaLocal, type IdDaProfissao } from '@paralaxe/dominio'
 import { ComparacaoDeEquipamento, IconeDoJogo } from '@/components/jogo'
 import { obterIconeDoEquipamento, obterIconeDoItem } from '@/iconesDosRecursos'
 import { rotulosDosItens, rotulosDasProfissoes } from '@/rotulosDoJogo'

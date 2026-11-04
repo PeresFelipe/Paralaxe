@@ -2,7 +2,7 @@
  * @file Rótulos e agrupamentos usados na apresentação de profissões e itens.
  * Os IDs continuam sendo as chaves do domínio; estes textos não definem receitas nem recompensas.
  */
-import type { IdDaProfissao } from "@greywake/dominio";
+import type { IdDaProfissao } from "@paralaxe/dominio";
 
 /** Nomes legíveis com acentuação para todas as profissões. */
 export const rotulosDasProfissoes: Record<IdDaProfissao, string> = {

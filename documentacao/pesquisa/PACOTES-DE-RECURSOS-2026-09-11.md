@@ -1,14 +1,14 @@
-# Avaliação dos pacotes Shikashi e Mana Seed para Greywake
+# Avaliação dos pacotes Shikashi e Mana Seed para Paralaxe
 
 Data: 11/09/2026. Base do código antes da integração: `6351cb1b856dab4cd41cee79f3df1bb2a830edd1`.
 
-**Recomendação: usar os ícones transparentes do Shikashi v2. O Mana Seed não é compatível com o desenvolvimento atual do Greywake sob a licença fornecida.** A seleção inicial do Shikashi já foi integrada ao jogo; este documento mantém a análise completa e o catálogo que orienta essa integração.
+**Recomendação: usar os ícones transparentes do Shikashi v2. O Mana Seed não é compatível com o desenvolvimento atual do Paralaxe sob a licença fornecida.** A seleção inicial do Shikashi já foi integrada ao jogo; este documento mantém a análise completa e o catálogo que orienta essa integração.
 
 ## O que foi examinado
 
 Foram inventariados os três ZIPs enviados: **442 arquivos**, sendo 426 PNGs, quatro GIFs, duas fontes TTF e dez documentos TXT. Os PNGs foram decodificados, os quadros dos GIFs foram lidos, as fontes foram inspecionadas e os documentos foram lidos. A inspeção visual incluiu as duas folhas completas de ícones, todas as versões de fundo, as variantes de personagem, composições representativas das folhas e os demais objetos/cenários. Isso não equivale a testar todas as animações dentro do jogo.
 
-O [inventário completo](inventario-de-pacotes-2026-09-11.tsv) registra caminho, formato, dimensões, tamanho e SHA-256 de cada arquivo. O [mapa de candidatos](shikashi-greywake-candidatos.json) relaciona coordenadas da folha aos IDs atuais do jogo, distinguindo usos diretos, adaptações e lacunas.
+O [inventário completo](inventario-de-pacotes-2026-09-11.tsv) registra caminho, formato, dimensões, tamanho e SHA-256 de cada arquivo. O [mapa de candidatos](shikashi-paralaxe-candidatos.json) relaciona coordenadas da folha aos IDs atuais do jogo, distinguindo usos diretos, adaptações e lacunas.
 
 | Arquivo enviado | Conteúdo real | Resultado |
 | --- | --- | --- |
@@ -34,13 +34,13 @@ Crédito do pacote usado no jogo: Shikashi's Fantasy Icons Pack, por Matt Firth 
 
 É gratuito, mas usa licença própria, não uma licença aberta equivalente à CC BY. A [licença do autor](https://selieltheshaper.weebly.com/user-license.html) permite uso comercial e edição, dispensa crédito obrigatório e exclui os recursos visuais gratuitos do limite de um produto. Proíbe redistribuir os arquivos para terceiros criarem outros produtos e usar as artes junto de conteúdo gerado por IA, incluindo código.
 
-O ZIP confirma a restrição em `NO AI, NO EXCEPTIONS.txt`. Como Greywake já usa código e artes gerados com IA, a conclusão para este projeto é **não integrar o pacote sob esses termos**. Trocar apenas os GIFs não resolveria a restrição ao código.
+O ZIP confirma a restrição em `NO AI, NO EXCEPTIONS.txt`. Como Paralaxe já usa código e artes gerados com IA, a conclusão para este projeto é **não integrar o pacote sob esses termos**. Trocar apenas os GIFs não resolveria a restrição ao código.
 
 ## Onde o Shikashi pode entrar
 
 O GDD enviado define uma interface minimalista com atmosfera Fantasia Sombria. O [UX-GDD](../UX-GDD.md) reserva imagens 1:1 para itens, recursos, equipamentos e Técnicas; os ícones complementam rótulos, e telas operacionais priorizam informação. Isso favorece a aplicação do Shikashi nas listas e espaços existentes.
 
-| Área do Greywake | Ícones encontrados | Aplicação recomendada |
+| Área do Paralaxe | Ícones encontrados | Aplicação recomendada |
 | --- | --- | --- |
 | Materiais de Atividades | Pedra/minério, madeira, peixes, ervas, ferramentas | Identificar resultado, ingrediente e quantidade junto do texto |
 | Inventário e Banco | Mochila, baú, materiais, comidas, chaves, livros, pergaminhos | Melhorar reconhecimento dos itens nas listas atuais |
@@ -80,7 +80,7 @@ O JSON cobre os 28 equipamentos, os outros 14 IDs de itens em `rotulosDoJogo.ts`
 - Maças, vestes longas, perneiras de armadura e as Braçadeiras de Giúis têm apenas aproximações. Exigem ajuste ou arte própria para representar o objeto corretamente.
 - Fragmento do Tratado, Fragmento de Fairtheoir e Pedra Sem Nome precisam preservar identidade narrativa. Um pergaminho ou runa genérica pode servir à triagem, mas não resolve a arte definitiva de Relíquias.
 - O pacote não oferece retratos 4:5, os inimigos da Versão 0.1, cenas 16:9 ou animações de trabalho. Não substitui os GIFs das Profissões nem as artes de Cidade e Masmorra.
-- A paleta é mais viva que a do Greywake. Começar com transparência sobre as superfícies escuras existentes e avaliar a leitura; evitar aplicar filtros globais que confundam poções, raridades e situação.
+- A paleta é mais viva que a do Paralaxe. Começar com transparência sobre as superfícies escuras existentes e avaliar a leitura; evitar aplicar filtros globais que confundam poções, raridades e situação.
 - Os arquivos chamados `Background` e `BG` são fundos de espaços repetidos na folha. Não são paisagens ou mapas.
 
 ## Conteúdo do Mana Seed, mesmo sem integração
@@ -95,7 +95,7 @@ O JSON cobre os 28 equipamentos, os outros 14 IDs de itens em `rotulosDoJogo.ts`
 | `tilesets` | 16 | Florestas de quatro estações, água, cachoeiras, sombras, escadas, casas e interiores | Composição manual de ambientes, não telas prontas |
 | Documentos na raiz | 3 | Apresentação, origem e restrição sobre IA | Regras de uso e escopo da amostra |
 
-O número de folhas de personagem não é o número de personagens únicos: são páginas de animação, camadas e trocas de cor. O material fornecido traz a página de movimento `p1` e três páginas de combate de uma mão (`pONE1`, `pONE2`, `pONE3`). O guia genérico menciona pesca, agricultura, mineração e outras páginas, mas **essas páginas de trabalho não estão neste ZIP**. Portanto, mesmo sem o impedimento da licença, este starter pacote não forneceria os sete ciclos de atividades do Greywake.
+O número de folhas de personagem não é o número de personagens únicos: são páginas de animação, camadas e trocas de cor. O material fornecido traz a página de movimento `p1` e três páginas de combate de uma mão (`pONE1`, `pONE2`, `pONE3`). O guia genérico menciona pesca, agricultura, mineração e outras páginas, mas **essas páginas de trabalho não estão neste ZIP**. Portanto, mesmo sem o impedimento da licença, este starter pacote não forneceria os sete ciclos de atividades do Paralaxe.
 
 As peças ambientais precisam ser montadas em cenas coerentes. A aparência é de RPG com vista de cima, mais colorida e acolhedora que a direção Fantasia Sombria atual. Isso seria uma mudança artística e de composição, não uma simples troca de arquivo. A licença verificada impede adotar também essas peças isoladas no projeto atual.
 

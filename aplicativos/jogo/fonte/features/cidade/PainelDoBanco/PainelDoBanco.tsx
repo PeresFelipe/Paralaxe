@@ -3,14 +3,14 @@
  * A tela mostra capacidades calculadas pelo domínio e envia quantidade ou ID de instância
  * aos callbacks; estoque e validação de espaço permanecem na camada de regras.
  */
-import { obterDefinicaoDeEquipamento } from "@greywake/conteudo";
+import { obterDefinicaoDeEquipamento } from "@paralaxe/conteudo";
 import {
   LIMITE_DE_ESPACOS_DO_BANCO_V01,
   LIMITE_DE_ESPACOS_DO_INVENTARIO_V01,
   obterUsoDeEspacosDoBanco,
   obterUsoDeEspacosDoInventario,
   type PartidaLocal,
-} from "@greywake/dominio";
+} from "@paralaxe/dominio";
 import { IconeDoJogo } from "@/components/jogo";
 import { obterIconeDoEquipamento, obterIconeDoItem } from "@/iconesDosRecursos";
 import { Button, Card } from '@/components/ui'

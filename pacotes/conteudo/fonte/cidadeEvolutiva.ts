@@ -1,5 +1,5 @@
 /** Catálogo de reconstrução. Custos e textos pertencem ao conteúdo, não ao React. */
-import type { DefinicaoDoDistrito, IdDoDistrito } from '@greywake/dominio'
+import type { DefinicaoDoDistrito, IdDoDistrito } from '@paralaxe/dominio'
 
 export const ESTAGIOS_DA_CIDADE = [
   { id: 0, nome: 'Cinzas da Fundação', descricao: 'A cidade resiste entre ruínas, névoa e silêncio.' },

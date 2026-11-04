@@ -14,7 +14,7 @@ import {
   obterDefinicaoDeEquipamento,
   obterDefinicaoDeAtividadeOciosa,
   obterConjuntoDeHabilidadesAntesDaMasmorra,
-} from "@greywake/conteudo";
+} from "@paralaxe/conteudo";
 import {
   aceitarContratoDeDunLiath,
   escolherCaminhoNaMasmorra,
@@ -28,7 +28,7 @@ import {
   type ResultadoDeCombate,
   type DefinicaoDeSalaDaMasmorra,
   type PartidaLocal,
-} from "@greywake/dominio";
+} from "@paralaxe/dominio";
 import { Button, Card } from "@/components/ui";
 import { rotulosDaInterface } from "@/rotulosDaInterface";
 import estilos from "./BancadaDaMasmorra.module.css";

@@ -13,7 +13,7 @@ import {
   type DefinicaoDeMasmorra,
   type DefinicaoDePresente,
   type PartidaLocal,
-} from '@greywake/dominio'
+} from '@paralaxe/dominio'
 import { criarRepositorioDePartidasIndexedDb } from './repositorioDePartidasIndexedDb'
 
 Object.defineProperty(globalThis, 'indexedDB', {

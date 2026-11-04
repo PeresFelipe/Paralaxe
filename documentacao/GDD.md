@@ -8,7 +8,7 @@
 
 # 1. Nome do jogo
 
-**Nome:** A definir.
+**Nome:** Paralaxe.
 
 **Slogan:** A definir.
 
@@ -2863,7 +2863,7 @@ A interface deve reduzir fricção acidental como:
 No estado seguro, existem quatro destinos principais:
 
 ```text
-GREYWAKE
+PARALAXE
 
 NAVEGAÇÃO PRINCIPAL
 ├── Personagem
@@ -3117,7 +3117,7 @@ A interface não usa cores, ícones, linguagem moral, alinhamento ou preview de 
 
 ## Experiência de retorno
 
-Ao retornar depois de ausência em contexto seguro, Greywake reconcilia o estado anterior com o atual.
+Ao retornar depois de ausência em contexto seguro, Paralaxe reconcilia o estado anterior com o atual.
 
 O resumo pode comunicar, proporcionalmente:
 

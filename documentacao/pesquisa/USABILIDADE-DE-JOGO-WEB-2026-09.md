@@ -1,29 +1,29 @@
-# Greywake: pesquisa de mercado e usabilidade para jogos web
+# Paralaxe: pesquisa de mercado e usabilidade para jogos web
 
 Data: 11 de setembro de 2026. Escopo: evolução da Versão 0.1 local, respeitando o GDD e o UX-GDD do repositório.
 
 ## Decisão
 
-Greywake deve funcionar como um RPG de atividades e preparação: escolher, agir, perceber o resultado e decidir o próximo passo. Para esta versão, a base indicada é React 19 + TypeScript 6 + Vite 8, DOM semântico, animações nativas do navegador e IndexedDB. A entrega acrescenta PWA com Workbox, controles acessíveis e uma área de Atividades reorganizada. A escolha se apoia no tipo de interação existente, na compatibilidade e no custo de manutenção; não existe uma tecnologia universalmente superior para todos os jogos.
+Paralaxe deve funcionar como um RPG de atividades e preparação: escolher, agir, perceber o resultado e decidir o próximo passo. Para esta versão, a base indicada é React 19 + TypeScript 6 + Vite 8, DOM semântico, animações nativas do navegador e IndexedDB. A entrega acrescenta PWA com Workbox, controles acessíveis e uma área de Atividades reorganizada. A escolha se apoia no tipo de interação existente, na compatibilidade e no custo de manutenção; não existe uma tecnologia universalmente superior para todos os jogos.
 
-A referência de Idle Iktah serve para proximidade entre cena, ação e resultado. A identidade de Greywake continua seguindo sua paleta, atmosfera, regras de risco e quatro destinos canônicos.
+A referência de Idle Iktah serve para proximidade entre cena, ação e resultado. A identidade de Paralaxe continua seguindo sua paleta, atmosfera, regras de risco e quatro destinos canônicos.
 
 ## Método e limites
 
-Pesquisa documental qualitativa de páginas oficiais de jogos, documentação de plataformas web e documentação técnica primária. O código e os documentos de Greywake foram confrontados com essas referências. Não houve teste comparativo com jogadores, medição de retenção dos concorrentes ou estimativa de participação de mercado. Os efeitos esperados abaixo são hipóteses de design a validar, não resultados de experimentos com usuários.
+Pesquisa documental qualitativa de páginas oficiais de jogos, documentação de plataformas web e documentação técnica primária. O código e os documentos de Paralaxe foram confrontados com essas referências. Não houve teste comparativo com jogadores, medição de retenção dos concorrentes ou estimativa de participação de mercado. Os efeitos esperados abaixo são hipóteses de design a validar, não resultados de experimentos com usuários.
 
 Idle Iktah e Idle Clans entram como referências do gênero. Suas páginas consultadas promovem versões nativas; elas não foram tratadas como prova de uma versão jogável no navegador. A análise de requisitos específicos da web usa Farm RPG e as diretrizes de plataformas web.
 
 ## Referências de mercado
 
-| Referência | Evidência publicada | Aplicação proposta em Greywake |
+| Referência | Evidência publicada | Aplicação proposta em Paralaxe |
 | --- | --- | --- |
 | [Idle Iktah — Grounded Games](https://grounded.games/idle_iktah.html) | Progressão por habilidades, coleta, produção, combate, missões e ganhos sem conexão; a página apresenta cenas de jogo e plataformas suportadas. | Manter o vínculo entre atividade, resultado e progressão. Conter a arte operacional, preservando a ambientação. A densidade visual é uma referência, não um modelo a copiar integralmente. |
 | [Melvor Idle — descrição do desenvolvedor](https://play.google.com/store/apps/details?hl=en_US&id=com.malcs.melvoridle) | Habilidades interdependentes, combate, inventário e continuidade entre plataformas. | Tornar a cadeia de materiais compreensível: informar o que falta, quanto falta e onde obter. Partida na Nuvem é uma característica do concorrente, não uma implementação desta configuração. |
-| [Farm RPG — página oficial](https://farmrpg.com/) | Jogo baseado em menus com coleta, pesca e produção; oferece entrada para jogar sem registro antes das opções de conta. | Reduzir barreiras de acesso e apresentar ações concretas. Greywake mantém personagens locais e escolhas iniciais com significado, sem exigir conta para esta fase. |
+| [Farm RPG — página oficial](https://farmrpg.com/) | Jogo baseado em menus com coleta, pesca e produção; oferece entrada para jogar sem registro antes das opções de conta. | Reduzir barreiras de acesso e apresentar ações concretas. Paralaxe mantém personagens locais e escolhas iniciais com significado, sem exigir conta para esta fase. |
 | [Idle Clans — página oficial](https://www.idleclans.com/) | Proposta de MMORPG acessível em sessões curtas, seleção de objetivo e execução automática, inclusive durante ausência. | Diferenciar claramente “estou consultando uma habilidade” de “esta atividade está rodando”. Os sistemas sociais e econômicos conectado não entram por consequência dessa referência. |
 
-A oportunidade para Greywake está na combinação de continuidade Ocioso com preparação e risco legíveis. Somente reduzir componentes não demonstra esse diferencial. O jogador precisa entender o efeito do recurso obtido sobre sua próxima escolha.
+A oportunidade para Paralaxe está na combinação de continuidade Ocioso com preparação e risco legíveis. Somente reduzir componentes não demonstra esse diferencial. O jogador precisa entender o efeito do recurso obtido sobre sua próxima escolha.
 
 ## Boas práticas e diagnóstico
 
@@ -48,7 +48,7 @@ As regras específicas de distribuição de cada portal não foram transformadas
 | Web Animations API e `transform` | A orientação de [animação eficiente do web.dev](https://web.dev/articles/animations-guide) favorece propriedades que evitam trabalho de disposição por quadro. | A barra usa `scaleX`; a interpolação visual sai do timer React de 100 ms. O texto é amostrado uma vez por segundo. O indicador suspende animação/timer quando a aba fica oculta e respeita movimento reduzido. A simulação continua baseada nos dados e horários do domínio. |
 | Vite PWA + Workbox | [Documentação do Vite PWA](https://vite-pwa-org.netlify.app/guide/) e sua [integração React](https://vite-pwa-org.netlify.app/frameworks/react.html) fornecem geração de manifest, precache e atualização controlada. | Implementado. Atualização mediante botão na seleção/criação de personagem. Instalação oferecida quando o navegador fornece essa capacidade. Nenhum reload automático é disparado pelo jogo durante a partida. |
 | PixiJS 8 / renderização em canvas | A [documentação de renderers do PixiJS](https://pixijs.com/8.x/guides/components/renderers) recomenda WebGL para produção e descreve o renderer WebGPU como experimental. Canvas pode beneficiar cenas com muitos animações em quadros, mas não resolve sozinho a navegação e a leitura dos painéis. | Candidato para uma futura camada de cenas, se houver demanda gráfica e medição que justifique. Não é dependência desta entrega. |
-| React Compiler | O [lançamento oficial do Compiler 1.0](https://react.dev/blog/2025/10/07/react-compiler-1) descreve memoização automática e adoção incremental. | Avaliado, ainda não habilitado. Primeiro corrigir a atualização visual frequente identificada no código; avaliar o compilador com perfil real de interações. Não atribuir ganhos de terceiros a Greywake. |
+| React Compiler | O [lançamento oficial do Compiler 1.0](https://react.dev/blog/2025/10/07/react-compiler-1) descreve memoização automática e adoção incremental. | Avaliado, ainda não habilitado. Primeiro corrigir a atualização visual frequente identificada no código; avaliar o compilador com perfil real de interações. Não atribuir ganhos de terceiros a Paralaxe. |
 
 A aplicação não depende de WebGPU, servidor de contas ou conexão contínua para a simulação local. PWA não significa execução em segundo plano ilimitada: ao retornar, os resultados continuam sendo calculados pelo sistema de progresso sem conexão já existente.
 

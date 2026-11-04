@@ -6,7 +6,7 @@ Cópia de segurança: `backup/main-antes-ptbr-2026-09-15-3a251bf`.
 
 ## Convenções
 
-Arquivos, pastas, tipos, funções, variáveis, propriedades próprias, classes CSS e comentários usam português brasileiro. Identificadores usam palavras sem acentos; textos para pessoas preservam os acentos. Nomes próprios como Greywake, Brann e Dún Liath são mantidos.
+Arquivos, pastas, tipos, funções, variáveis, propriedades próprias, classes CSS e comentários usam português brasileiro. Identificadores usam palavras sem acentos; textos para pessoas preservam os acentos. Nomes próprios como Paralaxe, Brann e Dún Liath são mantidos.
 
 | Antes | Agora |
 | --- | --- |
@@ -29,7 +29,7 @@ Os nomes exigidos por ferramentas e bibliotecas continuam seguindo seus contrato
 
 ## Compatibilidade das partidas
 
-`pacotes/persistencia/fonte/formatoLegado.ts` converte o vocabulário na entrada e na saída da persistência. O banco `greywake`, o armazenamento `saves`, a chave `saveId`, a versão do banco e o esquema 10 são mantidos. A versão anterior consegue ler as gravações novas.
+`pacotes/persistencia/fonte/formatoLegado.ts` converte o vocabulário na entrada e na saída da persistência. O banco `paralaxe`, o armazenamento `saves`, a chave `saveId`, a versão do banco e o esquema 10 são mantidos. A versão anterior consegue ler as gravações novas.
 
 O adaptador preserva nomes livres do jogador, identificadores de partidas e de instâncias, horários, saldos, quantidades, atributos, equipamentos, progresso, escolhas narrativas e sementes. Uma leitura não regrava o banco. A migração de versões anteriores continua passando pelas regras existentes.
 

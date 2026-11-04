@@ -16,7 +16,7 @@ export function KitDeInterface() {
     <main className={styles.screen}>
       <header className={styles.header}>
         <div>
-          <p className={styles.eyebrow}>Greywake · Ambiente de desenvolvimento</p>
+          <p className={styles.eyebrow}>Paralaxe · Ambiente de desenvolvimento</p>
           <h1>Kit de interface</h1>
           <p>Componentes compartilhados, variantes e estados. Use Tab para conferir o foco visível.</p>
         </div>

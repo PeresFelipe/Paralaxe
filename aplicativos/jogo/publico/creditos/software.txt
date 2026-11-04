@@ -1,4 +1,4 @@
-Avisos de software do Greywake
+Avisos de software do Paralaxe
 
 Textos de licença preservados das dependências distribuídas ao navegador.
 Ferramentas usadas somente para compilar não integram este inventário.

@@ -14,14 +14,14 @@ import {
   obterDefinicaoDeEquipamento,
   obterHistoriaDaJornada,
   obterDialogoDeBrann,
-} from "@greywake/conteudo";
+} from "@paralaxe/conteudo";
 import {
   derivarEstatisticasDeCombateDoJogador,
   obterValorPrincipalDoEquipamento,
   type DistribuicaoDeAtributos,
   type PartidaLocal,
   type IdDaProfissao,
-} from "@greywake/dominio";
+} from "@paralaxe/dominio";
 import BancadaDeCombate from "./features/aventura/BancadaDeCombate";
 import BancadaDaMasmorra from "./features/aventura/BancadaDaMasmorra";
 import BancadaDoMercado from "./features/cidade/BancadaDoMercado";
@@ -304,7 +304,7 @@ export default function EstruturaDoJogo({
           <span className="marca-simbolo" aria-hidden="true">
             <IconeDoJogo icone="espada-longa" tamanho={48} />
           </span>
-          <strong>GREYWAKE</strong>
+          <strong>PARALAXE</strong>
           <small>CRÔNICAS DA CIDADE LIVRE</small>
           <span className="marca-ornamento" aria-hidden="true" />
         </div>

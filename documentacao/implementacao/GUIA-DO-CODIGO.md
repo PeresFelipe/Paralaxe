@@ -1,4 +1,4 @@
-# Guia do código de Greywake
+# Guia do código de Paralaxe
 
 Este guia acompanha os comentários em português brasileiro acrescentados ao código. Explica a implementação existente; o [GDD](../GDD.md) e o [UX-GDD](../UX-GDD.md) continuam sendo as referências de requisitos. Um comentário sobre o funcionamento atual não significa que todo requisito planejado já esteja implementado.
 
@@ -68,7 +68,7 @@ JSON não aceita comentários. Os arquivos abaixo continuam com sua sintaxe e se
 
 | Arquivo | Funcionamento |
 | --- | --- |
-| `package.json` | Define o projeto como privado e ES modules, informa Node/pnpm e reúne os comandos executados na raiz. `desenvolver` inicia o Vite para `aplicativos/jogo`; `compilar` seleciona `@greywake/jogo`; os demais comandos percorrem os pacotes. |
+| `package.json` | Define o projeto como privado e ES modules, informa Node/pnpm e reúne os comandos executados na raiz. `desenvolver` inicia o Vite para `aplicativos/jogo`; `compilar` seleciona `@paralaxe/jogo`; os demais comandos percorrem os pacotes. |
 | `tsconfig.base.json` | Configuração TypeScript herdada: ES2023, módulos ESNext, resolução Bundler, verificação estrita e sem emissão de JavaScript. A compilação dos arquivos distribuídos fica com o Vite. |
 | `aplicativos/jogo/package.json` | Dependências React, integração do aplicativo web instalável e referências `workspace:*` aos pacotes internos. `compilar` primeiro verifica os projetos TypeScript e depois executa o Vite. |
 | `aplicativos/jogo/tsconfig.json` | Agrega dois projetos: código do navegador e configuração executada pelo Node. `files: []` evita tratar esse arquivo agregador como uma lista independente de fontes. |
@@ -83,9 +83,9 @@ JSON não aceita comentários. Os arquivos abaixo continuam com sua sintaxe e se
 | `pacotes/interface/package.json` | Define a entrada do pacote reservado à interface compartilhada. Por enquanto oferece somente análise e tipos, sem comando de testes. |
 | `pacotes/interface/tsconfig.json` | Inclui `fonte` e tipos DOM sobre a configuração base, preparando o pacote para contratos de interface. |
 | `aplicativos/jogo/fonte/catalogoDeCreditos.json` | Fonte única dos registros exibidos na janela de créditos e conferidos por `verificarCreditos.mjs`. Os campos são explicados na tabela seguinte. |
-| `documentacao/pesquisa/shikashi-greywake-candidatos.json` | Inventário de pesquisa dos ícones: proveniência, hashes, coordenadas e avaliação dos candidatos. Não é carregado pelo jogo como catálogo de execução. |
+| `documentacao/pesquisa/shikashi-paralaxe-candidatos.json` | Inventário de pesquisa dos ícones: proveniência, hashes, coordenadas e avaliação dos candidatos. Não é carregado pelo jogo como catálogo de execução. |
 
-Em todos os `package.json`, `name`, `scripts`, `dependencies`, `devDependencies`, `exports` e `types` são chaves reconhecidas pelas ferramentas e mantêm seus nomes padronizados. Os comandos próprios do projeto estão em português. `workspace:*` liga os pacotes locais identificados por seus nomes `@greywake/...`.
+Em todos os `package.json`, `name`, `scripts`, `dependencies`, `devDependencies`, `exports` e `types` são chaves reconhecidas pelas ferramentas e mantêm seus nomes padronizados. Os comandos próprios do projeto estão em português. `workspace:*` liga os pacotes locais identificados por seus nomes `@paralaxe/...`.
 
 Na configuração TypeScript, `strict` ativa verificações de tipos rigorosas; `noUncheckedIndexedAccess` obriga a considerar índices ausentes; `exactOptionalPropertyTypes` distingue uma propriedade omitida de uma explicitamente preenchida com `undefined`; `noFallthroughCasesInSwitch` ajuda a evitar quedas acidentais entre casos. `skipLibCheck` pula a verificação interna das declarações de dependências, não a do código próprio.
 
@@ -129,7 +129,7 @@ pnpm compilar
 
 `desenvolver` inicia o ambiente local e permanece em execução. `verificar` executa análise estática, tipos, testes e créditos. `compilar` verifica os projetos TypeScript do aplicativo e gera a versão de produção em `aplicativos/jogo/dist`. O fluxo de validação no GitHub executa verificação e compilação; ele não publica automaticamente um site.
 
-Para investigar uma área específica, use, por exemplo, `pnpm --filter @greywake/dominio testar` ou `pnpm verificar:creditos`. O script da raiz se chama `desenvolver`; não há um script chamado `dev` nesta versão.
+Para investigar uma área específica, use, por exemplo, `pnpm --filter @paralaxe/dominio testar` ou `pnpm verificar:creditos`. O script da raiz se chama `desenvolver`; não há um script chamado `dev` nesta versão.
 
 ## Índice dos arquivos comentados
 
@@ -208,7 +208,7 @@ Os caminhos abaixo são links para os arquivos reais do repositório. Cada descr
 | [pacotes/conteudo/fonte/criacaoDePersonagem.test.ts](../../pacotes/conteudo/fonte/criacaoDePersonagem.test.ts) | Teste de integração do Anel do Viajante com os catálogos reais. |
 | [pacotes/conteudo/fonte/criacaoDePersonagem.ts](../../pacotes/conteudo/fonte/criacaoDePersonagem.ts) | Opções iniciais de classes e presentes, separadas do estado de cada partida. |
 | [pacotes/conteudo/fonte/equipamento.ts](../../pacotes/conteudo/fonte/equipamento.ts) | Definições dos equipamentos iniciais, fabricáveis, compráveis e obtidos na masmorra. |
-| [pacotes/conteudo/fonte/indice.ts](../../pacotes/conteudo/fonte/indice.ts) | Entrada pública dos catálogos de Greywake. |
+| [pacotes/conteudo/fonte/indice.ts](../../pacotes/conteudo/fonte/indice.ts) | Entrada pública dos catálogos de Paralaxe. |
 | [pacotes/conteudo/fonte/jornada.test.ts](../../pacotes/conteudo/fonte/jornada.test.ts) | Testes de metas com receitas reais, coleta, banco e fabricação. |
 | [pacotes/conteudo/fonte/jornada.ts](../../pacotes/conteudo/fonte/jornada.ts) | Apresentação contextual das metas e da história a partir do estado da partida. |
 | [pacotes/conteudo/fonte/masmorra.ts](../../pacotes/conteudo/fonte/masmorra.ts) | Mapa declarativo de Dún Liath na dificuldade fácil. |
@@ -241,8 +241,8 @@ Os caminhos abaixo são links para os arquivos reais do repositório. Cada descr
 | [.github/workflows/validar.yml](../../.github/workflows/validar.yml) | Verificação automatizada da main e das propostas de integração: instalação, análise, tipos, testes, créditos e compilação. |
 | [aplicativos/jogo/index.html](../../aplicativos/jogo/index.html) | Página de entrada: metadados, ícones, fonte e ponto de montagem do React. |
 | [aplicativos/jogo/vite.config.ts](../../aplicativos/jogo/vite.config.ts) | Configuração de desenvolvimento, compilação e aplicativo web instalável. |
-| [documentacao/prototipos/greywake-fluxo-alta-fidelidade-v0.1.html](../../documentacao/prototipos/greywake-fluxo-alta-fidelidade-v0.1.html) | Protótipo navegável v0.1 com telas ilustrativas; sua lógica de DOM não participa da compilação do jogo. |
-| [documentacao/prototipos/greywake-fluxo-alta-fidelidade-v0.2.html](../../documentacao/prototipos/greywake-fluxo-alta-fidelidade-v0.2.html) | Protótipo navegável v0.2 com telas ilustrativas; sua lógica de DOM não participa da compilação do jogo. |
+| [documentacao/prototipos/paralaxe-fluxo-alta-fidelidade-v0.1.html](../../documentacao/prototipos/paralaxe-fluxo-alta-fidelidade-v0.1.html) | Protótipo navegável v0.1 com telas ilustrativas; sua lógica de DOM não participa da compilação do jogo. |
+| [documentacao/prototipos/paralaxe-fluxo-alta-fidelidade-v0.2.html](../../documentacao/prototipos/paralaxe-fluxo-alta-fidelidade-v0.2.html) | Protótipo navegável v0.2 com telas ilustrativas; sua lógica de DOM não participa da compilação do jogo. |
 | [documentacao/prototipos/mineracao-alta-fidelidade-v0.1.html](../../documentacao/prototipos/mineracao-alta-fidelidade-v0.1.html) | Protótipo estático e independente da tela de Mineração; usa dados ilustrativos e não executa regras do jogo. |
 | [ferramentas/verificarCreditos.mjs](../../ferramentas/verificarCreditos.mjs) | Verificação automatizada da cobertura do catálogo de créditos. |
 | [pnpm-workspace.yaml](../../pnpm-workspace.yaml) | Define as pastas dos aplicativos e pacotes locais que participam do espaço de trabalho pnpm. |

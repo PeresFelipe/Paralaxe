@@ -1,5 +1,5 @@
-import { DESAFIOS } from '@greywake/conteudo'
-import type { PartidaLocal } from '@greywake/dominio'
+import { DESAFIOS } from '@paralaxe/conteudo'
+import type { PartidaLocal } from '@paralaxe/dominio'
 import { Button, Card, ProgressBar } from '@/components/ui'
 
 export default function PainelDeDesafios({ partida, aoVoltar }: { partida: PartidaLocal; aoVoltar: () => void }) {

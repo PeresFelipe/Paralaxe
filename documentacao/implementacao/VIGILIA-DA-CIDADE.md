@@ -54,7 +54,7 @@ O componente mantém uma cena SVG própria e leve até a arte final estar dispon
 
 ## Compatibilidade e confiabilidade
 
-O esquema passa de 11 para 12, sem alterar o nome do banco `greywake`, o object store `saves` ou sua chave `saveId`. Ao migrar, não se inventam sessões históricas. O conteúdo da partida e as informações da Jornada, Códice, Desafios e Prestígio são mantidos.
+O esquema passa de 11 para 12, sem alterar o nome do banco `paralaxe`, o object store `saves` ou sua chave `saveId`. Ao migrar, não se inventam sessões históricas. O conteúdo da partida e as informações da Jornada, Códice, Desafios e Prestígio são mantidos.
 
 A fila de comandos protege **uma única instância da aplicação**. O IndexedDB atual não implementa bloqueio transacional entre múltiplas abas para o agregado inteiro. Jogar duas abas com a mesma partida simultaneamente pode produzir conflitos; isso precisa de trabalho e testes adicionais antes de anunciar suporte multitab.
 

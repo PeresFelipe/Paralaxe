@@ -5,7 +5,7 @@
  */
 import { beforeEach, describe, expect, it } from 'vitest'
 import { indexedDB } from 'fake-indexeddb'
-import type { PartidaLocal } from '@greywake/dominio'
+import type { PartidaLocal } from '@paralaxe/dominio'
 import { criarRepositorioDePartidasIndexedDb } from './repositorioDePartidasIndexedDb'
 import { gravarFormatoLegado, lerFormatoLegado } from './formatoLegado'
 import { partidaLegadaV10 } from './amostras/partidaLegadaV10'

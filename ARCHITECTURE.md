@@ -1,4 +1,4 @@
-# Greywake — arquitetura da interface
+# Paralaxe — arquitetura da interface
 
 Este documento define as regras permanentes para a interface do jogo. Toda nova alteração deve seguir estas convenções.
 
@@ -33,7 +33,7 @@ aplicativos/jogo/fonte/
         Modal.module.css
         index.ts
       index.ts
-    jogo/                 # componentes visuais específicos de Greywake
+    jogo/                 # componentes visuais específicos de Paralaxe
       IconeDoJogo/
         IconeDoJogo.tsx
         IconeDoJogo.module.css
@@ -143,12 +143,12 @@ aplicativos/jogo (features, hooks e composição React)
 
 ## Decisões e guia de implementação
 
-- Aplicamos Atomic Design de forma pragmática: `components/ui` contém controles visuais reutilizáveis; `components/jogo` contém peças específicas do universo Greywake; `features` compõe essas peças em fluxos completos. Não criamos átomos/moléculas sem reutilização concreta.
+- Aplicamos Atomic Design de forma pragmática: `components/ui` contém controles visuais reutilizáveis; `components/jogo` contém peças específicas do universo Paralaxe; `features` compõe essas peças em fluxos completos. Não criamos átomos/moléculas sem reutilização concreta.
 - Clean Architecture é aplicada nas fronteiras que existem no projeto: regras em domínio, serviços coordenando casos de uso, adaptadores em persistência e composição no ponto de entrada. Evite criar camadas vazias ou transferir lógica para componentes.
 - As variantes adicionais de `Button` formalizam padrões visuais já usados pelo jogo (HUD, inventário, navegação, profissão e outros). Elas só recebem estado e eventos tipados; não consultam estado, conteúdo nem regras do jogo.
 - Para nova ação, use `primary` para a ação principal, `secondary`/`ghost` para voltar ou cancelar e `danger` para ações destrutivas. Use uma variante oficial específica somente se o padrão se repetir e diferir visualmente. Ícones são passados pela prop `icon`; mantenha texto acessível no botão.
 - Para texto, número ou seleção, use `TextField`/`SelectField` com rótulo e estado de erro/ajuda; não monte controles nativos nas telas. Use `ProgressBar` para progresso linear e `Modal`/`Card` quando o padrão corresponder ao componente existente.
-- `@/` aponta para `aplicativos/jogo/fonte`; use-o em imports internos longos. Imports entre pacotes usam os nomes `@greywake/*` definidos nos manifestos.
+- `@/` aponta para `aplicativos/jogo/fonte`; use-o em imports internos longos. Imports entre pacotes usam os nomes `@paralaxe/*` definidos nos manifestos.
 - `rotulosDaInterface.ts` centraliza rótulos e mensagens técnicas repetidos. Textos narrativos e conteúdo exclusivo de um recurso permanecem junto ao catálogo/feature correspondente; não extraia frases únicas para um catálogo global.
 - `/ui-kit` é uma vitrine de desenvolvimento dos componentes e estados. O ponto de entrada só a monta em `DEV`; ela não é uma tela de jogo nem parte do build de produção.
 - Não foi criado um componente de layout genérico separado (Stack/Row/Grid): as composições atuais usam poucos padrões distintos, e o shell/responsividade já são compartilhados nas folhas globais. Extraia um quando a mesma composição concreta surgir em áreas independentes.

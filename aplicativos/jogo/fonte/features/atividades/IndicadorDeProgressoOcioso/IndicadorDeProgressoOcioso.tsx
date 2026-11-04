@@ -7,8 +7,8 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import {
   RECEITAS_INICIAIS_DE_FABRICACAO,
   ATIVIDADES_OCIOSAS_INICIAIS,
-} from "@greywake/conteudo";
-import type { PartidaLocal, IdDaProfissao } from "@greywake/dominio";
+} from "@paralaxe/conteudo";
+import type { PartidaLocal, IdDaProfissao } from "@paralaxe/dominio";
 
 import { rotulosDosItens, rotulosDasProfissoes } from "@/rotulosDoJogo";
 import estilos from "./IndicadorDeProgressoOcioso.module.css";

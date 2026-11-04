@@ -1,4 +1,4 @@
-# Protótipos de UX — Greywake
+# Protótipos de UX — Paralaxe
 
 Esta pasta contém protótipos isolados usados durante o **M5.5 — Fundamentos de UX**.
 
@@ -6,7 +6,7 @@ Eles não fazem parte do execução do jogo e não devem ser tratados como imple
 
 ## Candidato atual para teste com jogadores
 
-### `greywake-fluxo-alta-fidelidade-v0.2.html`
+### `paralaxe-fluxo-alta-fidelidade-v0.2.html`
 
 É o fluxo hi-fi navegável atual e substitui o v0.1 como referência de teste.
 
@@ -63,7 +63,7 @@ O `TESTE-COM-JOGADORES-ALTA-FIDELIDADE-V0.1.md` é preservado como histórico da
 
 Primeiro estudo focado em **Atividades → Mineração**, usado para estabelecer a linguagem visual inicial.
 
-### `greywake-fluxo-alta-fidelidade-v0.1.html`
+### `paralaxe-fluxo-alta-fidelidade-v0.1.html`
 
 Primeira derivação navegável das telas principais. Foi preservada para comparação, mas não é mais o candidato principal de teste com jogadores.
 

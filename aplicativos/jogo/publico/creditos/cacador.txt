@@ -6,7 +6,7 @@ ArtStation: https://artstation.com/otsoga
 Twitter: @otsoga_
 Revisado em: 29/10/2026
 
-Uso no Greywake: animação ociosa da classe Caçador na criação de personagem.
+Uso no Paralaxe: animação ociosa da classe Caçador na criação de personagem.
 Adaptação: folha horizontal montada com os seis quadros originais Idle e o primeiro
 repetido para fechar o loop; a animação é feita por CSS. Os PNGs de origem não
 foram incluídos no jogo.

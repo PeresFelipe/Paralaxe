@@ -1,5 +1,5 @@
-import { ENTRADAS_DO_CODICE, type CategoriaDoCodice } from '@greywake/conteudo'
-import type { PartidaLocal } from '@greywake/dominio'
+import { ENTRADAS_DO_CODICE, type CategoriaDoCodice } from '@paralaxe/conteudo'
+import type { PartidaLocal } from '@paralaxe/dominio'
 import { Button, Card } from '@/components/ui'
 
 const rotulos: Record<CategoriaDoCodice, string> = { classe: 'Classes', oficio: 'Ofícios', atividade: 'Atividades', receita: 'Receitas', material: 'Materiais', equipamento: 'Equipamentos', tecnica: 'Técnicas', inimigo: 'Inimigos', masmorra: 'Masmorras', sala: 'Salas' }

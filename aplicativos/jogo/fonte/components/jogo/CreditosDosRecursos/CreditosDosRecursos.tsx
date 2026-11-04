@@ -46,13 +46,13 @@ function JanelaDeCreditos({ aoFechar }: { aoFechar: () => void }) {
   return <Modal className={estilos.dialog} labelledBy={`${id}-titulo`} describedBy={`${id}-descricao`} closeOnBackdropClick onClose={aoFechar}>
     <header className={estilos.header}>
       <div>
-        <p className={estilos.brand}>Greywake</p>
+        <p className={estilos.brand}>Paralaxe</p>
         <h2 id={`${id}-titulo`}>Créditos e licenças</h2>
         <p id={`${id}-descricao`}>Arte, autoria e contribuições que dão vida à jornada.</p>
       </div>
       <Button variant="icon" aria-label="Fechar créditos" onClick={aoFechar}>×</Button>
     </header>
-    <div className={estilos.content} tabIndex={0} role="region" aria-label="Contribuições ao Greywake">
+    <div className={estilos.content} tabIndex={0} role="region" aria-label="Contribuições ao Paralaxe">
       {catalogo.grupos.filter((grupo) => grupo.id !== 'tecnologia').map((grupo) => <section key={grupo.id} className={estilos.group} aria-labelledby={`${id}-${grupo.id}`}>
         <h3 id={`${id}-${grupo.id}`}>{grupo.titulo}</h3>
         <ListaDeContribuicoes grupo={grupo.id} />

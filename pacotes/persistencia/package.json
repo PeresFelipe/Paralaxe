@@ -1,5 +1,5 @@
 {
-  "name": "@greywake/persistencia",
+  "name": "@paralaxe/persistencia",
   "private": true,
   "version": "0.0.1",
   "type": "module",
@@ -13,8 +13,8 @@
     "testar": "vitest run --pool=threads --maxWorkers=1"
   },
   "dependencies": {
-    "@greywake/dominio": "workspace:*",
-    "@greywake/interface": "workspace:*"
+    "@paralaxe/dominio": "workspace:*",
+    "@paralaxe/interface": "workspace:*"
   },
   "devDependencies": {
     "fake-indexeddb": "^6.2.2",

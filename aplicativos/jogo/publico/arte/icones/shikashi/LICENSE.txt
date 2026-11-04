@@ -6,7 +6,7 @@ License: Creative Commons Attribution 4.0 International (CC BY 4.0)
 License URL: https://creativecommons.org/licenses/by/4.0/
 
 These PNGs are 32x32 crops from the v2 transparent sheet supplied with the
-pack. Changes made for Greywake: cropping into individual files only; no
+pack. Changes made for Paralaxe: cropping into individual files only; no
 recoloring, redrawing, or other changes were made to the pixels.
 
 The creator's page requests credit for Matt Firth (shikashipx) and
@@ -15,7 +15,7 @@ game-icons.net. Retain the original attribution and, when an underlying
 author is identified, retain that author's credit and license information.
 The game-icons.net collection is referenced by its site as CC BY 3.0.
 
-Greywake uses these selected crops in its web game UI. This notice is kept
+Paralaxe uses these selected crops in its web game UI. This notice is kept
 with the runtime assets and the full pack is not redistributed here.
 
 Registro complementar de proveniência (16/09/2026):

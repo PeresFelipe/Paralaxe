@@ -1,6 +1,6 @@
 # Prontidão de teste com jogadores — Alta fidelidade v0.2
 
-Este documento verifica se `greywake-fluxo-alta-fidelidade-v0.2.html` possui superfícies e interações suficientes para executar o roteiro de UX antes de convidar participantes.
+Este documento verifica se `paralaxe-fluxo-alta-fidelidade-v0.2.html` possui superfícies e interações suficientes para executar o roteiro de UX antes de convidar participantes.
 
 > **Prontidão não é resultado de teste com jogadores.** Um cenário estar testável significa apenas que o protótipo oferece estímulos suficientes para observar o comportamento correspondente.
 

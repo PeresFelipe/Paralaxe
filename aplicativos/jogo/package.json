@@ -1,5 +1,5 @@
 {
-  "name": "@greywake/jogo",
+  "name": "@paralaxe/jogo",
   "private": true,
   "version": "0.0.1",
   "type": "module",
@@ -12,10 +12,10 @@
     "verificar:tipos": "tsc -b"
   },
   "dependencies": {
-    "@greywake/conteudo": "workspace:*",
-    "@greywake/dominio": "workspace:*",
-    "@greywake/persistencia": "workspace:*",
-    "@greywake/interface": "workspace:*",
+    "@paralaxe/conteudo": "workspace:*",
+    "@paralaxe/dominio": "workspace:*",
+    "@paralaxe/persistencia": "workspace:*",
+    "@paralaxe/interface": "workspace:*",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "workbox-window": "^7.4.1"

@@ -1,4 +1,4 @@
-CRÉDITOS E ATRIBUIÇÕES — GREYWAKE
+CRÉDITOS E ATRIBUIÇÕES — PARALAXE
 Revisão: 16/09/2026
 
 Arte dos personagens
@@ -25,7 +25,7 @@ Interface e tipografia
   Atribuição e proveniência: /fontes/antiquity-print-LICENSE.txt
 
 Produção visual do projeto
-- Ambientação gerada com assistência de IA e preparada para Greywake.
+- Ambientação gerada com assistência de IA e preparada para Paralaxe.
   Registro: /creditos/producao-do-projeto.txt
 
 Software

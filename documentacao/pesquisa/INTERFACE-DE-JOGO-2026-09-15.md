@@ -1,12 +1,12 @@
-# Greywake — Interface de jogo medieval fantasia sombria
+# Paralaxe — Interface de jogo medieval fantasia sombria
 
 Pesquisa e implementação: 14–15/09/2026. Base: `b86cec314c6331396f3cf52af46f700735870266`, Versão 0.1. Pedido: reforçar a experiência de jogo Ocioso e usar animações em quadros gratuitos do itch.io com licença compatível.
 
 ## Referências de mercado
 
-Pesquisa qualitativa em fontes dos próprios criadores. As aplicações ao Greywake abaixo são decisões de design, não resultados de um estudo com jogadores ou evidência de aumento de retenção.
+Pesquisa qualitativa em fontes dos próprios criadores. As aplicações ao Paralaxe abaixo são decisões de design, não resultados de um estudo com jogadores ou evidência de aumento de retenção.
 
-| Referência primária | O que a fonte apresenta | Aplicação ao Greywake |
+| Referência primária | O que a fonte apresenta | Aplicação ao Paralaxe |
 | --- | --- | --- |
 | [Idle Iktah — Grounded Games](https://grounded.games/idle_iktah.html) | Coleta, produção e combate interligados, progresso sem conexão e desbloqueio gradual | A profissão consultada tem identidade própria; a tarefa em execução continua identificável em qualquer área segura |
 | [Melvor Idle — página oficial na Steam](https://store.steampowered.com/app/1267910/Melvor_Idle/) | Profissões conectadas, gestão de inventário/banco e atividades operadas com poucos comandos | Ciclo, rendimento, materiais e ação principal ficam próximos; bolsa usa espaços, capacidade real e inspeção |

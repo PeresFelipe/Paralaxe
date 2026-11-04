@@ -9,7 +9,7 @@ Licença: termos próprios do autor; uso pessoal e comercial e modificações pe
 A licença original é mantida integralmente em:
 /arte/interface/dark-ages/LICENSE.txt
 
-Os recortes integram o Greywake; a licença não permite redistribuir o pacote
+Os recortes integram o Paralaxe; a licença não permite redistribuir o pacote
 como recursos para terceiros, incluí-lo em outros pacotes, NFTs, jogos de
 blockchain ou conjuntos de treinamento de IA. O crédito é opcional e foi mantido.
 Este aviso não substitui os termos originais.

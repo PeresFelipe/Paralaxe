@@ -15,7 +15,7 @@ import {
   ensinarEEquiparHabilidadesDeCombate,
   type RecursosDeCombate,
   type PartidaLocal,
-} from '@greywake/dominio'
+} from '@paralaxe/dominio'
 import { CLASSES_DE_PERSONAGEM, PRESENTES_INICIAIS } from './criacaoDePersonagem'
 import {
   obterDefinicaoDeHabilidadeDeCombate,

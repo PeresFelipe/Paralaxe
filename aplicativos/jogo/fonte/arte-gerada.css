@@ -1,6 +1,6 @@
 /* Arquivo: Recortes das folhas de cenas e retratos e suporte à arte individual das atividades.
    É carregado após a base; as URLs apontam para a pasta publico. */
-/* Arte gerada do Greywake, isolada para permitir sua substituição por arte autoral. */
+/* Arte gerada do Paralaxe, isolada para permitir sua substituição por arte autoral. */
 /* O fundo de 400% por 200% amplia uma folha de quatro colunas e duas linhas; a posição escolhe o quadro. */
 .contexto-arte {
   background-image: var(--ui-image-generated-scene) !important;

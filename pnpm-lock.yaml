@@ -111,16 +111,16 @@ importers:
 
   aplicativos/jogo:
     dependencies:
-      '@greywake/conteudo':
+      '@paralaxe/conteudo':
         specifier: workspace:*
         version: link:../../pacotes/conteudo
-      '@greywake/dominio':
+      '@paralaxe/dominio':
         specifier: workspace:*
         version: link:../../pacotes/dominio
-      '@greywake/interface':
+      '@paralaxe/interface':
         specifier: workspace:*
         version: link:../../pacotes/interface
-      '@greywake/persistencia':
+      '@paralaxe/persistencia':
         specifier: workspace:*
         version: link:../../pacotes/persistencia
       react:
@@ -163,7 +163,7 @@ importers:
 
   pacotes/conteudo:
     dependencies:
-      '@greywake/dominio':
+      '@paralaxe/dominio':
         specifier: workspace:*
         version: link:../dominio
     devDependencies:
@@ -191,7 +191,7 @@ importers:
 
   pacotes/interface:
     dependencies:
-      '@greywake/dominio':
+      '@paralaxe/dominio':
         specifier: workspace:*
         version: link:../dominio
     devDependencies:
@@ -204,10 +204,10 @@ importers:
 
   pacotes/persistencia:
     dependencies:
-      '@greywake/dominio':
+      '@paralaxe/dominio':
         specifier: workspace:*
         version: link:../dominio
-      '@greywake/interface':
+      '@paralaxe/interface':
         specifier: workspace:*
         version: link:../interface
     devDependencies:

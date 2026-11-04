@@ -1,4 +1,4 @@
-# Greywake — Legado da Cidade Livre (Cidade Viva)
+# Paralaxe — Legado da Cidade Livre (Cidade Viva)
 
 ## Resumo
 
@@ -34,7 +34,7 @@ Ao migrar do esquema 12:
 - Cada crédito oferece desconto de 2 moedas de ouro, limitado a 50% do custo nominal de cada novo projeto. Não substitui material ou conquista; não é produzido após a migração.
 - Considerar automaticamente concluídos os níveis já obtidos: a situação é derivada de `distritos`, não há cobrança retroativa.
 - Não premiar uma sessão histórica ainda ativa; seus dados ficam arquivados e a interface informa a mudança.
-- Migrar saves anteriores usando o adaptador de vocabulário já existente, preservando IndexedDB `greywake`, store `saves`, chave `saveId`.
+- Migrar saves anteriores usando o adaptador de vocabulário já existente, preservando IndexedDB `paralaxe`, store `saves`, chave `saveId`.
 
 **Compatibilidade reversa:** uma partida regravada em esquema 13 não é garantidamente legível por versões anteriores. Fazer backup antes de alternar entre branches. O mecanismo atual de fila garante ordem por uma instância do navegador, não concorrência multitab.
 

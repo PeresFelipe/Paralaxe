@@ -1,4 +1,4 @@
-# Greywake — Pacote visual da Cidade Livre
+# Paralaxe — Pacote visual da Cidade Livre
 
 ## Conteúdo
 
@@ -14,11 +14,11 @@
 
 A branch de arte `codex/vigilia-cidade-artes-completas-2026-11-03` publica as cinco imagens WebP, cinco versões móveis, quinze recursos de interface e referências conceituais. `CENAS_DA_CIDADE` mantém `disponivel: true` para as cenas; camadas independentes não alinhadas seguem desabilitadas. A etapa de importação descrita abaixo aplica-se apenas a clones da branch anterior que ainda não possuam os binários.
 
-Para importar o ZIP `greywake-cidade-artes-vigilia.zip` (arquivo fornecido separadamente no ChatGPT), execute em um clone limpo desta branch:
+Para importar o ZIP `paralaxe-cidade-artes-vigilia.zip` (arquivo fornecido separadamente no ChatGPT), execute em um clone limpo desta branch:
 
 ```sh
 git switch codex/vigilia-cidade-evolutiva-2026-11-03
-python3 ferramentas/importarArtesDaCidade.py /caminho/greywake-cidade-artes-vigilia.zip
+python3 ferramentas/importarArtesDaCidade.py /caminho/paralaxe-cidade-artes-vigilia.zip
 pnpm verificar
 pnpm compilar
 git add aplicativos/jogo/publico/arte/cidade pacotes/conteudo/fonte/cidadeEvolutiva.ts aplicativos/jogo/fonte/catalogoDeCreditos.json

@@ -1,4 +1,4 @@
-# Greywake — Cidade Viva + Refatoração de UI Responsiva
+# Paralaxe — Cidade Viva + Refatoração de UI Responsiva
 
 ## Escopo
 
@@ -29,7 +29,7 @@ Na raiz do clone:
 # Confirme a branch de artes e o estado do clone.
 git switch codex/vigilia-cidade-artes-completas-2026-11-03
 git status --short
-python3 /CAMINHO/greywake-refatoracao-ui-completa/aplicar_completo.py /CAMINHO/DO/CLONE
+python3 /CAMINHO/paralaxe-refatoracao-ui-completa/aplicar_completo.py /CAMINHO/DO/CLONE
 pnpm verificar
 pnpm compilar
 ```
@@ -41,7 +41,7 @@ O script cria a branch **local** `codex/legado-cidade-viva`; a branch remota de 
 Na branch local `codex/legado-cidade-viva`:
 
 ```bash
-python3 /CAMINHO/greywake-refatoracao-ui-completa/refatoracao-ui/aplicar_ui_responsiva.py /CAMINHO/DO/CLONE
+python3 /CAMINHO/paralaxe-refatoracao-ui-completa/refatoracao-ui/aplicar_ui_responsiva.py /CAMINHO/DO/CLONE
 pnpm verificar
 pnpm compilar
 ```

@@ -40,7 +40,7 @@ for (const arquivo of tsArquivos) {
     if (ts.isImportDeclaration(no) || ts.isExportDeclaration(no)) {
       const modulo = no.moduleSpecifier;
       if (modulo && ts.isStringLiteral(modulo)) {
-        if (modulo.text.startsWith('@greywake/persistencia/') || modulo.text === '@greywake/persistencia') {
+        if (modulo.text.startsWith('@paralaxe/persistencia/') || modulo.text === '@paralaxe/persistencia') {
           if (arquivo !== join(app, 'fonte', 'principal.tsx')) erros.push(`${arquivo}: persistência deve ser conectada apenas no composition root principal.tsx`);
         }
         if (arquivo.includes(join('pacotes', 'dominio')) && /^react(?:\/|$)/.test(modulo.text)) {

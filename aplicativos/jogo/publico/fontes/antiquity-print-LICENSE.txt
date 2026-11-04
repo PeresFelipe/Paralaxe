@@ -10,7 +10,7 @@ Legal code: https://creativecommons.org/licenses/by/4.0/legalcode
 
 The supplied antiquity-print.ttf is distributed unmodified. No glyphs,
 metadata, or license notices have been changed. CSS font selection,
-line spacing, and fallback fonts are part of Greywake's presentation.
+line spacing, and fallback fonts are part of Paralaxe's presentation.
 
 License provenance (verified 2026-09-11):
 The creator's itch.io page explicitly labels this pack CC-BY 4.0 and
@@ -28,5 +28,5 @@ https://fontstruct.com/fontstructors/show/1948971/scigho
 
 When redistributing this font, retain creator attribution, copyright and
 license notices, link to the source and CC BY 4.0, and identify any changes.
-Do not imply the creator endorses Greywake or impose additional restrictions
+Do not imply the creator endorses Paralaxe or impose additional restrictions
 that prevent recipients from exercising the rights granted by CC BY 4.0.

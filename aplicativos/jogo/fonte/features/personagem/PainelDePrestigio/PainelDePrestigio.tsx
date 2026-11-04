@@ -16,7 +16,7 @@ import {
   type PartidaLocal,
   type DefinicaoDeNoDePrestigio,
   type RamoPuroDePrestigio,
-} from '@greywake/dominio'
+} from '@paralaxe/dominio'
 import { Button, Card } from '@/components/ui'
 import { rotulosDaInterface } from '@/rotulosDaInterface'
 import estilos from './PainelDePrestigio.module.css'

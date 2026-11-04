@@ -1,12 +1,12 @@
 import {
   obterDefinicaoDeAtividadeOciosa,
   obterDefinicaoDeReceitaDeFabricacao,
-} from '@greywake/conteudo'
+} from '@paralaxe/conteudo'
 import {
   processarProgressoDeFabricacao,
   processarProgressoOcioso,
   type PartidaLocal,
-} from '@greywake/dominio'
+} from '@paralaxe/dominio'
 
 /** Substitui uma partida pelo mesmo ID na lista, sem criar duplicatas. */
 export function atualizarPartidaNaLista(

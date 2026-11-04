@@ -3,7 +3,7 @@
  * Cada preço é por compra da oferta inteira. O domínio verifica moedas e espaço
  * antes de materializar o produto no inventário.
  */
-import type { OfertaDoMercadoDePnj } from '@greywake/dominio'
+import type { OfertaDoMercadoDePnj } from '@paralaxe/dominio'
 
 /** As ofertas apontam para definições existentes; equipamentos comprados recebem uma nova instância por compra. */
 export const OFERTAS_INICIAIS_DO_MERCADO_DE_PNJ = [

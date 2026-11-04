@@ -181,7 +181,7 @@
           "url": "https://ninjikin.itch.io/"
         }
       ],
-      "contribuicao": "Tipografia da marca Greywake.",
+      "contribuicao": "Tipografia da marca Paralaxe.",
       "licenca": {
         "nome": "CC BY 4.0",
         "url": "https://creativecommons.org/licenses/by/4.0/"
@@ -205,7 +205,7 @@
       "titulo": "Ambientação e identidade visual",
       "autores": [
         {
-          "nome": "Projeto Greywake",
+          "nome": "Projeto Paralaxe",
           "url": null
         }
       ],
@@ -242,8 +242,8 @@
         "/arte/atividades/pesca.gif",
         "/arte/atividades/pesca-estatico.png",
         "/favicon.svg",
-        "/icones/greywake-192.png",
-        "/icones/greywake-512.png",
+        "/icones/paralaxe-192.png",
+        "/icones/paralaxe-512.png",
         "/arte/cidade/"
       ],
       "creditosComplementares": []

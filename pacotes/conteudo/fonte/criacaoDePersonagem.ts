@@ -3,7 +3,7 @@
  * Os IDs conectam os catálogos de equipamentos e habilidades ao construtor do domínio.
  * Textos descrevem as opções; as concessões são os dados efetivamente aplicados na criação.
  */
-import type { DefinicaoDeClasseDoPersonagem, DefinicaoDePresente } from '@greywake/dominio'
+import type { DefinicaoDeClasseDoPersonagem, DefinicaoDePresente } from '@paralaxe/dominio'
 
 /** Seis distribuições com 35 pontos cada. Alterar uma definição afeta novas criações, não reescreve personagens salvos. */
 export const CLASSES_DE_PERSONAGEM = [

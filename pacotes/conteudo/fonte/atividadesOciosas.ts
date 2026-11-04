@@ -3,7 +3,7 @@
  * Define produto, nível exigido, duração em segundos e XP por ação; o domínio transforma
  * esses dados em progresso, sem que este arquivo execute ou salve a coleta.
  */
-import type { DefinicaoDeAtividadeOciosa } from '@greywake/dominio'
+import type { DefinicaoDeAtividadeOciosa } from '@paralaxe/dominio'
 
 /** Cada ação completa entrega uma unidade do recurso; o tempo e a experiência variam por atividade. */
 export const ATIVIDADES_OCIOSAS_INICIAIS = [

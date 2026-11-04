@@ -3,7 +3,7 @@
  * Ingredientes são consumidos por ciclo; a saída distingue item empilhável, equipamento
  * novo e reforço de uma instância escolhida. Duração e XP são parâmetros de balanceamento.
  */
-import type { DefinicaoDeReceitaDeFabricacao } from '@greywake/dominio'
+import type { DefinicaoDeReceitaDeFabricacao } from '@paralaxe/dominio'
 
 /** Encadeia coleta e produção: Cloch vira material tratado, que também serve de ingrediente para o reforço. */
 export const RECEITAS_INICIAIS_DE_FABRICACAO = [

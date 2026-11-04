@@ -3,7 +3,7 @@
  * Descobertas vêm de fatos do save; desafios concedem apenas registros no Códice,
  * sem introduzir uma moeda ou alterar as recompensas existentes.
  */
-import type { PartidaLocal } from '@greywake/dominio'
+import type { PartidaLocal } from '@paralaxe/dominio'
 import { CLASSES_DE_PERSONAGEM } from './criacaoDePersonagem'
 import { ATIVIDADES_OCIOSAS_INICIAIS } from './atividadesOciosas'
 import { RECEITAS_INICIAIS_DE_FABRICACAO } from './receitasDeFabricacao'

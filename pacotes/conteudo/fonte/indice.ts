@@ -1,5 +1,5 @@
 /**
- * @file Entrada pública dos catálogos de Greywake.
+ * @file Entrada pública dos catálogos de Paralaxe.
  * A versão do conteúdo identifica as definições usadas ao criar a partida, enquanto
  * a versão do esquema no domínio descreve a estrutura dos dados salvos.
  */

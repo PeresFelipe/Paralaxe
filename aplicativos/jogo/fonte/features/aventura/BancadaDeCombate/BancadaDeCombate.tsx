@@ -10,7 +10,7 @@ import {
   obterDefinicaoDeConsumivelDeCombate,
   obterDefinicaoDeInimigo,
   obterDefinicaoDeEquipamento,
-} from "@greywake/conteudo";
+} from "@paralaxe/conteudo";
 import {
   aplicarResultadoDoCombateNaEstrada,
   configurarEspacoDeConsumivelDeCombate,
@@ -20,7 +20,7 @@ import {
   type ResultadoDeCombate,
   type RecursoDoLimiarDeCombate,
   type PartidaLocal,
-} from "@greywake/dominio";
+} from "@paralaxe/dominio";
 import { Button, Card, SelectField, TextField } from '@/components/ui'
 import { rotulosDaInterface } from '@/rotulosDaInterface'
 import estilos from './BancadaDeCombate.module.css'

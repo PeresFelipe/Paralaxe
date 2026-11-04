@@ -4,14 +4,14 @@ import {
   obterDefinicaoDeConsumivelDeCombate,
   obterDefinicaoDeInimigo,
   obterDefinicaoDeEquipamento,
-} from '@greywake/conteudo'
+} from '@paralaxe/conteudo'
 import {
   CHAVES_DOS_ATRIBUTOS,
   derivarEstatisticasDeCombateDoJogador,
   type DistribuicaoDeAtributos,
   type ChaveDeAtributo,
   type PartidaLocal,
-} from '@greywake/dominio'
+} from '@paralaxe/dominio'
 
 const catalogoDeCombate = {
   obterDefinicaoDeEquipamento,

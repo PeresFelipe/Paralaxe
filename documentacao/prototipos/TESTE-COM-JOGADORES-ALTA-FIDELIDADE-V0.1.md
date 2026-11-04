@@ -7,7 +7,7 @@ O objetivo não é perguntar se a interface é bonita. O teste procura evidênci
 ## Materiais
 
 - `mineracao-alta-fidelidade-v0.1.html` — referência visual focada em Atividades → Mineração;
-- `greywake-fluxo-alta-fidelidade-v0.1.html` — fluxo navegável de alta fidelidade.
+- `paralaxe-fluxo-alta-fidelidade-v0.1.html` — fluxo navegável de alta fidelidade.
 
 Os arquivos são protótipos isolados, sem integração com o execução real.
 

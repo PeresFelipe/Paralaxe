@@ -3,7 +3,7 @@
  * Produz avisos, comparações e falas sem salvar ou iniciar atividades. As flags de
  * combate e masmorra determinam o estágio narrativo, incluindo a memória do Protetor.
  */
-import { derivarEstatisticasDeCombateDoJogador, obterProgressoDaMetaDaJornada, type PartidaLocal } from '@greywake/dominio'
+import { derivarEstatisticasDeCombateDoJogador, obterProgressoDaMetaDaJornada, type PartidaLocal } from '@paralaxe/dominio'
 import { obterDefinicaoDeReceitaDeFabricacao } from './receitasDeFabricacao'
 import { obterDefinicaoDeEquipamento } from './equipamento'
 

@@ -1,7 +1,7 @@
 /* Arquivo: Tema medieval atual, aplicado sobre a base e os ajustes compactos.
    Concentra paleta, molduras licenciadas, navegação lateral, bolsa visual e adaptações
    por largura/altura. Os comentários agrupam responsabilidades sem alterar a cascata. */
-/* Interface do Greywake. Dark Ages UI, de Hypnobius; consulte arte/interface/dark-ages/LICENSE.txt.
+/* Interface do Paralaxe. Dark Ages UI, de Hypnobius; consulte arte/interface/dark-ages/LICENSE.txt.
    A estrutura temática compartilha o estado, o conteúdo e a persistência existentes. */
 /* Cores e medidas finais do tema; as URLs das molduras são recursos públicos licenciados. */
 :root {

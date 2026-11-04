@@ -1,5 +1,5 @@
 {
-  "name": "@greywake/interface",
+  "name": "@paralaxe/interface",
   "private": true,
   "version": "0.0.1",
   "type": "module",
@@ -8,7 +8,7 @@
   },
   "types": "./fonte/indice.ts",
   "dependencies": {
-    "@greywake/dominio": "workspace:*"
+    "@paralaxe/dominio": "workspace:*"
   },
   "scripts": {
     "analisar": "oxlint fonte",

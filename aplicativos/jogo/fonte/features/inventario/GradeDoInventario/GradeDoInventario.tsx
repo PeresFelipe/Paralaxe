@@ -4,8 +4,8 @@
  * inspeção, e encaminha o comando de equipar quando esse callback estiver disponível.
  */
 import { useState } from 'react'
-import { obterDefinicaoDeEquipamento } from '@greywake/conteudo'
-import { LIMITE_DE_ESPACOS_DO_INVENTARIO_V01, obterUsoDeEspacosDoInventario, type PartidaLocal } from '@greywake/dominio'
+import { obterDefinicaoDeEquipamento } from '@paralaxe/conteudo'
+import { LIMITE_DE_ESPACOS_DO_INVENTARIO_V01, obterUsoDeEspacosDoInventario, type PartidaLocal } from '@paralaxe/dominio'
 import { IconeDoJogo } from '@/components/jogo'
 import { obterIconeDoEquipamento, obterIconeDoItem } from '@/iconesDosRecursos'
 import { rotulosDosItens } from '@/rotulosDoJogo'

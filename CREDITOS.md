@@ -1,4 +1,4 @@
-# Créditos e atribuições do Greywake
+# Créditos e atribuições do Paralaxe
 
 Revisão: 16/09/2026. Os créditos aparecem no jogo em **Créditos e licenças**, tanto na criação/seleção de personagens quanto durante a partida.
 
@@ -10,12 +10,12 @@ Revisão: 16/09/2026. Os créditos aparecem no jogo em **Créditos e licenças**
 | Animação do Mago. | [Wizard Pack](https://luizmelo.itch.io/wizard-pack), por [LuizMelo](https://luizmelo.itch.io/) | [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/) | Animação montada em GIF a partir dos quadros originais. |
 | Molduras, ornamentos e espaços da interface. | [Dark Ages UI](https://hypnobius.itch.io/dark-ages-ui), por [Hypnobius](https://hypnobius.itch.io/) | [Licença do autor](aplicativos/jogo/publico/arte/interface/dark-ages/LICENSE.txt) | Quatro recortes do material original, sem recoloração. |
 | Ícones de profissões, recursos, inventário e equipamentos. | [Shikashi’s Fantasy Icons Pack](https://shikashipx.itch.io/shikashis-fantasy-icons-pack), por [Matt Firth (shikashipx)](https://shikashipx.itch.io/) | [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) | Recortes de 32 × 32 da folha v2, sem recoloração ou redesenho. |
-| Tipografia da marca Greywake. | [Antiquity Print](https://ninjikin.itch.io/font-antiquity-script), por [SciGho](https://ninjikin.itch.io/) | [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) | © 2021 SciGho. Arquivo da fonte preservado, sem alterações. |
-| Cenas, retratos, animações das profissões e símbolos do jogo. | Ambientação e identidade visual, por Projeto Greywake | Produção do projeto | Artes de ambientação geradas com assistência de IA, com recortes, montagem e ajustes para o jogo. |
+| Tipografia da marca Paralaxe. | [Antiquity Print](https://ninjikin.itch.io/font-antiquity-script), por [SciGho](https://ninjikin.itch.io/) | [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) | © 2021 SciGho. Arquivo da fonte preservado, sem alterações. |
+| Cenas, retratos, animações das profissões e símbolos do jogo. | Ambientação e identidade visual, por Projeto Paralaxe | Produção do projeto | Artes de ambientação geradas com assistência de IA, com recortes, montagem e ajustes para o jogo. |
 
 ## Proveniência e avisos locais
 
-O [índice de atribuições distribuído com o jogo](aplicativos/jogo/publico/creditos/LEIA-ME.txt) reúne os avisos. As licenças originais de Mattz Art e Hypnobius e o aviso da fonte são preservados. Os registros produzidos pelo Greywake são identificados como registros, sem se apresentarem como documentos originais dos autores.
+O [índice de atribuições distribuído com o jogo](aplicativos/jogo/publico/creditos/LEIA-ME.txt) reúne os avisos. As licenças originais de Mattz Art e Hypnobius e o aviso da fonte são preservados. Os registros produzidos pelo Paralaxe são identificados como registros, sem se apresentarem como documentos originais dos autores.
 
 - [Guerreiro — Mattz Art](aplicativos/jogo/publico/creditos/guerreiro.txt).
 - [Mago — LuizMelo](aplicativos/jogo/publico/creditos/mago.txt).

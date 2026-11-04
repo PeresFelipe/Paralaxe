@@ -8,7 +8,7 @@ import {
   type DistribuicaoDeAtributos,
   type ChaveDeAtributo,
   type PartidaLocal,
-} from "@greywake/dominio";
+} from "@paralaxe/dominio";
 import { Button, Card } from '@/components/ui'
 import { useDistribuicaoDeAtributos } from '@/hooks/useDistribuicaoDeAtributos'
 import { rotulosDaInterface } from '@/rotulosDaInterface'

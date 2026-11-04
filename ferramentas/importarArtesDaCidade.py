@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Importa o ZIP de artes da Vigília produzido no ChatGPT.
 
-Uso: python3 ferramentas/importarArtesDaCidade.py /caminho/greywake-cidade-artes-vigilia.zip
+Uso: python3 ferramentas/importarArtesDaCidade.py /caminho/paralaxe-cidade-artes-vigilia.zip
 
 Este script não faz commit/push, nem altera branches; valida antes de escrever.
 """
@@ -20,7 +20,7 @@ CATALOGO = ROOT / "pacotes/conteudo/fonte/cidadeEvolutiva.ts"
 CREDITOS = ROOT / "aplicativos/jogo/fonte/catalogoDeCreditos.json"
 
 if len(sys.argv) != 2:
-    raise SystemExit("Uso: python3 ferramentas/importarArtesDaCidade.py /caminho/greywake-cidade-artes-vigilia.zip")
+    raise SystemExit("Uso: python3 ferramentas/importarArtesDaCidade.py /caminho/paralaxe-cidade-artes-vigilia.zip")
 zip_path = Path(sys.argv[1]).resolve()
 if not zip_path.is_file():
     raise SystemExit(f"ZIP não encontrado: {zip_path}")

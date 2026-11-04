@@ -2,8 +2,8 @@
  * @file Compara os atributos de uma peça fabricada com o equipamento atual.
  * Os valores vêm do catálogo e das regras de conteúdo; esta camada só os formata.
  */
-import { obterComparacaoDeEquipamentoDaFabricacao } from "@greywake/conteudo";
-import type { PartidaLocal } from "@greywake/dominio";
+import { obterComparacaoDeEquipamentoDaFabricacao } from "@paralaxe/conteudo";
+import type { PartidaLocal } from "@paralaxe/dominio";
 import estilos from "./ComparacaoDeEquipamento.module.css";
 
 export type PropriedadesDeComparacaoDeEquipamento = {

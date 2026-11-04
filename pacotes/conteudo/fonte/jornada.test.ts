@@ -7,7 +7,7 @@ import { describe, expect, it } from 'vitest'
 import {
   escolherMetaDaJornada, criarPartidaLocal, depositarPilhaDoInventarioNoBanco, obterProgressoDaMetaDaJornada,
   processarProgressoDeFabricacao, processarProgressoOcioso, iniciarReceitaDeFabricacao, iniciarAtividadeOciosa, interromperAtividadeOciosa,
-} from '@greywake/dominio'
+} from '@paralaxe/dominio'
 import { CLASSES_DE_PERSONAGEM, PRESENTES_INICIAIS } from './criacaoDePersonagem'
 import { obterDefinicaoDeReceitaDeFabricacao } from './receitasDeFabricacao'
 import { ATIVIDADES_OCIOSAS_INICIAIS } from './atividadesOciosas'

@@ -3,7 +3,7 @@
  * As saídas por ID formam o grafo de avanço; os efeitos dos eventos, saques e decisões
  * são executados em dominio/masmorra.ts quando a sala é resolvida.
  */
-import type { DefinicaoDeMasmorra } from '@greywake/dominio'
+import type { DefinicaoDeMasmorra } from '@paralaxe/dominio'
 
 /** Define entrada, ramificação inicial, convergência, recuperação e chefe. A sala final não possui próximas saídas. */
 export const DUN_LIATH_FACIL = {

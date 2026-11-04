@@ -1,6 +1,6 @@
-# Greywake
+# Paralaxe
 
-RPG ocioso de fantasia sombria, com coleta, fabricação, combate automático e expedições. O título é provisório.
+RPG ocioso de fantasia sombria, com coleta, fabricação, combate automático e expedições. O projeto agora se chama Paralaxe.
 
 ## Estado atual
 
@@ -28,9 +28,11 @@ pnpm verificar
 pnpm compilar
 ```
 
-**Windows:** para iniciar por duplo clique, execute `iniciar-greywake-local.bat` a partir da raiz do repositório. O script verifica o Node.js, instala dependências se necessário e abre o Vite apenas em `http://127.0.0.1:5173/`. Feche com Ctrl+C. Também é possível usar `pnpm desenvolver`. O servidor de desenvolvimento e o preview aceitam somente conexões locais por padrão.
+**Windows:** para iniciar por duplo clique, execute `iniciar-paralaxe-local.bat` a partir da raiz do repositório. O script verifica o Node.js, instala dependências se necessário e abre o Vite apenas em `http://127.0.0.1:5173/`. Feche com Ctrl+C. Também é possível usar `pnpm desenvolver`. O servidor de desenvolvimento e o preview aceitam somente conexões locais por padrão.
 
 `pnpm verificar` executa análise estática, verificação de tipos e testes. A compilação gera a aplicação em `aplicativos/jogo/dist`. A automação do GitHub executa os mesmos comandos.
+
+**Compatibilidade:** o nome interno do banco IndexedDB permanece `greywake` para que as partidas existentes sejam carregadas normalmente. Esse identificador legado não altera o nome exibido do jogo.
 
 ## Organização
 
@@ -44,7 +46,7 @@ pnpm compilar
 | `pacotes/interface/fonte` | Contratos compartilhados de interface |
 | `documentacao` | GDD, experiência do usuário, pesquisas e validação |
 
-Os nomes dos pacotes são `@greywake/jogo`, `@greywake/dominio`, `@greywake/conteudo`, `@greywake/persistencia` e `@greywake/interface`.
+Os nomes dos pacotes são `@paralaxe/jogo`, `@paralaxe/dominio`, `@paralaxe/conteudo`, `@paralaxe/persistencia` e `@paralaxe/interface`.
 
 ## Documentação
 

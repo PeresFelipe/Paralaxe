@@ -8,7 +8,7 @@ import {
   obterAvisoDeFabricacaoDaJornada,
   obterResumoDeRetornoDaJornada,
   atualizarCodiceEDesafios,
-} from "@greywake/conteudo";
+} from "@paralaxe/conteudo";
 import {
   distribuirPontosDeAtributo,
   escolherMetaDaJornada,
@@ -31,10 +31,10 @@ import {
   type IdDoPresente,
   type IdDaProfissao,
   type PartidaLocal,
-} from "@greywake/dominio";
-import type { RepositorioDePartidasLocais } from "@greywake/interface";
-import { obterProjetoDaCidade, OFERTAS_INICIAIS_DO_MERCADO_DE_PNJ } from '@greywake/conteudo'
-import { concluirProjeto, comprarOfertaDoMercadoDePnj } from '@greywake/dominio'
+} from "@paralaxe/dominio";
+import type { RepositorioDePartidasLocais } from "@paralaxe/interface";
+import { obterProjetoDaCidade, OFERTAS_INICIAIS_DO_MERCADO_DE_PNJ } from '@paralaxe/conteudo'
+import { concluirProjeto, comprarOfertaDoMercadoDePnj } from '@paralaxe/dominio'
 import { useEffect, useRef, useState } from "react";
 import {
   atualizarPartidaNaLista,

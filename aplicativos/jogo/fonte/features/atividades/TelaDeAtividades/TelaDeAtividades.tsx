@@ -4,8 +4,8 @@
  * iniciar/parar alteram o trabalho; navegar ou consultar ingredientes mantém a atividade em andamento.
  */
 import { useState } from 'react'
-import { RECEITAS_INICIAIS_DE_FABRICACAO, ATIVIDADES_OCIOSAS_INICIAIS } from '@greywake/conteudo'
-import { obterXpDeProfissaoParaProximoNivel, type PartidaLocal, type IdDaProfissao } from '@greywake/dominio'
+import { RECEITAS_INICIAIS_DE_FABRICACAO, ATIVIDADES_OCIOSAS_INICIAIS } from '@paralaxe/conteudo'
+import { obterXpDeProfissaoParaProximoNivel, type PartidaLocal, type IdDaProfissao } from '@paralaxe/dominio'
 import IndicadorDeProgressoOcioso from '../IndicadorDeProgressoOcioso'
 import { IconeDoJogo, ComparacaoDeEquipamento } from '@/components/jogo'
 import { obterIconeDoItem, iconeDeProfissaoPorId } from '@/iconesDosRecursos'

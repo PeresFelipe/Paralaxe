@@ -1,6 +1,6 @@
 # Auditoria heurística — Alta fidelidade v0.1
 
-Esta auditoria registra uma revisão estática/heurística do protótipo `greywake-fluxo-alta-fidelidade-v0.1.html` contra o `documentacao/UX-GDD.md` e o roteiro `TESTE-COM-JOGADORES-ALTA-FIDELIDADE-V0.1.md`.
+Esta auditoria registra uma revisão estática/heurística do protótipo `paralaxe-fluxo-alta-fidelidade-v0.1.html` contra o `documentacao/UX-GDD.md` e o roteiro `TESTE-COM-JOGADORES-ALTA-FIDELIDADE-V0.1.md`.
 
 > Esta revisão **não substitui teste com jogadores com jogadores**. Ela serve apenas para remover inconsistências claras antes de expor o protótipo a participantes.
 

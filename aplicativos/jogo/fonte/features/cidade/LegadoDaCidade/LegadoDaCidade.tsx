@@ -1,8 +1,8 @@
 /** Cidade Viva: apresentação de projetos, sem temporizadores ou regras de economia no React. */
 import { useMemo, useState } from 'react'
 import { Button, Card, ProgressBar } from '@/components/ui'
-import { DISTRITOS_DA_CIDADE, ESTAGIOS_DA_CIDADE, CENAS_DA_CIDADE, PROJETOS_DA_CIDADE } from '@greywake/conteudo'
-import { consultarProjeto, estagioDoLegado, totalDeMelhoriasDaCidade, LIMIARES_DOS_ESTAGIOS, type IdDoDistrito, type PartidaLocal, type SituacaoDoProjeto } from '@greywake/dominio'
+import { DISTRITOS_DA_CIDADE, ESTAGIOS_DA_CIDADE, CENAS_DA_CIDADE, PROJETOS_DA_CIDADE } from '@paralaxe/conteudo'
+import { consultarProjeto, estagioDoLegado, totalDeMelhoriasDaCidade, LIMIARES_DOS_ESTAGIOS, type IdDoDistrito, type PartidaLocal, type SituacaoDoProjeto } from '@paralaxe/dominio'
 import estilos from './LegadoDaCidade.module.css'
 
 export interface AcoesDoLegado { aoConcluirProjeto: (idDoProjeto: string) => Promise<void> }

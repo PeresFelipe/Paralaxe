@@ -4,7 +4,7 @@
  * em vez de permanecer como uma pilha sem efeito no inventário.
  */
 import { describe, expect, it } from 'vitest'
-import { criarPartidaLocal, derivarEstatisticasDeCombateDoJogador } from '@greywake/dominio'
+import { criarPartidaLocal, derivarEstatisticasDeCombateDoJogador } from '@paralaxe/dominio'
 import { CLASSES_DE_PERSONAGEM, PRESENTES_INICIAIS } from './criacaoDePersonagem'
 import { obterDefinicaoDeEquipamento } from './equipamento'
 

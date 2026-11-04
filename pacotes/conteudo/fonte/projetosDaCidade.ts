@@ -1,5 +1,5 @@
 /** Conteúdo da Cidade Viva: 32 projetos alcançáveis usando apenas marcos e materiais existentes. */
-import type { DefinicaoDeProjetoDaCidade, IdDoDistrito, MarcoDaCidade, MaterialDoProjeto } from '@greywake/dominio'
+import type { DefinicaoDeProjetoDaCidade, IdDoDistrito, MarcoDaCidade, MaterialDoProjeto } from '@paralaxe/dominio'
 
 const MARCOS = {
   nivel: (nivel: number): MarcoDaCidade => ({ tipo: 'nivel-personagem', nivel }),
@@ -40,7 +40,7 @@ const ETAPAS: Record<IdDoDistrito, readonly [Etapa, Etapa, Etapa, Etapa]> = {
     { nome: 'Reacender a Forja', descricao: 'O metal volta a receber forma pelas mãos do artesão.', conclusao: 'O som do metal voltou a ecoar pela Cidade Livre.', requisitos: [MARCOS.receita('receita.metalurgia.tratada-cloch')], materiais: [material('cloch', 5), material('giuis', 3)], ouro: 0 },
     { nome: 'Recuperar as Ferramentas', descricao: 'Reponha tenazes, martelos e madeira de apoio.', conclusao: 'O Ferreiro recuperou suas ferramentas.', requisitos: [MARCOS.oficio('metalurgia', 4)], materiais: [material('cloch', 15), material('giuis', 12)], ouro: 12 },
     { nome: 'Oficina Avançada', descricao: 'Prepare a oficina para trabalhos de maior precisão.', conclusao: 'Uma nova geração de ferramentas tomou forma.', requisitos: [MARCOS.receita('receita.forja.giuis-bracadeiras')], materiais: [material('cloch', 25), material('giuis', 22)], ouro: 30 },
-    { nome: 'Forja-Mestra', descricao: 'Consolide a tradição metalúrgica da cidade.', conclusao: 'A Forja-Mestra iluminou a noite de Greywake.', requisitos: [MARCOS.oficio('forja', 8)], materiais: [material('cloch', 45), material('giuis', 35)], ouro: 70 },
+    { nome: 'Forja-Mestra', descricao: 'Consolide a tradição metalúrgica da cidade.', conclusao: 'A Forja-Mestra iluminou a noite de Paralaxe.', requisitos: [MARCOS.oficio('forja', 8)], materiais: [material('cloch', 45), material('giuis', 35)], ouro: 70 },
   ],
   mercado: [
     { nome: 'Reabrir as Barracas', descricao: 'Restabeleça o comércio na praça.', conclusao: 'Mercadores começaram a voltar.', requisitos: [MARCOS.material('material.giuis')], materiais: [material('giuis', 4), material('cloch', 2)], ouro: 0 },

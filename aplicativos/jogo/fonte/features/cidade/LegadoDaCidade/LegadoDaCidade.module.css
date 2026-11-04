@@ -1,4 +1,4 @@
-/* Cidade Viva: apenas tokens de design já presentes na arquitetura Greywake. */
+/* Cidade Viva: apenas tokens de design já presentes na arquitetura Paralaxe. */
 .cena { position: relative; width: 100%; aspect-ratio: 16/9; overflow: hidden; border: var(--ui-size-border) solid var(--ui-color-border-strong); border-radius: var(--ui-radius-xl); background: var(--ui-color-scene-deep); isolation: isolate; }
 .imagemResponsiva { display: block; width: 100%; height: 100%; }
 .imagemFinal { width: 100%; height: 100%; display: block; object-fit: contain; }

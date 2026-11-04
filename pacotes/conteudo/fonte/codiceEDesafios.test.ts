@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { atualizarCodiceEDesafios, DESAFIOS, ENTRADAS_DO_CODICE, obterDescobertasComprovadas } from './codiceEDesafios'
-import { criarPartidaLocal } from '@greywake/dominio'
+import { criarPartidaLocal } from '@paralaxe/dominio'
 import { CLASSES_DE_PERSONAGEM, PRESENTES_INICIAIS } from './criacaoDePersonagem'
 
 function partidaInicial() {

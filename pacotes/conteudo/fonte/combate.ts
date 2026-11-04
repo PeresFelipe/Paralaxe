@@ -8,7 +8,7 @@ import type {
   DefinicaoDeHabilidadeDeCombate,
   DefinicaoDeConsumivelDeCombate,
   DefinicaoDeInimigo,
-} from '@greywake/dominio'
+} from '@paralaxe/dominio'
 
 /** A ordem de uso vem dos espaços ativos do personagem, não da ordem desta lista de definições. */
 export const HABILIDADES_DE_COMBATE = [

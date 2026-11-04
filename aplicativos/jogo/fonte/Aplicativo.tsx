@@ -6,13 +6,13 @@
 import {
   CLASSES_DE_PERSONAGEM,
   PRESENTES_INICIAIS,
-} from "@greywake/conteudo";
+} from "@paralaxe/conteudo";
 import {
   MODO_DA_PARTIDA,
   type IdDaClasseDoPersonagem,
   type IdDoPresente,
-} from "@greywake/dominio";
-import type { RepositorioDePartidasLocais } from "@greywake/interface";
+} from "@paralaxe/dominio";
+import type { RepositorioDePartidasLocais } from "@paralaxe/interface";
 import CreditosDosRecursos from "./components/jogo/CreditosDosRecursos";
 import { IconeDoJogo } from "./components/jogo";
 import EstruturaDoJogo from "./EstruturaDoJogo";
@@ -78,7 +78,7 @@ function Aplicativo({ repositorioDePartidas }: AplicativoProps) {
   if (tela === "erro") {
     return (
       <main className="entrada-estrutura entrada-centralizado">
-        <p className="secao-chamada">Greywake</p>
+        <p className="secao-chamada">Paralaxe</p>
         <h1 className="destaque-titulo">
           Não foi possível abrir o armazenamento local.
         </h1>
@@ -162,7 +162,7 @@ function Aplicativo({ repositorioDePartidas }: AplicativoProps) {
         <EstadoDoJogoWeb podeAtualizar />
         <header className="entrada-cabecalho">
           <div>
-            <p className="secao-chamada">Greywake</p>
+            <p className="secao-chamada">Paralaxe</p>
             <strong className="entrada-marca">Versão 0.1 · Sem conexão</strong>
           </div>
           <Button
@@ -214,7 +214,7 @@ function Aplicativo({ repositorioDePartidas }: AplicativoProps) {
       <header className="entrada-cabecalho">
         <div>
           <p className="secao-chamada">Novo jogo</p>
-          <strong className="entrada-marca">Greywake</strong>
+          <strong className="entrada-marca">Paralaxe</strong>
         </div>
         {partidas.length > 0 ? (
           <Button
@@ -259,7 +259,7 @@ function Aplicativo({ repositorioDePartidas }: AplicativoProps) {
         {criacaoPasso === 1 ? (
           <div className="criacao-foco">
             <p className="secao-chamada">Nome</p>
-            <h1 className="destaque-titulo">Quem desperta em Greywake?</h1>
+            <h1 className="destaque-titulo">Quem desperta em Paralaxe?</h1>
             <TextField
               className="campo-pilha"
               label="Nome do personagem"
