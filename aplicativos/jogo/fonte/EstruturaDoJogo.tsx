@@ -390,8 +390,6 @@ export default function EstruturaDoJogo({
               aoAba={definirPersonagemAba}
               aoEquipar={aoEquipar}
               aoIniciarReceita={aoIniciarReceita}
-              aoIniciarReceitaSecundaria={aoIniciarReceitaSecundaria}
-              aoPararReceitaSecundaria={aoPararReceitaSecundaria}
               aoDistribuirAtributos={aoDistribuirAtributos}
               aoRealizarPrestigioDoPersonagem={aoRealizarPrestigioDoPersonagem}
               aoDesbloquearNoDePrestigio={aoDesbloquearNoDePrestigio}
@@ -408,6 +406,8 @@ export default function EstruturaDoJogo({
               aoIniciarAtividadeSecundaria={aoIniciarAtividadeSecundaria}
               aoPararAtividadeSecundaria={aoPararAtividadeSecundaria}
               aoIniciarReceita={aoIniciarReceita}
+              aoIniciarReceitaSecundaria={aoIniciarReceitaSecundaria}
+              aoPararReceitaSecundaria={aoPararReceitaSecundaria}
               aoPararTrabalho={aoPararTrabalho}
               aoPrestigiarProfissao={aoPrestigiarProfissao}
               aoTrilhaReceita={async (idDaReceita) => {

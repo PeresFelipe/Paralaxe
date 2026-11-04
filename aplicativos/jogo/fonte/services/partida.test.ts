@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { ATIVIDADES_OCIOSAS_INICIAIS, CLASSES_DE_PERSONAGEM, PRESENTES_INICIAIS, VERSAO_DO_CONTEUDO, obterDefinicaoDeReceitaDeFabricacao } from '@paralaxe/conteudo'
-import { criarPartidaLocal, iniciarAtividadeOciosa, iniciarAtividadeSecundaria } from '@paralaxe/dominio'
+import { criarPartidaLocal, iniciarAtividadeOciosa, iniciarAtividadeSecundaria, iniciarReceitaDeFabricacao, iniciarReceitaSecundaria } from '@paralaxe/dominio'
 import { atualizarPartidaNaLista, formatarAusencia, processarTrabalhoAtual } from './partida'
 
 function criarPartida(idDaPartida: string) {
