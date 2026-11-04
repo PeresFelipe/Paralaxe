@@ -455,7 +455,7 @@ body {
   }
 }
 
-/* Desktop: os painéis acompanham o contêiner central de 760px, não as bordas da janela.
+/* Desktop: os painéis acompanham o contêiner central definido pelos tokens, não as bordas da janela.
    O recuo mínimo protege o conteúdo nas larguras intermediárias. */
 @media (min-width: 1100px) {
   .jogo-estrutura {
