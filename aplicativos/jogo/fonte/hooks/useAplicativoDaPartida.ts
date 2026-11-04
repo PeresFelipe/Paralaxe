@@ -23,6 +23,9 @@ import {
   interromperReceitaSecundaria,
   iniciarAtividadeOciosa,
   iniciarAtividadeSecundaria,
+  configurarPrioridadeDaColeta,
+  configurarPrioridadeDaFabricacao,
+  type PrioridadeDeOficio,
   interromperAtividadeSecundaria,
   realizarPrestigioDaProfissao,
   interromperReceitaDeFabricacao,
@@ -381,6 +384,19 @@ export function useAplicativoDaPartida(repositorioDePartidas: RepositorioDeParti
     }, 'Produção secundária interrompida.')
   }
 
+  /** Prestígio II: processa o saldo antes de mudar a distribuição de produtividade. */
+  async function tratarAlterarPrioridadeDeOficio(prioridade: PrioridadeDeOficio) {
+    await aplicarAlteracaoNaPartidaAtiva(atual => {
+      const agora = new Date().toISOString()
+      const pronto = processarTrabalhoAtual(atual, agora).partida
+      if (pronto.ocioso.atividadeAtiva) return configurarPrioridadeDaColeta(pronto, prioridade, agora)
+      const id = pronto.fabricacao.receitaAtiva?.idDaDefinicaoDaReceita
+      const receita = id ? obterDefinicaoDeReceitaDeFabricacao(id) : null
+      if (receita) return configurarPrioridadeDaFabricacao(pronto, receita, prioridade, agora)
+      throw new Error('Não há trabalho ativo para configurar.')
+    }, 'Prioridade da atividade atualizada.')
+  }
+
   /** Troca o trabalho atual por uma receita, preservando o progresso já acumulado e repassando o alvo de reforço. */
   async function tratarIniciarReceita(
     idDaDefinicaoDaReceita: string,
@@ -722,6 +738,7 @@ export function useAplicativoDaPartida(repositorioDePartidas: RepositorioDeParti
     tratarIniciarReceita,
     tratarIniciarReceitaSecundaria,
     tratarPararReceitaSecundaria,
+    tratarAlterarPrioridadeDeOficio,
     tratarPararTrabalho,
     tratarPrestigiarProfissao,
     tratarConcluirProjeto,

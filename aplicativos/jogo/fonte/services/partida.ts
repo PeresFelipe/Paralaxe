@@ -67,7 +67,7 @@ export function processarTrabalhoAtual(
       const adicional = primeira ?? (secundaria
         ? processarProgressoDaAtividadeSecundaria(resultado.partida, secundaria, agora, obterDefinicaoDeEquipamento)
         : null)
-      const processada = adicional?.partida ?? resultado.partida
+      const processada = primeira ? resultado.partida : adicional?.partida ?? resultado.partida
       // Quando a principal para por capacidade, credita primeiro o tempo secundário;
       // em seguida encerra o segundo espaço para não deixar atividade órfã.
       const proxima = !processada.ocioso.atividadeAtiva && processada.ocioso.atividadeSecundaria
@@ -116,7 +116,7 @@ export function processarTrabalhoAtual(
       const adicional = primeira ?? (secundaria
         ? processarProgressoDaReceitaSecundaria(resultado.partida, secundaria, agora)
         : null)
-      const processada = adicional?.partida ?? resultado.partida
+      const processada = primeira ? resultado.partida : adicional?.partida ?? resultado.partida
       const proxima = !processada.fabricacao.receitaAtiva && processada.fabricacao.receitaSecundaria
         ? { ...processada, fabricacao: { ...processada.fabricacao, receitaSecundaria: null } }
         : processada

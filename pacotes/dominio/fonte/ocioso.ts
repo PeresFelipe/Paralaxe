@@ -275,6 +275,7 @@ export function iniciarAtividadeOciosa(
     atualizadoEm: agora,
     ocioso: {
       atividadeSecundaria: null,
+      prioridade: 'equilibrado',
       atividadeAtiva: {
         idDaDefinicaoDaAtividade: atividade.id,
         iniciadoEm: agora,

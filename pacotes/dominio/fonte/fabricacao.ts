@@ -181,6 +181,7 @@ export function iniciarReceitaDeFabricacao(
     atualizadoEm: agora,
     fabricacao: {
       receitaSecundaria: null,
+      prioridade: 'equilibrado',
       receitaAtiva: {
         idDaDefinicaoDaReceita: receita.id,
         iniciadoEm: agora,

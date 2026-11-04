@@ -5,7 +5,7 @@
  */
 import { useState } from 'react'
 import { RECEITAS_INICIAIS_DE_FABRICACAO, ATIVIDADES_OCIOSAS_INICIAIS, obterDefinicaoDeEquipamento } from '@paralaxe/conteudo'
-import { NIVEL_MAXIMO_DE_PROFISSAO, obterBonusDaFerramentaDeColeta, obterXpDeProfissaoParaProximoNivel, type PartidaLocal, type IdDaProfissao } from '@paralaxe/dominio'
+import { NIVEL_MAXIMO_DE_PROFISSAO, type PrioridadeDeOficio, obterBonusDaFerramentaDeColeta, obterXpDeProfissaoParaProximoNivel, type PartidaLocal, type IdDaProfissao } from '@paralaxe/dominio'
 import IndicadorDeProgressoOcioso from '../IndicadorDeProgressoOcioso'
 import { IconeDoJogo, ComparacaoDeEquipamento } from '@/components/jogo'
 import { obterIconeDoItem, iconeDeProfissaoPorId } from '@/iconesDosRecursos'
@@ -26,13 +26,14 @@ type PropriedadesDeTelaDeAtividades = {
   aoIniciarReceita: (id: string) => Promise<void>
   aoIniciarReceitaSecundaria: (id: string) => Promise<void>
   aoPararReceitaSecundaria: () => Promise<void>
+  aoAlterarPrioridade: (prioridade: PrioridadeDeOficio) => Promise<void>
   aoPararTrabalho: () => Promise<void>
   aoPrestigiarProfissao: (id: IdDaProfissao) => Promise<void>
   aoTrilhaReceita: (idDaReceita: string) => Promise<void>
 }
 
 /** Filtra o catálogo pela profissão selecionada e combina requisitos com o inventário para explicar as ações disponíveis. */
-export default function TelaDeAtividades({ partida, ultimoResultadoDoTrabalho, profissaoSelecionada, aoSelecionarProfissao, aoIniciarAtividade, aoIniciarAtividadeSecundaria, aoPararAtividadeSecundaria, aoIniciarReceita, aoIniciarReceitaSecundaria, aoPararReceitaSecundaria, aoPararTrabalho, aoPrestigiarProfissao, aoTrilhaReceita }: PropriedadesDeTelaDeAtividades) {
+export default function TelaDeAtividades({ partida, ultimoResultadoDoTrabalho, profissaoSelecionada, aoSelecionarProfissao, aoIniciarAtividade, aoIniciarAtividadeSecundaria, aoPararAtividadeSecundaria, aoIniciarReceita, aoIniciarReceitaSecundaria, aoPararReceitaSecundaria, aoAlterarPrioridade, aoPararTrabalho, aoPrestigiarProfissao, aoTrilhaReceita }: PropriedadesDeTelaDeAtividades) {
   const [pendente, definirPendente] = useState(false)
   const [acaoErro, definirAcaoErro] = useState<string | null>(null)
   const progresso = partida.profissoes[profissaoSelecionada]
@@ -102,6 +103,17 @@ export default function TelaDeAtividades({ partida, ultimoResultadoDoTrabalho, p
           <div className="profissao-nivel-faixa">
             <strong>{rotulosDasProfissoes[profissaoSelecionada]} · Nv. {progresso.nivel}</strong>
             {proximoNivelXp ? <><ProgressBar max={proximoNivelXp} value={progresso.xp} label={`XP de ${rotulosDasProfissoes[profissaoSelecionada]} até o próximo nível`} /><span>{progresso.xp} / {proximoNivelXp} XP</span></> : <span>Nível máximo da versão · {progresso.xp} XP</span>}
+            {progresso.prestigio >= 2 && ativoProfissao === profissaoSelecionada ? (
+              <div aria-label="Prioridade dos trabalhos">
+                <p className="secao-chamada">Prestígio II · Prioridade dos trabalhos</p>
+                {(['equilibrado', 'principal', 'secundaria'] as const).map(opcao => {
+                  const atual = ocioso ? partida.ocioso.prioridade ?? 'equilibrado' : partida.fabricacao.prioridade ?? 'equilibrado'
+                  const nome = opcao === 'equilibrado' ? 'Equilibrado' : opcao === 'principal' ? 'Prioridade Principal' : 'Prioridade Secundária'
+                  return <Button key={opcao} variant={atual === opcao ? 'primary' : 'secondary'} size="sm"
+                    disabled={pendente || atual === opcao} onClick={() => void agir(() => aoAlterarPrioridade(opcao))}>{nome}</Button>
+                })}
+              </div>
+            ) : null}
             <details><summary>Detalhes</summary><p>Prestígio: {progresso.prestigio}. Ao alcançar Prestígio I, você pode manter duas coletas do mesmo Ofício; a secundária opera a 50% de eficiência (provisório).</p></details>
             {progresso.nivel >= NIVEL_MAXIMO_DE_PROFISSAO && progresso.prestigio < 3 ? <Button variant="primary" disabled={pendente || Boolean(partida.ocioso.atividadeAtiva || partida.ocioso.atividadeSecundaria || partida.fabricacao.receitaAtiva || partida.fabricacao.receitaSecundaria)} onClick={() => void agir(() => aoPrestigiarProfissao(profissaoSelecionada))}>Realizar Prestígio {progresso.prestigio + 1} · reiniciar ofício</Button> : null}
           </div>
