@@ -266,6 +266,15 @@ function migrarPartidaAnterior(dadosArmazenados: unknown): Omit<PartidaLocal, 'v
     return brutoPartida as PartidaLocal
   }
 
+  if (candidato.versaoDoEsquemaDaPartida === 15) {
+    const anterior = brutoPartida as PartidaLocal
+    validarEstadoDaVigilia(anterior.vigilia)
+    validarLegado(anterior.legado)
+    return { ...anterior, versaoDoEsquemaDaPartida: VERSAO_DO_ESQUEMA_DA_PARTIDA,
+      ocioso: { ...anterior.ocioso, atividadeTerciaria: null, prioridade: anterior.ocioso.prioridade ?? 'equilibrado' },
+      fabricacao: { ...anterior.fabricacao, receitaTerciaria: null, prioridade: anterior.fabricacao.prioridade ?? 'equilibrado' } }
+  }
+
   if (candidato.versaoDoEsquemaDaPartida === 14) {
     const anterior = brutoPartida as PartidaLocal
     validarEstadoDaVigilia(anterior.vigilia)
@@ -437,12 +446,14 @@ function migrarPartida(dadosArmazenados: unknown): PartidaLocal {
   // Todos os legados anteriores ao v14 recebem o segundo espaço vazio sem perder a atividade principal.
   const migrada = {
     ...anterior,
-    ocioso: { ...anterior.ocioso, atividadeSecundaria: anterior.ocioso.atividadeSecundaria ?? null },
-    fabricacao: { ...anterior.fabricacao, receitaSecundaria: anterior.fabricacao.receitaSecundaria ?? null },
+    ocioso: { ...anterior.ocioso, atividadeSecundaria: anterior.ocioso.atividadeSecundaria ?? null,
+      atividadeTerciaria: anterior.ocioso.atividadeTerciaria ?? null, prioridade: anterior.ocioso.prioridade ?? 'equilibrado' },
+    fabricacao: { ...anterior.fabricacao, receitaSecundaria: anterior.fabricacao.receitaSecundaria ?? null,
+      receitaTerciaria: anterior.fabricacao.receitaTerciaria ?? null, prioridade: anterior.fabricacao.prioridade ?? 'equilibrado' },
   }
   if ('legado' in migrada) {
     validarLegado(migrada.legado)
-    if (!('vigilia' in migrada)) throw new Error('Save v15 sem histórico da Vigília.')
+    if (!('vigilia' in migrada)) throw new Error('Save v16 sem histórico da Vigília.')
     validarEstadoDaVigilia(migrada.vigilia)
     return { ...migrada, vigilia: migrada.vigilia, legado: migrada.legado }
   }

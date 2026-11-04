@@ -18,6 +18,8 @@ export function pausarTrabalhoAtualDuranteRisco(partida: PartidaLocal, agora: st
     atualizadoEm: agora,
     ocioso: {
       ...partida.ocioso,
+      atividadeTerciaria: partida.ocioso.atividadeTerciaria
+        ? { ...partida.ocioso.atividadeTerciaria, processadoPorUltimoEm: agora } : null,
       atividadeSecundaria: partida.ocioso.atividadeSecundaria
         ? { ...partida.ocioso.atividadeSecundaria, processadoPorUltimoEm: agora }
         : null,
@@ -27,6 +29,8 @@ export function pausarTrabalhoAtualDuranteRisco(partida: PartidaLocal, agora: st
     },
     fabricacao: {
       ...partida.fabricacao,
+      receitaTerciaria: partida.fabricacao.receitaTerciaria
+        ? { ...partida.fabricacao.receitaTerciaria, processadoPorUltimoEm: agora } : null,
       receitaSecundaria: partida.fabricacao.receitaSecundaria
         ? { ...partida.fabricacao.receitaSecundaria, processadoPorUltimoEm: agora }
         : null,
@@ -53,8 +57,8 @@ export function iniciarMasmorraComContinuidade(
   // A validação de iniciarMasmorra exige trabalho inativo; a retirada é temporária e só nesta chamada.
   const desvinculado: PartidaLocal = {
     ...pausado,
-    ocioso: { atividadeAtiva: null, atividadeSecundaria: null },
-    fabricacao: { receitaAtiva: null, receitaSecundaria: null },
+    ocioso: { ...pausado.ocioso, atividadeAtiva: null, atividadeSecundaria: null, atividadeTerciaria: null },
+    fabricacao: { ...pausado.fabricacao, receitaAtiva: null, receitaSecundaria: null, receitaTerciaria: null },
   }
   const iniciado = iniciarMasmorra(desvinculado, masmorra, semente, agora, recursosIniciais)
 
