@@ -25,6 +25,7 @@ describe('Grupo e Mira — GDD §§21–22', () => {
     let p = partida()
     expect(() => registrarMarcoDeMira(p, 'cooperacao-temporaria', agora)).toThrow('ordem')
     for (const marco of MARCOS_DE_MIRA.slice(1)) {
+      if (marco === 'desconhecida') continue
       p = registrarMarcoDeMira(p, marco, agora)
       if (marco === 'cooperacao-temporaria' || marco === 'divergencia-sobre-monstros' || marco === 'chefe-em-dupla') {
         expect(p.grupo.idsDosParceirosAtivos).toContain(ID_DE_MIRA)

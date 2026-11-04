@@ -120,7 +120,7 @@ export function simularCombateEmGrupo(
   let inimigoVida = inimigo.vidaMaxima
   let proximoAtaqueInimigo = inimigo.intervaloDeAcaoEmSegundos
   const recargasInimigo = new Map(inimigo.habilidades.map(h => [h.id, h.atrasoInicialEmSegundos ?? 0]))
-  let aviso: { habilidade: typeof inimigo.habilidades[number] } | null = null
+  const aviso = { habilidade: null as DefinicaoDeHabilidadeDoInimigo | null }
   // O máximo de eventos impede loop infinito inclusive com dados inesperados.
   for (let evento = 0; evento < 6000 && inimigoVida > 0 && atores.some(a => a.vida > 0); evento++) {
     const proximoAliado = Math.min(...atores.filter(a => a.vida > 0).map(a => a.proximaAcao))
@@ -159,14 +159,14 @@ export function simularCombateEmGrupo(
     }
     if (inimigoVida <= 0) break
     if (proximoAtaqueInimigo <= segundo + 1e-7) {
-      const habilidade: DefinicaoDeHabilidadeDoInimigo | undefined = aviso?.habilidade ??
+      const habilidade: DefinicaoDeHabilidadeDoInimigo | undefined = aviso.habilidade ??
         inimigo.habilidades.find(h => (recargasInimigo.get(h.id) ?? 0) <= segundo + 1e-7)
-      if (!aviso && habilidade?.segundosDeAvisoDeAtaque && habilidade.segundosDeAvisoDeAtaque > 0) {
-        aviso = { habilidade }
+      if (!aviso.habilidade && habilidade?.segundosDeAvisoDeAtaque && habilidade.segundosDeAvisoDeAtaque > 0) {
+        aviso.habilidade = habilidade
         proximoAtaqueInimigo = segundo + habilidade.segundosDeAvisoDeAtaque
         registro.push({ segundo, tipo: 'aviso', mensagem: inimigo.nome + ' prepara ' + habilidade.nome + '.' })
       } else {
-        aviso = null
+        aviso.habilidade = null
         if (habilidade) recargasInimigo.set(habilidade.id, segundo + habilidade.segundosDeRecarga)
         const vivos = atores.filter(a => a.vida > 0).map(a => a.id)
         const foco = escolherAlvoDaAmeaca(ameaca, vivos, segundo, Boolean(habilidade?.ignorarAmeaca))
