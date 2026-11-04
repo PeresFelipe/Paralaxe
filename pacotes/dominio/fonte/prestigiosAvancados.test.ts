@@ -37,18 +37,18 @@ function partida(prestigio = 3): PartidaLocal {
     { idDaDefinicao: 'material.copar', quantidade: 20 },
   ] } }
 }
-const coletas: DefinicaoDeAtividadeOciosa[] = ['cloch', 'stan', 'copar'].map((slug, indice) => ({
+const coletas = ['cloch', 'stan', 'copar'].map((slug, indice) => ({
   id: `coletar.mineracao.${slug}`, idDaProfissao: 'mineracao', nome: slug,
   idDaDefinicaoDoItemProduzido: `material.${slug}`, nomeDoResultado: slug,
   nivelExigidoDaProfissao: indice === 2 ? 20 : 1, segundosPorAcao: 8,
   xpDeProfissaoPorAcao: 8,
-}))
-const receitas: DefinicaoDeReceitaDeFabricacao[] = ['alpha', 'beta', 'gama'].map((slug, indice) => ({
+})) as [DefinicaoDeAtividadeOciosa, DefinicaoDeAtividadeOciosa, DefinicaoDeAtividadeOciosa]
+const receitas = ['alpha', 'beta', 'gama'].map((slug, indice) => ({
   id: `receita.metalurgia.${slug}`, idDaProfissao: 'metalurgia',
   nome: slug, nivelExigidoDaProfissao: 1, segundosPorAcao: 8, xpDeProfissaoPorAcao: 8,
-  ingredientes: [{ idDaDefinicao: ['material.cloch', 'material.stan', 'material.copar'][indice], quantidade: 2 }],
+  ingredientes: [{ idDaDefinicao: (['material.cloch', 'material.stan', 'material.copar'] as const)[indice] ?? 'material.cloch', quantidade: 2 }],
   saida: { tipo: 'item', idDaDefinicao: `material.liga-${slug}`, nome: slug, quantidade: 1 },
-}))
+})) as [DefinicaoDeReceitaDeFabricacao, DefinicaoDeReceitaDeFabricacao, DefinicaoDeReceitaDeFabricacao]
 const qtd = (p: PartidaLocal, id: string) => p.personagem.inventario.find(i => i.idDaDefinicao === id)?.quantidade ?? 0
 
 describe('GDD §9: Prestígios II e III', () => {
