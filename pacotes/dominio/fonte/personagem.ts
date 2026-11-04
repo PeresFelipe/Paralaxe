@@ -144,7 +144,7 @@ export interface EstadoDoPersonagem {
 }
 
 /** Versão estrutural usada pelas migrações. Traduzir nomes internos não exige mudar o formato persistido. */
-export const VERSAO_DO_ESQUEMA_DA_PARTIDA = 16 as const
+export const VERSAO_DO_ESQUEMA_DA_PARTIDA = 17 as const
 
 /** Agregado salvo como uma unidade: personagem, trabalhos, combate, expedição e metas da jornada. */
 export interface PartidaLocal {
@@ -315,6 +315,8 @@ export function criarPartidaLocal(entradaDeDados: ParametrosDeCriacaoDaPartidaLo
     },
     masmorra: {
       expedicaoAtiva: null,
+      incursaoAutomaticaAtiva: null,
+      ultimaIncursaoAutomatica: null,
       dunLiathFacilConquistado: false,
       dunLiathProtetor: null,
       contratoConcluido: false,

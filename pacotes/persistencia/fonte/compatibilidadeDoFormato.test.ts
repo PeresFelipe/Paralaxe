@@ -113,7 +113,7 @@ describe('compatibilidade com a main anterior à tradução', () => {
     expect(jornadaAntiga.craftedRecipeIds.length).toBeGreaterThan(0)
     await inserirPartidaAntiga({ ...legado, saveSchemaVersion: 9 })
     const partida = await criarRepositorioDePartidasIndexedDb().obter('warrior')
-    expect(partida?.versaoDoEsquemaDaPartida).toBe(16)
+    expect(partida?.versaoDoEsquemaDaPartida).toBe(17)
     expect(partida?.jornada).toEqual({ meta: null, idsDasReceitasFabricadas: [] })
     expect(partida?.personagem).toEqual((lerFormatoLegado(partidaLegadaV10) as PartidaLocal).personagem)
   })

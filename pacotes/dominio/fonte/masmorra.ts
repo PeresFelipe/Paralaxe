@@ -7,6 +7,7 @@ import type { CatalogoDeConteudoDeCombate, EntradaDoRegistroDeCombate, Resultado
 import { aplicarResultadoDeCombate, simularCombate } from './combate'
 import type { InstanciaDeEquipamento, RaridadeDoEquipamento } from './equipamento'
 import type { PartidaLocal } from './personagem'
+import type { PlanoDeIncursaoAutomatica, ResumoDaIncursaoAutomatica } from './incursaoAutomatica'
 import { verificarCapacidadeParaEquipamentoNoInventario, verificarCapacidadeParaPilhaNoInventario } from './armazenamento'
 import { adaptarInimigoParaDificuldade } from './perfisDeDunLiath'
 
@@ -87,6 +88,8 @@ export interface ExpedicaoNaMasmorra {
 
 export interface EstadoDeProgressoDaMasmorra {
   expedicaoAtiva: ExpedicaoNaMasmorra | null
+  incursaoAutomaticaAtiva?: PlanoDeIncursaoAutomatica | null
+  ultimaIncursaoAutomatica?: ResumoDaIncursaoAutomatica | null
   dunLiathFacilConquistado: boolean
   /** Primeiras conclusões por dificuldade. Em saves anteriores, o Fácil é inferido da flag legada. */
   dificuldadesConcluidas?: DificuldadeDaMasmorra[]
@@ -379,6 +382,7 @@ export function iniciarMasmorra(
     throw new Error("Interrompa a atividade Ocioso antes de iniciar uma Masmorra.")
   }
   if (partida.masmorra.expedicaoAtiva) throw new Error("Já existe uma Expedição na Masmorra ativa.")
+  if (partida.masmorra.incursaoAutomaticaAtiva) throw new Error("Encerre a Incursão Automática antes de iniciar a expedição manual.")
   if (!partida.masmorra.contratoAceito && !partida.masmorra.contratoConcluido) {
     throw new Error('Aceite primeiro o Contrato — Fortaleza Cinzenta.')
   }

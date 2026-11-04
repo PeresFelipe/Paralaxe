@@ -1,8 +1,12 @@
 /**
  * @file Núcleo puro da Incursão Automática de Dún Liath (GDD §23).
- * Não executa a expedição manual, não concede itens por si só e não altera saves.
- * A aplicação deverá persistir o início e liquidar o resultado uma única vez.
+ * Não executa expedições manuais. Iniciar, finalizar e cancelar retornam estados completos
+ * para persistência atômica, sem conceder itens em simples consultas do relógio.
  */
+import type { PartidaLocal } from './personagem'
+import { verificarCapacidadeParaPilhaNoInventario } from './armazenamento'
+import { pausarTrabalhoAtualDuranteRisco, retomarTrabalhoAposRisco } from './continuidade'
+
 export type PresetDeIncursao = 'cautelosa' | 'equilibrada' | 'ousada'
 
 export interface PlanoDeIncursaoAutomatica {
@@ -80,4 +84,57 @@ export function consultarResultadoDaIncursaoAutomatica(
   estado ^= estado >>> 16
   const sucesso = (estado >>> 0) / 0x100000000 < plano.chanceDeSucesso
   return { concluida: true, sucesso, recompensa: sucesso ? plano.recompensaPossivel.map(item => ({ ...item })) : [] }
+}
+
+/** Registro somente da última tentativa efetivamente resgatada. */
+export interface ResumoDaIncursaoAutomatica {
+  preset: PresetDeIncursao
+  sucesso: boolean
+  concluidaEm: string
+  recompensa: ReadonlyArray<{ idDaDefinicao: string; quantidade: number }>
+}
+
+export function iniciarIncursaoAutomatica(
+  partida: PartidaLocal, preset: PresetDeIncursao, poder: number, semente: number, agora: string,
+): PartidaLocal {
+  if (partida.masmorra.expedicaoAtiva) throw new Error('Encerre a expedição manual antes de iniciar uma incursão.')
+  if (partida.masmorra.incursaoAutomaticaAtiva) throw new Error('Já existe uma Incursão Automática ativa.')
+  const plano = planejarIncursaoAutomatica(preset, poder, semente, agora, partida.masmorra.dunLiathFacilConquistado)
+  const pausada = pausarTrabalhoAtualDuranteRisco(partida, agora)
+  return { ...pausada, masmorra: { ...pausada.masmorra, incursaoAutomaticaAtiva: plano } }
+}
+
+/** Credita saques e consome o plano uma vez; se não couber, nada é concedido. */
+export function finalizarIncursaoAutomatica(partida: PartidaLocal, agora: string): PartidaLocal {
+  const plano = partida.masmorra.incursaoAutomaticaAtiva
+  if (!plano) throw new Error('Não existe Incursão Automática ativa para resgatar.')
+  const resultado = consultarResultadoDaIncursaoAutomatica(plano, agora)
+  if (!resultado.concluida || resultado.sucesso === null) {
+    throw new Error('A Incursão Automática ainda está em andamento.')
+  }
+  for (const item of resultado.recompensa) {
+    verificarCapacidadeParaPilhaNoInventario(partida, item.idDaDefinicao, item.quantidade)
+  }
+  const inventario = partida.personagem.inventario.map(pilha => ({ ...pilha }))
+  for (const item of resultado.recompensa) {
+    const pilha = inventario.find(atual => atual.idDaDefinicao === item.idDaDefinicao)
+    if (pilha) pilha.quantidade += item.quantidade
+    else inventario.push({ ...item })
+  }
+  return retomarTrabalhoAposRisco({
+    ...partida, atualizadoEm: agora,
+    personagem: { ...partida.personagem, inventario },
+    masmorra: { ...partida.masmorra, incursaoAutomaticaAtiva: null,
+      ultimaIncursaoAutomatica: { preset: plano.preset, sucesso: resultado.sucesso,
+        concluidaEm: agora, recompensa: resultado.recompensa.map(item => ({ ...item })) } },
+  }, agora)
+}
+
+/** Abandono sem recompensas; evita bloquear a partida se o inventário estiver cheio. */
+export function cancelarIncursaoAutomatica(partida: PartidaLocal, agora: string): PartidaLocal {
+  if (!partida.masmorra.incursaoAutomaticaAtiva) throw new Error('Não existe Incursão Automática ativa.')
+  return retomarTrabalhoAposRisco({
+    ...partida, atualizadoEm: agora,
+    masmorra: { ...partida.masmorra, incursaoAutomaticaAtiva: null },
+  }, agora)
 }
