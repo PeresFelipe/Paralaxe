@@ -8,9 +8,11 @@ A versão 0.1 funciona localmente e integra criação de personagem, sete profis
 
 O código próprio, os caminhos, os comandos e a documentação estão em português brasileiro. Os identificadores de código usam português sem acentos; os textos exibidos usam acentuação normal.
 
-## Vigília da Cidade (branch de desenvolvimento)
+## Legado da Cidade Livre — Cidade Viva
 
-A evolução experimental da Cidade Livre e o sistema de sessões de foco estão documentados em `documentacao/implementacao/VIGILIA-DA-CIDADE.md`. O pacote inclui cinco estados visuais e persistência versionada; conferir a validação antes de integrar à `main`.
+O sistema de reconstrução evolui com conquistas, recursos e projetos do RPG, sem sessões de foco ou cronômetro. A cidade possui oito distritos, 32 projetos e cinco estágios visuais com imagens adaptadas a telas menores. Consulte `documentacao/implementacao/LEGADO-CIDADE-VIVA.md` e `documentacao/implementacao/REFATORACAO-RESPONSIVA-CIDADE-VIVA.md`.
+
+Os saves anteriores são migrados para o novo esquema na leitura; antes de testar atualizações com personagens importantes, mantenha uma cópia de segurança.
 
 ## Executar
 
@@ -25,6 +27,8 @@ pnpm desenvolver
 pnpm verificar
 pnpm compilar
 ```
+
+**Windows:** para iniciar por duplo clique, execute `iniciar-greywake-local.bat` a partir da raiz do repositório. O script verifica o Node.js, instala dependências se necessário e abre o Vite apenas em `http://127.0.0.1:5173/`. Feche com Ctrl+C. Também é possível usar `pnpm desenvolver`. O servidor de desenvolvimento e o preview aceitam somente conexões locais por padrão.
 
 `pnpm verificar` executa análise estática, verificação de tipos e testes. A compilação gera a aplicação em `aplicativos/jogo/dist`. A automação do GitHub executa os mesmos comandos.
 

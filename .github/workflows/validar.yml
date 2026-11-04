@@ -5,7 +5,7 @@ name: Validar versão 0.1
 
 on:
   push:
-    branches: [main, codex/vigilia-cidade-evolutiva-2026-11-03, codex/vigilia-cidade-artes-completas-2026-11-03, codex/legado-cidade-viva]
+    branches: [main, codex/vigilia-cidade-evolutiva-2026-11-03, codex/vigilia-cidade-artes-completas-2026-11-03, codex/legado-cidade-viva, Develop]
   pull_request:
     branches: [main]
 
