@@ -20,6 +20,8 @@ import {
   realizarPrestigioDoPersonagem,
   iniciarReceitaDeFabricacao,
   iniciarAtividadeOciosa,
+  iniciarAtividadeSecundaria,
+  interromperAtividadeSecundaria,
   realizarPrestigioDaProfissao,
   interromperReceitaDeFabricacao,
   interromperAtividadeOciosa,
@@ -338,6 +340,23 @@ export function useAplicativoDaPartida(repositorioDePartidas: RepositorioDeParti
           : "Não foi possível iniciar a atividade.",
       );
     }
+  }
+
+  /** O segundo relógio só existe após o Prestígio I da profissão principal. */
+  async function tratarIniciarAtividadeSecundaria(id: string) {
+    const atividade = obterDefinicaoDeAtividadeOciosa(id)
+    if (!atividade) throw new Error('Recurso não encontrado.')
+    await aplicarAlteracaoNaPartidaAtiva(atual => {
+      const agora = new Date().toISOString()
+      return iniciarAtividadeSecundaria(processarTrabalhoAtual(atual, agora).partida, atividade, agora)
+    }, `Coleta secundária iniciada: ${atividade.nomeDoResultado}.`)
+  }
+
+  async function tratarPararAtividadeSecundaria() {
+    await aplicarAlteracaoNaPartidaAtiva(atual => {
+      const agora = new Date().toISOString()
+      return interromperAtividadeSecundaria(processarTrabalhoAtual(atual, agora).partida, agora)
+    }, 'Coleta secundária interrompida.')
   }
 
   /** Troca o trabalho atual por uma receita, preservando o progresso já acumulado e repassando o alvo de reforço. */
@@ -676,6 +695,8 @@ export function useAplicativoDaPartida(repositorioDePartidas: RepositorioDeParti
     tratarCriarPartida,
     tratarCarregarPartida,
     tratarIniciarAtividade,
+    tratarIniciarAtividadeSecundaria,
+    tratarPararAtividadeSecundaria,
     tratarIniciarReceita,
     tratarPararTrabalho,
     tratarPrestigiarProfissao,

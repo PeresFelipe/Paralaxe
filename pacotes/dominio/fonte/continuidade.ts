@@ -17,6 +17,10 @@ export function pausarTrabalhoAtualDuranteRisco(partida: PartidaLocal, agora: st
     ...partida,
     atualizadoEm: agora,
     ocioso: {
+      ...partida.ocioso,
+      atividadeSecundaria: partida.ocioso.atividadeSecundaria
+        ? { ...partida.ocioso.atividadeSecundaria, processadoPorUltimoEm: agora }
+        : null,
       atividadeAtiva: partida.ocioso.atividadeAtiva
         ? { ...partida.ocioso.atividadeAtiva, processadoPorUltimoEm: agora }
         : null,
@@ -45,7 +49,7 @@ export function iniciarMasmorraComContinuidade(
   // A validação de iniciarMasmorra exige trabalho inativo; a retirada é temporária e só nesta chamada.
   const desvinculado: PartidaLocal = {
     ...pausado,
-    ocioso: { atividadeAtiva: null },
+    ocioso: { atividadeAtiva: null, atividadeSecundaria: null },
     fabricacao: { receitaAtiva: null },
   }
   const iniciado = iniciarMasmorra(desvinculado, masmorra, semente, agora, recursosIniciais)

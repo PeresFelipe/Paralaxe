@@ -6,6 +6,7 @@ import {
 import {
   processarProgressoDeFabricacao,
   processarProgressoOcioso,
+  processarProgressoDaAtividadeSecundaria,
   type PartidaLocal,
 } from '@paralaxe/dominio'
 
@@ -51,6 +52,17 @@ export function processarTrabalhoAtual(
     const atividade = obterDefinicaoDeAtividadeOciosa(ativoOciosoId)
     if (atividade) {
       const resultado = processarProgressoOcioso(partida, atividade, agora, obterDefinicaoDeEquipamento)
+      const secundariaId = resultado.partida.ocioso.atividadeSecundaria?.idDaDefinicaoDaAtividade
+      const secundaria = secundariaId ? obterDefinicaoDeAtividadeOciosa(secundariaId) : null
+      const adicional = secundaria
+        ? processarProgressoDaAtividadeSecundaria(resultado.partida, secundaria, agora, obterDefinicaoDeEquipamento)
+        : null
+      const proxima = adicional?.partida ?? resultado.partida
+      const relatoSecundario = adicional && adicional.acoesConcluidas > 0
+        ? ` · Secundária +${adicional.itensConcedidos} ${secundaria?.nomeDoResultado} (+${adicional.xpDeProfissaoConcedido} XP)`
+        : adicional?.interrompidoPorCapacidade
+          ? ' · Coleta secundária interrompida por capacidade'
+          : ''
       const nivelTextoExibido =
         resultado.niveisDeProfissaoGanhos > 0
           ? ` · +${resultado.niveisDeProfissaoGanhos} nível(is) de Profissão`
@@ -61,13 +73,13 @@ export function processarTrabalhoAtual(
         ? ' · Inventário sem capacidade; coleta interrompida'
         : ''
       return {
-        partida: resultado.partida,
+        partida: proxima,
         textoExibido:
           resultado.acoesConcluidas > 0
-            ? `+${resultado.acoesConcluidas} ${atividade.nomeDoResultado} · +${resultado.xpDeProfissaoConcedido} XP de Profissão${nivelTextoExibido}${limitadoTextoExibido}${capacidadeTextoExibido}`
+            ? `+${resultado.acoesConcluidas} ${atividade.nomeDoResultado} · +${resultado.xpDeProfissaoConcedido} XP de Profissão${nivelTextoExibido}${limitadoTextoExibido}${capacidadeTextoExibido}${relatoSecundario}`
             : resultado.interrompidoPorCapacidade
               ? `${atividade.nome} foi interrompida: Inventário sem capacidade.`
-              : null,
+              : relatoSecundario || null,
       }
     }
   }

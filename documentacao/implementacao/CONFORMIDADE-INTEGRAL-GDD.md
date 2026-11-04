@@ -16,7 +16,7 @@ Referência canônica: `documentacao/GDD.md`, 75 seções. Base de código: bran
 | 1–3 | Nome, escopo e filosofia | Parcial | `documentacao/GDD.md`, shell do jogo | Confirmar pontos em aberto da seção 46 |
 | 4 | Nível geral 1–99, pontos de atributo | Parcial | `pacotes/dominio/fonte/progressao.ts`, `progressao.test.ts` | Validar balanceamento definitivo, progressão narrativa e pacing |
 | 5–6 | Classes e presentes | Base implementada | `pacotes/conteudo/fonte/criacaoDePersonagem.ts` | Refinamento de conteúdo/UX |
-| 7–9 | Sete Ofícios 1–99, Prestígios, ferramentas e minigames | Parcial | `ocioso.ts`, `ocioso.test.ts`, `equipamento.ts`, `ferramentasDeColeta.test.ts` | Ferramentas base implementadas com XP; faltam gradações/raridade procedural, conteúdo 11–99, 2/3 trabalhos simultâneos, prioridades e minigames |
+| 7–9 | Sete Ofícios 1–99, Prestígios, ferramentas e minigames | Parcial | `ocioso.ts`, `ocioso.test.ts`, `equipamento.ts`, `ferramentasDeColeta.test.ts` | Ferramentas base implementadas com XP; faltam gradações/raridade procedural, conteúdo 11–99, segunda coleta de Prestígio I implementada; faltam produção paralela, prioridades do Prestígio II, terceira atividade do III e minigames |
 | 10–14 | Convenções, coleta/Metalurgia/Forja/Culinária | Parcial | `atividadesOciosas.ts`, `receitasDeFabricacao.ts`, `progressoOficiosNiveis20e30.test.ts` | Oito recursos normais cobrem os marcos 1–90 em cada coleta; Metalurgia 75/90 e receitas utilizáveis de Forja/Culinária foram adicionadas. Faltam aprofundamento até 99, receitas raras/especiais e Prestígios I–III |
 | 15 | Reforços sem falha +0 → +2 | Parcial | `fabricacao.ts`, `equipamento.ts` | Reforço +2 com componente especial, ferramentas e raridades de fabricação |
 | 16–17 | Prestígio do personagem e ausência | Parcial | `prestigio.ts`, `ocioso.ts` | Integração do conteúdo e balanceamento amplo para 99 níveis |
@@ -93,6 +93,17 @@ Arquivos: `pacotes/conteudo/fonte/atividadesOciosas.ts`, `receitasDeFabricacao.t
 - Os oito novos recursos são consumidos por ao menos uma receita. Itens das faixas antigas permanecem relevantes em receitas avançadas.
 - **Balanceamento provisório:** custos, cadências, XP, atributos, receitas criativas e nomes de peças (não prescritos no GDD). Não há alteração no esquema dos saves ou mudança de IDs já persistidos.
 - Testes de desbloqueio, consumo, equipagem, Códice e geração determinística em `progressoOficiosNiveis75e90.test.ts`. A validação visual permanece pendente.
+
+### Entrega G — Prestígio I: segunda coleta simultânea (primeiro passo)
+
+- O domínio passa a salvar uma atividade secundária no estado Ocioso sem substituir a principal.
+- A segunda coleta exige Prestígio I da mesma profissão e um recurso distinto; seus ciclos são processados com 50% de velocidade, parâmetro de balanceamento provisório.
+- O motor reaproveita coleta determinística, capacidade do inventário, limite de ausência e atualização de XP, processando a principal antes da secundária.
+- Trocar o trabalho principal ou iniciar produção encerra a secundária; o processamento pendente ocorre antes da troca.
+- Entrar em combate ou Masmorra congela ambos os relógios, preservando o progresso parcial.
+- Esquema v14: saves v13 ganham `ocioso.atividadeSecundaria: null`; versões anteriores também são normalizadas.
+- Interface da profissão mostra progresso e comandos para início/fim do segundo espaço.
+- **Ainda faltam:** duas receitas simultâneas, prioridade configurável do P2, terceiro trabalho do P3, conteúdos de Prestígio e validação visual.
 
 ## Dependências e riscos não encerrados
 

@@ -21,6 +21,8 @@ type PropriedadesDeTelaDeAtividades = {
   profissaoSelecionada: IdDaProfissao
   aoSelecionarProfissao: (profissao: IdDaProfissao) => void
   aoIniciarAtividade: (id: string) => Promise<void>
+  aoIniciarAtividadeSecundaria: (id: string) => Promise<void>
+  aoPararAtividadeSecundaria: () => Promise<void>
   aoIniciarReceita: (id: string) => Promise<void>
   aoPararTrabalho: () => Promise<void>
   aoPrestigiarProfissao: (id: IdDaProfissao) => Promise<void>
@@ -28,7 +30,7 @@ type PropriedadesDeTelaDeAtividades = {
 }
 
 /** Filtra o catálogo pela profissão selecionada e combina requisitos com o inventário para explicar as ações disponíveis. */
-export default function TelaDeAtividades({ partida, ultimoResultadoDoTrabalho, profissaoSelecionada, aoSelecionarProfissao, aoIniciarAtividade, aoIniciarReceita, aoPararTrabalho, aoPrestigiarProfissao, aoTrilhaReceita }: PropriedadesDeTelaDeAtividades) {
+export default function TelaDeAtividades({ partida, ultimoResultadoDoTrabalho, profissaoSelecionada, aoSelecionarProfissao, aoIniciarAtividade, aoIniciarAtividadeSecundaria, aoPararAtividadeSecundaria, aoIniciarReceita, aoPararTrabalho, aoPrestigiarProfissao, aoTrilhaReceita }: PropriedadesDeTelaDeAtividades) {
   const [pendente, definirPendente] = useState(false)
   const [acaoErro, definirAcaoErro] = useState<string | null>(null)
   const progresso = partida.profissoes[profissaoSelecionada]
@@ -37,6 +39,7 @@ export default function TelaDeAtividades({ partida, ultimoResultadoDoTrabalho, p
   // Reforço precisa de uma instância escolhida; sua entrada permanece em Personagem → Equipamento.
   const receitas = RECEITAS_INICIAIS_DE_FABRICACAO.filter((receita) => receita.idDaProfissao === profissaoSelecionada && receita.saida.tipo !== "equipamento-reforco")
   const ocioso = ATIVIDADES_OCIOSAS_INICIAIS.find((atividade) => atividade.id === partida.ocioso.atividadeAtiva?.idDaDefinicaoDaAtividade)
+  const secundaria = ATIVIDADES_OCIOSAS_INICIAIS.find(a => a.id === partida.ocioso.atividadeSecundaria?.idDaDefinicaoDaAtividade)
   const fabricar = RECEITAS_INICIAIS_DE_FABRICACAO.find((receita) => receita.id === partida.fabricacao.receitaAtiva?.idDaDefinicaoDaReceita)
   const trabalho = ocioso?.nomeDoResultado ?? fabricar?.nome
   const ativoProfissao = ocioso?.idDaProfissao ?? fabricar?.idDaProfissao
@@ -70,7 +73,14 @@ export default function TelaDeAtividades({ partida, ultimoResultadoDoTrabalho, p
           <div className={`atividade-etapa ${estilos.stage}`}>
             <CenaDoOficio profissao={profissaoSelecionada} legenda={atividades[0]?.nome ?? rotulosDasProfissoes[profissaoSelecionada]} />
             <Card appearance="soft" className="atividade-atualizado">
-              {ativoProfissao === profissaoSelecionada ? <IndicadorDeProgressoOcioso partida={partida} /> : <div className="atividade-pronto">
+              {ativoProfissao === profissaoSelecionada ? <>
+                <IndicadorDeProgressoOcioso partida={partida} />
+                {secundaria ? <div aria-label="Coleta secundária em andamento">
+                  <p className="secao-chamada">Prestígio I · Coleta secundária a 50% de eficiência</p>
+                  <IndicadorDeProgressoOcioso partida={{ ...partida, ocioso: { ...partida.ocioso, atividadeAtiva: partida.ocioso.atividadeSecundaria ?? null } }} compacto />
+                  <Button variant="secondary" size="sm" disabled={pendente} onClick={() => void agir(aoPararAtividadeSecundaria)}>Parar coleta secundária</Button>
+                </div> : null}
+              </> : <div className="atividade-pronto">
                 <p className="secao-chamada">{receitas.length ? 'Na bancada' : 'No campo'}</p>
                 <h2>{receitas.length ? 'Tudo começa com os materiais.' : 'O próximo ciclo começa com você.'}</h2>
                 <p>{trabalho ? `${trabalho} continua em curso. Iniciar uma nova tarefa substitui a atual.` : 'Escolha abaixo o que deseja coletar ou produzir.'}</p>
@@ -84,14 +94,16 @@ export default function TelaDeAtividades({ partida, ultimoResultadoDoTrabalho, p
           <div className="profissao-nivel-faixa">
             <strong>{rotulosDasProfissoes[profissaoSelecionada]} · Nv. {progresso.nivel}</strong>
             {proximoNivelXp ? <><ProgressBar max={proximoNivelXp} value={progresso.xp} label={`XP de ${rotulosDasProfissoes[profissaoSelecionada]} até o próximo nível`} /><span>{progresso.xp} / {proximoNivelXp} XP</span></> : <span>Nível máximo da versão · {progresso.xp} XP</span>}
-            <details><summary>Detalhes</summary><p>Prestígio: {progresso.prestigio}. Trocar a habilidade em consulta mantém a atividade atual.</p></details>
-            {progresso.nivel >= NIVEL_MAXIMO_DE_PROFISSAO && progresso.prestigio < 3 ? <Button variant="primary" disabled={pendente || Boolean(partida.ocioso.atividadeAtiva || partida.fabricacao.receitaAtiva)} onClick={() => void agir(() => aoPrestigiarProfissao(profissaoSelecionada))}>Realizar Prestígio {progresso.prestigio + 1} · reiniciar ofício</Button> : null}
+            <details><summary>Detalhes</summary><p>Prestígio: {progresso.prestigio}. Ao alcançar Prestígio I, você pode manter duas coletas do mesmo Ofício; a secundária opera a 50% de eficiência (provisório).</p></details>
+            {progresso.nivel >= NIVEL_MAXIMO_DE_PROFISSAO && progresso.prestigio < 3 ? <Button variant="primary" disabled={pendente || Boolean(partida.ocioso.atividadeAtiva || partida.ocioso.atividadeSecundaria || partida.fabricacao.receitaAtiva)} onClick={() => void agir(() => aoPrestigiarProfissao(profissaoSelecionada))}>Realizar Prestígio {progresso.prestigio + 1} · reiniciar ofício</Button> : null}
           </div>
           {acaoErro ? <p className="informacao-alerta" role="alert">{acaoErro}</p> : null}
           <div className={estilos.options}>
             <div className={estilos.optionsHeading}><h2>{receitas.length ? 'Receitas conhecidas' : 'Recursos disponíveis'}</h2><span>Rendimento por ciclo</span></div>
             {atividades.map((atividade) => {
               const ativo = ocioso?.id === atividade.id
+              const ativaSecundaria = secundaria?.id === atividade.id
+              const podeIniciarSecundaria = progresso.prestigio >= 1 && ocioso?.idDaProfissao === profissaoSelecionada && !ativo && !ativaSecundaria
               const desbloqueado = progresso.nivel >= atividade.nivelExigidoDaProfissao
               const bonusFerramenta = obterBonusDaFerramentaDeColeta(partida, atividade, obterDefinicaoDeEquipamento)
               return <Card appearance="soft" className={`${estilos.option} ${ativo ? "selecionado-cartao" : ''}`} key={atividade.id}>
@@ -100,8 +112,10 @@ export default function TelaDeAtividades({ partida, ultimoResultadoDoTrabalho, p
                   <div className={estilos.optionTitle}><h2>{atividade.nomeDoResultado}</h2><span>Possuído: <strong>{possuido(atividade.idDaDefinicaoDoItemProduzido)}</strong></span></div>
                   <p className={estilos.yield}>+1 por ciclo · {atividade.segundosPorAcao}s · +{atividade.xpDeProfissaoPorAcao + bonusFerramenta} XP{bonusFerramenta ? ` (ferramenta +${bonusFerramenta})` : ''}</p>
                   {!desbloqueado ? <p className="informacao-alerta">Requer {rotulosDasProfissoes[profissaoSelecionada]} no nível {atividade.nivelExigidoDaProfissao}.</p> : null}
-                  {trabalho && !ativo ? <p className={estilos.replacement}>Ao iniciar, substitui {trabalho}.</p> : null}
+                  {trabalho && !ativo && !ativaSecundaria ? <p className={estilos.replacement}>Iniciar como principal substitui {trabalho} e encerra a secundária.</p> : null}
                   <Button variant={ativo ? 'secondary' : 'primary'} size="sm" disabled={pendente || !desbloqueado} onClick={() => void agir(ativo ? aoPararTrabalho : () => aoIniciarAtividade(atividade.id))}>{ativo ? 'Em curso · Parar' : `Coletar ${atividade.nomeDoResultado}`}</Button>
+                  {ativaSecundaria ? <Button variant="secondary" size="sm" disabled={pendente} onClick={() => void agir(aoPararAtividadeSecundaria)}>Secundária · Parar</Button>
+                    : podeIniciarSecundaria ? <Button variant="secondary" size="sm" disabled={pendente || !desbloqueado} onClick={() => void agir(() => aoIniciarAtividadeSecundaria(atividade.id))}>Adicionar coleta secundária</Button> : null}
                 </div>
               </Card>
             })}

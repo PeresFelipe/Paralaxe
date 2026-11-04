@@ -80,6 +80,8 @@ type PropriedadesDeEstruturaDoJogo = {
   aoComprarOfertaDoMercado: (idDaOferta: string) => Promise<void>;
   prepararRisco: () => Promise<PartidaLocal>;
   aoIniciarAtividade: (idDaDefinicaoDaAtividade: string) => Promise<void>;
+  aoIniciarAtividadeSecundaria: (id: string) => Promise<void>;
+  aoPararAtividadeSecundaria: () => Promise<void>;
   aoIniciarReceita: (
     idDaDefinicaoDaReceita: string,
     idDaInstanciaDoEquipamentoAlvo?: string | null,
@@ -153,6 +155,8 @@ export default function EstruturaDoJogo({
   aoComprarOfertaDoMercado,
   prepararRisco,
   aoIniciarAtividade,
+  aoIniciarAtividadeSecundaria,
+  aoPararAtividadeSecundaria,
   aoIniciarReceita,
   aoEscolherMetaDaJornada,
   aoPararTrabalho,
@@ -395,6 +399,8 @@ export default function EstruturaDoJogo({
               profissaoSelecionada={profissaoSelecionada}
               aoSelecionarProfissao={definirSelecionadoProfissao}
               aoIniciarAtividade={aoIniciarAtividade}
+              aoIniciarAtividadeSecundaria={aoIniciarAtividadeSecundaria}
+              aoPararAtividadeSecundaria={aoPararAtividadeSecundaria}
               aoIniciarReceita={aoIniciarReceita}
               aoPararTrabalho={aoPararTrabalho}
               aoPrestigiarProfissao={aoPrestigiarProfissao}

@@ -49,6 +49,8 @@ export interface AtividadeOciosaAtiva {
 
 export interface EstadoOcioso {
   atividadeAtiva: AtividadeOciosaAtiva | null
+  /** Segundo espaço do Prestígio I. Saves antigos são normalizados para null na migração. */
+  atividadeSecundaria?: AtividadeOciosaAtiva | null
 }
 
 /** Combina a nova partida com um resumo usado nas mensagens de retorno e interrupção. */
@@ -94,6 +96,74 @@ export function obterBonusDaFerramentaDeColeta(
   const definicao = resolver(instancia.idDaDefinicao)
   if (definicao?.espaco !== espaco || definicao.bonusDeColeta?.idDaProfissao !== atividade.idDaProfissao) return 0
   return Math.max(0, Math.floor(definicao.bonusDeColeta.xpAdicionalPorAcao))
+}
+
+/** Prestígio I: ciclo secundário em 50% da velocidade-base. Balanceamento provisório. */
+export const EFICIENCIA_SECUNDARIA_PRESTIGIO_I = 0.5
+
+/** A atividade secundária mantém o mesmo produto e XP, mas exige mais tempo por ciclo. */
+export function ajustarAtividadeParaSegundoEspaco(atividade: DefinicaoDeAtividadeOciosa): DefinicaoDeAtividadeOciosa {
+  return { ...atividade, segundosPorAcao: Math.ceil(atividade.segundosPorAcao / EFICIENCIA_SECUNDARIA_PRESTIGIO_I) }
+}
+
+/** Inicia somente o segundo espaço, sem interromper o principal e sem criar um relógio global. */
+export function iniciarAtividadeSecundaria(
+  partida: PartidaLocal,
+  atividade: DefinicaoDeAtividadeOciosa,
+  agora: string,
+): PartidaLocal {
+  const principal = partida.ocioso.atividadeAtiva
+  if (!principal || partida.fabricacao.receitaAtiva) throw new Error('Inicie uma coleta principal antes da secundária.')
+  if (principal.idDaDefinicaoDaAtividade === atividade.id) throw new Error('Escolha outro recurso para a coleta secundária.')
+  const principalProfissao = principal.idDaDefinicaoDaAtividade.split('.')[1]
+  if (principalProfissao !== atividade.idDaProfissao) throw new Error('A coleta secundária deve pertencer ao mesmo Ofício da principal.')
+  const progresso = partida.profissoes[atividade.idDaProfissao]
+  if (progresso.prestigio < 1) throw new Error('A segunda atividade exige Prestígio I desse Ofício.')
+  if (progresso.nivel < atividade.nivelExigidoDaProfissao) {
+    throw new Error(`${atividade.nome} exige nível ${atividade.nivelExigidoDaProfissao} de Profissão.`)
+  }
+  if (obterEspacoParaPilhaNoInventario(partida, atividade.idDaDefinicaoDoItemProduzido) <= 0) {
+    throw new Error('O Inventário não possui capacidade para o resultado dessa coleta.')
+  }
+  return {
+    ...partida, atualizadoEm: agora,
+    ocioso: { ...partida.ocioso, atividadeSecundaria: {
+      idDaDefinicaoDaAtividade: atividade.id,
+      iniciadoEm: agora, processadoPorUltimoEm: agora, segundosRestantes: 0,
+    } },
+  }
+}
+
+export function interromperAtividadeSecundaria(partida: PartidaLocal, agora: string): PartidaLocal {
+  return { ...partida, atualizadoEm: agora, ocioso: { ...partida.ocioso, atividadeSecundaria: null } }
+}
+
+/** Processa o segundo relógio depois da atividade principal, reutilizando o motor determinístico e a capacidade compartilhada. */
+export function processarProgressoDaAtividadeSecundaria(
+  partida: PartidaLocal,
+  atividade: DefinicaoDeAtividadeOciosa,
+  agora: string,
+  resolverEquipamento?: (idDaDefinicao: string) => DefinicaoDeEquipamento | null,
+): ResultadoDoProgressoOcioso {
+  const secundaria = partida.ocioso.atividadeSecundaria
+  if (!secundaria || secundaria.idDaDefinicaoDaAtividade !== atividade.id) {
+    return { partida, acoesConcluidas: 0, itensConcedidos: 0, xpDeProfissaoConcedido: 0,
+      xpGeralConcedido: 0, niveisDeProfissaoGanhos: 0, segundosProcessados: 0,
+      segundosLimitados: 0, interrompidoPorCapacidade: false }
+  }
+  const simulada: PartidaLocal = { ...partida, ocioso: { ...partida.ocioso, atividadeAtiva: secundaria } }
+  const resultado = processarProgressoOcioso(simulada, ajustarAtividadeParaSegundoEspaco(atividade), agora, resolverEquipamento)
+  return {
+    ...resultado,
+    partida: {
+      ...resultado.partida,
+      ocioso: {
+        ...partida.ocioso,
+        atividadeAtiva: partida.ocioso.atividadeAtiva,
+        atividadeSecundaria: resultado.partida.ocioso.atividadeAtiva,
+      },
+    },
+  }
 }
 
 const LIMITE_BASE_DE_AUSENCIA_EM_SEGUNDOS = 4 * 60 * 60
@@ -159,7 +229,7 @@ export function realizarPrestigioDaProfissao(partida: PartidaLocal, idDaProfissa
   const progresso = partida.profissoes[idDaProfissao]
   if (progresso.nivel < NIVEL_MAXIMO_DE_PROFISSAO) throw new Error(`Leve o ofício ao nível ${NIVEL_MAXIMO_DE_PROFISSAO} antes de realizar Prestígio.`)
   if (progresso.prestigio >= 3) throw new Error('Esse ofício já atingiu Prestígio III.')
-  if (partida.ocioso.atividadeAtiva || partida.fabricacao.receitaAtiva) throw new Error('Pare o trabalho atual antes de realizar Prestígio.')
+  if (partida.ocioso.atividadeAtiva || partida.ocioso.atividadeSecundaria || partida.fabricacao.receitaAtiva) throw new Error('Pare o trabalho atual antes de realizar Prestígio.')
   return {
     ...partida,
     atualizadoEm: agora,
@@ -193,6 +263,7 @@ export function iniciarAtividadeOciosa(
     ...partida,
     atualizadoEm: agora,
     ocioso: {
+      atividadeSecundaria: null,
       atividadeAtiva: {
         idDaDefinicaoDaAtividade: atividade.id,
         iniciadoEm: agora,
@@ -208,7 +279,7 @@ export function interromperAtividadeOciosa(partida: PartidaLocal, agora: string)
   return {
     ...partida,
     atualizadoEm: agora,
-    ocioso: { atividadeAtiva: null },
+    ocioso: { ...partida.ocioso, atividadeAtiva: null, atividadeSecundaria: null },
   }
 }
 
@@ -295,6 +366,8 @@ export function processarProgressoOcioso(
       [atividade.idDaProfissao]: profissaoResultado.progresso,
     },
     ocioso: {
+      ...partida.ocioso,
+      atividadeSecundaria: interrompidoPorCapacidade ? null : partida.ocioso.atividadeSecundaria,
       atividadeAtiva: interrompidoPorCapacidade
         ? null
         : {
