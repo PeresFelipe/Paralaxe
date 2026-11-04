@@ -16,6 +16,8 @@ export type TipoDeSalaDaMasmorra =
   | "evento"
   | "tesouro"
   | "recuperacao"
+  | "armadilha"
+  | "secreta"
   | "chefe"
 
 export interface DefinicaoDeSalaDaMasmorra {
@@ -24,12 +26,20 @@ export interface DefinicaoDeSalaDaMasmorra {
   tipo: TipoDeSalaDaMasmorra
   idDaDefinicaoDoInimigo?: string
   idsDasProximasSalas: readonly string[]
+  /** Texto que mostra apenas indícios ambientais da rota, sem revelar o tipo de recompensa. */
+  pistasDasSaidas?: Readonly<Record<string, string>>
+  /** Ambientação da sala persistida no grafo. */
+  descricao?: string
+  /** Dano percentual não letal, aplicável apenas ao tipo armadilha. */
+  fracaoDeDanoDaArmadilha?: number
 }
 
 export interface DefinicaoDeMasmorra {
   id: string
   nome: string
   dificuldade: "facil"
+  /** Gerado antes de iniciar a expedição; a definição-base continua sendo o cânone da primeira visita. */
+  procedural?: boolean
   salas: readonly DefinicaoDeSalaDaMasmorra[]
   idDaSalaInicial: string
 }
@@ -51,6 +61,8 @@ export interface ExpedicaoNaMasmorra {
   idDaDefinicaoDaMasmorra: string
   dificuldade: "facil"
   semente: number
+  /** Snapshot imutável do grafo gerado. Saves antigos usam o catálogo fixo sem esta propriedade. */
+  grafoGerado?: DefinicaoDeMasmorra | null
   idDaSalaAtual: string
   idsDasSalasVisitadas: string[]
   idsDasSalasResolvidas: string[]
@@ -304,6 +316,7 @@ export function criarExpedicaoNaMasmorra(
     idDaDefinicaoDaMasmorra: masmorra.id,
     dificuldade: masmorra.dificuldade,
     semente,
+    grafoGerado: masmorra.procedural ? masmorra : null,
     idDaSalaAtual: masmorra.idDaSalaInicial,
     idsDasSalasVisitadas: [masmorra.idDaSalaInicial],
     idsDasSalasResolvidas: [],
@@ -358,7 +371,8 @@ export function escolherCaminhoNaMasmorra(
   const execucao = partida.masmorra.expedicaoAtiva
   if (!execucao) throw new Error("Nenhuma Expedição na Masmorra ativa.")
 
-  const sala = masmorra.salas.find((candidato) => candidato.id === execucao.idDaSalaAtual)
+  const mapaPersistido = execucao.grafoGerado ?? masmorra
+  const sala = mapaPersistido.salas.find((candidato) => candidato.id === execucao.idDaSalaAtual)
   if (!sala) throw new Error('Sala atual inválida.')
   if (!execucao.idsDasSalasResolvidas.includes(sala.id)) {
     throw new Error('Resolva a sala atual antes de avançar.')
@@ -508,7 +522,8 @@ export function resolverSalaDaMasmorra(
   const execucao = partida.masmorra.expedicaoAtiva
   if (!execucao) throw new Error("Nenhuma Expedição na Masmorra ativa.")
 
-  const sala = masmorra.salas.find((candidato) => candidato.id === execucao.idDaSalaAtual)
+  const mapaPersistido = execucao.grafoGerado ?? masmorra
+  const sala = mapaPersistido.salas.find((candidato) => candidato.id === execucao.idDaSalaAtual)
   if (!sala) throw new Error('Sala atual inválida.')
   if (execucao.idsDasSalasResolvidas.includes(sala.id)) throw new Error('Essa sala já foi resolvida.')
   if (sala.id === "sala.protetor" && !execucao.decisaoSobreOProtetor) {
@@ -539,6 +554,23 @@ export function resolverSalaDaMasmorra(
 
     proximoPartida = combateResolucao.partida
     proximoExecucao = combateResolucao.execucao
+  }
+
+  // Armadilhas novas nunca eliminam o jogador instantaneamente: indícios foram mostrados
+  // na rota anterior e a consequência usa apenas recursos da expedição.
+  if (sala.tipo === "armadilha") {
+    const fracao = Math.min(0.20, Math.max(0, sala.fracaoDeDanoDaArmadilha ?? 0.08))
+    const dano = Math.min(Math.max(0, proximoExecucao.recursos.vida - 1),
+      Math.max(1, Math.ceil(proximoExecucao.recursos.vidaMaxima * fracao)))
+    proximoExecucao = { ...proximoExecucao,
+      recursos: { ...proximoExecucao.recursos, vida: proximoExecucao.recursos.vida - dano } }
+  }
+
+  // Salas opcionais concedem apenas Sucata de Dún Liath em bolsa de risco.
+  // A visita da sala não pode ser repetida e a derrota descarta essa bolsa.
+  if (sala.tipo === "secreta") {
+    proximoExecucao = { ...proximoExecucao,
+      bolsaDaExpedicao: adicionarPilha(proximoExecucao.bolsaDaExpedicao, 'item.dun-liath.sucata', 1) }
   }
 
   if (sala.id === "sala.tratado") {
