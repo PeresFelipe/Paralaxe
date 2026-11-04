@@ -70,15 +70,14 @@
   text-transform: uppercase;
 }
 
-.titulo,
-.panel :global(.lateral-folha) .titulo {
+.titulo {
   margin: 0;
   color: var(--ui-color-text);
   font: var(--ui-font-weight-semibold) var(--ui-font-size-xl)/var(--ui-line-height-display) var(--ui-font-family-display);
   overflow-wrap: anywhere;
 }
 
-.fechar {
+.header .fechar {
   display: grid;
   place-items: center;
   flex: 0 0 var(--ui-dimension-44px);
@@ -92,8 +91,8 @@
   cursor: pointer;
 }
 
-.fechar:hover { background: var(--ui-color-secondary); }
-.fechar:focus-visible {
+.header .fechar:hover { background: var(--ui-color-secondary); }
+.header .fechar:focus-visible {
   outline: var(--ui-size-focus-ring) solid var(--ui-color-focus);
   outline-offset: var(--ui-space-1);
 }

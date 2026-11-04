@@ -88,7 +88,8 @@ export default function MetaDaJornada({ partida, aoEscolherMeta, aoAbrirProfissa
               const nivelAtual = partida.profissoes[candidato.idDaProfissao].nivel
               const bloqueado = nivelAtual < candidato.nivelExigidoDaProfissao
               return (
-                <button
+                <Button
+                  variant="ghost"
                   key={candidato.id}
                   type="button"
                   className={estilos.opcao}
@@ -102,7 +103,7 @@ export default function MetaDaJornada({ partida, aoEscolherMeta, aoAbrirProfissa
                     <span>{rotulosDasProfissoes[candidato.idDaProfissao]} · {candidato.segundosPorAcao}s por fabricação</span>
                     <strong>{bloqueado ? `Requer Nv. ${candidato.nivelExigidoDaProfissao}` : receita?.id === candidato.id ? 'Atual' : 'Escolher →'}</strong>
                   </span>
-                </button>
+                </Button>
               )
             })}
           </div>

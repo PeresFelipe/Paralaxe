@@ -4,7 +4,7 @@
  * Apenas o corpo rola; o botão de fechar nunca abandona a área visível.
  */
 import { useId, type ReactNode } from 'react'
-import { Modal } from '@/components/ui'
+import { Button, Modal } from '@/components/ui'
 import estilos from './PainelRapido.module.css'
 
 type Propriedades = {
@@ -28,7 +28,8 @@ export default function PainelRapido({ rotulo, aoFechar, children, icone }: Prop
             <h2 className={estilos.titulo} id={tituloId}>{rotulo}</h2>
           </div>
         </div>
-        <button
+        <Button
+          variant="ghost"
           type="button"
           autoFocus
           className={estilos.fechar}
@@ -37,7 +38,7 @@ export default function PainelRapido({ rotulo, aoFechar, children, icone }: Prop
           title={`Fechar ${rotulo}`}
         >
           <span aria-hidden="true">×</span>
-        </button>
+        </Button>
       </header>
       <div className={estilos.corpo}>{children}</div>
     </Modal>
