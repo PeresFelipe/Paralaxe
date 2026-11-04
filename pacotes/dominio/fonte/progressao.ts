@@ -4,7 +4,7 @@
  */
 import { CHAVES_DOS_ATRIBUTOS, type ChaveDeAtributo, type PartidaLocal } from './personagem'
 
-/** Custos de cada transição, do nível 1 ao 10; não são totais acumulados. */
+/** Custos por transição, não acumulados. Os nove primeiros preservam o balanceamento histórico. */
 export const XP_GERAL_PARA_PROXIMO_NIVEL = [
   100,
   150,
@@ -15,9 +15,16 @@ export const XP_GERAL_PARA_PROXIMO_NIVEL = [
   775,
   975,
   1200,
+  ...Array.from({ length: 89 }, (_, indice) => {
+    const faixa = indice + 1
+    return Math.round(1200 + faixa * 155 + Math.pow(faixa, 1.6) * 22)
+  }),
 ] as const
 
-export const NIVEL_GERAL_MAXIMO_V01 = 10
+/** Regra canônica: níveis gerais 1–99. Os custos novos são valores provisórios. */
+export const NIVEL_GERAL_MAXIMO = 99
+/** Alias legado para evitar quebra de importações antigas, mantendo o limite efetivo atualizado. */
+export const NIVEL_GERAL_MAXIMO_V01 = NIVEL_GERAL_MAXIMO
 
 export type DistribuicaoDeAtributos = Partial<Record<ChaveDeAtributo, number>>
 
@@ -32,7 +39,7 @@ export function obterNivelGeralPorXp(totalXp: number) {
     nivel += 1
   }
 
-  return Math.min(nivel, NIVEL_GERAL_MAXIMO_V01)
+  return Math.min(nivel, NIVEL_GERAL_MAXIMO)
 }
 
 /**

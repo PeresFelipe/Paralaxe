@@ -7,6 +7,9 @@ import { describe, expect, it } from 'vitest'
 import { criarPartidaLocal, type DefinicaoDeClasseDoPersonagem, type DefinicaoDePresente } from './personagem'
 import {
   obterLimiteDeAusenciaEmSegundos,
+  aplicarXpDeProfissao,
+  obterXpDeProfissaoParaProximoNivel,
+  realizarPrestigioDaProfissao,
   processarProgressoOcioso,
   iniciarAtividadeOciosa,
   type DefinicaoDeAtividadeOciosa,
@@ -102,5 +105,32 @@ describe("progresso ocioso", () => {
     expect(resultado.segundosLimitados).toBe(28_800)
     expect(resultado.acoesConcluidas).toBe(3_600)
     expect(resultado.partida.ocioso.atividadeAtiva?.processadoPorUltimoEm).toBe('2026-09-09T12:00:00.000Z')
+  })
+})
+
+
+describe('níveis 1–99 de Ofício (GDD §9)', () => {
+  it('preserva os custos históricos e permite evoluir de 10 para 11', () => {
+    expect(obterXpDeProfissaoParaProximoNivel(1)).toBe(40)
+    expect(obterXpDeProfissaoParaProximoNivel(9)).toBe(320)
+    const custo = obterXpDeProfissaoParaProximoNivel(10)!
+    const resultado = aplicarXpDeProfissao({ nivel: 10, xp: 0, prestigio: 0 }, custo)
+    expect(resultado.progresso).toEqual({ nivel: 11, xp: 0, prestigio: 0 })
+    expect(resultado.niveisGanhos).toBe(1)
+  })
+
+  it('preserva saldo em lote e não ultrapassa o nível 99', () => {
+    const saldo = obterXpDeProfissaoParaProximoNivel(98)! + 42
+    const resultado = aplicarXpDeProfissao({ nivel: 98, xp: 0, prestigio: 2 }, saldo)
+    expect(resultado.progresso.nivel).toBe(99)
+    expect(resultado.progresso.xp).toBe(42)
+    expect(resultado.progresso.prestigio).toBe(2)
+    expect(obterXpDeProfissaoParaProximoNivel(99)).toBeNull()
+  })
+
+  it('impede Prestígio antes de 99, inclusive em saves antigos de nível 10', () => {
+    const partida = criarPartida()
+    const antigo = { ...partida, profissoes: { ...partida.profissoes, mineracao: { nivel: 10, xp: 0, prestigio: 0 } } }
+    expect(() => realizarPrestigioDaProfissao(antigo, 'mineracao', '2026-09-09T12:01:00.000Z')).toThrow('nível 99')
   })
 })

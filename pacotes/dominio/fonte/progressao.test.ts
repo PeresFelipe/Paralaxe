@@ -5,7 +5,7 @@
  */
 import { describe, expect, it } from 'vitest'
 import { criarPartidaLocal } from './personagem'
-import { distribuirPontosDeAtributo, concederXpGeral } from './progressao'
+import { distribuirPontosDeAtributo, concederXpGeral, obterNivelGeralPorXp, XP_GERAL_PARA_PROXIMO_NIVEL } from './progressao'
 
 const classeDoPersonagem = {
   id: "errante" as const,
@@ -91,5 +91,24 @@ describe("progressão geral da versão 0.1", () => {
       { vitalidade: 2 },
       '2026-09-09T12:02:00.000Z',
     )).toThrow('excede os pontos')
+  })
+})
+
+
+describe('nível geral 1–99 (GDD §4)', () => {
+  it('mantém os primeiros nove custos e alcança exatamente o nível 99', () => {
+    expect(XP_GERAL_PARA_PROXIMO_NIVEL.slice(0, 3)).toEqual([100, 150, 225])
+    expect(XP_GERAL_PARA_PROXIMO_NIVEL).toHaveLength(98)
+    const xpPara99 = XP_GERAL_PARA_PROXIMO_NIVEL.reduce((soma, custo) => soma + custo, 0)
+    expect(obterNivelGeralPorXp(xpPara99 - 1)).toBe(98)
+    expect(obterNivelGeralPorXp(xpPara99)).toBe(99)
+    expect(obterNivelGeralPorXp(xpPara99 * 2)).toBe(99)
+  })
+
+  it('concede pontos por cada nível atravessado sem rebaixar saves anteriores', () => {
+    const xp = XP_GERAL_PARA_PROXIMO_NIVEL.slice(0, 10).reduce((a, b) => a + b, 0)
+    const partida = concederXpGeral(criarPartida(), xp, '2026-09-09T12:01:00.000Z')
+    expect(partida.personagem.nivel).toBe(11)
+    expect(partida.personagem.pontosDeAtributoDisponiveis).toBe(10)
   })
 })

@@ -15,7 +15,7 @@ export const IDS_DAS_PROFISSOES = [
   "forja",
   "culinaria",
 ] as const
-export const NIVEL_MAXIMO_DE_PROFISSAO = 10
+export const NIVEL_MAXIMO_DE_PROFISSAO = 99
 
 export type IdDaProfissao = (typeof IDS_DAS_PROFISSOES)[number]
 
@@ -63,12 +63,20 @@ export interface ResultadoDoProgressoOcioso {
   interrompidoPorCapacidade: boolean
 }
 
-const XP_DE_PROFISSAO_PARA_PROXIMO_NIVEL = [40, 60, 80, 110, 140, 180, 220, 270, 320] as const
+/** Os nove primeiros custos são históricos; a extensão até 99 é balanceamento provisório. */
+const XP_DE_PROFISSAO_PARA_PROXIMO_NIVEL = [
+  40, 60, 80, 110, 140, 180, 220, 270, 320,
+  ...Array.from({ length: NIVEL_MAXIMO_DE_PROFISSAO - 10 }, (_, indice) => {
+    const faixa = indice + 1
+    return Math.round(320 + faixa * 35 + Math.pow(faixa, 1.55) * 7)
+  }),
+] as const
 const LIMITE_BASE_DE_AUSENCIA_EM_SEGUNDOS = 4 * 60 * 60
 const BONUS_DE_AUSENCIA_POR_DEZ_NIVEIS_EM_SEGUNDOS = 2 * 60 * 60
 
 /** Retorna o custo do próximo nível; null indica que a tabela não possui outra transição. */
 export function obterXpDeProfissaoParaProximoNivel(nivel: number): number | null {
+  if (!Number.isInteger(nivel) || nivel < 1 || nivel >= NIVEL_MAXIMO_DE_PROFISSAO) return null
   return XP_DE_PROFISSAO_PARA_PROXIMO_NIVEL[nivel - 1] ?? null
 }
 
@@ -106,9 +114,9 @@ export function aplicarXpDeProfissao(progresso: ProgressoDeProfissao, ganhoXp: n
   let niveisGanhos = 0
 
   while (nivel < NIVEL_MAXIMO_DE_PROFISSAO) {
-    const requisito = XP_DE_PROFISSAO_PARA_PROXIMO_NIVEL[nivel - 1]
+    const requisito = obterXpDeProfissaoParaProximoNivel(nivel)
 
-    if (requisito === undefined || xp < requisito) break
+    if (requisito === null || xp < requisito) break
 
     xp -= requisito
     nivel += 1
@@ -121,7 +129,7 @@ export function aplicarXpDeProfissao(progresso: ProgressoDeProfissao, ganhoXp: n
   }
 }
 
-/** Reinicia um ofício no nível 10 e registra até Prestígio III; não concede recursos extras. */
+/** Prestígio só no nível 99; progressos históricos de Prestígio permanecem válidos. */
 export function realizarPrestigioDaProfissao(partida: PartidaLocal, idDaProfissao: IdDaProfissao, agora: string): PartidaLocal {
   const progresso = partida.profissoes[idDaProfissao]
   if (progresso.nivel < NIVEL_MAXIMO_DE_PROFISSAO) throw new Error(`Leve o ofício ao nível ${NIVEL_MAXIMO_DE_PROFISSAO} antes de realizar Prestígio.`)

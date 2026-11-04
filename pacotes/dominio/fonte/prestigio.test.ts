@@ -163,12 +163,12 @@ describe("Árvore de Prestígio do personagem", () => {
 })
 
 describe('Prestígio de ofício', () => {
-  it('permite prestigiar no nível 10, reinicia o ofício e mantém o restante da partida', () => {
+  it('exige nível 99, reinicia o ofício e mantém o restante da partida', () => {
     const partida = criarPartida()
-    const pronto = { ...partida, profissoes: { ...partida.profissoes, mineracao: { nivel: 10, xp: 12, prestigio: 0 } } }
+    const pronto = { ...partida, profissoes: { ...partida.profissoes, mineracao: { nivel: 99, xp: 12, prestigio: 0 } } }
     const promovido = realizarPrestigioDaProfissao(pronto, 'mineracao', '2026-09-09T12:01:00.000Z')
     expect(promovido.profissoes.mineracao).toEqual({ nivel: 1, xp: 0, prestigio: 1 })
     expect(promovido.personagem).toEqual(partida.personagem)
-    expect(() => realizarPrestigioDaProfissao(partida, 'mineracao', '2026-09-09T12:01:00.000Z')).toThrow('nível 10')
+    expect(() => realizarPrestigioDaProfissao(partida, 'mineracao', '2026-09-09T12:01:00.000Z')).toThrow('nível 99')
   })
 })
