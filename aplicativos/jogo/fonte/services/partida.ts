@@ -10,6 +10,8 @@ import {
   ajustarAtividadePrincipalPorPrioridade,
   processarProgressoOcioso,
   processarProgressoDaAtividadeSecundaria,
+  processarProgressoDaAtividadeTerciaria,
+  processarProgressoDaReceitaTerciaria,
   type PartidaLocal,
 } from '@paralaxe/dominio'
 
@@ -68,11 +70,20 @@ export function processarTrabalhoAtual(
         ? processarProgressoDaAtividadeSecundaria(resultado.partida, secundaria, agora, obterDefinicaoDeEquipamento)
         : null)
       const processada = primeira ? resultado.partida : adicional?.partida ?? resultado.partida
+      const terceiraId = processada.ocioso.atividadeTerciaria?.idDaDefinicaoDaAtividade
+      const terceiraDefinicao = terceiraId ? obterDefinicaoDeAtividadeOciosa(terceiraId) : null
+      const terceira = terceiraDefinicao
+        ? processarProgressoDaAtividadeTerciaria(processada, terceiraDefinicao, agora, obterDefinicaoDeEquipamento)
+        : null
+      const consolidada = terceira?.partida ?? processada
+      const relatoTerceiro = terceira && terceira.acoesConcluidas > 0
+        ? ` · Terciária +${terceira.itensConcedidos} ${terceiraDefinicao?.nomeDoResultado} (+${terceira.xpDeProfissaoConcedido} XP)`
+        : terceira?.interrompidoPorCapacidade ? ' · terceira coleta interrompida: capacidade' : ''
       // Quando a principal para por capacidade, credita primeiro o tempo secundário;
       // em seguida encerra o segundo espaço para não deixar atividade órfã.
-      const proxima = !processada.ocioso.atividadeAtiva && processada.ocioso.atividadeSecundaria
-        ? { ...processada, ocioso: { ...processada.ocioso, atividadeSecundaria: null } }
-        : processada
+      const proxima = !consolidada.ocioso.atividadeAtiva
+        ? { ...consolidada, ocioso: { ...consolidada.ocioso, atividadeSecundaria: null, atividadeTerciaria: null } }
+        : consolidada
       const relatoSecundario = adicional && adicional.acoesConcluidas > 0
         ? ` · Secundária +${adicional.itensConcedidos} ${secundaria?.nomeDoResultado} (+${adicional.xpDeProfissaoConcedido} XP)`
         : adicional?.interrompidoPorCapacidade
@@ -91,10 +102,10 @@ export function processarTrabalhoAtual(
         partida: proxima,
         textoExibido:
           resultado.acoesConcluidas > 0
-            ? `+${resultado.acoesConcluidas} ${atividade.nomeDoResultado} · +${resultado.xpDeProfissaoConcedido} XP de Profissão${nivelTextoExibido}${limitadoTextoExibido}${capacidadeTextoExibido}${relatoSecundario}`
+            ? `+${resultado.acoesConcluidas} ${atividade.nomeDoResultado} · +${resultado.xpDeProfissaoConcedido} XP de Profissão${nivelTextoExibido}${limitadoTextoExibido}${capacidadeTextoExibido}${relatoSecundario}${relatoTerceiro}`
             : resultado.interrompidoPorCapacidade
               ? `${atividade.nome} foi interrompida: Inventário sem capacidade.`
-              : relatoSecundario || null,
+              : relatoSecundario || relatoTerceiro || null,
       }
     }
   }
@@ -117,9 +128,17 @@ export function processarTrabalhoAtual(
         ? processarProgressoDaReceitaSecundaria(resultado.partida, secundaria, agora)
         : null)
       const processada = primeira ? resultado.partida : adicional?.partida ?? resultado.partida
-      const proxima = !processada.fabricacao.receitaAtiva && processada.fabricacao.receitaSecundaria
-        ? { ...processada, fabricacao: { ...processada.fabricacao, receitaSecundaria: null } }
-        : processada
+      const terceiraId = processada.fabricacao.receitaTerciaria?.idDaDefinicaoDaReceita
+      const terceiraDefinicao = terceiraId ? obterDefinicaoDeReceitaDeFabricacao(terceiraId) : null
+      const terceira = terceiraDefinicao ? processarProgressoDaReceitaTerciaria(processada, terceiraDefinicao, agora) : null
+      const consolidada = terceira?.partida ?? processada
+      const proxima = !consolidada.fabricacao.receitaAtiva
+        ? { ...consolidada, fabricacao: { ...consolidada.fabricacao, receitaSecundaria: null, receitaTerciaria: null } }
+        : consolidada
+      const relatoTerceiro = terceira && terceira.acoesConcluidas > 0
+        ? ` · Terciária: ${terceiraDefinicao?.nome} ×${terceira.acoesConcluidas} (+${terceira.xpDeProfissaoConcedido} XP)`
+        : terceira?.interrompidoPorMateriais ? ' · terceira produção interrompida: materiais'
+          : terceira?.interrompidoPorCapacidade ? ' · terceira produção interrompida: capacidade' : ''
       const relatoSecundario = adicional && adicional.acoesConcluidas > 0
         ? ` · Secundária: ${secundaria?.nome} ×${adicional.acoesConcluidas} (+${adicional.xpDeProfissaoConcedido} XP)`
         : adicional?.interrompidoPorMateriais
@@ -141,12 +160,12 @@ export function processarTrabalhoAtual(
         partida: proxima,
         textoExibido:
           resultado.acoesConcluidas > 0
-            ? `${receita.nome}: ${totalSaida || resultado.acoesConcluidas} concluído(s) · +${resultado.xpDeProfissaoConcedido} XP de Profissão${interrompidoTextoExibido}${capacidadeTextoExibido}${relatoSecundario}`
+            ? `${receita.nome}: ${totalSaida || resultado.acoesConcluidas} concluído(s) · +${resultado.xpDeProfissaoConcedido} XP de Profissão${interrompidoTextoExibido}${capacidadeTextoExibido}${relatoSecundario}${relatoTerceiro}`
             : resultado.interrompidoPorMateriais
               ? `${receita.nome} foi interrompida por materiais insuficientes.`
               : resultado.interrompidoPorCapacidade
                 ? `${receita.nome} foi interrompida: Inventário sem capacidade.`
-                : relatoSecundario || null,
+                : relatoSecundario || relatoTerceiro || null,
       }
     }
   }
