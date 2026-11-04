@@ -22,6 +22,7 @@ import {
   derivarEstatisticasDeCombateDoJogador,
   extrairExpedicaoDaMasmorra,
   resolverSalaDaMasmorra,
+  gerarDunLiathProcedural,
   retomarTrabalhoAposRisco,
   iniciarMasmorraComContinuidade,
   ensinarEEquiparHabilidadesDeCombate,
@@ -145,13 +146,13 @@ export default function BancadaDaMasmorra({
   const [preparando, definirPreparando] = useState(false);
 
   const execucao = partida.masmorra.expedicaoAtiva;
+  // O snapshot é a verdade para uma expedição já iniciada, inclusive após atualizar o catálogo.
+  const mapaDaExpedicao = execucao?.grafoGerado ?? DUN_LIATH_FACIL;
   const atualSala = useMemo<DefinicaoDeSalaDaMasmorra | null>(
-    () =>
-      execucao
-        ? (DUN_LIATH_FACIL.salas.find((sala) => sala.id === execucao.idDaSalaAtual) ??
-          null)
-        : null,
-    [execucao],
+    () => execucao
+      ? (mapaDaExpedicao.salas.find((sala) => sala.id === execucao.idDaSalaAtual) ?? null)
+      : null,
+    [execucao, mapaDaExpedicao],
   );
   const salaResolvido = Boolean(
     atualSala && execucao?.idsDasSalasResolvidas.includes(atualSala.id),
@@ -229,9 +230,13 @@ export default function BancadaDaMasmorra({
         folego: estatisticas.folegoMaximo,
         folegoMaximo: estatisticas.folegoMaximo,
       };
+      // A primeira visita é narrativa e fixa. Repetições variam com a semente da viagem.
+      const definicaoDaViagem = riscoPartida.masmorra.dunLiathFacilConquistado
+        ? gerarDunLiathProcedural(DUN_LIATH_FACIL, semente)
+        : DUN_LIATH_FACIL;
       const proximo = iniciarMasmorraComContinuidade(
         riscoPartida,
-        DUN_LIATH_FACIL,
+        definicaoDaViagem,
         semente,
         agora,
         recursosIniciais,
@@ -266,7 +271,7 @@ export default function BancadaDaMasmorra({
       const agora = new Date().toISOString();
       const resultado = resolverSalaDaMasmorra(
         partida,
-        DUN_LIATH_FACIL,
+        mapaDaExpedicao,
         masmorraCatalogo,
         agora,
       );
@@ -313,7 +318,7 @@ export default function BancadaDaMasmorra({
     try {
       const proximo = escolherCaminhoNaMasmorra(
         partida,
-        DUN_LIATH_FACIL,
+        mapaDaExpedicao,
         proximoSalaId,
         new Date().toISOString(),
       );
@@ -517,7 +522,9 @@ export default function BancadaDaMasmorra({
             </h2>
             <p className="atenuado">
               Fortificação militar abandonada · expedição prolongada · saques em
-              risco.
+              risco. {partida.masmorra.dunLiathFacilConquistado
+                ? 'Novas incursões geram caminhos, armadilhas e passagens opcionais.'
+                : 'A primeira visita segue os acontecimentos do contrato.'}
             </p>
           </div>
           {aoRetorno ? (
@@ -639,7 +646,7 @@ export default function BancadaDaMasmorra({
           <Card className={estilos.salaPainel}>
             <p className="secao-chamada">Sala atual</p>
             <h3>{salaRotulo(atualSala)}</h3>
-            <p className="atenuado">{salaTexto[atualSala.id]}</p>
+            <p className="atenuado">{atualSala.descricao ?? salaTexto[atualSala.id] ?? 'A fortificação muda, mas as marcas da guerra e da ocupação permanecem.'}</p>
 
             <div className={estilos.recursoGrade}>
               <div>
@@ -732,7 +739,7 @@ export default function BancadaDaMasmorra({
               className={`masmorra-caminhos ${estilos.caminhos} ${ramoEscolha ? estilos.caminhosRamo : ""}`}
             >
               {atualSala.idsDasProximasSalas.map((salaId) => {
-                const sala = DUN_LIATH_FACIL.salas.find(
+                const sala = mapaDaExpedicao.salas.find(
                   (candidato) => candidato.id === salaId,
                 );
                 return sala ? (
@@ -743,10 +750,15 @@ export default function BancadaDaMasmorra({
                     onClick={() => void tratarCaminho(salaId)}
                   >
                     <span className="secao-chamada">Próxima rota</span>
-                    <strong>{salaRotulo(sala)}</strong>
+                    <strong>{atualSala.pistasDasSaidas?.[salaId]
+                      ?? (salaId === 'sala.alojamentos'
+                        ? 'Marcas recentes atravessam a poeira rumo ao quartel.'
+                        : salaId === 'sala.administracao'
+                          ? 'Uma porta antiga traz o selo corroído da guarnição.'
+                          : 'Um corredor de pedra molhada segue para o interior.')}</strong>
                     <small>
                       {ramoEscolha
-                        ? "Escolher esta rota fecha a alternativa nesta expedição."
+                        ? "Essa escolha fecha a alternativa nesta expedição."
                         : "Seguir adiante"}
                     </small>
                   </Button>
