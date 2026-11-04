@@ -98,6 +98,32 @@ describe("repositório de partidas em IndexedDB", () => {
   })
 
 
+  it('migra o save v15 para v16 mantendo ambos os relógios, prioridades e saldos', async () => {
+    const base = criarPartidaLocal({ idDaPartida: 'migra-v15-terceiro-relogio',
+      criadoEm: '2026-11-04T12:00:00.000Z', versaoDoConteudo: 'test',
+      nomeDoPersonagem: 'Ailith', classeDoPersonagem, presente })
+    const primeira = { idDaDefinicaoDaAtividade: 'coletar.mineracao.cloch',
+      iniciadoEm: '2026-11-04T12:00:00.000Z', processadoPorUltimoEm: '2026-11-04T12:00:11.000Z',
+      segundosRestantes: 3 }
+    const segunda = { ...primeira, idDaDefinicaoDaAtividade: 'coletar.mineracao.stan', segundosRestantes: 7 }
+    const antigo = { ...base, versaoDoEsquemaDaPartida: 15 as const,
+      ocioso: { atividadeAtiva: primeira, atividadeSecundaria: segunda, prioridade: 'secundaria' as const },
+      fabricacao: { receitaAtiva: null, receitaSecundaria: null, prioridade: 'equilibrado' as const },
+      profissoes: { ...base.profissoes, mineracao: { nivel: 30, xp: 17, prestigio: 2 } } }
+    const repo = criarRepositorioDePartidasIndexedDb()
+    await repo.salvar(antigo as unknown as PartidaLocal)
+    const atual = await repo.obter('migra-v15-terceiro-relogio')
+    expect(atual?.versaoDoEsquemaDaPartida).toBe(16)
+    expect(atual?.ocioso.atividadeAtiva).toEqual(primeira)
+    expect(atual?.ocioso.atividadeSecundaria).toEqual(segunda)
+    expect(atual?.ocioso.atividadeTerciaria).toBeNull()
+    expect(atual?.ocioso.prioridade).toBe('secundaria')
+    expect(atual?.fabricacao.receitaTerciaria).toBeNull()
+    expect(atual?.profissoes.mineracao).toEqual(antigo.profissoes.mineracao)
+    await repo.salvar(atual!)
+    expect(await repo.obter('migra-v15-terceiro-relogio')).toEqual(atual)
+  })
+
   it('migra save v14 para v15 sem perder o trabalho de fabricação principal', async () => {
     const atual = criarPartidaLocal({
       idDaPartida: 'migra-v14-producao-paralela',
