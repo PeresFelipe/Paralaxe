@@ -57,10 +57,10 @@ body {
 }
 
 .global-recursos > div {
-  padding:var(--ui-space-1-25) var(--ui-space-2);
-  border: var(--ui-size-border) solid var(--ui-color-border);
-  border-radius:var(--ui-radius-lg);
-  background: var(--ui-color-surface);
+  padding:var(--ui-space-1) var(--ui-space-2);
+  border: var(--ui-size-border) solid transparent;
+  border-radius:var(--ui-radius-md);
+  background: var(--ui-color-surface-raised);
 }
 
 .global-recursos strong {
@@ -88,9 +88,9 @@ body {
   padding:var(--ui-space-1-5);
   gap:var(--ui-space-1);
   border: var(--ui-size-border) solid var(--ui-color-border);
-  border-radius:var(--ui-radius-2xl);
-  background: color-mix(in srgb, var(--ui-color-surface) 95%, transparent);
-  box-shadow: var(--ui-shadow-lg);
+  border-radius:var(--ui-radius-xl);
+  background: color-mix(in srgb, var(--ui-color-surface) 97%, transparent);
+  box-shadow: var(--ui-shadow-sm);
   backdrop-filter: blur(var(--ui-blur-xl));
   transform: translateX(-50%);
 }
@@ -210,10 +210,10 @@ body {
 .jornada-meta,
 .jornada-secao {
   border: var(--ui-size-border) solid var(--ui-color-border);
-  border-radius:var(--ui-radius-xl);
+  border-radius:var(--ui-radius-lg);
   color: var(--ui-color-text);
   background: var(--ui-color-surface);
-  box-shadow: var(--ui-shadow-md);
+  box-shadow: none;
 }
 
 .cidade-visaoGeral-disposicao,
@@ -552,4 +552,31 @@ body {
 
 @media (prefers-reduced-motion: reduce) {
   .criacao-classe-sprite { animation: none; }
+}
+
+/* Hierarquia global: títulos de tela medievais; dados de cartões usam fonte de leitura. */
+.funcionalidade-telaDoJogo [data-ui="card"] h2,
+.funcionalidade-telaDoJogo [data-ui="card"] h3 {
+  font-family: var(--ui-font-family-body);
+  font-size: var(--ui-font-size-md);
+  font-weight: var(--ui-font-weight-semibold);
+  line-height: var(--ui-line-height-reading);
+}
+
+/* Ornamentos não precisam se repetir dentro de cada cartão de informação. */
+.jogo-conteudo .item-cartao {
+  border-color: var(--ui-color-border);
+  border-radius: var(--ui-radius-lg);
+  box-shadow: none;
+}
+.jogo-conteudo .informacao-linhaDeDados {
+  border-top-color: var(--ui-color-border);
+}
+.funcionalidade-telaDoJogo .secao-chamada {
+  font-size: var(--ui-font-size-2xs);
+  letter-spacing: var(--ui-letter-spacing-narrow);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .jogo-conteudo > :not([data-meta-resumo]) { animation: none; }
 }

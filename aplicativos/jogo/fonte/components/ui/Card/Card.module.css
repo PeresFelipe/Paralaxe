@@ -12,3 +12,19 @@
 .card { box-sizing: border-box; max-inline-size: 100%; overflow-wrap: break-word; }
 .card :where(img, video, picture) { max-inline-size: 100%; }
 /* GW-UI-RESPONSIVA-V1: FIM DO REFINAMENTO */
+
+/* Superfícies discretas reutilizadas em listas e painéis secundários. */
+.soft {
+  background: var(--ui-color-surface-raised);
+  border-color: var(--ui-color-border);
+  box-shadow: none;
+  padding: var(--ui-space-3);
+}
+
+.plain {
+  background: transparent;
+  border: 0;
+  border-radius: var(--ui-radius-none);
+  box-shadow: none;
+  padding: var(--ui-space-2) var(--ui-space-0);
+}
