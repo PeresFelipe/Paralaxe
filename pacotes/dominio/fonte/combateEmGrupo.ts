@@ -6,7 +6,7 @@
 import type { PartidaLocal } from './personagem'
 import { derivarEstatisticasDeCombateDoJogador, type CatalogoDeConteudoDeCombate, type DefinicaoDeHabilidadeDoInimigo } from './combate'
 import { criarEstadoDeAmeaca, escolherAlvoDaAmeaca, provocarInimigo, registrarAmeaca,
-  type EstadoDeAmeaca, type AlvoDaAmeaca } from './ameaca'
+  type EstadoDeAmeaca } from './ameaca'
 
 export type PapelDoParceiro = 'arqueira' | 'guardiao' | 'curandeiro'
 export interface DefinicaoDeParceiroDeCombate {

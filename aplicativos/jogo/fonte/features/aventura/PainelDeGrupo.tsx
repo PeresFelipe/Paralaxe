@@ -5,7 +5,7 @@ import {
   obterDefinicaoDeHabilidadeDeCombate, obterDefinicaoDeInimigo, obterDefinicaoDeParceiro,
 } from '@paralaxe/conteudo'
 import {
-  configurarFormacaoDoGrupo, simularCombateEmGrupo, ID_DE_MIRA,
+  configurarFormacaoDoGrupo, recrutarMira, simularCombateEmGrupo, ID_DE_MIRA,
   type DefinicaoDeParceiroDeCombate, type PartidaLocal, type ResultadoDeCombateEmGrupo,
 } from '@paralaxe/dominio'
 import { Button, Card } from '@/components/ui'
@@ -50,6 +50,7 @@ export default function PainelDeGrupo({ partida, aoPersistir, aoVoltar }: Propri
   const ativos = partida.grupo.idsDosParceirosAtivos
   const disponivel = partida.masmorra.dunLiathFacilConquistado
   const emRisco = Boolean(partida.masmorra.expedicaoAtiva || partida.masmorra.incursaoAutomaticaAtiva)
+  const miraConhecida = partida.grupo.marcoDeMira !== 'desconhecida'
 
   async function alternarMira() {
     if (ocupado || emRisco || !mira?.recrutado) return
@@ -62,6 +63,19 @@ export default function PainelDeGrupo({ partida, aoPersistir, aoVoltar }: Propri
       definirResultado(null)
     } catch (erro) {
       definirMensagem(erro instanceof Error ? erro.message : 'Não foi possível alterar a formação.')
+    } finally {
+      definirOcupado(false)
+    }
+  }
+
+  async function tratarRecrutarMira() {
+    if (ocupado || emRisco || partida.grupo.marcoDeMira !== 'recrutavel') return
+    definirOcupado(true)
+    try {
+      await aoPersistir(recrutarMira(partida, new Date().toISOString()), 'Mira foi recrutada.')
+      definirMensagem('Mira é agora uma parceira recrutada. Escolha incluí-la na formação.')
+    } catch (erro) {
+      definirMensagem(erro instanceof Error ? erro.message : 'Não foi possível recrutar Mira.')
     } finally {
       definirOcupado(false)
     }
@@ -96,8 +110,8 @@ export default function PainelDeGrupo({ partida, aoPersistir, aoVoltar }: Propri
         </div>
         <Button variant="secondary" size="sm" onClick={aoVoltar}>Voltar à Aventura</Button>
       </div>
-      <div className={estilos.grade}>
-        <Card className={estilos.painel}>
+      <div className={estilos.grade ?? ""}>
+        <Card className={estilos.painel ?? ""}>
           <p className="secao-chamada">Formação persistida</p>
           <h3>{ativos.length}/3 parceiros</h3>
           <p className="atenuado">Posição inicial: {partida.personagem.nome} (líder).</p>
@@ -109,22 +123,31 @@ export default function PainelDeGrupo({ partida, aoPersistir, aoVoltar }: Propri
           ))}
           {ativos.length === 0 ? <p className="atenuado">Nenhum parceiro ativo.</p> : null}
           <div className="informacao-linhaDeDados">
-            <span>Mira</span>
+            <span>{miraConhecida ? 'Mira' : 'Primeira parceira'}</span>
             <strong>{NOMES_DOS_MARCOS[partida.grupo.marcoDeMira]}</strong>
           </div>
-          <p className="atenuado">
-            Ex-soldada e arqueira. Olho de Caçadora: +5 pontos percentuais
-            de chance de crítico para todo o Grupo (parâmetro provisório).
-          </p>
+          {miraConhecida ? (
+            <p className="atenuado">
+              Mira é ex-soldada e arqueira. Olho de Caçadora acrescenta +5 pontos
+              percentuais de crítico ao Grupo (parâmetro provisório).
+            </p>
+          ) : (
+            <p className="atenuado">A primeira parceira será apresentada pelos eventos da próxima Masmorra.</p>
+          )}
           <div className="informacao-linhaDeDados">
             <span>Vínculo</span>
             <strong>{mira?.vinculo ?? 'desconhecido'}</strong>
           </div>
-          <Button size="sm" variant="secondary" disabled={ocupado || emRisco || !mira?.recrutado}
-            onClick={() => void alternarMira()}>
-            {!mira?.recrutado ? 'Aguardando segundo cenário' :
-              ativos.includes(ID_DE_MIRA) ? 'Retirar Mira do Grupo' : 'Adicionar Mira ao Grupo'}
-          </Button>
+          {!mira?.recrutado && partida.grupo.marcoDeMira === 'recrutavel' ? (
+            <Button size="sm" variant="primary" disabled={ocupado || emRisco}
+              onClick={() => void tratarRecrutarMira()}>Recrutar Mira</Button>
+          ) : (
+            <Button size="sm" variant="secondary" disabled={ocupado || emRisco || !mira?.recrutado}
+              onClick={() => void alternarMira()}>
+              {!mira?.recrutado ? 'Aguardando segundo cenário' :
+                ativos.includes(ID_DE_MIRA) ? 'Retirar Mira do Grupo' : 'Adicionar Mira ao Grupo'}
+            </Button>
+          )}
           <p className="atenuado">
             A história de Mira começa na segunda Masmorra. Recrutamento e evolução do vínculo
             não podem ser antecipados por esta bancada.
@@ -145,7 +168,7 @@ export default function PainelDeGrupo({ partida, aoPersistir, aoVoltar }: Propri
             {disponivel ? 'Executar ensaio tático' : 'Conclua Dún Liath Fácil'}
           </Button>
           {resultado ? (
-            <div className={estilos.resultado}>
+            <div className={estilos.resultado ?? ""}>
               <p className="secao-chamada">Resultado do ensaio</p>
               <h3>{resultado.desfecho === 'vitoria' ? 'Vitória' :
                 resultado.desfecho === 'derrota' ? 'Derrota' : 'Tempo esgotado'}</h3>
@@ -158,7 +181,7 @@ export default function PainelDeGrupo({ partida, aoPersistir, aoVoltar }: Propri
                 </div>
               ))}
               <p className="secao-chamada">Mudanças de foco</p>
-              <ol className={estilos.log}>
+              <ol className={estilos.log ?? ""}>
                 {resultado.registro.filter(e => e.tipo === 'foco' || e.tipo === 'provocacao')
                   .slice(-8).map((entrada, indice) => (
                     <li key={indice}>{entrada.segundo.toFixed(1)}s · {entrada.mensagem}</li>
