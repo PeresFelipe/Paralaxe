@@ -86,6 +86,7 @@ type PropriedadesDeEstruturaDoJogo = {
   aoIniciarAtividadeTerciaria: (id: string) => Promise<void>;
   aoPararAtividadeTerciaria: () => Promise<void>;
   aoAlterarPrioridade: (prioridade: PrioridadeDeOficio) => Promise<void>;
+  aoResponderMinigame: (oficio: IdDaProfissao, resposta: number) => Promise<void>;
   aoIniciarReceitaSecundaria: (id: string) => Promise<void>;
   aoPararReceitaSecundaria: () => Promise<void>;
   aoIniciarReceitaTerciaria: (id: string) => Promise<void>;
@@ -173,6 +174,7 @@ export default function EstruturaDoJogo({
   aoIniciarReceitaTerciaria,
   aoPararReceitaTerciaria,
   aoAlterarPrioridade,
+  aoResponderMinigame,
   aoEscolherMetaDaJornada,
   aoPararTrabalho,
   aoPrestigiarProfissao,
@@ -424,6 +426,7 @@ export default function EstruturaDoJogo({
               aoIniciarReceitaTerciaria={aoIniciarReceitaTerciaria}
               aoPararReceitaTerciaria={aoPararReceitaTerciaria}
               aoAlterarPrioridade={aoAlterarPrioridade}
+              aoResponderMinigame={aoResponderMinigame}
               aoPararTrabalho={aoPararTrabalho}
               aoPrestigiarProfissao={aoPrestigiarProfissao}
               aoTrilhaReceita={async (idDaReceita) => {

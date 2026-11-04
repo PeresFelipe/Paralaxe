@@ -57,7 +57,7 @@ function Aplicativo({ repositorioDePartidas }: AplicativoProps) {
     definirMensagem, ultimoResultadoDoTrabalho,
     ausenteResumo, definirAusenteResumo, ehSalvando, riscoAtivo, definirRiscoAtivo,
     tratarCriarPartida, tratarCarregarPartida, tratarIniciarAtividade, tratarIniciarAtividadeSecundaria,
-    tratarPararAtividadeSecundaria, tratarIniciarAtividadeTerciaria, tratarPararAtividadeTerciaria, tratarIniciarReceita, tratarIniciarReceitaSecundaria, tratarPararReceitaSecundaria, tratarIniciarReceitaTerciaria, tratarPararReceitaTerciaria, tratarAlterarPrioridadeDeOficio,
+    tratarPararAtividadeSecundaria, tratarIniciarAtividadeTerciaria, tratarPararAtividadeTerciaria, tratarIniciarReceita, tratarIniciarReceitaSecundaria, tratarPararReceitaSecundaria, tratarIniciarReceitaTerciaria, tratarPararReceitaTerciaria, tratarAlterarPrioridadeDeOficio, tratarResponderMinigame,
     tratarPararTrabalho, tratarPrestigiarProfissao, tratarEscolherJornadaMeta, tratarEquipar, tratarDistribuirAtributos,
     tratarDesbloquearPrestigioNo, tratarRealizarPersonagemPrestigio, tratarDepositarBancoPilha,
     tratarRetirarBancoPilha, tratarDepositarBancoEquipamento, tratarRetirarBancoEquipamento,
@@ -148,6 +148,7 @@ function Aplicativo({ repositorioDePartidas }: AplicativoProps) {
           aoIniciarReceitaTerciaria={tratarIniciarReceitaTerciaria}
           aoPararReceitaTerciaria={tratarPararReceitaTerciaria}
           aoAlterarPrioridade={tratarAlterarPrioridadeDeOficio}
+          aoResponderMinigame={tratarResponderMinigame}
           aoEscolherMetaDaJornada={tratarEscolherJornadaMeta}
           aoPararTrabalho={tratarPararTrabalho}
           aoPrestigiarProfissao={tratarPrestigiarProfissao}
