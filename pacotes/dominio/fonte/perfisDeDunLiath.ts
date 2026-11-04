@@ -20,7 +20,6 @@ type InimigoDeDunLiath =
   | 'inimigo.cosantoir'
   | 'inimigo.fairtheoir-fase1'
   | 'inimigo.fairtheoir-fase2'
-type DificuldadeAvancada = Exclude<DificuldadeDaMasmorra, 'facil'>
 type ReforcosPorInimigo = Partial<Record<InimigoDeDunLiath, readonly DefinicaoDeHabilidadeDoInimigo[]>>
 
 /**

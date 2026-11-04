@@ -30,6 +30,7 @@ import {
   ensinarEEquiparHabilidadesDeCombate,
   type ResultadoDeCombate,
   type DefinicaoDeSalaDaMasmorra,
+  type DefinicaoDeMasmorra,
   type PartidaLocal,
 } from "@paralaxe/dominio";
 import { Button, Card } from "@/components/ui";
@@ -157,7 +158,7 @@ export default function BancadaDaMasmorra({
     facil: 'Fácil', normal: 'Normal', dificil: 'Difícil', impossivel: 'Impossível',
   };
   // O snapshot é a verdade para uma expedição já iniciada, inclusive após atualizar o catálogo.
-  const mapaDaExpedicao = execucao?.grafoGerado ??
+  const mapaDaExpedicao: DefinicaoDeMasmorra = execucao?.grafoGerado ??
     (execucao ? obterDefinicaoDeMasmorra(execucao.idDaDefinicaoDaMasmorra) : null) ??
     DUN_LIATH_FACIL;
   const atualSala = useMemo<DefinicaoDeSalaDaMasmorra | null>(
