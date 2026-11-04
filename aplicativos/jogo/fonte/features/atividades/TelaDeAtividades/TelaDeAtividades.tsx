@@ -9,7 +9,7 @@ import { obterXpDeProfissaoParaProximoNivel, type PartidaLocal, type IdDaProfiss
 import IndicadorDeProgressoOcioso from '../IndicadorDeProgressoOcioso'
 import { IconeDoJogo, ComparacaoDeEquipamento } from '@/components/jogo'
 import { obterIconeDoItem, iconeDeProfissaoPorId } from '@/iconesDosRecursos'
-import { coletaProfissoes, rotulosDosItens, producaoProfissoes, rotulosDasProfissoes } from '@/rotulosDoJogo'
+import { rotulosDosItens, rotulosDasProfissoes } from '@/rotulosDoJogo'
 import { Button, Card, ProgressBar } from '@/components/ui'
 import { SeletorDeOficios } from '../SeletorDeOficios/SeletorDeOficios'
 import { CenaDoOficio } from '../CenaDoOficio/CenaDoOficio'

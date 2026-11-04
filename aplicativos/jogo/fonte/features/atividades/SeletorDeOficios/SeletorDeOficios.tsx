@@ -9,7 +9,7 @@ import estilos from './SeletorDeOficios.module.css'
 type Propriedades = {
   selecionado: IdDaProfissao
   profissoes: PartidaLocal['profissoes']
-  emCurso?: IdDaProfissao
+  emCurso?: IdDaProfissao | undefined
   aoSelecionar: (id: IdDaProfissao) => void
 }
 
