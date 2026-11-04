@@ -90,6 +90,7 @@
 
 .linhaSaque {
   display: flex;
+  align-items: center;
   justify-content: space-between;
   gap: var(--ui-space-3);
   padding: var(--ui-space-2) 0;
@@ -98,6 +99,9 @@
 }
 
 .linhaSaque span {
+  flex: 1;
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
   color: var(--ui-color-text-muted);
 }
 

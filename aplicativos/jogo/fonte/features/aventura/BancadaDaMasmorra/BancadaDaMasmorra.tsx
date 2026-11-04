@@ -39,6 +39,8 @@ import {
   type PartidaLocal,
 } from "@paralaxe/dominio";
 import { Button, Card, ProgressBar } from "@/components/ui";
+import IconeDoJogo from "@/components/jogo/IconeDoJogo";
+import { obterIconeDoEquipamento, obterIconeDoItem } from "@/iconesDosRecursos";
 import { rotulosDaInterface } from "@/rotulosDaInterface";
 import estilos from "./BancadaDaMasmorra.module.css";
 
@@ -1030,13 +1032,15 @@ export default function BancadaDaMasmorra({
             ) : null}
             {execucao.bolsaDaExpedicao.map((pilha) => (
               <div className={estilos.linhaSaque} key={pilha.idDaDefinicao}>
+                <IconeDoJogo icone={obterIconeDoItem(pilha.idDaDefinicao)} tamanho={24} />
                 <span>{itemRotulo(pilha.idDaDefinicao)}</span>
                 <strong>×{pilha.quantidade}</strong>
               </div>
             ))}
             {execucao.equipamentosDaExpedicao.map((item, indice) => (
               <div className={estilos.linhaSaque} key={`${item.idDaDefinicao}-${indice}`}>
-                <span>{item.idDaDefinicao}</span>
+                <IconeDoJogo icone={obterIconeDoEquipamento(item.idDaDefinicao)} tamanho={24} />
+                <span>{obterDefinicaoDeEquipamento(item.idDaDefinicao)?.nome ?? item.idDaDefinicao}</span>
                 <strong>{item.raridade}</strong>
               </div>
             ))}

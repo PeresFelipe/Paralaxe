@@ -35,6 +35,18 @@ A página atual do [Shikashi](https://shikashipx.itch.io/shikashis-fantasy-icons
 
 A atribuição inclui © 2021 SciGho, fonte e licença. O registro preserva a diferença entre os metadados antigos do TTF e a concessão CC BY 4.0 na página atual do autor. O arquivo da fonte continua sem alterações.
 
+### Auditoria das amostras Tiny RPG e da folha Shikashi v2 (04/11/2026)
+
+| Origem | Arquivos examinados | Uso no Paralaxe |
+| --- | ---: | --- |
+| [Tiny RPG Character Asset Pack 01 V2.0](https://zerie.itch.io/tiny-rpg-character-asset-pack), por Zerie | 34 PNGs e 4 arquivos Aseprite | Soldier e Orc poderiam servir de referência para um combatente humano e um inimigo humanoide. O Orc armado não corresponde às garras do Crúbach, e o Soldier não representa o equipamento do Cosantóir nem a identidade do Fairtheoir. Nenhum arquivo incluído. |
+| [Tiny RPG Character Asset Pack 02](https://zerie.itch.io/tiny-rpg-character-asset-pack-02), por Zerie | 28 PNGs e 4 arquivos Aseprite | Demon_A e Blood Monster_A não correspondem aos personagens ou à comunidade de Dún Liath descritos no GDD. Nenhum arquivo incluído. |
+| [Shikashi’s Fantasy Icons Pack v2](https://shikashipx.itch.io/shikashis-fantasy-icons-pack), por Matt Firth (shikashipx) | 17 PNGs e 1 aviso | O jogo já distribui 41 recortes de 32 × 32 da folha transparente. Mercado, fabricação e Bolsa de Expedição reaproveitam esses PNGs. O aviso local tem os mesmos bytes do TXT examinado. |
+
+Os 88 arquivos de entrada incluem 79 PNGs com canal alfa, oito arquivos Aseprite e um TXT. As folhas de Zerie usam células de 100 × 100. As faixas de animação têm de quatro a nove células e as folhas compostas medem 800 × 600 ou 900 × 700. Os Aseprite têm telas de 100 × 100 com 34 a 43 quadros. O Pack 01 inclui duas versões do projétil Arrow01, de 100 × 100 e 32 × 32. A aplicação de um sprite exigiria recortar um quadro ou animar a faixa correspondente. As folhas Shikashi de 512 × 867 repetem o catálogo com fundos ou sombras alternativos.
+
+As páginas de Zerie autorizam uso em jogos e adaptação, com crédito facultativo, e vedam redistribuir ou republicar os arquivos, mesmo modificados. Como o repositório publica os arquivos e a aplicação web entrega os recursos públicos separadamente, a integração depende de autorização que cubra essa distribuição. O jogo mantém as representações atuais. Os créditos acessíveis pelo jogador continuam descrevendo somente material distribuído. Para o Shikashi, o crédito existente preserva CC BY 4.0 e a referência original a CC BY 3.0, com a pendência de autoria individual descrita acima.
+
 ## Software distribuído
 
 | Componente | Atribuição | Licença |

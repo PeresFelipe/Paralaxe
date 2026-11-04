@@ -70,7 +70,7 @@ export const iconeDoPainelPorId = {
 /** Associação de definições de itens empilháveis e de missão. */
 export const iconeDeItemPorId: Record<string, NomeDoIconeShikashi> = {
   "item.dun-liath.sucata": "pedra",
-  "item.dun-liath.registro-arquivo": "pedraRunica",
+  "item.dun-liath.registro-arquivo": "livro-abrir",
   "item.dun-liath.lacre-comandante": "pedraRunica",
   "material.cloch": "pedra",
   "material.stan": "pedra",
@@ -106,7 +106,8 @@ export const iconeDeItemPorId: Record<string, NomeDoIconeShikashi> = {
   "material.grianchloch-refinado": "pedraRunica",
   "item.comida.tuinnin-saiste": "cozido-peixe",
   "item.comida.doingean-maros": "cozido-peixe",
-  "item.consumivel.elixir-maros": "pocao-verde",  "material.lingote-stan": "ouro-lingote",
+  "item.consumivel.elixir-maros": "pocao-verde",
+  "material.lingote-stan": "ouro-lingote",
   "material.copar": "pedra",
   "material.iarann": "pedra",
   "material.fearn": "madeira",
@@ -154,7 +155,8 @@ export const iconeDeEquipamentoPorId: Record<string, NomeDoIconeShikashi> = {
   "item.equipamento.airgead-anel": "anel",
   "armadura.dair-peitoral-hibrido": "armadura-ferro",
   "arma.iur-arco-grianchloch": "arco",
-  "arma.grianchloch-cajado": "cajado-verde",  "arma.beith-arco": "arco",
+  "arma.grianchloch-cajado": "cajado-verde",
+  "arma.beith-arco": "arco",
   "escudo.fearn-broquel": "escudo-madeira",
   "armadura.iarann-couraca": "armadura-ferro",
   "arma.saileach-arco": "arco",
@@ -188,11 +190,18 @@ export function obterCaminhoDoIconeShikashi(icone: NomeDoIconeShikashi) {
 }
 
 /** Consulta o símbolo de um item; IDs sem associação resultam em undefined. */
-export function obterIconeDoItem(idDaDefinicao: string) {
-  return iconeDeItemPorId[idDaDefinicao];
+export function obterIconeDoItem(idDaDefinicao: string): NomeDoIconeShikashi | undefined {
+  return Object.hasOwn(iconeDeItemPorId, idDaDefinicao) ? iconeDeItemPorId[idDaDefinicao] : undefined;
 }
 
 /** Consulta pelo ID da definição, e não pelo ID individual da peça do jogador. */
-export function obterIconeDoEquipamento(idDaDefinicao: string) {
-  return iconeDeEquipamentoPorId[idDaDefinicao];
+export function obterIconeDoEquipamento(idDaDefinicao: string): NomeDoIconeShikashi | undefined {
+  return Object.hasOwn(iconeDeEquipamentoPorId, idDaDefinicao) ? iconeDeEquipamentoPorId[idDaDefinicao] : undefined;
+}
+
+/** Resolve produtos de mercado, fabricação e outras listas com os mesmos IDs do inventário. */
+export function obterIconeDoProduto(produto: { tipo: "item" | "equipamento"; idDaDefinicao: string }) {
+  return produto.tipo === "equipamento"
+    ? obterIconeDoEquipamento(produto.idDaDefinicao)
+    : obterIconeDoItem(produto.idDaDefinicao);
 }

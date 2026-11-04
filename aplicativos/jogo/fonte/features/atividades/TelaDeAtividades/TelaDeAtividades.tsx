@@ -8,7 +8,7 @@ import { RECEITAS_INICIAIS_DE_FABRICACAO, ATIVIDADES_OCIOSAS_INICIAIS, obterDefi
 import { NIVEL_MAXIMO_DE_PROFISSAO, type PrioridadeDeOficio, obterBonusDaFerramentaDeColeta, obterOportunidadeDeMinigame, obterXpDeProfissaoParaProximoNivel, type PartidaLocal, type IdDaProfissao, type DefinicaoDeAtividadeOciosa, type DefinicaoDeReceitaDeFabricacao } from '@paralaxe/dominio'
 import IndicadorDeProgressoOcioso from '../IndicadorDeProgressoOcioso'
 import { IconeDoJogo, ComparacaoDeEquipamento } from '@/components/jogo'
-import { obterIconeDoItem, iconeDeProfissaoPorId } from '@/iconesDosRecursos'
+import { obterIconeDoItem, obterIconeDoProduto, iconeDeProfissaoPorId } from '@/iconesDosRecursos'
 import { rotulosDosItens, rotulosDasProfissoes } from '@/rotulosDoJogo'
 import { Button, Card, ProgressBar, TextField } from '@/components/ui'
 import { SeletorDeOficios } from '../SeletorDeOficios/SeletorDeOficios'
@@ -209,7 +209,9 @@ export default function TelaDeAtividades({ partida, ultimoResultadoDoTrabalho, p
               const desbloqueado = progresso.nivel >= receita.nivelExigidoDaProfissao &&
                 progresso.prestigio >= (receita.prestigioExigido ?? 0) && dificuldadeLiberada
               return <Card appearance="soft" className={`${estilos.option} ${ativo ? "selecionado-cartao" : ''}`} key={receita.id}>
-                <div className="item-miniatura" aria-hidden="true"><IconeDoJogo icone={receita.saida.tipo === 'item' ? obterIconeDoItem(receita.saida.idDaDefinicao) : iconeDeProfissaoPorId[profissaoSelecionada]} tamanho={40} /></div>
+                <div className="item-miniatura" aria-hidden="true">
+                  <IconeDoJogo icone={receita.saida.tipo === 'equipamento-reforco' ? 'ferreiro' : obterIconeDoProduto(receita.saida)} tamanho={40} alternativa={receita.saida.nome.slice(0, 1)} />
+                </div>
                 <div className={estilos.optionBody}>
                   <h2>{receita.nome}</h2>
                   <p className={estilos.yield}>{receita.saida.tipo === 'item' ? `${receita.saida.quantidade} ${receita.saida.nome}` : `1 ${receita.saida.nome}`} · {receita.segundosPorAcao}s por ciclo · +{receita.xpDeProfissaoPorAcao} XP</p>
@@ -221,7 +223,17 @@ export default function TelaDeAtividades({ partida, ultimoResultadoDoTrabalho, p
                       const origem = ATIVIDADES_OCIOSAS_INICIAIS.find((atividade) => atividade.idDaDefinicaoDoItemProduzido === ingrediente.idDaDefinicao)
                       const producaoOrigem = RECEITAS_INICIAIS_DE_FABRICACAO.find((candidato) => candidato.saida.tipo === 'item' && candidato.saida.idDaDefinicao === ingrediente.idDaDefinicao)
                       const origemProfissao = origem?.idDaProfissao ?? producaoOrigem?.idDaProfissao
-                      return <div className={estilos.ingredientRow} key={ingrediente.idDaDefinicao}><span>{rotulosDosItens[ingrediente.idDaDefinicao] ?? ingrediente.idDaDefinicao} <strong>{quantidade} / {ingrediente.quantidade}</strong>{faltante ? <small>Faltam {faltante}</small> : null}</span>{faltante && origemProfissao ? <Button variant="secondary" size="sm" onClick={() => escolherProfissao(origemProfissao)}>Ver {rotulosDasProfissoes[origemProfissao]} →</Button> : null}</div>
+                      return (
+                        <div className={estilos.ingredientRow} key={ingrediente.idDaDefinicao}>
+                          <IconeDoJogo icone={obterIconeDoItem(ingrediente.idDaDefinicao)} tamanho={24} />
+                          <span>
+                            {rotulosDosItens[ingrediente.idDaDefinicao] ?? ingrediente.idDaDefinicao}
+                            <strong>{quantidade} / {ingrediente.quantidade}</strong>
+                            {faltante ? <small>Faltam {faltante}</small> : null}
+                          </span>
+                          {faltante && origemProfissao ? <Button variant="secondary" size="sm" onClick={() => escolherProfissao(origemProfissao)}>Ver {rotulosDasProfissoes[origemProfissao]} →</Button> : null}
+                        </div>
+                      )
                     })}
                   </div>
                   {receita.saida.tipo === 'equipamento' ? <details className={estilos.recipeDetails}>

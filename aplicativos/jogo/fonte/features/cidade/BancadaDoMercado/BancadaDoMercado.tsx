@@ -7,6 +7,8 @@ import { useState } from 'react'
 import { OFERTAS_INICIAIS_DO_MERCADO_DE_PNJ } from '@paralaxe/conteudo'
 import { obterUsoDeEspacosDoInventario, LIMITE_DE_ESPACOS_DO_INVENTARIO_V01, type PartidaLocal } from '@paralaxe/dominio'
 import { Button, Card } from '@/components/ui'
+import IconeDoJogo from '@/components/jogo/IconeDoJogo'
+import { obterIconeDoProduto } from '@/iconesDosRecursos'
 import estilos from './BancadaDoMercado.module.css'
 
 type PropriedadesDaTelaDeMercado = {
@@ -66,7 +68,9 @@ export default function BancadaDoMercado({ partida, aoComprarOferta }: Proprieda
             : partida.personagem.inventario.find(i => i.idDaDefinicao === oferta.produto.idDaDefinicao)?.quantidade ?? 0
           return (
             <Card appearance="soft" className="item-cartao" key={oferta.id}>
-              <div className="item-miniatura" aria-hidden="true">{oferta.nome.slice(0, 1)}</div>
+              <div className="item-miniatura" aria-hidden="true">
+                <IconeDoJogo icone={obterIconeDoProduto(oferta.produto)} alternativa={oferta.nome.slice(0, 1)} />
+              </div>
               <div className="item-cartaoCorpo">
                  <h3>{oferta.nome}</h3>
                 <p className="atenuado">
