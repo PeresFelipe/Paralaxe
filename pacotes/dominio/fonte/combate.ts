@@ -71,6 +71,8 @@ export interface DefinicaoDeHabilidadeDoInimigo {
   tipoDeDano?: TipoDeDano
   segundosDeAvisoDeAtaque?: number
   interrompivel?: boolean
+  /** A habilidade só entra na rotação quando a Vida do inimigo cai a esta fração. */
+  ativarQuandoVidaAte?: number
   aplicacoesDeEfeito?: readonly DefinicaoDeAplicacaoDeEfeito[]
   multiplicadorDoProximoIntervalo?: number
   multiplicadorDoDanoRecebidoPeloProprio?: number
@@ -976,7 +978,11 @@ export function simularCombate(
     }
 
     if (Math.abs(inimigoProntoEm - agora) <= EPSILON && recursos.vida > 0 && vidaDoInimigo > 0 && !avisoDeAtaque) {
-      const pronto = inimigo.habilidades.find((habilidade) => (inimigoRecargas.get(habilidade.id) ?? 0) <= agora + EPSILON)
+      const pronto = inimigo.habilidades.find((habilidade) =>
+        (inimigoRecargas.get(habilidade.id) ?? 0) <= agora + EPSILON &&
+        (habilidade.ativarQuandoVidaAte === undefined ||
+          vidaDoInimigo / inimigo.vidaMaxima <= habilidade.ativarQuandoVidaAte)
+      )
       if (pronto) {
         inimigoRecargas.set(pronto.id, agora + pronto.segundosDeRecarga)
         if (pronto.multiplicadorDoDanoRecebidoPeloProprio !== undefined) {

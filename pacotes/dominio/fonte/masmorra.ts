@@ -8,6 +8,7 @@ import { aplicarResultadoDeCombate, simularCombate } from './combate'
 import type { InstanciaDeEquipamento, RaridadeDoEquipamento } from './equipamento'
 import type { PartidaLocal } from './personagem'
 import { verificarCapacidadeParaEquipamentoNoInventario, verificarCapacidadeParaPilhaNoInventario } from './armazenamento'
+import { adaptarInimigoParaDificuldade } from './perfisDeDunLiath'
 
 export type TipoDeSalaDaMasmorra =
   | "entrada"
@@ -320,28 +321,16 @@ export function obterDificuldadesDesbloqueadasDaMasmorra(estado: EstadoDeProgres
   return liberadas
 }
 
-/** Balanceamento temporário. Novos kits mecânicos de cada dificuldade permanecem pendentes. */
-const ESCALAS_DE_DIFICULDADE: Record<DificuldadeDaMasmorra, number> = {
-  facil: 1, normal: 1.22, dificil: 1.55, impossivel: 1.9,
-}
-
+/** Não altera o catálogo global: cada encontro recebe seu perfil escalado e as técnicas da dificuldade. */
 function catalogoEscaladoParaDificuldade(
   catalogo: CatalogoDeConteudoDaMasmorra, dificuldade: DificuldadeDaMasmorra,
 ): CatalogoDeConteudoDaMasmorra {
-  const escala = ESCALAS_DE_DIFICULDADE[dificuldade]
-  if (escala === 1) return catalogo
+  if (dificuldade === 'facil') return catalogo
   return {
     ...catalogo,
     obterDefinicaoDeInimigo: (id) => {
-      const original = catalogo.obterDefinicaoDeInimigo(id)
-      if (!original) return null
-      return { ...original,
-        vidaMaxima: Math.ceil(original.vidaMaxima * escala),
-        defesa: Math.ceil(original.defesa * escala),
-        poder: Math.ceil(original.poder * escala),
-        nivelDeCombate: Math.ceil(original.nivelDeCombate * escala),
-        recompensaDeXp: Math.ceil(original.recompensaDeXp * escala),
-      }
+      const base = catalogo.obterDefinicaoDeInimigo(id)
+      return base ? adaptarInimigoParaDificuldade(base, dificuldade) : null
     },
   }
 }
