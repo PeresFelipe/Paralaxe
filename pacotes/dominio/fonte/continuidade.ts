@@ -26,6 +26,10 @@ export function pausarTrabalhoAtualDuranteRisco(partida: PartidaLocal, agora: st
         : null,
     },
     fabricacao: {
+      ...partida.fabricacao,
+      receitaSecundaria: partida.fabricacao.receitaSecundaria
+        ? { ...partida.fabricacao.receitaSecundaria, processadoPorUltimoEm: agora }
+        : null,
       receitaAtiva: partida.fabricacao.receitaAtiva
         ? { ...partida.fabricacao.receitaAtiva, processadoPorUltimoEm: agora }
         : null,
@@ -50,7 +54,7 @@ export function iniciarMasmorraComContinuidade(
   const desvinculado: PartidaLocal = {
     ...pausado,
     ocioso: { atividadeAtiva: null, atividadeSecundaria: null },
-    fabricacao: { receitaAtiva: null },
+    fabricacao: { receitaAtiva: null, receitaSecundaria: null },
   }
   const iniciado = iniciarMasmorra(desvinculado, masmorra, semente, agora, recursosIniciais)
 

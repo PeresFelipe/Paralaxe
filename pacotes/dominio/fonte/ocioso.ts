@@ -229,7 +229,7 @@ export function realizarPrestigioDaProfissao(partida: PartidaLocal, idDaProfissa
   const progresso = partida.profissoes[idDaProfissao]
   if (progresso.nivel < NIVEL_MAXIMO_DE_PROFISSAO) throw new Error(`Leve o ofício ao nível ${NIVEL_MAXIMO_DE_PROFISSAO} antes de realizar Prestígio.`)
   if (progresso.prestigio >= 3) throw new Error('Esse ofício já atingiu Prestígio III.')
-  if (partida.ocioso.atividadeAtiva || partida.ocioso.atividadeSecundaria || partida.fabricacao.receitaAtiva) throw new Error('Pare o trabalho atual antes de realizar Prestígio.')
+  if (partida.ocioso.atividadeAtiva || partida.ocioso.atividadeSecundaria || partida.fabricacao.receitaAtiva || partida.fabricacao.receitaSecundaria) throw new Error('Pare o trabalho atual antes de realizar Prestígio.')
   return {
     ...partida,
     atualizadoEm: agora,
@@ -246,7 +246,7 @@ export function iniciarAtividadeOciosa(
   atividade: DefinicaoDeAtividadeOciosa,
   agora: string,
 ): PartidaLocal {
-  if (partida.fabricacao.receitaAtiva) {
+  if (partida.fabricacao.receitaAtiva || partida.fabricacao.receitaSecundaria) {
     throw new Error('Interrompa a produção antes de iniciar uma coleta.')
   }
 

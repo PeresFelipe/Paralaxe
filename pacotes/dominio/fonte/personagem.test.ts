@@ -49,7 +49,7 @@ describe("criação de personagem", () => {
     })
 
     expect(partida.modoDaPartida).toBe("LOCAL")
-    expect(partida.versaoDoEsquemaDaPartida).toBe(14)
+    expect(partida.versaoDoEsquemaDaPartida).toBe(15)
     expect(partida.ocioso.atividadeSecundaria).toBeNull()
     expect(partida.jornada).toEqual({ meta: null, idsDasReceitasFabricadas: [] })
     expect(partida.personagem.prestigio).toEqual({ nivel: 0, pontos: 0, idsDosNosDesbloqueados: [] })
@@ -63,6 +63,7 @@ describe("criação de personagem", () => {
     expect(partida.profissoes.mineracao).toEqual({ nivel: 1, xp: 0, prestigio: 0 })
     expect(partida.ocioso.atividadeAtiva).toBeNull()
     expect(partida.fabricacao.receitaAtiva).toBeNull()
+    expect(partida.fabricacao.receitaSecundaria).toBeNull()
     expect(partida.personagem.itensDeEquipamento).toHaveLength(2)
     expect(partida.personagem.banco).toEqual({ inventario: [], itensDeEquipamento: [] })
 

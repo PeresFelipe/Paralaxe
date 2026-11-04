@@ -53,6 +53,8 @@ export interface ReceitaDeFabricacaoAtiva {
 
 export interface EstadoDeFabricacao {
   receitaAtiva: ReceitaDeFabricacaoAtiva | null
+  /** Prestígio I: segundo relógio independente; nos saves v14 é inicializado como null. */
+  receitaSecundaria?: ReceitaDeFabricacaoAtiva | null
 }
 
 export interface ResultadoDoProgressoDeFabricacao {
@@ -137,7 +139,7 @@ export function iniciarReceitaDeFabricacao(
   agora: string,
   idDaInstanciaDoEquipamentoAlvo: string | null = null,
 ): PartidaLocal {
-  if (partida.ocioso.atividadeAtiva) {
+  if (partida.ocioso.atividadeAtiva || partida.ocioso.atividadeSecundaria) {
     throw new Error('Interrompa a atividade de coleta antes de iniciar uma produção.')
   }
 
@@ -173,6 +175,7 @@ export function iniciarReceitaDeFabricacao(
     ...partida,
     atualizadoEm: agora,
     fabricacao: {
+      receitaSecundaria: null,
       receitaAtiva: {
         idDaDefinicaoDaReceita: receita.id,
         iniciadoEm: agora,
@@ -184,12 +187,95 @@ export function iniciarReceitaDeFabricacao(
   }
 }
 
+/** P1: velocidade secundária provisória; a quantidade e o XP por ciclo não mudam. */
+export const EFICIENCIA_PRODUCAO_SECUNDARIA_PRESTIGIO_I = 0.5
+
+export function ajustarReceitaParaSegundoEspaco(receita: DefinicaoDeReceitaDeFabricacao): DefinicaoDeReceitaDeFabricacao {
+  return { ...receita, segundosPorAcao: Math.ceil(receita.segundosPorAcao / EFICIENCIA_PRODUCAO_SECUNDARIA_PRESTIGIO_I) }
+}
+
+/**
+ * Abre a segunda receita do mesmo Ofício. Receber a definição principal
+ * evita adivinhar profissão a partir da sintaxe do ID da receita.
+ */
+export function iniciarReceitaSecundaria(
+  partida: PartidaLocal,
+  principal: DefinicaoDeReceitaDeFabricacao,
+  secundaria: DefinicaoDeReceitaDeFabricacao,
+  agora: string,
+): PartidaLocal {
+  const ativa = partida.fabricacao.receitaAtiva
+  if (!ativa || ativa.idDaDefinicaoDaReceita !== principal.id || partida.ocioso.atividadeAtiva || partida.ocioso.atividadeSecundaria) {
+    throw new Error('Inicie uma receita principal antes da produção secundária.')
+  }
+  if (principal.id === secundaria.id) throw new Error('Selecione outra receita para o segundo espaço.')
+  if (principal.idDaProfissao !== secundaria.idDaProfissao) throw new Error('A segunda receita deve pertencer ao mesmo Ofício.')
+  if (principal.saida.tipo === 'equipamento-reforco' || secundaria.saida.tipo === 'equipamento-reforco') {
+    throw new Error('Reforços de equipamentos não podem ser produzidos em paralelo.')
+  }
+  const progresso = partida.profissoes[secundaria.idDaProfissao]
+  if (progresso.prestigio < 1) throw new Error('Produção paralela exige Prestígio I desse Ofício.')
+  if (progresso.nivel < secundaria.nivelExigidoDaProfissao) {
+    throw new Error(`${secundaria.nome} exige nível ${secundaria.nivelExigidoDaProfissao} de Profissão.`)
+  }
+  if (obterMaximoFabricavelCiclos(partida.personagem.inventario, secundaria.ingredientes) < 1) {
+    throw new Error('Materiais insuficientes para iniciar a produção secundária.')
+  }
+  return {
+    ...partida, atualizadoEm: agora,
+    fabricacao: { ...partida.fabricacao, receitaSecundaria: {
+      idDaDefinicaoDaReceita: secundaria.id, iniciadoEm: agora,
+      processadoPorUltimoEm: agora, segundosRestantes: 0,
+      idDaInstanciaDoEquipamentoAlvo: null,
+    } },
+  }
+}
+
+/** Encerra só o segundo relógio após a aplicação registrar os ciclos pendentes. */
+export function interromperReceitaSecundaria(partida: PartidaLocal, agora: string): PartidaLocal {
+  return { ...partida, atualizadoEm: agora, fabricacao: { ...partida.fabricacao, receitaSecundaria: null } }
+}
+
+/**
+ * Reutiliza a fabricação normal em um relógio temporário. A aplicação processa
+ * primeiro a principal e depois a secundária: estoque, capacidade e IDs são únicos.
+ */
+export function processarProgressoDaReceitaSecundaria(
+  partida: PartidaLocal,
+  receita: DefinicaoDeReceitaDeFabricacao,
+  agora: string,
+): ResultadoDoProgressoDeFabricacao {
+  const secundaria = partida.fabricacao.receitaSecundaria
+  if (!secundaria || secundaria.idDaDefinicaoDaReceita !== receita.id) {
+    return {
+      partida, acoesConcluidas: 0, itensProduzidos: 0, equipamentosProduzidos: 0,
+      equipamentosReforcados: 0, xpDeProfissaoConcedido: 0, xpGeralConcedido: 0,
+      niveisDeProfissaoGanhos: 0, segundosProcessados: 0, segundosLimitados: 0,
+      interrompidoPorMateriais: false, interrompidoPorCapacidade: false,
+    }
+  }
+  if (receita.saida.tipo === 'equipamento-reforco') throw new Error('Reforço secundário inválido.')
+  const simulada: PartidaLocal = { ...partida, fabricacao: { ...partida.fabricacao, receitaAtiva: secundaria } }
+  const resultado = processarProgressoDeFabricacao(simulada, ajustarReceitaParaSegundoEspaco(receita), agora)
+  return {
+    ...resultado,
+    partida: {
+      ...resultado.partida,
+      fabricacao: {
+        ...partida.fabricacao,
+        receitaAtiva: partida.fabricacao.receitaAtiva,
+        receitaSecundaria: resultado.partida.fabricacao.receitaAtiva,
+      },
+    },
+  }
+}
+
 /** Cancela a seleção da receita; não executa ciclos nem devolve ingredientes já consumidos. */
 export function interromperReceitaDeFabricacao(partida: PartidaLocal, agora: string): PartidaLocal {
   return {
     ...partida,
     atualizadoEm: agora,
-    fabricacao: { receitaAtiva: null },
+    fabricacao: { ...partida.fabricacao, receitaAtiva: null, receitaSecundaria: null },
   }
 }
 
@@ -347,6 +433,7 @@ export function processarProgressoDeFabricacao(
       [receita.idDaProfissao]: profissaoResultado.progresso,
     },
     fabricacao: {
+      ...partida.fabricacao,
       receitaAtiva: naoPodeRepetir
         ? null
         : { ...ativo, processadoPorUltimoEm: agora, segundosRestantes },

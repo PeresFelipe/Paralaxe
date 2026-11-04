@@ -5,6 +5,7 @@ import {
 } from '@paralaxe/conteudo'
 import {
   processarProgressoDeFabricacao,
+  processarProgressoDaReceitaSecundaria,
   processarProgressoOcioso,
   processarProgressoDaAtividadeSecundaria,
   type PartidaLocal,
@@ -94,6 +95,20 @@ export function processarTrabalhoAtual(
     const receita = obterDefinicaoDeReceitaDeFabricacao(ativoReceitaId)
     if (receita) {
       const resultado = processarProgressoDeFabricacao(partida, receita, agora)
+      const secundariaId = resultado.partida.fabricacao.receitaSecundaria?.idDaDefinicaoDaReceita
+      const secundaria = secundariaId ? obterDefinicaoDeReceitaDeFabricacao(secundariaId) : null
+      const adicional = secundaria ? processarProgressoDaReceitaSecundaria(resultado.partida, secundaria, agora) : null
+      const processada = adicional?.partida ?? resultado.partida
+      const proxima = !processada.fabricacao.receitaAtiva && processada.fabricacao.receitaSecundaria
+        ? { ...processada, fabricacao: { ...processada.fabricacao, receitaSecundaria: null } }
+        : processada
+      const relatoSecundario = adicional && adicional.acoesConcluidas > 0
+        ? ` · Secundária: ${secundaria?.nome} ×${adicional.acoesConcluidas} (+${adicional.xpDeProfissaoConcedido} XP)`
+        : adicional?.interrompidoPorMateriais
+          ? ' · produção secundária interrompida: materiais insuficientes'
+          : adicional?.interrompidoPorCapacidade
+            ? ' · produção secundária interrompida: sem capacidade'
+            : ''
       const totalSaida =
         resultado.itensProduzidos +
         resultado.equipamentosProduzidos +
@@ -105,15 +120,15 @@ export function processarTrabalhoAtual(
         ? ' · produção interrompida por Inventário sem capacidade'
         : ''
       return {
-        partida: resultado.partida,
+        partida: proxima,
         textoExibido:
           resultado.acoesConcluidas > 0
-            ? `${receita.nome}: ${totalSaida || resultado.acoesConcluidas} concluído(s) · +${resultado.xpDeProfissaoConcedido} XP de Profissão${interrompidoTextoExibido}${capacidadeTextoExibido}`
+            ? `${receita.nome}: ${totalSaida || resultado.acoesConcluidas} concluído(s) · +${resultado.xpDeProfissaoConcedido} XP de Profissão${interrompidoTextoExibido}${capacidadeTextoExibido}${relatoSecundario}`
             : resultado.interrompidoPorMateriais
               ? `${receita.nome} foi interrompida por materiais insuficientes.`
               : resultado.interrompidoPorCapacidade
                 ? `${receita.nome} foi interrompida: Inventário sem capacidade.`
-                : null,
+                : relatoSecundario || null,
       }
     }
   }

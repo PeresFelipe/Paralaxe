@@ -266,6 +266,16 @@ function migrarPartidaAnterior(dadosArmazenados: unknown): Omit<PartidaLocal, 'v
     return brutoPartida as PartidaLocal
   }
 
+  if (candidato.versaoDoEsquemaDaPartida === 14) {
+    const anterior = brutoPartida as PartidaLocal
+    validarEstadoDaVigilia(anterior.vigilia)
+    validarLegado(anterior.legado)
+    return {
+      ...anterior, versaoDoEsquemaDaPartida: VERSAO_DO_ESQUEMA_DA_PARTIDA,
+      fabricacao: { ...anterior.fabricacao, receitaSecundaria: null },
+    }
+  }
+
   if (candidato.versaoDoEsquemaDaPartida === 13) {
     const anterior = brutoPartida as PartidaLocal
     validarEstadoDaVigilia(anterior.vigilia)
@@ -425,10 +435,14 @@ function migrarPartidaAnterior(dadosArmazenados: unknown): Omit<PartidaLocal, 'v
 function migrarPartida(dadosArmazenados: unknown): PartidaLocal {
   const anterior = migrarPartidaAnterior(dadosArmazenados)
   // Todos os legados anteriores ao v14 recebem o segundo espaço vazio sem perder a atividade principal.
-  const migrada = { ...anterior, ocioso: { ...anterior.ocioso, atividadeSecundaria: anterior.ocioso.atividadeSecundaria ?? null } }
+  const migrada = {
+    ...anterior,
+    ocioso: { ...anterior.ocioso, atividadeSecundaria: anterior.ocioso.atividadeSecundaria ?? null },
+    fabricacao: { ...anterior.fabricacao, receitaSecundaria: anterior.fabricacao.receitaSecundaria ?? null },
+  }
   if ('legado' in migrada) {
     validarLegado(migrada.legado)
-    if (!('vigilia' in migrada)) throw new Error('Save v14 sem histórico da Vigília.')
+    if (!('vigilia' in migrada)) throw new Error('Save v15 sem histórico da Vigília.')
     validarEstadoDaVigilia(migrada.vigilia)
     return { ...migrada, vigilia: migrada.vigilia, legado: migrada.legado }
   }
