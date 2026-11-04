@@ -53,6 +53,7 @@ export interface EstadoOcioso {
   /** Segundo espaço do Prestígio I. Saves antigos são normalizados para null na migração. */
   atividadeSecundaria?: AtividadeOciosaAtiva | null
   prioridade?: PrioridadeDeOficio
+  atividadeTerciaria?: AtividadeOciosaAtiva | null
 }
 
 /** Combina a nova partida com um resumo usado nas mensagens de retorno e interrupção. */
@@ -138,7 +139,7 @@ export function iniciarAtividadeSecundaria(
   }
   return {
     ...partida, atualizadoEm: agora,
-    ocioso: { ...partida.ocioso, atividadeSecundaria: {
+    ocioso: { ...partida.ocioso, atividadeTerciaria: null, atividadeSecundaria: {
       idDaDefinicaoDaAtividade: atividade.id,
       iniciadoEm: agora, processadoPorUltimoEm: agora, segundosRestantes: 0,
     } },
@@ -146,7 +147,7 @@ export function iniciarAtividadeSecundaria(
 }
 
 export function interromperAtividadeSecundaria(partida: PartidaLocal, agora: string): PartidaLocal {
-  return { ...partida, atualizadoEm: agora, ocioso: { ...partida.ocioso, atividadeSecundaria: null } }
+  return { ...partida, atualizadoEm: agora, ocioso: { ...partida.ocioso, atividadeSecundaria: null, atividadeTerciaria: null } }
 }
 
 /** Processa o segundo relógio depois da atividade principal, reutilizando o motor determinístico e a capacidade compartilhada. */
@@ -175,6 +176,47 @@ export function processarProgressoDaAtividadeSecundaria(
       },
     },
   }
+}
+
+/** Prestígio III: terceiro relógio distinto; mantido no mesmo Ofício. */
+export function iniciarAtividadeTerciaria(partida: PartidaLocal, atividade: DefinicaoDeAtividadeOciosa, agora: string): PartidaLocal {
+  const a = partida.ocioso.atividadeAtiva
+  const b = partida.ocioso.atividadeSecundaria
+  if (!a || !b) throw new Error('Inicie duas coletas antes da terceira.')
+  if ([a.idDaDefinicaoDaAtividade, b.idDaDefinicaoDaAtividade].includes(atividade.id)) throw new Error('A terceira coleta deve ser diferente.')
+  if (a.idDaDefinicaoDaAtividade.split('.')[1] !== atividade.idDaProfissao ||
+      b.idDaDefinicaoDaAtividade.split('.')[1] !== atividade.idDaProfissao) throw new Error('Os três recursos devem ser do mesmo Ofício.')
+  const progresso = partida.profissoes[atividade.idDaProfissao]
+  if (progresso.prestigio < 3) throw new Error('Terceira coleta exige Prestígio III.')
+  if (progresso.nivel < atividade.nivelExigidoDaProfissao) throw new Error(`Requer nível ${atividade.nivelExigidoDaProfissao} da profissão.`)
+  if (obterEspacoParaPilhaNoInventario(partida, atividade.idDaDefinicaoDoItemProduzido) <= 0) throw new Error('Inventário sem capacidade.')
+  return { ...partida, atualizadoEm: agora, ocioso: { ...partida.ocioso, atividadeTerciaria: {
+    idDaDefinicaoDaAtividade: atividade.id, iniciadoEm: agora,
+    processadoPorUltimoEm: agora, segundosRestantes: 0,
+  } } }
+}
+
+export function interromperAtividadeTerciaria(partida: PartidaLocal, agora: string): PartidaLocal {
+  return { ...partida, atualizadoEm: agora, ocioso: { ...partida.ocioso, atividadeTerciaria: null } }
+}
+
+export function processarProgressoDaAtividadeTerciaria(
+  partida: PartidaLocal, atividade: DefinicaoDeAtividadeOciosa, agora: string,
+  resolver?: (idDaDefinicao: string) => DefinicaoDeEquipamento | null,
+): ResultadoDoProgressoOcioso {
+  const terceira = partida.ocioso.atividadeTerciaria
+  if (!terceira || terceira.idDaDefinicaoDaAtividade !== atividade.id) {
+    return { partida, acoesConcluidas: 0, itensConcedidos: 0, xpDeProfissaoConcedido: 0,
+      xpGeralConcedido: 0, niveisDeProfissaoGanhos: 0, segundosProcessados: 0,
+      segundosLimitados: 0, interrompidoPorCapacidade: false }
+  }
+  const adaptada = { ...atividade, segundosPorAcao: segundosPorAcaoComPrioridade(atividade.segundosPorAcao, partida.ocioso.prioridade, 'terciaria') }
+  const sim: PartidaLocal = { ...partida, ocioso: { ...partida.ocioso, atividadeAtiva: terceira } }
+  const res = processarProgressoOcioso(sim, adaptada, agora, resolver)
+  return { ...res, partida: { ...res.partida, ocioso: {
+    ...partida.ocioso, atividadeAtiva: partida.ocioso.atividadeAtiva,
+    atividadeTerciaria: res.partida.ocioso.atividadeAtiva,
+  } } }
 }
 
 const LIMITE_BASE_DE_AUSENCIA_EM_SEGUNDOS = 4 * 60 * 60
@@ -240,7 +282,7 @@ export function realizarPrestigioDaProfissao(partida: PartidaLocal, idDaProfissa
   const progresso = partida.profissoes[idDaProfissao]
   if (progresso.nivel < NIVEL_MAXIMO_DE_PROFISSAO) throw new Error(`Leve o ofício ao nível ${NIVEL_MAXIMO_DE_PROFISSAO} antes de realizar Prestígio.`)
   if (progresso.prestigio >= 3) throw new Error('Esse ofício já atingiu Prestígio III.')
-  if (partida.ocioso.atividadeAtiva || partida.ocioso.atividadeSecundaria || partida.fabricacao.receitaAtiva || partida.fabricacao.receitaSecundaria) throw new Error('Pare o trabalho atual antes de realizar Prestígio.')
+  if (partida.ocioso.atividadeAtiva || partida.ocioso.atividadeSecundaria || partida.ocioso.atividadeTerciaria || partida.fabricacao.receitaAtiva || partida.fabricacao.receitaSecundaria || partida.fabricacao.receitaTerciaria) throw new Error('Pare o trabalho atual antes de realizar Prestígio.')
   return {
     ...partida,
     atualizadoEm: agora,
@@ -257,7 +299,7 @@ export function iniciarAtividadeOciosa(
   atividade: DefinicaoDeAtividadeOciosa,
   agora: string,
 ): PartidaLocal {
-  if (partida.fabricacao.receitaAtiva || partida.fabricacao.receitaSecundaria) {
+  if (partida.fabricacao.receitaAtiva || partida.fabricacao.receitaSecundaria || partida.fabricacao.receitaTerciaria) {
     throw new Error('Interrompa a produção antes de iniciar uma coleta.')
   }
 
@@ -275,6 +317,7 @@ export function iniciarAtividadeOciosa(
     atualizadoEm: agora,
     ocioso: {
       atividadeSecundaria: null,
+      atividadeTerciaria: null,
       prioridade: 'equilibrado',
       atividadeAtiva: {
         idDaDefinicaoDaAtividade: atividade.id,
@@ -291,7 +334,7 @@ export function interromperAtividadeOciosa(partida: PartidaLocal, agora: string)
   return {
     ...partida,
     atualizadoEm: agora,
-    ocioso: { ...partida.ocioso, atividadeAtiva: null, atividadeSecundaria: null },
+    ocioso: { ...partida.ocioso, atividadeAtiva: null, atividadeSecundaria: null, atividadeTerciaria: null },
   }
 }
 
