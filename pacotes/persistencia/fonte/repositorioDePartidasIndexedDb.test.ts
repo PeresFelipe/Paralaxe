@@ -13,6 +13,8 @@ import {
   type DefinicaoDeMasmorra,
   type DefinicaoDePresente,
   type PartidaLocal,
+  iniciarIncursaoAutomatica,
+  finalizarIncursaoAutomatica,
 } from '@paralaxe/dominio'
 import { criarRepositorioDePartidasIndexedDb } from './repositorioDePartidasIndexedDb'
 
@@ -350,4 +352,30 @@ describe("repositório de partidas em IndexedDB", () => {
     expect((await reaberto.obter(original.idDaPartida))?.jornada).toEqual(progredido.jornada)
     expect((await reaberto.listar())[0]?.jornada).toEqual(progredido.jornada)
   })
+  it('migra v16, conserva atributos e restaura uma incursão persistida até resgatá-la', async () => {
+    const base = criarPartidaLocal({ idDaPartida: 'incursao-reabertura', criadoEm: '2026-11-04T12:00:00.000Z',
+      versaoDoConteudo: 'test', nomeDoPersonagem: 'Ailith', classeDoPersonagem, presente })
+    const antiga = { ...base, versaoDoEsquemaDaPartida: 16 as const,
+      masmorra: { ...base.masmorra, dunLiathFacilConquistado: true } }
+    delete (antiga.masmorra as Record<string, unknown>).incursaoAutomaticaAtiva
+    delete (antiga.masmorra as Record<string, unknown>).ultimaIncursaoAutomatica
+    const repo = criarRepositorioDePartidasIndexedDb()
+    await repo.salvar(antiga as unknown as PartidaLocal)
+    const migrada = await repo.obter('incursao-reabertura')
+    expect(migrada?.versaoDoEsquemaDaPartida).toBe(17)
+    expect(migrada?.masmorra.incursaoAutomaticaAtiva).toBeNull()
+    expect(migrada?.masmorra.dunLiathFacilConquistado).toBe(true)
+    expect(migrada?.personagem.atributos).toEqual(base.personagem.atributos)
+    const ativa = iniciarIncursaoAutomatica(migrada!, 'cautelosa', 20, 15, '2026-11-04T12:10:00Z')
+    await repo.salvar(ativa)
+    const recarregada = await criarRepositorioDePartidasIndexedDb().obter('incursao-reabertura')
+    expect(recarregada?.masmorra.incursaoAutomaticaAtiva).toEqual(ativa.masmorra.incursaoAutomaticaAtiva)
+    const encerrada = finalizarIncursaoAutomatica(recarregada!, '2026-11-04T12:26:00Z')
+    await repo.salvar(encerrada)
+    const revisitada = await repo.obter('incursao-reabertura')
+    expect(revisitada?.masmorra.incursaoAutomaticaAtiva).toBeNull()
+    expect(revisitada?.masmorra.ultimaIncursaoAutomatica).toEqual(encerrada.masmorra.ultimaIncursaoAutomatica)
+    expect(() => finalizarIncursaoAutomatica(revisitada!, '2026-11-04T12:27:00Z')).toThrow('Não existe')
+  })
+
 })

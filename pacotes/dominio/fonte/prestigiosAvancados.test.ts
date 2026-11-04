@@ -61,7 +61,7 @@ describe('GDD §9: Prestígios II e III', () => {
     expect(segundosPorAcaoComPrioridade(8, 'secundaria', 'principal')).toBe(10)
     expect(segundosPorAcaoComPrioridade(8, 'secundaria', 'secundaria')).toBe(11)
     expect(segundosPorAcaoComPrioridade(8, 'principal', 'principal')).toBe(7)
-    expect(segundosPorAcaoComPrioridade(8, 'equilibrado', 'secundaria')).toBe(16)
+    expect(segundosPorAcaoComPrioridade(8, 'equilibrado', 'secundaria')).toBe(17)
   })
 
   it('exige Prestígio III e três coletas distintas da mesma profissão', () => {
@@ -80,7 +80,7 @@ describe('GDD §9: Prestígios II e III', () => {
     const repetido = processarProgressoDaAtividadeTerciaria(tres.partida, coletas[2], tempo(32))
     expect(repetido.acoesConcluidas).toBe(0)
     expect(repetido.partida.ocioso.atividadeAtiva).toEqual(tres.partida.ocioso.atividadeAtiva)
-    expect(tres.partida.versaoDoEsquemaDaPartida).toBe(16)
+    expect(tres.partida.versaoDoEsquemaDaPartida).toBe(17)
     const pausa = pausarTrabalhoAtualDuranteRisco(tres.partida, tempo(100))
     expect(pausa.ocioso.atividadeTerciaria?.processadoPorUltimoEm).toBe(tempo(100))
   })
@@ -97,7 +97,7 @@ describe('GDD §9: Prestígios II e III', () => {
     expect(qtd(terceiro.partida,'material.liga-beta')).toBe(2)
     expect(qtd(terceiro.partida,'material.liga-gama')).toBe(1)
     expect(qtd(terceiro.partida,'material.cloch')).toBe(12)
-    expect(qtd(terceiro.partida,'material.stan')).toBe(16)
+    expect(qtd(terceiro.partida,'material.stan')).toBe(17)
     expect(qtd(terceiro.partida,'material.copar')).toBe(18)
     expect(processarProgressoDaReceitaTerciaria(terceiro.partida, c, tempo(32)).acoesConcluidas).toBe(0)
     expect(terceiro.partida.jornada.idsDasReceitasFabricadas).toEqual([a.id, b.id, c.id])
