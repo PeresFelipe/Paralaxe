@@ -17,7 +17,7 @@ Referência canônica: `documentacao/GDD.md`, 75 seções. Base de código: bran
 | 4 | Nível geral 1–99, pontos de atributo | Parcial | `pacotes/dominio/fonte/progressao.ts`, `progressao.test.ts` | Validar balanceamento definitivo, progressão narrativa e pacing |
 | 5–6 | Classes e presentes | Base implementada | `pacotes/conteudo/fonte/criacaoDePersonagem.ts` | Refinamento de conteúdo/UX |
 | 7–9 | Sete Ofícios 1–99, Prestígios, ferramentas e minigames | Parcial | `ocioso.ts`, `ocioso.test.ts`, `equipamento.ts`, `ferramentasDeColeta.test.ts` | Ferramentas base implementadas com XP; faltam gradações/raridade procedural, conteúdo 11–99, 2/3 trabalhos simultâneos, prioridades e minigames |
-| 10–14 | Convenções, coleta/Metalurgia/Forja/Culinária | Parcial | `atividadesOciosas.ts`, `receitasDeFabricacao.ts`, `progressoOficiosNiveis20e30.test.ts` | Marcos normais de coleta até nível 60 com fabricação e consumíveis; faltam níveis 75–99, especializações de receitas e caminhos dos Prestígios I–III |
+| 10–14 | Convenções, coleta/Metalurgia/Forja/Culinária | Parcial | `atividadesOciosas.ts`, `receitasDeFabricacao.ts`, `progressoOficiosNiveis20e30.test.ts` | Oito recursos normais cobrem os marcos 1–90 em cada coleta; Metalurgia 75/90 e receitas utilizáveis de Forja/Culinária foram adicionadas. Faltam aprofundamento até 99, receitas raras/especiais e Prestígios I–III |
 | 15 | Reforços sem falha +0 → +2 | Parcial | `fabricacao.ts`, `equipamento.ts` | Reforço +2 com componente especial, ferramentas e raridades de fabricação |
 | 16–17 | Prestígio do personagem e ausência | Parcial | `prestigio.ts`, `ocioso.ts` | Integração do conteúdo e balanceamento amplo para 99 níveis |
 | 18–20 | Combate, estados, resistências e chefes | Parcial | `combate.ts` domínio/conteúdo | Conteúdo completo, estratégias e mecânicas de níveis avançados |
@@ -83,6 +83,16 @@ Arquivos: `pacotes/conteudo/fonte/atividadesOciosas.ts`, `receitasDeFabricacao.t
 - Os catálogos existentes fornecem desbloqueios, ciclos offline, Códice e interfaces. Os IDs de saves anteriores permanecem inalterados e nenhuma migração estrutural é necessária.
 - **Ainda provisório:** custos, cadências, XP, peças novas e efeitos de equipamento/consumíveis. Não foram definidos como cânone pelo GDD.
 - Testes: `pacotes/conteudo/fonte/progressoOficiosNiveis45e60.test.ts` (bloqueios, consumo, saída, Códice e compatibilidade com saves).
+
+### Entrega F — recursos normais 75/90 integrados à produção
+
+- **Coleta (GDD §11):** Ór/Grianchloch, Dair/Iúr, Tuinnín/Doingean e Sáiste/Marós, com desbloqueio exatamente nos níveis 75/90.
+- **Metalurgia (GDD §12):** Lingote de Ór, Metais Nobres e Grianchloch Refinado, sem subprodutos aleatórios.
+- **Forja (GDD §13):** Peitoral Híbrido de Dair, Arco de Iúr e Grianchloch e Cajado de Grianchloch, todos equipamentos normais.
+- **Culinária (GDD §14):** Refeição de Tuinnín e Sáiste, Banquete de Doingean e Marós e Elixir de Marós, com efeitos de recuperação não permanentes.
+- Os oito novos recursos são consumidos por ao menos uma receita. Itens das faixas antigas permanecem relevantes em receitas avançadas.
+- **Balanceamento provisório:** custos, cadências, XP, atributos, receitas criativas e nomes de peças (não prescritos no GDD). Não há alteração no esquema dos saves ou mudança de IDs já persistidos.
+- Testes de desbloqueio, consumo, equipagem, Códice e geração determinística em `progressoOficiosNiveis75e90.test.ts`. A validação visual permanece pendente.
 
 ## Dependências e riscos não encerrados
 

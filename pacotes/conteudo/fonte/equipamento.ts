@@ -19,6 +19,10 @@ export const DEFINICOES_DE_EQUIPAMENTO = [
   { id: 'armadura.fundicao-pesada-peitoral', nome: 'Peitoral de Fundição Pesada', espaco: 'peitoral', estatisticaPrincipal: { tipo: 'defesa', valor: 36 } },
   { id: 'arma.fuinseog-arco', nome: 'Arco de Fuinseog', espaco: 'maoPrincipal', estatisticaPrincipal: { tipo: 'ataque', valor: 29 }, combateDaArma: { tipoDeDano: 'perfuracao', intervaloDeAcaoEmSegundos: 2.25, escalonamento: { forca: 'D', destreza: 'A' } } },
   { id: 'item.equipamento.airgead-anel', nome: 'Anel de Airgead', espaco: 'anel1', bonusDeRecursos: { vidaMaxima: 20, manaMaxima: 20, folegoMaximo: 15 } },
+  // Ofícios 75/90: equipamento normal fabricado; o GDD reserva Relíquias para descoberta.
+  { id: 'armadura.dair-peitoral-hibrido', nome: 'Peitoral Híbrido de Dair', espaco: 'peitoral', estatisticaPrincipal: { tipo: 'defesa', valor: 46 } },
+  { id: 'arma.iur-arco-grianchloch', nome: 'Arco de Iúr e Grianchloch', espaco: 'maoPrincipal', estatisticaPrincipal: { tipo: 'ataque', valor: 38 }, combateDaArma: { tipoDeDano: 'perfuracao', intervaloDeAcaoEmSegundos: 2.2, escalonamento: { forca: 'D', destreza: 'A' } } },
+  { id: 'arma.grianchloch-cajado', nome: 'Cajado de Grianchloch', espaco: 'maoPrincipal', estatisticaPrincipal: { tipo: 'ataque', valor: 36 }, combateDaArma: { tipoDeDano: 'arcano', intervaloDeAcaoEmSegundos: 2.4, escalonamento: { inteligencia: 'A' } } },
   { id: "arma.milicia-espada", nome: 'Espada de Milícia', espaco: "maoPrincipal", estatisticaPrincipal: { tipo: "ataque", valor: 14 }, combateDaArma: { tipoDeDano: "corte", intervaloDeAcaoEmSegundos: 2.1, escalonamento: { forca: 'B', destreza: 'C' } } },
   { id: "escudo.milicia-escudo", nome: 'Escudo de Milícia', espaco: "maoSecundaria", estatisticaPrincipal: { tipo: "defesa", valor: 8 } },
   { id: "armadura.milicia-peitoral", nome: 'Peitoral de Milícia', espaco: "peitoral", estatisticaPrincipal: { tipo: "defesa", valor: 18 } },

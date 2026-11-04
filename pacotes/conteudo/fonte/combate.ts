@@ -242,6 +242,10 @@ export const CONSUMIVEIS_DE_COMBATE = [
   { id: 'item.comida.trosc-defumado', nome: 'Trosc Defumado', restaurar: { vida: 75, folego: 40 } },
   { id: 'item.consumivel.extrato-aiteann', nome: 'Extrato de Aiteann', restaurar: { mana: 55 } },
   { id: 'item.comida.bradan-raithneach', nome: 'Refeição de Bradán e Raithneach', restaurar: { vida: 90, mana: 30, folego: 50 } },
+  // Culinária 75/90: consumíveis sem raridade procedural ou atributo permanente.
+  { id: 'item.comida.tuinnin-saiste', nome: 'Refeição de Tuinnín e Sáiste', restaurar: { vida: 110, folego: 65 } },
+  { id: 'item.comida.doingean-maros', nome: 'Banquete de Doingean e Marós', restaurar: { vida: 150, mana: 80, folego: 100 } },
+  { id: 'item.consumivel.elixir-maros', nome: 'Elixir de Marós', restaurar: { mana: 95, vida: 45 } },
   {
     id: "item.consumivel.carmesim-frasco",
     nome: 'Frasco Carmesim',
