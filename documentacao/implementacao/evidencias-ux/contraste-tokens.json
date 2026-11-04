@@ -1,0 +1,32 @@
+[
+  {
+    "foreground": "text",
+    "background": "surface",
+    "ratio": 13.66
+  },
+  {
+    "foreground": "text-muted",
+    "background": "surface-raised",
+    "ratio": 7.41
+  },
+  {
+    "foreground": "primary-text",
+    "background": "primary",
+    "ratio": 7.47
+  },
+  {
+    "foreground": "warning-text",
+    "background": "warning-surface",
+    "ratio": 7.98
+  },
+  {
+    "foreground": "danger-text",
+    "background": "danger-surface",
+    "ratio": 8.89
+  },
+  {
+    "foreground": "text-inverse",
+    "background": "danger",
+    "ratio": 5.63
+  }
+]
