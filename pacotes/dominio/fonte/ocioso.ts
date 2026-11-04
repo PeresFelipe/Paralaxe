@@ -5,6 +5,7 @@
  */
 import type { PilhaDoInventario, PartidaLocal } from './personagem'
 import { obterEspacoParaPilhaNoInventario } from './armazenamento'
+import type { DefinicaoDeEquipamento, EspacoDeFerramenta } from './equipamento'
 
 export const IDS_DAS_PROFISSOES = [
   "mineracao",
@@ -71,6 +72,30 @@ const XP_DE_PROFISSAO_PARA_PROXIMO_NIVEL = [
     return Math.round(320 + faixa * 35 + Math.pow(faixa, 1.55) * 7)
   }),
 ] as const
+const FERRAMENTA_POR_PROFISSAO: Partial<Record<IdDaProfissao, EspacoDeFerramenta>> = {
+  mineracao: 'ferramentaMineracao',
+  lenhador: 'ferramentaLenhador',
+  pesca: 'ferramentaPesca',
+  herbologia: 'ferramentaHerbologia',
+}
+
+/** Consulta o bônus da ferramenta sem acoplar o motor de coleta ao catálogo do jogo. */
+export function obterBonusDaFerramentaDeColeta(
+  partida: PartidaLocal,
+  atividade: DefinicaoDeAtividadeOciosa,
+  resolver?: (idDaDefinicao: string) => DefinicaoDeEquipamento | null,
+): number {
+  const espaco = FERRAMENTA_POR_PROFISSAO[atividade.idDaProfissao]
+  if (!espaco || !resolver) return 0
+  const id = partida.personagem.equipamento[espaco]
+  if (!id) return 0
+  const instancia = partida.personagem.itensDeEquipamento.find((item) => item.idDaInstancia === id)
+  if (!instancia) return 0
+  const definicao = resolver(instancia.idDaDefinicao)
+  if (definicao?.espaco !== espaco || definicao.bonusDeColeta?.idDaProfissao !== atividade.idDaProfissao) return 0
+  return Math.max(0, Math.floor(definicao.bonusDeColeta.xpAdicionalPorAcao))
+}
+
 const LIMITE_BASE_DE_AUSENCIA_EM_SEGUNDOS = 4 * 60 * 60
 const BONUS_DE_AUSENCIA_POR_DEZ_NIVEIS_EM_SEGUNDOS = 2 * 60 * 60
 
@@ -195,6 +220,7 @@ export function processarProgressoOcioso(
   partida: PartidaLocal,
   atividade: DefinicaoDeAtividadeOciosa,
   agora: string,
+  resolverEquipamento?: (idDaDefinicao: string) => DefinicaoDeEquipamento | null,
 ): ResultadoDoProgressoOcioso {
   const ativo = partida.ocioso.atividadeAtiva
 
@@ -245,7 +271,8 @@ export function processarProgressoOcioso(
     (inventarioSala > 0 && acoesConcluidas === inventarioSala)
   const segundosRestantes = interrompidoPorCapacidade ? 0 : totalSegundos % atividade.segundosPorAcao
 
-  const profissaoXp = acoesConcluidas * atividade.xpDeProfissaoPorAcao
+  const bonusFerramenta = obterBonusDaFerramentaDeColeta(partida, atividade, resolverEquipamento)
+  const profissaoXp = acoesConcluidas * (atividade.xpDeProfissaoPorAcao + bonusFerramenta)
   const atualProfissao = partida.profissoes[atividade.idDaProfissao]
   const profissaoResultado = aplicarXpDeProfissao(atualProfissao, profissaoXp)
   // Cada nível de profissão concede 5 XP gerais. Aqui só o total de XP é somado,

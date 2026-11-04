@@ -1,6 +1,7 @@
 import {
   obterDefinicaoDeAtividadeOciosa,
   obterDefinicaoDeReceitaDeFabricacao,
+  obterDefinicaoDeEquipamento,
 } from '@paralaxe/conteudo'
 import {
   processarProgressoDeFabricacao,
@@ -49,7 +50,7 @@ export function processarTrabalhoAtual(
   if (ativoOciosoId) {
     const atividade = obterDefinicaoDeAtividadeOciosa(ativoOciosoId)
     if (atividade) {
-      const resultado = processarProgressoOcioso(partida, atividade, agora)
+      const resultado = processarProgressoOcioso(partida, atividade, agora, obterDefinicaoDeEquipamento)
       const nivelTextoExibido =
         resultado.niveisDeProfissaoGanhos > 0
           ? ` · +${resultado.niveisDeProfissaoGanhos} nível(is) de Profissão`

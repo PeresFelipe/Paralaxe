@@ -4,8 +4,15 @@
  * com reforço, raridade e afixos próprios. As operações devolvem novos estados.
  */
 import type { ChaveDeAtributo, PartidaLocal } from './personagem'
+import type { IdDaProfissao } from './ocioso'
 
 /** Lista canônica de espaços, também usada para criar os equipamentos em ordem estável. */
+/** Ferramentas de profissão ocupam espaços separados dos equipamentos de combate. */
+export const ESPACOS_DE_FERRAMENTAS = [
+  'ferramentaMineracao', 'ferramentaLenhador', 'ferramentaPesca', 'ferramentaHerbologia',
+] as const
+export type EspacoDeFerramenta = (typeof ESPACOS_DE_FERRAMENTAS)[number]
+
 export const ESPACOS_DE_EQUIPAMENTO = [
   "cabeca",
   "peitoral",
@@ -17,6 +24,7 @@ export const ESPACOS_DE_EQUIPAMENTO = [
   "amuleto",
   "anel1",
   "anel2",
+  ...ESPACOS_DE_FERRAMENTAS,
 ] as const
 
 export type EspacoDeEquipamento = (typeof ESPACOS_DE_EQUIPAMENTO)[number]
@@ -48,6 +56,8 @@ export interface DefinicaoDeEquipamento {
   espaco: EspacoDeEquipamento
   estatisticaPrincipal?: EstatisticaPrincipalDoEquipamento
   combateDaArma?: PerfilDeCombateDaArma
+  /** Bônus determinístico de XP de coleta no ofício da ferramenta. */
+  bonusDeColeta?: { idDaProfissao: IdDaProfissao; xpAdicionalPorAcao: number }
   bonusDeRecursos?: {
     vidaMaxima?: number
     manaMaxima?: number

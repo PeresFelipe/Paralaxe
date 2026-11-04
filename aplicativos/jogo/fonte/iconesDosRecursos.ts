@@ -92,6 +92,10 @@ export const iconeDeItemPorId: Record<string, NomeDoIconeShikashi> = {
 
 /** Associação de modelos de equipamento, compartilhada por todas as suas instâncias. */
 export const iconeDeEquipamentoPorId: Record<string, NomeDoIconeShikashi> = {
+  "ferramenta.mineracao.picareta": "picareta",
+  "ferramenta.lenhador.machado-corte": "machado",
+  "ferramenta.pesca.equipamento-pesca": "pesca-vara",
+  "ferramenta.herbologia.kit-herbologia": "erva",
   "arma.milicia-espada": "espada-longa",
   "escudo.milicia-escudo": "escudo-madeira",
   "armadura.milicia-peitoral": "armadura-ferro",

@@ -102,6 +102,31 @@ export const RECEITAS_INICIAIS_DE_FABRICACAO = [
     ingredientes: [{ idDaDefinicao: 'material.seamair', quantidade: 2 }],
     saida: { tipo: 'item', idDaDefinicao: 'item.consumivel.infusao-seamair', nome: 'Infusão de Seamair', quantidade: 1 },
   },
+  // Ferramentas são equipamentos individuais produzidos na Forja.
+  {
+    id: 'receita.forja.picareta-campo', idDaProfissao: 'forja', nome: 'Picareta de Campo',
+    nivelExigidoDaProfissao: 1, segundosPorAcao: 12, xpDeProfissaoPorAcao: 24,
+    ingredientes: [{ idDaDefinicao: 'material.tratada-cloch', quantidade: 2 }, { idDaDefinicao: 'material.giuis', quantidade: 2 }],
+    saida: { tipo: 'equipamento', idDaDefinicao: 'ferramenta.mineracao.picareta', nome: 'Picareta de Campo' },
+  },
+  {
+    id: 'receita.forja.machado-corte', idDaProfissao: 'forja', nome: 'Machado de Corte',
+    nivelExigidoDaProfissao: 1, segundosPorAcao: 12, xpDeProfissaoPorAcao: 24,
+    ingredientes: [{ idDaDefinicao: 'material.tratada-cloch', quantidade: 2 }, { idDaDefinicao: 'material.giuis', quantidade: 3 }],
+    saida: { tipo: 'equipamento', idDaDefinicao: 'ferramenta.lenhador.machado-corte', nome: 'Machado de Corte' },
+  },
+  {
+    id: 'receita.forja.equipamento-pesca', idDaProfissao: 'forja', nome: 'Equipamento de Pesca',
+    nivelExigidoDaProfissao: 1, segundosPorAcao: 12, xpDeProfissaoPorAcao: 24,
+    ingredientes: [{ idDaDefinicao: 'material.giuis', quantidade: 5 }, { idDaDefinicao: 'material.scadan', quantidade: 2 }],
+    saida: { tipo: 'equipamento', idDaDefinicao: 'ferramenta.pesca.equipamento-pesca', nome: 'Equipamento de Pesca' },
+  },
+  {
+    id: 'receita.forja.kit-herbologia', idDaProfissao: 'forja', nome: 'Kit de Herbologia',
+    nivelExigidoDaProfissao: 1, segundosPorAcao: 12, xpDeProfissaoPorAcao: 24,
+    ingredientes: [{ idDaDefinicao: 'material.giuis', quantidade: 4 }, { idDaDefinicao: 'material.neantog', quantidade: 2 }],
+    saida: { tipo: 'equipamento', idDaDefinicao: 'ferramenta.herbologia.kit-herbologia', nome: 'Kit de Herbologia' },
+  },
   {
     id: "receita.forja.simples-reforco-1",
     idDaProfissao: "forja",

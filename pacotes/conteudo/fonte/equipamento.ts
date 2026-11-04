@@ -7,6 +7,10 @@ import type { DefinicaoDeEquipamento } from '@paralaxe/dominio'
 
 /** Armas definem dano, cadência e escalonamento; armaduras fornecem defesa e acessórios podem aumentar recursos. */
 export const DEFINICOES_DE_EQUIPAMENTO = [
+  { id: 'ferramenta.mineracao.picareta', nome: 'Picareta de Campo', espaco: 'ferramentaMineracao', bonusDeColeta: { idDaProfissao: 'mineracao', xpAdicionalPorAcao: 2 } },
+  { id: 'ferramenta.lenhador.machado-corte', nome: 'Machado de Corte', espaco: 'ferramentaLenhador', bonusDeColeta: { idDaProfissao: 'lenhador', xpAdicionalPorAcao: 2 } },
+  { id: 'ferramenta.pesca.equipamento-pesca', nome: 'Equipamento de Pesca', espaco: 'ferramentaPesca', bonusDeColeta: { idDaProfissao: 'pesca', xpAdicionalPorAcao: 3 } },
+  { id: 'ferramenta.herbologia.kit-herbologia', nome: 'Kit de Herbologia', espaco: 'ferramentaHerbologia', bonusDeColeta: { idDaProfissao: 'herbologia', xpAdicionalPorAcao: 2 } },
   { id: "arma.milicia-espada", nome: 'Espada de Milícia', espaco: "maoPrincipal", estatisticaPrincipal: { tipo: "ataque", valor: 14 }, combateDaArma: { tipoDeDano: "corte", intervaloDeAcaoEmSegundos: 2.1, escalonamento: { forca: 'B', destreza: 'C' } } },
   { id: "escudo.milicia-escudo", nome: 'Escudo de Milícia', espaco: "maoSecundaria", estatisticaPrincipal: { tipo: "defesa", valor: 8 } },
   { id: "armadura.milicia-peitoral", nome: 'Peitoral de Milícia', espaco: "peitoral", estatisticaPrincipal: { tipo: "defesa", valor: 18 } },
