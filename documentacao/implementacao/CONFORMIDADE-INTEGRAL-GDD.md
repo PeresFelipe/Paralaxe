@@ -22,7 +22,7 @@ Referência canônica: `documentacao/GDD.md`, 75 seções. Base de código: bran
 | 16–17 | Prestígio do personagem e ausência | Parcial | `prestigio.ts`, `ocioso.ts` | Integração do conteúdo e balanceamento amplo para 99 níveis |
 | 18–20 | Combate, estados, resistências e chefes | Parcial | `combate.ts` domínio/conteúdo | Conteúdo completo, estratégias e mecânicas de níveis avançados |
 | 21–22 | Grupo, Ameaça e Mira | Pendente | Sem agregado funcional de Grupo | Até 3 parceiros, IA multiagente, aggro e introdução narrativa |
-| 23–33 | Masmorras e Dún Liath | Parcial | `masmorra.ts` domínio/conteúdo | Procedural reproduzível, armadilhas/segredos, quatro dificuldades, Incursão Automática |
+| 23–33 | Masmorras e Dún Liath | Parcial | `masmorra.ts`, `geracaoDeDunLiath.ts`, `geracaoDeDunLiath.test.ts`, `dificuldadesDeDunLiath.test.ts` | Grafo procedural pós-primeira visita com semente e snapshot persistidos, armadilha não letal, segredo opcional, quatro dificuldades com desbloqueio sequencial e recompensas de primeira conclusão. Pendem kits próprios de inimigos por dificuldade, eventos narrativos raros, Arquivo Selado, Incursão Automática e testes visuais |
 | 34–37 | Equipamentos, armazenamento, Relíquias e economia | Parcial | `equipamento.ts`, `armazenamento.ts`, `economia.ts` | Raridades e afixos ampliados, Relicário funcional, itens únicos |
 | 38 | Cidade Livre e mundo | **Divergência** | `projetosDaCidade.ts`, `legadoDaCidade.ts` | Resolver incompatibilidade Cidade Viva × ausência de evolução da Cidade no GDD |
 | 39–40 | Missões, NPCs e prólogo | Parcial | `jornada.ts`, telas e estados de contrato | Novos arcos, condições, ramificações e reação dos PNJs |
@@ -136,6 +136,18 @@ Arquivos: `pacotes/conteudo/fonte/atividadesOciosas.ts`, `receitasDeFabricacao.t
 **Reforço +2:** receita adicional de Forja para elevar somente +1→+2, usando Fragmento de Fairtheoir (chefe de Dún Liath) e Lingote de Iarann. Nunca falha, não exige ouro e mantém afixos/raridade. Bônus-base +30% é provisório. Não foi criado sistema de durabilidade.
 
 **Validação:** matriz de testes `prestigiosAvancados.test.ts`, `conteudoDePrestigios.test.ts`, `minigamesDeOficio.test.ts`, `fabricacao.test.ts` e migrações IndexedDB. A pipeline de TypeScript, lint, testes automatizados e build deve ser verificada pelo SHA de HEAD publicado. Não alegar validação manual de navegador, balanceamento de longo prazo ou segurança econômica Conectada.
+
+### Entrega N — Dún Liath procedural e dificuldades (04/11/2026)
+
+- A primeira expedição Fácil mantém o percurso controlado do GDD. Após concluir Fácil, as novas viagens geram grafo determinístico por semente.
+- Cada grafo tem 20 nós e caminhos irreversíveis de 17–20 salas, conservando a decisão do Protetor, o Registro de Suprimentos, Cosantóir, a sala de recuperação, o portão de decisão e Fairtheoir.
+- Uma armadilha ambiental sinalizada aplica perda parcial não letal de Vida; um caminho alternativo na muralha leva a sala secreta com Sucata em Bolsa de Expedição, sujeita à perda em derrota.
+- O grafo inteiro fica persistido na expedição, não só a semente, e é consultado pelo domínio e pela interface; saves anteriores sem snapshot seguem usando o mapa fixo.
+- Desbloqueio progressivo de Fácil, Normal, Difícil e Impossível, com parâmetros de força de inimigos provisórios para cada dificuldade.
+- Primeiras conclusões: Guarda Instintiva (Fácil, já existente), receita Reforço do Vigia (Normal), Escudo do Último Vigia (Difícil) e Lacre do Comandante (Impossível). Escudo e Lacre são concedidos uma única vez, com checagem de capacidade antes da extração.
+- A receita Normal requer Sucata, Cruach e Fragmento de Fairtheoir. O Lacre é um item de história, não uma Relíquia ou material consumível.
+- Testes por múltiplas sementes, caminho garantido, irreversibilidade, efeitos de sala, bônus sem repetição, desbloqueios, recompensas e receita de Forja.
+- **Escopo parcial:** as quatro dificuldades ainda usam escalonamento numérico no combate (não todos os kits próprios do GDD §33). A variedade de eventos, o Arquivo Selado e a Incursão Automática permanecem para próximos ciclos.
 
 ## Dependências e riscos não encerrados
 

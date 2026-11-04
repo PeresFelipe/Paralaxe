@@ -98,5 +98,7 @@ export const rotulosDosItens: Record<string, string> = {
   "item.equipamento.viajante-anel": "Anel do Viajante",
   "item.guarnicao-suprimento-registroDeDados": "Registro de Suprimentos",
   "item.tratado-fragmento": "Fragmento do Tratado",
-  "item.fairtheoir-fragmento": "Fragmento de Fairtheoir",
+
+  "item.dun-liath.sucata": "Sucata de Dún Liath",
+  "item.dun-liath.lacre-comandante": "Lacre do Comandante",  "item.fairtheoir-fragmento": "Fragmento de Fairtheoir",
 };

@@ -110,6 +110,8 @@ function itemRotulo(idDaDefinicao: string) {
     "item.tratado-fragmento": "Fragmento do Tratado",
     "item.guarnicao-suprimento-registroDeDados": "Registro de Suprimentos",
     "item.dun-liath.viga": "Viga de Dún Liath",
+    "item.dun-liath.sucata": "Sucata de Dún Liath",
+    "item.dun-liath.lacre-comandante": "Lacre do Comandante",
     "item.fairtheoir-fragmento": "Fragmento de Fairtheoir",
     "item.consumivel.campo-preparacao": "Preparado de Campo",
   };

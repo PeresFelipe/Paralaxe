@@ -69,6 +69,8 @@ export const iconeDoPainelPorId = {
 
 /** Associação de definições de itens empilháveis e de missão. */
 export const iconeDeItemPorId: Record<string, NomeDoIconeShikashi> = {
+  "item.dun-liath.sucata": "pedra",
+  "item.dun-liath.lacre-comandante": "pedraRunica",
   "material.cloch": "pedra",
   "material.stan": "pedra",
   "material.beith": "madeira",
@@ -175,6 +177,7 @@ export const iconeDeEquipamentoPorId: Record<string, NomeDoIconeShikashi> = {
   "arma.bastiao-maca": "clava",
   "arma.patrulha-arco": "arco",
   "arma.campanha-cajado": "cajado-verde",
+  "escudo.ultimo-vigia": "escudo-quadriculado",
   "escudo.vigia-escudo": "escudo-quadriculado",
 };
 

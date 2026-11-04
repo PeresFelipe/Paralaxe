@@ -20,6 +20,10 @@ Branch exclusiva `develop`, documentação canônica `documentacao/GDD.md`. O pe
 - Prestígio III: terceiro trabalho de coleta ou fabricação e save v16, migração de dados antigos sem perder relógios ou prioridades.
 - Prestígios I–III: catálogos exclusivos de 84 coletas, 63 receitas, 21 equipamentos e 21 consumíveis (parâmetros provisórios).
 - Sete microdesafios opcionais de Ofício com janela temporária; sucesso dá XP adicional por ciclo e erro não penaliza idle.
+
+- Dún Liath: primeira Fácil mantém tutorial; depois da conquista, viagens geram grafos determinísticos e persistidos com armadilhas e segredos opcionais.
+- Dificuldades Fácil → Normal → Difícil → Impossível desbloqueiam sequencialmente. O escalonamento de combate é provisório; recompensas únicas: Guarda Instintiva, Reforço do Vigia, Escudo do Último Vigia e Lacre do Comandante.
+- Testes: `geracaoDeDunLiath.test.ts` e `dificuldadesDeDunLiath.test.ts`. Sem validação visual no navegador nesta etapa.
 - Reforço +2: exige fragmento do chefe Fairtheoir, +1 anterior, ausência de falha e de ouro.
 
 ## Regras de continuidade
@@ -35,7 +39,7 @@ Branch exclusiva `develop`, documentação canônica `documentacao/GDD.md`. O pe
 - Profissões: os marcos normais de coleta e linhas de Prestígios I–III foram cadastrados; faltam aprofundamentos, variantes de habilidades e balanceamento até o nível 99.
 - Aprofundar os sete microdesafios temáticos (atualmente escolhas rápidas) para interações ricas de habilidade, sem prejudicar a automação.
 - Ampliar os materiais especiais de reforço e as raridades/afixos procedurais além do reforço +2 básico.
-- Dún Liath procedural, dificuldades, segredos, recompensas e automação.
+- Dún Liath: grafo procedural e snapshot por semente, armadilha/sala secreta, quatro dificuldades e recompensas iniciais adicionados; faltam kits específicos de cada dificuldade, profundidade de eventos, Arquivo Selado e Incursão Automática.
 - Grupo, Ameaça, Mira, segunda Masmorra.
 - Relíquias e Relicário.
 - Missões, narrativa e finais.
