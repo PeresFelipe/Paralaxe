@@ -82,6 +82,8 @@ type PropriedadesDeEstruturaDoJogo = {
   aoIniciarAtividade: (idDaDefinicaoDaAtividade: string) => Promise<void>;
   aoIniciarAtividadeSecundaria: (id: string) => Promise<void>;
   aoPararAtividadeSecundaria: () => Promise<void>;
+  aoIniciarReceitaSecundaria: (id: string) => Promise<void>;
+  aoPararReceitaSecundaria: () => Promise<void>;
   aoIniciarReceita: (
     idDaDefinicaoDaReceita: string,
     idDaInstanciaDoEquipamentoAlvo?: string | null,
@@ -158,6 +160,8 @@ export default function EstruturaDoJogo({
   aoIniciarAtividadeSecundaria,
   aoPararAtividadeSecundaria,
   aoIniciarReceita,
+  aoIniciarReceitaSecundaria,
+  aoPararReceitaSecundaria,
   aoEscolherMetaDaJornada,
   aoPararTrabalho,
   aoPrestigiarProfissao,
@@ -386,6 +390,8 @@ export default function EstruturaDoJogo({
               aoAba={definirPersonagemAba}
               aoEquipar={aoEquipar}
               aoIniciarReceita={aoIniciarReceita}
+              aoIniciarReceitaSecundaria={aoIniciarReceitaSecundaria}
+              aoPararReceitaSecundaria={aoPararReceitaSecundaria}
               aoDistribuirAtributos={aoDistribuirAtributos}
               aoRealizarPrestigioDoPersonagem={aoRealizarPrestigioDoPersonagem}
               aoDesbloquearNoDePrestigio={aoDesbloquearNoDePrestigio}

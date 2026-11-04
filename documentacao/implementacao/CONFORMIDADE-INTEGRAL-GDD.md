@@ -16,7 +16,7 @@ Referência canônica: `documentacao/GDD.md`, 75 seções. Base de código: bran
 | 1–3 | Nome, escopo e filosofia | Parcial | `documentacao/GDD.md`, shell do jogo | Confirmar pontos em aberto da seção 46 |
 | 4 | Nível geral 1–99, pontos de atributo | Parcial | `pacotes/dominio/fonte/progressao.ts`, `progressao.test.ts` | Validar balanceamento definitivo, progressão narrativa e pacing |
 | 5–6 | Classes e presentes | Base implementada | `pacotes/conteudo/fonte/criacaoDePersonagem.ts` | Refinamento de conteúdo/UX |
-| 7–9 | Sete Ofícios 1–99, Prestígios, ferramentas e minigames | Parcial | `ocioso.ts`, `ocioso.test.ts`, `equipamento.ts`, `ferramentasDeColeta.test.ts` | Ferramentas base implementadas com XP; faltam gradações/raridade procedural, conteúdo 11–99, segunda coleta de Prestígio I implementada; faltam produção paralela, prioridades do Prestígio II, terceira atividade do III e minigames |
+| 7–9 | Sete Ofícios 1–99, Prestígios, ferramentas e minigames | Parcial | `ocioso.ts`, `ocioso.test.ts`, `equipamento.ts`, `ferramentasDeColeta.test.ts` | Ferramentas base implementadas com XP; faltam gradações/raridade procedural, conteúdo 11–99, segunda coleta de Prestígio I implementada; produção paralela do Prestígio I implementada; faltam prioridades do Prestígio II, terceira atividade do III e minigames |
 | 10–14 | Convenções, coleta/Metalurgia/Forja/Culinária | Parcial | `atividadesOciosas.ts`, `receitasDeFabricacao.ts`, `progressoOficiosNiveis20e30.test.ts` | Oito recursos normais cobrem os marcos 1–90 em cada coleta; Metalurgia 75/90 e receitas utilizáveis de Forja/Culinária foram adicionadas. Faltam aprofundamento até 99, receitas raras/especiais e Prestígios I–III |
 | 15 | Reforços sem falha +0 → +2 | Parcial | `fabricacao.ts`, `equipamento.ts` | Reforço +2 com componente especial, ferramentas e raridades de fabricação |
 | 16–17 | Prestígio do personagem e ausência | Parcial | `prestigio.ts`, `ocioso.ts` | Integração do conteúdo e balanceamento amplo para 99 níveis |
@@ -104,6 +104,16 @@ Arquivos: `pacotes/conteudo/fonte/atividadesOciosas.ts`, `receitasDeFabricacao.t
 - Esquema v14: saves v13 ganham `ocioso.atividadeSecundaria: null`; versões anteriores também são normalizadas.
 - Interface da profissão mostra progresso e comandos para início/fim do segundo espaço.
 - **Ainda faltam:** duas receitas simultâneas, prioridade configurável do P2, terceiro trabalho do P3, conteúdos de Prestígio e validação visual.
+
+### Entrega H — Prestígio I: produção paralela dos Ofícios de produção
+
+- Segundo relógio em `fabricacao.receitaSecundaria` persistido no esquema v15.
+- Uma receita secundária exige Prestígio I, pertence ao mesmo Ofício da principal e precisa estar desbloqueada; reforços não são paralelizáveis.
+- Principal é processada antes da secundária, usando estoque remanescente. Cada ciclo valida capacidade antes de consumir, e equipamentos compartilham a sequência global de instâncias.
+- Velocidade secundária em 50% (balanceamento provisório).
+- Interface permite acompanhar, iniciar ou interromper a produção secundária. A continuidade pausa ambos os relógios em risco.
+- Migração v14 → v15 cria receita secundária vazia sem perder trabalho, inventário ou XP.
+- **Ainda falta:** prioridades do Prestígio II, terceira atividade do III e conteúdo exclusivo de Prestígios.
 
 ## Dependências e riscos não encerrados
 

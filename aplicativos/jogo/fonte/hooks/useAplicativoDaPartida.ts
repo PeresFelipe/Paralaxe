@@ -19,6 +19,8 @@ import {
   pausarTrabalhoAtualDuranteRisco,
   realizarPrestigioDoPersonagem,
   iniciarReceitaDeFabricacao,
+  iniciarReceitaSecundaria,
+  interromperReceitaSecundaria,
   iniciarAtividadeOciosa,
   iniciarAtividadeSecundaria,
   interromperAtividadeSecundaria,
@@ -357,6 +359,26 @@ export function useAplicativoDaPartida(repositorioDePartidas: RepositorioDeParti
       const agora = new Date().toISOString()
       return interromperAtividadeSecundaria(processarTrabalhoAtual(atual, agora).partida, agora)
     }, 'Coleta secundária interrompida.')
+  }
+
+  /** Prestígio I: segunda linha de produção, mantendo a primeira em execução. */
+  async function tratarIniciarReceitaSecundaria(id: string) {
+    await aplicarAlteracaoNaPartidaAtiva(atual => {
+      const agora = new Date().toISOString()
+      const partida = processarTrabalhoAtual(atual, agora).partida
+      const principalId = partida.fabricacao.receitaAtiva?.idDaDefinicaoDaReceita
+      const principal = principalId ? obterDefinicaoDeReceitaDeFabricacao(principalId) : null
+      const secundaria = obterDefinicaoDeReceitaDeFabricacao(id)
+      if (!principal || !secundaria) throw new Error('Receita principal ou secundária indisponível.')
+      return iniciarReceitaSecundaria(partida, principal, secundaria, agora)
+    }, 'Produção secundária iniciada.')
+  }
+
+  async function tratarPararReceitaSecundaria() {
+    await aplicarAlteracaoNaPartidaAtiva(atual => {
+      const agora = new Date().toISOString()
+      return interromperReceitaSecundaria(processarTrabalhoAtual(atual, agora).partida, agora)
+    }, 'Produção secundária interrompida.')
   }
 
   /** Troca o trabalho atual por uma receita, preservando o progresso já acumulado e repassando o alvo de reforço. */
@@ -698,6 +720,8 @@ export function useAplicativoDaPartida(repositorioDePartidas: RepositorioDeParti
     tratarIniciarAtividadeSecundaria,
     tratarPararAtividadeSecundaria,
     tratarIniciarReceita,
+    tratarIniciarReceitaSecundaria,
+    tratarPararReceitaSecundaria,
     tratarPararTrabalho,
     tratarPrestigiarProfissao,
     tratarConcluirProjeto,
