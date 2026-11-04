@@ -33,6 +33,8 @@ export interface DefinicaoDeSalaDaMasmorra {
   descricao?: string
   /** Dano percentual não letal, aplicável apenas ao tipo armadilha. */
   fracaoDeDanoDaArmadilha?: number
+  /** Requisito somente para um desvio opcional; nunca bloqueia a rota ao Chefe. */
+  requisitoDeItemParaEntrar?: string
 }
 
 export const DIFICULDADES_DE_DUN_LIATH = ['facil', 'normal', 'dificil', 'impossivel'] as const
@@ -415,6 +417,13 @@ export function escolherCaminhoNaMasmorra(
   if (!sala.idsDasProximasSalas.includes(proximoSalaId)) {
     throw new Error('Esse caminho não parte da sala atual.')
   }
+  const destino = mapaPersistido.salas.find(candidato => candidato.id === proximoSalaId)
+  if (!destino) throw new Error('O corredor selecionado não pertence à estrutura desta expedição.')
+  if (destino.requisitoDeItemParaEntrar &&
+      !partida.personagem.inventario.some(item =>
+        item.idDaDefinicao === destino.requisitoDeItemParaEntrar && item.quantidade > 0)) {
+    throw new Error('A passagem permanece selada. É necessário o Lacre do Comandante.')
+  }
   if (execucao.idsDasSalasVisitadas.includes(proximoSalaId)) {
     throw new Error("A rota da Masmorra é irreversível.")
   }
@@ -602,9 +611,12 @@ export function resolverSalaDaMasmorra(
       recursos: { ...proximoExecucao.recursos, vida: proximoExecucao.recursos.vida - dano } }
   }
 
-  // Salas opcionais concedem apenas Sucata de Dún Liath em bolsa de risco.
-  // A visita da sala não pode ser repetida e a derrota descarta essa bolsa.
-  if (sala.tipo === "secreta") {
+  // O Arquivo Selado oferece um registro histórico, sem gerar Relíquia automaticamente.
+  // Assim como qualquer saque de expedição, o documento é perdido na derrota.
+  if (sala.id === 'sala.procedural.arquivo-selado') {
+    proximoExecucao = { ...proximoExecucao,
+      bolsaDaExpedicao: adicionarPilha(proximoExecucao.bolsaDaExpedicao, 'item.dun-liath.registro-arquivo', 1) }
+  } else if (sala.tipo === "secreta") {
     proximoExecucao = { ...proximoExecucao,
       bolsaDaExpedicao: adicionarPilha(proximoExecucao.bolsaDaExpedicao, 'item.dun-liath.sucata', 1) }
   }

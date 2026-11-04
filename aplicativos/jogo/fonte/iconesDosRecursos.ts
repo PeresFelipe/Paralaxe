@@ -70,6 +70,7 @@ export const iconeDoPainelPorId = {
 /** Associação de definições de itens empilháveis e de missão. */
 export const iconeDeItemPorId: Record<string, NomeDoIconeShikashi> = {
   "item.dun-liath.sucata": "pedra",
+  "item.dun-liath.registro-arquivo": "pedraRunica",
   "item.dun-liath.lacre-comandante": "pedraRunica",
   "material.cloch": "pedra",
   "material.stan": "pedra",

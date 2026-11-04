@@ -57,6 +57,8 @@ const SEGREDOS = [
 
 const ID_ARMADILHA = 'sala.procedural.armadilha'
 const ID_SEGREDO = 'sala.procedural.segredo'
+const ID_ARQUIVO = 'sala.procedural.arquivo-selado'
+export const ID_DO_LACRE_DO_COMANDANTE = 'item.dun-liath.lacre-comandante'
 
 /**
  * Todas as variantes têm 20 nós, mas cada caminho solo percorre apenas 18–20,
@@ -64,7 +66,11 @@ const ID_SEGREDO = 'sala.procedural.segredo'
  *
  * Nunca muta o catálogo-base: o chamador persiste o resultado em ExpedicaoNaMasmorra.
  */
-export function gerarDunLiathProcedural(base: DefinicaoDeMasmorra, semente: number): DefinicaoDeMasmorra {
+export function gerarDunLiathProcedural(
+  base: DefinicaoDeMasmorra,
+  semente: number,
+  opcoes: { possuiLacreDoComandante?: boolean } = {},
+): DefinicaoDeMasmorra {
   if (!Number.isSafeInteger(semente)) throw new Error('A semente da Masmorra deve ser um inteiro seguro.')
   if (!base.id.startsWith('masmorra.dun-liath.')) throw new Error('A geração requer uma definição de Dún Liath.')
   const aleatorio = geradorDeSemente(semente)
@@ -102,6 +108,25 @@ export function gerarDunLiathProcedural(base: DefinicaoDeMasmorra, semente: numb
       descricao: segredo.descricao, idsDasProximasSalas: ['sala.passagem'],
     },
   ]
-  // A ordem é determinística. A sala secreta só está acessível pela escolha na muralha.
+  // O Arquivo é uma ramificação opcional posterior ao segredo: nunca impede a rota
+  // direta para Fairtheoir, e o Lacre não é consumido na entrada.
+  if (opcoes.possuiLacreDoComandante) {
+    const salaSecreta = adicionais.find(sala => sala.id === ID_SEGREDO)
+    if (!salaSecreta) throw new Error('Estrutura sem passagem para o Arquivo Selado.')
+    salaSecreta.idsDasProximasSalas = ['sala.passagem', ID_ARQUIVO]
+    salaSecreta.pistasDasSaidas = {
+      'sala.passagem': 'Uma abertura estreita retorna ao eixo militar principal.',
+      [ID_ARQUIVO]: 'Uma porta sem insígnia guarda o entalhe de um lacre de comando.',
+    }
+    adicionais.push({
+      id: ID_ARQUIVO,
+      nome: 'Arquivo Selado',
+      tipo: 'secreta',
+      descricao: 'Registros militares anteriores à ocupação recente contradizem a história oficial do bastião. O Selo de Dún Liath ainda não é uma recompensa garantida.',
+      requisitoDeItemParaEntrar: ID_DO_LACRE_DO_COMANDANTE,
+      idsDasProximasSalas: ['sala.passagem'],
+    })
+  }
+  // Sem o Lacre, o grafo tutorial pós-primeira visita conserva seus 20 nós.
   return { ...base, procedural: true, salas: [...grafo, ...adicionais] }
 }

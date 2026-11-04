@@ -112,6 +112,7 @@ function itemRotulo(idDaDefinicao: string) {
     "item.dun-liath.viga": "Viga de Dún Liath",
     "item.dun-liath.sucata": "Sucata de Dún Liath",
     "item.dun-liath.lacre-comandante": "Lacre do Comandante",
+    "item.dun-liath.registro-arquivo": "Registro do Arquivo Selado",
     "item.fairtheoir-fragmento": "Fragmento de Fairtheoir",
     "item.consumivel.campo-preparacao": "Preparado de Campo",
   };
@@ -249,7 +250,10 @@ export default function BancadaDaMasmorra({
       }
       const definicaoDaViagem = dificuldadeSelecionada === 'facil' && !riscoPartida.masmorra.dunLiathFacilConquistado
         ? DUN_LIATH_FACIL
-        : gerarDunLiathProcedural(baseDaDificuldade, semente);
+        : gerarDunLiathProcedural(baseDaDificuldade, semente, {
+          possuiLacreDoComandante: riscoPartida.personagem.inventario.some(item =>
+            item.idDaDefinicao === 'item.dun-liath.lacre-comandante' && item.quantidade > 0),
+        });
       const proximo = iniciarMasmorraComContinuidade(
         riscoPartida,
         definicaoDaViagem,
@@ -775,7 +779,9 @@ export default function BancadaDaMasmorra({
                   <Button
                     variant="route"
                     key={salaId}
-                    disabled={ocupado}
+                    disabled={ocupado || Boolean(sala.requisitoDeItemParaEntrar &&
+                      !partida.personagem.inventario.some(item =>
+                        item.idDaDefinicao === sala.requisitoDeItemParaEntrar && item.quantidade > 0))}
                     onClick={() => void tratarCaminho(salaId)}
                   >
                     <span className="secao-chamada">Próxima rota</span>
