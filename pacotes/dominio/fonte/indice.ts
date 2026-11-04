@@ -11,6 +11,7 @@ export type ModoDaPartida = typeof MODO_DA_PARTIDA
 
 export * from './personagem'
 export * from './ocioso'
+export * from './prioridadesDeOficio'
 export * from './equipamento'
 export * from './fabricacao'
 export * from './jornada'

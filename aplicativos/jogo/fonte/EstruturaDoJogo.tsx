@@ -21,6 +21,7 @@ import {
   type DistribuicaoDeAtributos,
   type PartidaLocal,
   type IdDaProfissao,
+  type PrioridadeDeOficio,
 } from "@paralaxe/dominio";
 import BancadaDeCombate from "./features/aventura/BancadaDeCombate";
 import BancadaDaMasmorra from "./features/aventura/BancadaDaMasmorra";
