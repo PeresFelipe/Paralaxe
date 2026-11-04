@@ -80,6 +80,12 @@ const DIFICIL: ReforcosPorInimigo = {
     aplicacoesDeEfeito: [{ situacao: 'atordoamento', acumulo: 60 }],
     vulnerabilidadeApos: { multiplicadorDoDanoRecebido: 1.25, duracaoEmSegundos: 2.5 },
   }],
+  'inimigo.fairtheoir-fase2': [{
+    id: 'inimigo.fairtheoir.ruptura-crescente', nome: 'Ruptura Crescente',
+    segundosDeRecarga: 10, multiplicadorDeDano: 1.6, tipoDeDano: 'impacto',
+    segundosDeAvisoDeAtaque: 1.5, interrompivel: true,
+    aplicacoesDeEfeito: [{ situacao: 'atordoamento', acumulo: 50 }],
+  }],
 }
 
 /** Impossível: a defesa se torna extrema; o Chefe mantém janelas claras de reação. */

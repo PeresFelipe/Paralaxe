@@ -21,7 +21,7 @@ const nomes = [
   ['Cobertura Pesada', 'Golpe Concussivo', 'Muralha Viva'],
   ['Interposição', 'Formação Defensiva', 'Última Linha'],
   ['Contra-Impacto', 'Ruptura', 'Linha Intransponível'],
-  ['Destroços', 'Desespero Absoluto', 'Até o Último'],
+  ['Destroços', 'Ruptura Crescente', 'Desespero Absoluto'],
 ] as const
 const catalogo = {
   obterDefinicaoDeInimigo,
