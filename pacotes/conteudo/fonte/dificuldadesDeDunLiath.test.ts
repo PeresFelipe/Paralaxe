@@ -97,7 +97,7 @@ describe('Dún Liath com quatro dificuldades', () => {
   it('conclusão Normal libera o Reforço do Vigia, exigindo materiais e fragmento de chefe', () => {
     const receita = obterDefinicaoDeReceitaDeFabricacao('receita.forja.reforco-do-vigia')
     if (!receita) throw new Error('Receita não cadastrada')
-    expect(receita.dificuldadeRequerida).toBe('normal')
+    expect('dificuldadeRequerida' in receita ? receita.dificuldadeRequerida : null).toBe('normal')
     expect(receita.ingredientes.map(i => i.idDaDefinicao))
       .toContain('item.fairtheoir-fragmento')
     const original = novaPartida()

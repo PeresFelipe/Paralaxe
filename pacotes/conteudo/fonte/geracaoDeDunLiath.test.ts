@@ -5,6 +5,7 @@ import { describe, expect, it } from 'vitest'
 import {
   gerarDunLiathProcedural, iniciarMasmorra, criarPartidaLocal,
   escolherCaminhoNaMasmorra, resolverSalaDaMasmorra,
+  extrairExpedicaoDaMasmorra, encerrarExpedicaoComDerrota,
   type DefinicaoDeMasmorra, type DefinicaoDeSalaDaMasmorra,
 } from '@paralaxe/dominio'
 import { DUN_LIATH_FACIL } from './masmorra'
@@ -144,4 +145,73 @@ describe('Dún Liath — geração procedural de repetição', () => {
     expect(resolverSalaDaMasmorra(quaseMorta, DUN_LIATH_FACIL, catalogo, agora)
       .partida.masmorra.expedicaoAtiva?.recursos.vida).toBe(1)
   })
+  it('abre o Arquivo Selado somente com Lacre, mas conserva a rota direta ao Chefe', () => {
+    const mapa = gerarDunLiathProcedural(DUN_LIATH_FACIL, 120, { possuiLacreDoComandante: true })
+    const arquivo = sala(mapa, 'sala.procedural.arquivo-selado')
+    const secreta = sala(mapa, 'sala.procedural.segredo')
+    expect(mapa.salas).toHaveLength(21)
+    expect(arquivo.requisitoDeItemParaEntrar).toBe('item.dun-liath.lacre-comandante')
+    expect(secreta.idsDasProximasSalas).toEqual(['sala.passagem', arquivo.id])
+    const rotas = rotasAteChefe(mapa)
+    expect(rotas.some(rota => rota.includes(arquivo.id))).toBe(true)
+    expect(rotas.some(rota => !rota.includes(arquivo.id))).toBe(true)
+
+    const semLacre = iniciarMasmorra(partida(), mapa, 120, agora)
+    const viagem = semLacre.masmorra.expedicaoAtiva!
+    const noSegredo = {
+      ...semLacre, masmorra: {
+        ...semLacre.masmorra,
+        expedicaoAtiva: {
+          ...viagem,
+          idDaSalaAtual: secreta.id,
+          idsDasSalasVisitadas: [...viagem.idsDasSalasVisitadas, secreta.id],
+          idsDasSalasResolvidas: [secreta.id],
+        },
+      },
+    }
+    expect(() => escolherCaminhoNaMasmorra(noSegredo, mapa, arquivo.id, agora)).toThrow('Lacre')
+    expect(escolherCaminhoNaMasmorra(noSegredo, mapa, 'sala.passagem', agora)
+      .masmorra.expedicaoAtiva?.idDaSalaAtual).toBe('sala.passagem')
+  })
+
+  it('o Arquivo entrega documento uma única vez e mantém o Lacre; a derrota perde a Bolsa', () => {
+    const mapa = gerarDunLiathProcedural(DUN_LIATH_FACIL, 119, { possuiLacreDoComandante: true })
+    const comLacre = partida()
+    const comLacrePersistido = {
+      ...comLacre, personagem: { ...comLacre.personagem,
+        inventario: [...comLacre.personagem.inventario,
+          { idDaDefinicao: 'item.dun-liath.lacre-comandante', quantidade: 1 }],
+      },
+    }
+    const iniciado = iniciarMasmorra(comLacrePersistido, mapa, 119, agora)
+    const viagem = iniciado.masmorra.expedicaoAtiva!
+    const noSegredo = {
+      ...iniciado, masmorra: { ...iniciado.masmorra,
+        expedicaoAtiva: { ...viagem,
+          idDaSalaAtual: 'sala.procedural.segredo',
+          idsDasSalasVisitadas: [...viagem.idsDasSalasVisitadas, 'sala.procedural.segredo'],
+          idsDasSalasResolvidas: ['sala.procedural.segredo'],
+        },
+      },
+    }
+    const noArquivo = escolherCaminhoNaMasmorra(noSegredo, mapa, 'sala.procedural.arquivo-selado', agora)
+    const resolvido = resolverSalaDaMasmorra(noArquivo, mapa, catalogo, agora).partida
+    expect(resolvido.masmorra.expedicaoAtiva?.bolsaDaExpedicao)
+      .toContainEqual({ idDaDefinicao: 'item.dun-liath.registro-arquivo', quantidade: 1 })
+    expect(() => resolverSalaDaMasmorra(resolvido, mapa, catalogo, agora)).toThrow('já foi resolvida')
+    const salvo = {
+      ...resolvido, masmorra: { ...resolvido.masmorra,
+        expedicaoAtiva: { ...resolvido.masmorra.expedicaoAtiva!, extracaoSeguraDisponivel: true },
+      },
+    }
+    const extraido = extrairExpedicaoDaMasmorra(salvo, agora)
+    expect(extraido.personagem.inventario)
+      .toContainEqual({ idDaDefinicao: 'item.dun-liath.registro-arquivo', quantidade: 1 })
+    expect(extraido.personagem.inventario)
+      .toContainEqual({ idDaDefinicao: 'item.dun-liath.lacre-comandante', quantidade: 1 })
+    const derrotado = encerrarExpedicaoComDerrota(resolvido, agora)
+    expect(derrotado.masmorra.expedicaoAtiva).toBeNull()
+    expect(derrotado.personagem.inventario.some(i => i.idDaDefinicao === 'item.dun-liath.registro-arquivo')).toBe(false)
+  })
+
 })
