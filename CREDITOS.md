@@ -60,6 +60,10 @@ A pasta revisada nesta etapa contém o Shikashi v2 (17 PNGs e um aviso) e o [Ico
 
 As células do Shikashi são indicadas como coluna e linha com índice inicial zero, na folha transparente de 32 × 32 por célula. Os PNGs do Icons Essential foram apenas renomeados. A página do autor e a [licença original incluída](aplicativos/jogo/publico/arte/icones/crusenho/LICENSE.txt) concedem CC BY 4.0. A atribuição ao Crusenho também aparece em **Créditos e licenças** no jogo.
 
+### Reformulação das superfícies de interface
+
+A moldura escura de Dark Ages UI passou a compor os painéis Agora, Formação e Bolsa de Expedição com o mesmo recorte que já acompanha o jogo. A [auditoria de UI](documentacao/pesquisa/UI-2026-11-04.md) registra separadamente TravelBook Lite e as duas coleções ToffeeCraft, que ficaram fora da distribuição.
+
 ## Software distribuído
 
 | Componente | Atribuição | Licença |

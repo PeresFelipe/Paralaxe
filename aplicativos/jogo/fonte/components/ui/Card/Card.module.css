@@ -28,3 +28,12 @@
   box-shadow: none;
   padding: var(--ui-space-2) var(--ui-space-0);
 }
+
+.framed {
+  border-image: var(--ui-frame-dark) var(--ui-frame-dark-slice) / var(--ui-dimension-12px) stretch;
+  background: var(--ui-color-surface-raised);
+}
+
+@media (forced-colors: active) {
+  .framed { border-image: none; }
+}

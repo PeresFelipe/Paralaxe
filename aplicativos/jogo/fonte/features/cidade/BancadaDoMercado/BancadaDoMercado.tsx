@@ -9,53 +9,59 @@ import { obterUsoDeEspacosDoInventario, LIMITE_DE_ESPACOS_DO_INVENTARIO_V01, typ
 import { Button, Card } from '@/components/ui'
 import IconeDoJogo from '@/components/jogo/IconeDoJogo'
 import { obterIconeDoProduto } from '@/iconesDosRecursos'
+import { rotulosDaInterface } from '@/rotulosDaInterface'
 import estilos from './BancadaDoMercado.module.css'
 
 type PropriedadesDaTelaDeMercado = {
   partida: PartidaLocal
   aoComprarOferta: (idDaOferta: string) => Promise<void>
+  aoVoltar: () => void
 }
 
 /** Mantém apenas mensagem e bloqueio de operação; os produtos e preços vêm do catálogo fixo. */
-export default function BancadaDoMercado({ partida, aoComprarOferta }: PropriedadesDaTelaDeMercado) {
+export default function BancadaDoMercado({ partida, aoComprarOferta, aoVoltar }: PropriedadesDaTelaDeMercado) {
   const [mensagem, definirMensagem] = useState<string | null>(null)
-  const [ocupado, definirOcupado] = useState(false)
+  const [ofertaEmCompra, definirOfertaEmCompra] = useState<string | null>(null)
 
   /** Resolve o ID da oferta, bloqueia reenvios durante a Promise e só anuncia sucesso depois de salvar. */
   async function comprar(ofertaId: string) {
-    if (ocupado) return
+    if (ofertaEmCompra) return
     const oferta = OFERTAS_INICIAIS_DO_MERCADO_DE_PNJ.find((item) => item.id === ofertaId)
     if (!oferta) return
 
-    definirOcupado(true)
+    definirOfertaEmCompra(oferta.id)
     try {
       await aoComprarOferta(oferta.id)
       definirMensagem(`${oferta.nome} comprado por ${oferta.preco} moedas.`)
     } catch (erro) {
       definirMensagem(erro instanceof Error ? erro.message : 'Não foi possível concluir a compra.')
     } finally {
-      definirOcupado(false)
+      definirOfertaEmCompra(null)
     }
   }
 
   return (
     <section className="funcionalidade-telaDoJogo mercado-telaDoJogo" aria-labelledby="mercado-titulo">
-      <div className="contexto-arte contexto-arte--compacto" aria-hidden="true">
-        <span>ARTE 16:9 · MERCADO</span>
-      </div>
-
       <div className="telaDoJogo-tituloDaSecao">
         <div>
           <p className="secao-chamada">Cidade · Mercado</p>
-          <h2 id="mercado-titulo" className="destaque-titulo">Comprar</h2>
-         </div>
-        <div className="moedaCorrente-selo" aria-label={`${partida.personagem.ouro} moedas`}>
-          <span aria-hidden="true">◇</span>
-          <strong>{partida.personagem.ouro}</strong>
-          <small>moedas</small>
+          <h2 id="mercado-titulo" className="destaque-titulo">Mercado</h2>
+        </div>
+        <div className={estilos.headerActions}>
+          <div className="moedaCorrente-selo" aria-label={`${partida.personagem.ouro} moedas`}>
+            <span aria-hidden="true">◇</span>
+            <strong>{partida.personagem.ouro}</strong>
+            <small>moedas</small>
+          </div>
+          <Button variant="secondary" size="sm" onClick={aoVoltar}>
+            {rotulosDaInterface.voltarACidade}
+          </Button>
         </div>
       </div>
 
+      <div className={`contexto-arte contexto-arte--compacto ${estilos.art}`} aria-hidden="true">
+        <span>ARTE 16:9 · MERCADO</span>
+      </div>
       <p className="atenuado">Inventário: {obterUsoDeEspacosDoInventario(partida)} / {LIMITE_DE_ESPACOS_DO_INVENTARIO_V01} espaços. A compra entrega o item na bolsa.</p>
       {mensagem ? <p className="emLinha-mensagem" role="status">{mensagem}</p> : null}
 
@@ -84,7 +90,8 @@ export default function BancadaDoMercado({ partida, aoComprarOferta }: Proprieda
                 <Button
                   variant="primary"
                   size="sm"
-                  disabled={ocupado || !podePagar}
+                  disabled={ofertaEmCompra !== null || !podePagar}
+                  loading={ofertaEmCompra === oferta.id}
                   onClick={() => void comprar(oferta.id)}
                 >
                   Comprar por {oferta.preco} moedas

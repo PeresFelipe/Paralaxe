@@ -55,6 +55,8 @@
   --ui-frame-inventory: url('/arte/interface/dark-ages/slot-iron.png');
   --ui-frame-gold: url('/arte/interface/dark-ages/frame-gold.png');
   --ui-frame-dark: url('/arte/interface/dark-ages/frame-dark.png');
+  --ui-frame-dark-slice: 12;
+  --ui-flourish-gold: url('/arte/interface/dark-ages/flourish-gold.png');
   --ui-image-generated-scene: url('/arte/cenas-geradas.webp?v=6');
   --ui-image-generated-portrait: url('/arte/retratos-gerados.webp?v=6');
   --ui-size-inventory-slot-min-height: 3.25rem;

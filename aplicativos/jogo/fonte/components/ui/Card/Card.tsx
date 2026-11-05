@@ -4,7 +4,7 @@ import styles from './Card.module.css'
 export type CardElement = 'article' | 'aside' | 'div' | 'section'
 
 /** Aparências semânticas: a hierarquia decide quando uma moldura é realmente necessária. */
-export type CardAppearance = 'default' | 'soft' | 'plain'
+export type CardAppearance = 'default' | 'soft' | 'plain' | 'framed'
 
 export interface CardProps extends HTMLAttributes<HTMLElement> {
   as?: CardElement

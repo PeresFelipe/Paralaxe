@@ -1023,7 +1023,7 @@ export default function BancadaDaMasmorra({
 
         {/* A bolsa mostra saque provisório; a rota lista apenas salas já visitadas, sem transformar navegação em movimento livre. */}
         <aside className={estilos.lateral}>
-          <Card className="expedicao-bolsa">
+          <Card appearance="framed" className="expedicao-bolsa">
             <p className="secao-chamada">Bolsa de Expedição</p>
             <h3>Em risco</h3>
             {execucao.bolsaDaExpedicao.length === 0 &&

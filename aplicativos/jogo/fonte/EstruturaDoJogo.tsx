@@ -3,7 +3,7 @@
  * Recebe a partida persistida e callbacks de Aplicativo; suas abas e painéis são estado
  * transitório de apresentação. Consultar outra tela não inicia nem cancela um trabalho.
  */
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { usePreferenciaDeTela } from "./hooks/usePreferenciaDeTela";
 import {
   CLASSES_DE_PERSONAGEM,
@@ -222,6 +222,16 @@ export default function EstruturaDoJogo({
   const masmorraAtivo = Boolean(partida.masmorra.expedicaoAtiva || partida.masmorra.incursaoAutomaticaAtiva);
   // O risco temporário do combate e a expedição persistida bloqueiam a navegação e pausam a barra de trabalho.
   const focadoRisco = riscoAtivo || masmorraAtivo;
+  const conteudoRef = useRef<HTMLElement>(null);
+  const telaAtual = destino === "cidade" ? `cidade/${cidadeTelaDoJogo}` : destino === "aventura" ? `aventura/${aventuraTelaDoJogo}` : destino;
+  const ultimaTela = useRef(telaAtual);
+
+  useEffect(() => {
+    const mudou = ultimaTela.current !== telaAtual;
+    ultimaTela.current = telaAtual;
+    // Voltar ou abrir uma bancada pode desmontar o controle que tinha o foco.
+    if (mudou && document.activeElement === document.body) conteudoRef.current?.focus();
+  }, [telaAtual]);
 
   /** Muda o destino principal em contexto seguro e fecha consultas rápidas para evitar painéis fora de contexto. */
   function ir(proximo: DestinoPrincipal) {
@@ -397,7 +407,7 @@ export default function EstruturaDoJogo({
       ) : null}
 
       <div className="jogo-disposicao">
-        <main className="jogo-conteudo" id="jogo-conteudo" tabIndex={-1}>
+        <main ref={conteudoRef} className="jogo-conteudo" id="jogo-conteudo" tabIndex={-1}>
           {!focadoRisco ? (
             <ResumoDaMetaDaJornada
               partida={partida}
@@ -408,7 +418,7 @@ export default function EstruturaDoJogo({
           {/* As telas recebem intenções de alteração; a coordenação superior mantém a ordem das gravações. */}
           {destino === "personagem" && personagemAba === "visaoGeral" && !focadoRisco ? (
             <section className="sessao-resumo" aria-label="Resumo da sessão">
-              <Card appearance="soft">
+              <Card appearance="framed">
                 <p className="secao-chamada">Agora</p>
                 <h2>{trabalho ? "Seu trabalho continua" : "Escolha seu próximo trabalho"}</h2>
                 <IndicadorDeProgressoOcioso partida={partida} compacto />
@@ -594,7 +604,7 @@ export default function EstruturaDoJogo({
       {rapidoPainel === "inventario" && !focadoRisco ? (
         <PainelRapido
           rotulo="Inventário"
-          icone={<IconeDoJogo icone="armadura-sobreposta" tamanho={26} />}
+          icone={<IconeDoJogo icone={iconeDeAtalhoPorId.inventario} tamanho={32} />}
           aoFechar={() => definirRapidoPainel(null)}
         >
           <GradeDoInventario partida={partida} compacto aoEquipar={aoEquipar} />
@@ -1083,7 +1093,13 @@ function ComponenteDaTelaDaCidade({
     return <PainelDoCodice partida={partida} aoVoltar={() => aoTelaDoJogo("visaoGeral")} />;
   }
   if (telaDoJogo === "mercado")
-    return <BancadaDoMercado partida={partida} aoComprarOferta={aoComprarOfertaDoMercado} />;
+    return (
+      <BancadaDoMercado
+        partida={partida}
+        aoComprarOferta={aoComprarOfertaDoMercado}
+        aoVoltar={() => aoTelaDoJogo("visaoGeral")}
+      />
+    );
   if (telaDoJogo === "banco") {
     return (
       <PainelDoBanco

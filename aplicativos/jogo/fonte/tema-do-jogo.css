@@ -164,7 +164,7 @@ summary:focus-visible,
 .marca-ornamento {
   width: min(var(--ui-dimension-132px), 100%);
   height: var(--ui-dimension-44px);
-  background: url("/arte/interface/dark-ages/flourish-gold.png") center / contain
+  background: var(--ui-flourish-gold) center / contain
     no-repeat;
   image-rendering: pixelated;
 }
@@ -346,7 +346,7 @@ summary:focus-visible,
 .companheiro-secao {
   padding:var(--ui-space-3-75) var(--ui-space-3);
   border: var(--ui-dimension-8px) solid transparent;
-  border-image: var(--ui-frame-dark) 12 / var(--ui-dimension-12px) stretch;
+  border-image: var(--ui-frame-dark) var(--ui-frame-dark-slice) / var(--ui-dimension-12px) stretch;
   background: var(--ui-color-surface);
   min-width: 0;
 }

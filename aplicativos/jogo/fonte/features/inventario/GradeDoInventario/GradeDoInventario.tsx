@@ -3,9 +3,9 @@
  * Converte pilhas e equipamentos guardados em entradas visuais, oferece filtros e
  * inspeção, e encaminha o comando de equipar quando esse callback estiver disponível.
  */
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { obterDefinicaoDeEquipamento } from '@paralaxe/conteudo'
-import { LIMITE_DE_ESPACOS_DO_INVENTARIO_V01, obterUsoDeEspacosDoInventario, type PartidaLocal } from '@paralaxe/dominio'
+import { LIMITE_DE_ESPACOS_DO_INVENTARIO_V01, obterUsoDeEspacosDoInventario, obterValorPrincipalDoEquipamento, type PartidaLocal } from '@paralaxe/dominio'
 import { IconeDoJogo } from '@/components/jogo'
 import { obterIconeDoEquipamento, obterIconeDoItem } from '@/iconesDosRecursos'
 import { rotulosDosItens } from '@/rotulosDoJogo'
@@ -25,6 +25,7 @@ export default function GradeDoInventario({ partida, compacto = false, aoEquipar
   const [selecionado, definirSelecionado] = useState<string | null>(null)
   const [pendente, definirPendente] = useState(false)
   const [erro, definirErro] = useState<string | null>(null)
+  const legendaRef = useRef<HTMLDivElement>(null)
   const equipado = new Set(Object.values(partida.personagem.equipamento))
   // Pilhas usam o ID da definição; equipamentos usam o ID da instância para distinguir cópias com a mesma aparência.
   const itens = [
@@ -43,6 +44,19 @@ export default function GradeDoInventario({ partida, compacto = false, aoEquipar
   const exibido = itens.filter((item) => filtro === "todos" || item.tipo === filtro)
   const visivel = compacto ? exibido.slice(0, 8) : exibido
   const selecionadoItem = itens.find((item) => item.id === selecionado)
+  const peca = selecionadoItem?.tipo === 'equipamento'
+    ? partida.personagem.itensDeEquipamento.find((item) => item.idDaInstancia === selecionado)
+    : undefined
+  const definicao = peca && obterDefinicaoDeEquipamento(peca.idDaDefinicao)
+  const pecaEmUso = definicao && partida.personagem.itensDeEquipamento.find(
+    (item) => item.idDaInstancia === partida.personagem.equipamento[definicao.espaco],
+  )
+  const definicaoEmUso = pecaEmUso && obterDefinicaoDeEquipamento(pecaEmUso.idDaDefinicao)
+  const valor = peca && definicao ? obterValorPrincipalDoEquipamento(definicao, peca.nivelDeReforco) : null
+  const valorEmUso = pecaEmUso && definicaoEmUso && definicaoEmUso.estatisticaPrincipal?.tipo === definicao?.estatisticaPrincipal?.tipo
+    ? obterValorPrincipalDoEquipamento(definicaoEmUso, pecaEmUso.nivelDeReforco)
+    : null
+  const atributo = definicao?.estatisticaPrincipal?.tipo === 'ataque' ? 'Poder' : 'Defesa'
   // Espaços vazios completam somente a visão de todos os itens; filtros não devem parecer aumentar a capacidade disponível.
   const vazio = filtro === "todos" ? Math.max(0, (compacto ? 8 : 0) - visivel.length) : 0
 
@@ -51,13 +65,17 @@ export default function GradeDoInventario({ partida, compacto = false, aoEquipar
     if (!aoEquipar || pendente) return
     definirPendente(true)
     definirErro(null)
-    try { await aoEquipar(id); definirSelecionado(null) }
+    try {
+      await aoEquipar(id)
+      definirSelecionado(null)
+      legendaRef.current?.focus()
+    }
     catch (motivo) { definirErro(motivo instanceof Error ? motivo.message : mensagensDeErroDaInterface.equiparItem) }
     finally { definirPendente(false) }
   }
 
   return <div className={`${estilos.grid} ${compacto ? estilos.compact : ''}`}>
-    <div className={estilos.legend}><span>{compacto ? 'Na bolsa' : 'Bolsa do viajante'}</span><strong>{obterUsoDeEspacosDoInventario(partida)} / {LIMITE_DE_ESPACOS_DO_INVENTARIO_V01}</strong></div>
+    <div className={estilos.legend} ref={legendaRef} tabIndex={-1}><span>{compacto ? 'Na bolsa' : 'Bolsa do viajante'}</span><strong>{obterUsoDeEspacosDoInventario(partida)} / {LIMITE_DE_ESPACOS_DO_INVENTARIO_V01} espaços</strong></div>
     {!compacto ? <div className={estilos.filters} aria-label="Filtrar inventário">
       {([["todos", 'Tudo'], ['material', 'Materiais'], ["consumivel", 'Outros itens'], ["equipamento", 'Equipamentos']] as const).map(([id, rotulo]) =>
         <Button key={id} variant="filter" aria-pressed={filtro === id} onClick={() => { definirFiltro(id); definirSelecionado(null) }}>{rotulo}</Button>)}
@@ -70,11 +88,19 @@ export default function GradeDoInventario({ partida, compacto = false, aoEquipar
       </Button>)}
       {Array.from({ length: vazio }, (_, indice) => <span className={estilos.emptySlot} key={`vazio-${indice}`} aria-hidden="true" />)}
     </div>
-    {!exibido.length && filtro !== "todos" ? <p className="atenuado">Nenhum item nesta categoria.</p> : null}
+    {!exibido.length ? <p className="atenuado">{filtro === "todos" ? 'Sua bolsa está vazia.' : 'Nenhum item nesta categoria.'}</p> : null}
     {selecionadoItem ? <div className={estilos.inspection} aria-live="polite">
-      <strong>{selecionadoItem.nome}</strong><p>{selecionadoItem.detalhe} Quantidade: {selecionadoItem.quantidade}.</p>
+      <strong>{selecionadoItem.nome}</strong>
+      {peca && definicao ? (
+        <>
+          <p>Raridade {peca.raridade ?? 'comum'}{valor === null ? '' : ` · ${atributo} ${valor}`}</p>
+          <p>{definicaoEmUso
+            ? `Em uso no mesmo espaço: ${definicaoEmUso.nome}${valorEmUso === null ? '' : ` · ${atributo} ${valorEmUso}`}`
+            : 'Nenhum equipamento em uso neste espaço.'}</p>
+        </>
+      ) : <p>{selecionadoItem.detalhe} Quantidade: {selecionadoItem.quantidade}.</p>}
       {selecionadoItem.tipo === "equipamento" && aoEquipar ? <Button variant="primary" size="sm" disabled={pendente} loading={pendente} onClick={() => void equipar(selecionadoItem.id)}>{pendente ? 'Equipando…' : 'Equipar'}</Button> : null}
-    </div> : !compacto ? <p className={estilos.hint}>Selecione um item para inspecionar. Equipamentos em uso ficam na aba Equipamento.</p> : null}
+    </div> : exibido.length > 0 ? <p className={estilos.hint}>{compacto ? 'Selecione um espaço para ver o nome e os detalhes do item.' : 'Selecione um item para inspecionar. Equipamentos em uso ficam na aba Equipamento.'}</p> : null}
     {compacto && itens.length > 8 ? <p className="atenuado">+{itens.length - 8} itens na bolsa completa</p> : null}
     {erro ? <p role="alert" className="informacao-alerta">{erro}</p> : null}
   </div>

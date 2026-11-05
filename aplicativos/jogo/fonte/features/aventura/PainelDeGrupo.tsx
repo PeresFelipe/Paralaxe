@@ -111,7 +111,7 @@ export default function PainelDeGrupo({ partida, aoPersistir, aoVoltar }: Propri
         <Button variant="secondary" size="sm" onClick={aoVoltar}>Voltar à Aventura</Button>
       </div>
       <div className={estilos.grade ?? ""}>
-        <Card className={estilos.painel ?? ""}>
+        <Card appearance="framed" className={estilos.painel ?? ""}>
           <p className="secao-chamada">Seu grupo</p>
           <h3>{ativos.length}/3 parceiros</h3>
           <ol className={estilos.formacao} aria-label="Ordem da formação">
