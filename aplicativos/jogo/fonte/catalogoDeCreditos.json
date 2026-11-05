@@ -132,6 +132,34 @@
       "creditosComplementares": []
     },
     {
+      "id": "icones-atalhos",
+      "grupo": "interface",
+      "titulo": "Icons Essential Pack v1.2",
+      "autores": [
+        {
+          "nome": "Crusenho Agus Hennihuno",
+          "url": "https://crusenho.itch.io/"
+        }
+      ],
+      "contribuicao": "Ícones dos atalhos de Inventário, Banco e Grupo.",
+      "licenca": {
+        "nome": "CC BY 4.0",
+        "url": "https://creativecommons.org/licenses/by/4.0/"
+      },
+      "origem": "https://crusenho.itch.io/icons-essential-pack-free-icons",
+      "modificacoes": "Três PNGs de 16 × 16, com nomes adaptados para o jogo e pixels originais preservados.",
+      "avisos": [
+        {
+          "rotulo": "Licença original do pacote",
+          "url": "/arte/icones/crusenho/LICENSE.txt"
+        }
+      ],
+      "arquivos": [
+        "/arte/icones/crusenho/"
+      ],
+      "creditosComplementares": []
+    },
+    {
       "id": "icones",
       "grupo": "interface",
       "titulo": "Shikashi’s Fantasy Icons Pack",

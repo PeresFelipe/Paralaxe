@@ -43,7 +43,7 @@ import CreditosDosRecursos from "./components/jogo/CreditosDosRecursos";
 import { IconeDoJogo } from "./components/jogo";
 import GradeDoInventario from "./features/inventario/GradeDoInventario";
 import MetaDaJornada, { ResumoDaMetaDaJornada } from "./features/jornada/MetaDaJornada";
-import { obterIconeDoEquipamento, iconeDoPainelPorId, iconeDeProfissaoPorId } from "./iconesDosRecursos";
+import { obterIconeDoEquipamento, iconeDoPainelPorId, iconeDeProfissaoPorId, iconeDeAtalhoPorId } from "./iconesDosRecursos";
 import { rotulosDasProfissoes } from "./rotulosDoJogo";
 import { rotulosDaInterface } from './rotulosDaInterface'
 import { Button, Card } from "./components/ui";
@@ -553,7 +553,7 @@ export default function EstruturaDoJogo({
         <div className="continuidade-acoes">
           <Button
             variant="hud"
-            icon={<IconeDoJogo icone="armadura-sobreposta" tamanho={24} />}
+            icon={<IconeDoJogo icone={iconeDeAtalhoPorId.inventario} tamanho={24} />}
             disabled={focadoRisco}
             aria-haspopup="dialog"
             onClick={() => definirRapidoPainel("inventario")}
@@ -1031,7 +1031,7 @@ function ComponenteDaTelaDeAventura({
               <span>Parceiros ativos</span>
               <strong>{partida.grupo.idsDosParceirosAtivos.length}/3</strong>
             </div>
-            <Button variant="secondary" size="sm" onClick={() => aoTelaDoJogo("grupo")}>
+            <Button variant="secondary" size="sm" icon={<IconeDoJogo icone={iconeDeAtalhoPorId.grupo} tamanho={16} />} onClick={() => aoTelaDoJogo("grupo")}>
               Consultar Grupo
             </Button>
           </Card>
@@ -1224,7 +1224,7 @@ function ComponenteDaTelaDaCidade({
             <strong>Ferreiro</strong>
             <span>Serviços de equipamento</span>
           </Button>
-          <Button variant="location" icon={<IconeDoJogo icone="chave" tamanho={32} />} onClick={() => aoTelaDoJogo("banco")}>
+          <Button variant="location" icon={<IconeDoJogo icone={iconeDeAtalhoPorId.banco} tamanho={32} />} onClick={() => aoTelaDoJogo("banco")}>
             <strong>Banco</strong>
             <span>Armazenamento seguro</span>
           </Button>

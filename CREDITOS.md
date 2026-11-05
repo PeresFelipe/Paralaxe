@@ -47,6 +47,19 @@ Os 88 arquivos de entrada incluem 79 PNGs com canal alfa, oito arquivos Aseprite
 
 As páginas de Zerie autorizam uso em jogos e adaptação, com crédito facultativo, e vedam redistribuir ou republicar os arquivos, mesmo modificados. Como o repositório publica os arquivos e a aplicação web entrega os recursos públicos separadamente, a integração depende de autorização que cubra essa distribuição. O jogo mantém as representações atuais. Os créditos acessíveis pelo jogador continuam descrevendo somente material distribuído. Para o Shikashi, o crédito existente preserva CC BY 4.0 e a referência original a CC BY 3.0, com a pendência de autoria individual descrita acima.
 
+### Novos ícones selecionados dos arquivos locais
+
+A pasta revisada nesta etapa contém o Shikashi v2 (17 PNGs e um aviso) e o [Icons Essential Pack v1.2](https://crusenho.itch.io/icons-essential-pack-free-icons), de Crusenho Agus Hennihuno (80 PNGs individuais, uma folha, um Aseprite e dois textos). Foram selecionados nove ícones para os usos abaixo.
+
+| Origem | Arquivo ou célula original | Uso |
+| --- | --- | --- |
+| Shikashi v2 | (2, 17), (4, 17) | Minérios brutos e cristal de Grianchloch |
+| Shikashi v2 | (11, 19), (4, 16) | Viga de Dún Liath e Breac |
+| Shikashi v2 | (0, 6), (12, 11) | Broquel de Fearn e kit de Herbologia |
+| Icons Essential v1.2 | `Backpack.png`, `ChestTreasure.png`, `Team.png` | Atalhos de Inventário, Banco e Grupo |
+
+As células do Shikashi são indicadas como coluna e linha com índice inicial zero, na folha transparente de 32 × 32 por célula. Os PNGs do Icons Essential foram apenas renomeados. A página do autor e a [licença original incluída](aplicativos/jogo/publico/arte/icones/crusenho/LICENSE.txt) concedem CC BY 4.0. A atribuição ao Crusenho também aparece em **Créditos e licenças** no jogo.
+
 ## Software distribuído
 
 | Componente | Atribuição | Licença |

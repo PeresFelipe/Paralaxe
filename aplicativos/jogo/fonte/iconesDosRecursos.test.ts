@@ -4,10 +4,11 @@ import { describe, expect, it } from "vitest";
 import { OFERTAS_INICIAIS_DO_MERCADO_DE_PNJ } from "@paralaxe/conteudo";
 import {
   iconeDeEquipamentoPorId,
+  iconeDeAtalhoPorId,
   iconeDeItemPorId,
   iconeDeProfissaoPorId,
   iconeDoPainelPorId,
-  obterCaminhoDoIconeShikashi,
+  obterCaminhoDoIconeDoJogo,
   obterIconeDoEquipamento,
   obterIconeDoItem,
   obterIconeDoProduto,
@@ -20,9 +21,10 @@ describe("ícones dos recursos", () => {
       ...Object.values(iconeDeEquipamentoPorId),
       ...Object.values(iconeDeProfissaoPorId),
       ...Object.values(iconeDoPainelPorId),
+      ...Object.values(iconeDeAtalhoPorId),
     ]);
     for (const icone of icones) {
-      const caminho = obterCaminhoDoIconeShikashi(icone).split("?")[0];
+      const caminho = obterCaminhoDoIconeDoJogo(icone).split("?")[0];
       expect(existsSync(new URL(`../publico${caminho}`, import.meta.url)), caminho).toBe(true);
     }
   });

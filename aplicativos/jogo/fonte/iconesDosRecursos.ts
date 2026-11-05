@@ -1,5 +1,5 @@
 /**
- * @file Mapeamento entre identificadores do jogo e os ícones de Shikashi.
+ * @file Mapeamento entre identificadores do jogo e os ícones dos pacotes de arte.
  * Os nomes descrevem arquivos visuais; trocar uma associação não muda atributos ou recompensas.
  */
 import type { IdDaProfissao } from "@paralaxe/dominio";
@@ -46,7 +46,24 @@ export type NomeDoIconeShikashi =
   | "botas-aco"
   | "espada-gladio"
   | "escudo-quadriculado"
-  | "cajado-verde";
+  | "cajado-verde"
+  | "almofariz"
+  | "broquel"
+  | "cristal-bruto"
+  | "minerio"
+  | "truta"
+  | "viga-madeira";
+
+export const iconeDeAtalhoPorId = {
+  inventario: "mochila",
+  banco: "bau",
+  grupo: "equipe",
+} as const;
+
+type NomeDoIconeCrusenho = (typeof iconeDeAtalhoPorId)[keyof typeof iconeDeAtalhoPorId];
+export type NomeDoIconeDoJogo = NomeDoIconeShikashi | NomeDoIconeCrusenho;
+
+const iconesCrusenho: ReadonlySet<NomeDoIconeDoJogo> = new Set(Object.values(iconeDeAtalhoPorId));
 
 /** Associação completa das profissões; o tipo exige uma entrada para cada profissão. */
 export const iconeDeProfissaoPorId: Record<IdDaProfissao, NomeDoIconeShikashi> = {
@@ -70,16 +87,17 @@ export const iconeDoPainelPorId = {
 /** Associação de definições de itens empilháveis e de missão. */
 export const iconeDeItemPorId: Record<string, NomeDoIconeShikashi> = {
   "item.dun-liath.sucata": "pedra",
+  "item.dun-liath.viga": "viga-madeira",
   "item.dun-liath.registro-arquivo": "livro-abrir",
   "item.dun-liath.lacre-comandante": "pedraRunica",
   "material.cloch": "pedra",
-  "material.stan": "pedra",
+  "material.stan": "minerio",
   "material.beith": "madeira",
-  "material.breac": "peixe",
+  "material.breac": "truta",
   "material.seamair": "erva",
 
-  "material.luaidhe": "pedra",
-  "material.airgead": "pedra",
+  "material.luaidhe": "minerio",
+  "material.airgead": "minerio",
   "material.coll": "madeira",
   "material.fuinseog": "madeira",
   "material.trosc": "peixe",
@@ -93,8 +111,8 @@ export const iconeDeItemPorId: Record<string, NomeDoIconeShikashi> = {
   "item.comida.trosc-defumado": "cozido-peixe",
   "item.consumivel.extrato-aiteann": "pocao-verde",
   "item.comida.bradan-raithneach": "cozido-peixe",
-  "material.or": "pedra",
-  "material.grianchloch": "pedra",
+  "material.or": "minerio",
+  "material.grianchloch": "cristal-bruto",
   "material.dair": "madeira",
   "material.iur": "madeira",
   "material.tuinnin": "peixe",
@@ -108,8 +126,8 @@ export const iconeDeItemPorId: Record<string, NomeDoIconeShikashi> = {
   "item.comida.doingean-maros": "cozido-peixe",
   "item.consumivel.elixir-maros": "pocao-verde",
   "material.lingote-stan": "ouro-lingote",
-  "material.copar": "pedra",
-  "material.iarann": "pedra",
+  "material.copar": "minerio",
+  "material.iarann": "minerio",
   "material.fearn": "madeira",
   "material.saileach": "madeira",
   "material.sairdin": "peixe",
@@ -142,7 +160,7 @@ export const iconeDeEquipamentoPorId: Record<string, NomeDoIconeShikashi> = {
   "ferramenta.mineracao.picareta": "picareta",
   "ferramenta.lenhador.machado-corte": "machado",
   "ferramenta.pesca.equipamento-pesca": "pesca-vara",
-  "ferramenta.herbologia.kit-herbologia": "erva",
+  "ferramenta.herbologia.kit-herbologia": "almofariz",
   "arma.milicia-espada": "espada-longa",
   "escudo.milicia-escudo": "escudo-madeira",
   "armadura.milicia-peitoral": "armadura-ferro",
@@ -157,7 +175,7 @@ export const iconeDeEquipamentoPorId: Record<string, NomeDoIconeShikashi> = {
   "arma.iur-arco-grianchloch": "arco",
   "arma.grianchloch-cajado": "cajado-verde",
   "arma.beith-arco": "arco",
-  "escudo.fearn-broquel": "escudo-madeira",
+  "escudo.fearn-broquel": "broquel",
   "armadura.iarann-couraca": "armadura-ferro",
   "arma.saileach-arco": "arco",
   "armadura.caca-gibao": "armadura-couro",
@@ -184,8 +202,9 @@ export const iconeDeEquipamentoPorId: Record<string, NomeDoIconeShikashi> = {
   "escudo.vigia-escudo": "escudo-quadriculado",
 };
 
-/** Monta a URL pública; o parâmetro v identifica a revisão visual para o navegador. */
-export function obterCaminhoDoIconeShikashi(icone: NomeDoIconeShikashi) {
+/** Resolve o arquivo público do pacote ao qual pertence o ícone. */
+export function obterCaminhoDoIconeDoJogo(icone: NomeDoIconeDoJogo) {
+  if (iconesCrusenho.has(icone)) return `/arte/icones/crusenho/${icone}.png`;
   return `/arte/icones/shikashi/${icone}.png?v=1`;
 }
 

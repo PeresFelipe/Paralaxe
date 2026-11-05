@@ -20,6 +20,9 @@ Interface e tipografia
   Atribuição: /arte/icones/shikashi/LICENSE.txt
   Aviso original do pacote v2: /creditos/shikashi-aviso-original.txt
   Desenhos-base: https://game-icons.net/ — CC BY 3.0, conforme o aviso do pacote.
+- Icons Essential Pack v1.2, por Crusenho Agus Hennihuno, CC BY 4.0.
+  Origem: https://crusenho.itch.io/icons-essential-pack-free-icons
+  Licença original: /arte/icones/crusenho/LICENSE.txt
 - Antiquity Print, por SciGho. Copyright SciGho 2021. CC BY 4.0.
   Origem: https://ninjikin.itch.io/font-antiquity-script
   Atribuição e proveniência: /fontes/antiquity-print-LICENSE.txt
