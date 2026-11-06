@@ -47,7 +47,7 @@
   display: flex;
   flex-direction: column;
   width: min(19rem, calc(100vw - 1.5rem));
-  max-height: min(80dvh, 32rem);
+  max-height: min(32rem, calc(100dvh - var(--ui-dimension-100px)));
   overflow-y: auto;
   overscroll-behavior: contain;
   padding: var(--ui-space-2);
@@ -106,7 +106,7 @@
   padding: var(--ui-space-1-5) var(--ui-space-3);
   color: var(--ui-color-warning-text);
   font-family: var(--ui-font-family-body);
-  font-size: var(--ui-font-size-2xs);
+  font-size: var(--ui-font-size-xs);
   font-weight: var(--ui-font-weight-bold);
   letter-spacing: var(--ui-letter-spacing-narrow);
   text-transform: uppercase;

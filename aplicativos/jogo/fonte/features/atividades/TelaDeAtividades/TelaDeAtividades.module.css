@@ -63,7 +63,7 @@
 
 .optionsHeading > span {
   color: var(--ui-color-text-muted);
-  font-size:var(--ui-oficios-fonte-105);
+  font-size: var(--ui-font-size-xs);
 }
 
 .option {
@@ -102,7 +102,7 @@
 
 .optionTitle > span {
   color: var(--ui-color-text-muted);
-  font-size:var(--ui-oficios-fonte-106);
+  font-size: var(--ui-font-size-xs);
 }
 
 .optionTitle > span strong {
@@ -165,7 +165,7 @@
 
 .result > span {
   color: var(--ui-color-text-muted);
-  font-size:var(--ui-oficios-fonte-111);
+  font-size: var(--ui-font-size-xs);
   letter-spacing:var(--ui-oficios-linha-116);
   text-transform: uppercase;
 }

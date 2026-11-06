@@ -27,6 +27,11 @@ export function useTemaDaInterface() {
   // A mudança ocorre antes da pintura para não piscar ao trocar de tela.
   useLayoutEffect(() => {
     document.documentElement.dataset.tema = tema
+    // A barra do navegador deve acompanhar a aparência ativa, inclusive após alternar.
+    document.querySelector('meta[name="theme-color"]')?.setAttribute(
+      'content',
+      tema === 'claro' ? '#ece7dc' : '#171d14',
+    )
     try {
       window.localStorage.setItem(CHAVE_DO_TEMA, tema)
     } catch {

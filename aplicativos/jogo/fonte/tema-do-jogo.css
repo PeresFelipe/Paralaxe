@@ -287,7 +287,8 @@ summary:focus-visible,
 
 .global-recursos > div > dt {
   display: block;
-  font-size: var(--ui-font-size-2xs-large);
+  font-size: var(--ui-font-size-xs);
+  line-height: var(--ui-line-height-reading);
 }
 
 .global-recursos > div > dd {
@@ -408,7 +409,7 @@ summary:focus-visible,
 .contexto-arte {
   border-radius:var(--ui-radius-none);
   border-color: var(--ui-color-border);
-  image-rendering: pixelated;
+  image-rendering: auto;
   box-shadow: var(--ui-shadow-inset-card);
 }
 
@@ -437,7 +438,7 @@ summary:focus-visible,
   padding:var(--ui-space-2) var(--ui-space-2-5);
   border: var(--ui-size-border) solid var(--ui-color-border);
   color: var(--ui-color-text-muted);
-  font-size: var(--ui-font-size-3xs);
+  font-size: var(--ui-font-size-2xs);
   letter-spacing: var(--ui-letter-spacing-narrow);
 }
 
@@ -989,7 +990,8 @@ summary:focus-visible,
 
   .global-recursos > div > dt {
     display: block;
-    font-size: var(--ui-font-size-3xs);
+    font-size: var(--ui-font-size-2xs);
+    line-height: var(--ui-line-height-reading);
     overflow-wrap: anywhere;
   }
 
@@ -1044,7 +1046,7 @@ summary:focus-visible,
 
   .atividade-estado {
     padding:var(--ui-space-1-5);
-    font-size: var(--ui-font-size-3xs);
+    font-size: var(--ui-font-size-2xs);
   }
 
   .atividades-disposicao {

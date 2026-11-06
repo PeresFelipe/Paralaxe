@@ -6,6 +6,17 @@
     <!-- viewport-fit permite que o CSS use as margens seguras dos dispositivos móveis. -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="theme-color" content="#171d14" />
+    <!-- Aplica a preferência antes de montar o React para evitar um flash escuro ao abrir no tema claro. -->
+    <script>
+      try {
+        if (localStorage.getItem('paralaxe.ui.tema') === 'claro') {
+          document.documentElement.dataset.tema = 'claro'
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ece7dc')
+        }
+      } catch {
+        /* O bloqueio do armazenamento não impede iniciar o jogo. */
+      }
+    </script>
     <meta name="description" content="Paralaxe — RPG ocioso de fantasia sombria em desenvolvimento." />
     <title>Paralaxe — Versão 0.1</title>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />

@@ -320,7 +320,7 @@ body {
 .jogo-aviso-rotulo {
   color: var(--aviso-acento);
   font-family: var(--ui-font-family-body);
-  font-size: var(--ui-font-size-2xs);
+  font-size: var(--ui-font-size-xs);
   font-weight: var(--ui-font-weight-bold);
   line-height: var(--ui-line-height-reading);
   letter-spacing: var(--ui-letter-spacing-narrow);
