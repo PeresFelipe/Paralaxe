@@ -24,6 +24,17 @@ describe('contratos de layout do Paralaxe', () => {
     }
   })
 
+  it('usa tokens nomeados e definidos em todas as cores do seletor de ofícios', () => {
+    const css = fonte('../../atividades/SeletorDeOficios/SeletorDeOficios.module.css')
+    const tokens = fonte('../../../styles/tokens.css')
+    const cores = Array.from(css.matchAll(/var\((--ui-oficio-seletor-[a-z-]+)/g), match => match[1])
+    expect(new Set(cores).size).toBe(30)
+    expect(css).not.toMatch(/--ui-oficios-cor-(?:[1-9]|[12][0-9]|30)\b/)
+    for (const cor of cores) {
+      expect(tokens).toContain(cor + ':')
+    }
+  })
+
   it('não deixa o aviso lateral com três colunas estreitas no desktop', () => {
     const css = fonte('../../../interface-do-jogo.css')
     expect(css).toMatch(/\.jogo-aviso-conteudo\s*\{\s*grid-column:\s*1\s*\/\s*-1;\s*grid-row:\s*2;/)

@@ -8,7 +8,7 @@
 }
 .rotulo {
   color: var(--ui-color-warning-text);
-  font-size:var(--ui-oficios-fonte-78);
+  font-size: var(--ui-font-size-xs);
   font-weight: var(--ui-oficios-peso-82);
   letter-spacing:var(--ui-oficios-linha-86);
   text-transform: uppercase;
@@ -21,19 +21,19 @@
   min-width: 0;
   min-height: var(--ui-oficios-medida-37);
   padding: var(--ui-oficios-medida-38) var(--ui-oficios-medida-39);
-  border: var(--ui-oficios-medida-40) solid var(--ui-oficios-cor-1);
+  border: var(--ui-oficios-medida-40) solid var(--ui-oficio-seletor-borda);
   border-radius: var(--ui-oficios-medida-36);
-  background: linear-gradient(140deg, var(--ui-oficios-cor-2), var(--ui-oficios-cor-3));
-  color: var(--ui-oficios-cor-4);
-  box-shadow: 0 var(--ui-oficios-medida-41) 0 var(--ui-oficios-cor-5), 0 var(--ui-oficios-medida-42) var(--ui-oficios-medida-43) var(--ui-oficios-cor-6);
+  background: linear-gradient(140deg, var(--ui-oficio-seletor-fundo-inicio), var(--ui-oficio-seletor-fundo-fim));
+  color: var(--ui-oficio-seletor-texto);
+  box-shadow: 0 var(--ui-oficios-medida-41) 0 var(--ui-oficio-seletor-sombra-contorno), 0 var(--ui-oficios-medida-42) var(--ui-oficios-medida-43) var(--ui-oficio-seletor-sombra);
   text-align: left;
   cursor: pointer;
   transition: box-shadow var(--ui-oficios-medida-44) ease, border-color var(--ui-oficios-medida-44) ease, transform var(--ui-oficios-medida-44) ease;
 }
 .gatilho:hover,
 .gatilho[data-state='open'] {
-  border-color: var(--ui-oficios-cor-7);
-  box-shadow: 0 0 0 var(--ui-oficios-medida-41) var(--ui-oficios-cor-8), 0 var(--ui-oficios-medida-45) var(--ui-oficios-medida-46) var(--ui-oficios-cor-9);
+  border-color: var(--ui-oficio-seletor-borda-hover);
+  box-shadow: 0 0 0 var(--ui-oficios-medida-41) var(--ui-oficio-seletor-realce-hover), 0 var(--ui-oficios-medida-45) var(--ui-oficios-medida-46) var(--ui-oficio-seletor-sombra-hover);
 }
 .gatilho:focus-visible {
   outline: var(--ui-oficios-medida-47) solid var(--ui-color-focus);
@@ -45,25 +45,25 @@
   place-items: center;
   width: var(--ui-oficios-medida-48);
   height: var(--ui-oficios-medida-48);
-  border: var(--ui-oficios-medida-40) solid var(--ui-oficios-cor-10);
+  border: var(--ui-oficios-medida-40) solid var(--ui-oficio-seletor-icone-borda);
   border-radius: var(--ui-oficios-medida-49);
-  background: linear-gradient(140deg, var(--ui-oficios-cor-11), var(--ui-oficios-cor-12));
+  background: linear-gradient(140deg, var(--ui-oficio-seletor-icone-fundo-inicio), var(--ui-oficio-seletor-icone-fundo-fim));
 }
 .dados, .itemDados { display: grid; gap: var(--ui-oficios-medida-50); min-width: 0; flex: 1; }
 .nome { font-size: var(--ui-oficios-medida-51); font-weight: var(--ui-font-weight-bold); overflow-wrap: anywhere; }
-.subtitulo, .itemDados small { color: var(--ui-oficios-cor-13); font-size: var(--ui-oficios-medida-52); }
+.subtitulo, .itemDados small { color: var(--ui-oficio-seletor-texto-secundario); font-size: var(--ui-oficios-medida-52); }
 .selo, .emCurso {
   flex: none;
   padding: var(--ui-oficios-medida-53) var(--ui-oficios-medida-54);
-  border: var(--ui-oficios-medida-40) solid var(--ui-oficios-cor-14);
+  border: var(--ui-oficios-medida-40) solid var(--ui-oficio-seletor-status-borda);
   border-radius: var(--ui-oficios-medida-55);
-  background: var(--ui-oficios-cor-15);
-  color: var(--ui-oficios-cor-16);
+  background: var(--ui-oficio-seletor-status-fundo);
+  color: var(--ui-oficio-seletor-status-texto);
   font-size:var(--ui-oficios-fonte-79);
   font-weight: var(--ui-oficios-peso-83);
   white-space: nowrap;
 }
-.seta { flex: none; color: var(--ui-oficios-cor-17); font-size: var(--ui-oficios-medida-57); line-height: var(--ui-line-height-dense); transition: transform var(--ui-oficios-medida-44) ease; }
+.seta { flex: none; color: var(--ui-oficio-seletor-seta); font-size: var(--ui-oficios-medida-57); line-height: var(--ui-line-height-dense); transition: transform var(--ui-oficios-medida-44) ease; }
 .gatilho[data-state='open'] .seta { transform: rotate(180deg); }
 .menu {
   z-index: var(--ui-oficios-camada-88);
@@ -72,11 +72,11 @@
   max-width: calc(100vw - var(--ui-oficios-medida-46));
   max-height: var(--radix-select-content-available-height);
   overflow: hidden;
-  border: var(--ui-oficios-medida-40) solid var(--ui-oficios-cor-18);
+  border: var(--ui-oficios-medida-40) solid var(--ui-oficio-seletor-menu-borda);
   border-radius: var(--ui-oficios-medida-58);
-  background: var(--ui-oficios-cor-19);
-  color: var(--ui-oficios-cor-20);
-  box-shadow: 0 var(--ui-oficios-medida-59) var(--ui-oficios-medida-60) var(--ui-oficios-cor-21), 0 var(--ui-oficios-medida-41) var(--ui-oficios-medida-61) var(--ui-oficios-cor-22);
+  background: var(--ui-oficio-seletor-menu-fundo);
+  color: var(--ui-oficio-seletor-menu-texto);
+  box-shadow: 0 var(--ui-oficios-medida-59) var(--ui-oficios-medida-60) var(--ui-oficio-seletor-menu-sombra), 0 var(--ui-oficios-medida-41) var(--ui-oficios-medida-61) var(--ui-oficio-seletor-menu-sombra-contorno);
   font-family: var(--ui-font-family-body);
   transform-origin: var(--radix-select-content-transform-origin);
   animation: aparecer var(--ui-oficios-medida-62) cubic-bezier(.2,.75,.2,1);
@@ -84,13 +84,13 @@
 .lista { padding: var(--ui-oficios-medida-54); max-height: min(var(--ui-oficios-medida-63), calc(100vh - var(--ui-oficios-medida-60))); overflow: auto; }
 .categoria {
   padding: var(--ui-oficios-medida-64) var(--ui-oficios-medida-39) var(--ui-oficios-medida-31);
-  color: var(--ui-oficios-cor-23);
-  font-size:var(--ui-oficios-fonte-80);
+  color: var(--ui-oficio-seletor-grupo-texto);
+  font-size: var(--ui-font-size-xs);
   font-weight: var(--ui-oficios-peso-84);
   letter-spacing:var(--ui-oficios-linha-87);
   text-transform: uppercase;
 }
-.divisor { height: var(--ui-oficios-medida-40); margin: var(--ui-oficios-medida-67) var(--ui-oficios-medida-68) var(--ui-oficios-medida-33); background: var(--ui-oficios-cor-24); }
+.divisor { height: var(--ui-oficios-medida-40); margin: var(--ui-oficios-medida-67) var(--ui-oficios-medida-68) var(--ui-oficios-medida-33); background: var(--ui-oficio-seletor-divisor); }
 .item {
   position: relative;
   display: flex;
@@ -106,26 +106,26 @@
   user-select: none;
 }
 .item[data-highlighted] {
-  background: var(--ui-oficios-cor-25);
-  border-color: var(--ui-oficios-cor-26);
+  background: var(--ui-oficio-seletor-item-hover-fundo);
+  border-color: var(--ui-oficio-seletor-item-hover-borda);
 }
 .item[data-state='checked'] {
-  background: var(--ui-oficios-cor-27);
-  border-color: var(--ui-oficios-cor-28);
+  background: var(--ui-oficio-seletor-item-selecionado-fundo);
+  border-color: var(--ui-oficio-seletor-item-selecionado-borda);
 }
-.item[data-highlighted][data-state='checked'] { background: var(--ui-oficios-cor-29); }
+.item[data-highlighted][data-state='checked'] { background: var(--ui-oficio-seletor-item-selecionado-hover); }
 .iconeItem { width: var(--ui-oficios-medida-72); height: var(--ui-oficios-medida-72); border-radius: var(--ui-oficios-medida-38); }
 .itemDados { gap: var(--ui-oficios-medida-73); font-size: var(--ui-oficios-medida-58); font-weight: var(--ui-font-weight-semibold); }
 .itemDados small { font-weight: var(--ui-font-weight-regular); }
 .indicador {
   position: absolute;
   right: var(--ui-oficios-medida-67);
-  color: var(--ui-oficios-cor-30);
+  color: var(--ui-oficio-seletor-indicador);
   font-size:var(--ui-oficios-fonte-81);
   font-weight: var(--ui-oficios-peso-85);
 }
 .emCurso { margin-inline-start: auto; }
-.rolagem { display: grid; place-items: center; height: var(--ui-oficios-medida-75); color: var(--ui-oficios-cor-17); background: var(--ui-oficios-cor-19); }
+.rolagem { display: grid; place-items: center; height: var(--ui-oficios-medida-75); color: var(--ui-oficio-seletor-seta); background: var(--ui-oficio-seletor-menu-fundo); }
 @keyframes aparecer {
   from { opacity: 0; transform: translateY(var(--ui-oficios-medida-76)) scale(.985); }
   to { opacity: 1; transform: translateY(0) scale(1); }

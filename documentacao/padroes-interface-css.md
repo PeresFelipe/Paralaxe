@@ -60,3 +60,13 @@ os controles, a navegação por teclado e o menu com a alternância de tema.
 
 Os testes Vitest verificam contratos de renderização e CSS; **não substituem**
 capturas de tela comparativas nem um teste visual com navegador.
+
+## Tokens semânticos do seletor de ofícios
+A paleta do seletor Radix está em `styles/tokens.css` com o prefixo
+`--ui-oficio-seletor-*`. Os nomes indicam **função**, não ordem numérica.
+Como o menu Radix é renderizado em um portal, esses valores são definidos em
+`:root`, não somente no ancestral local do seletor. Qualquer alteração de tema
+pode sobrescrever as mesmas variáveis na raiz sem duplicar regras do componente.
+
+Os tokens antigos de outras partes dos ofícios ainda existem e devem ser migrados
+somente após conferir seus consumidores. Não renomear tokens em massa às cegas.
