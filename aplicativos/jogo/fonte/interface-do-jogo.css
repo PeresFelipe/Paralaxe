@@ -506,6 +506,26 @@ body {
     transform: translateY(-50%);
   }
 
+  /* Aviso na lateral direita, alinhado ao menu, mas acima dele.
+     A largura segue a coluna livre: a cena central nunca fica encoberta. */
+  .jogo-aviso,
+  .jogo-estrutura--risco .jogo-aviso {
+    inset: clamp(var(--ui-dimension-12px), calc(50dvh - 20rem), var(--ui-dimension-100px))
+      var(--jogo-recuo-paineis, var(--ui-dimension-16px)) auto auto;
+    width: min(var(--ui-dimension-230px), calc((100vw - var(--ui-dimension-760px)) / 2 - var(--ui-dimension-24px)));
+    max-width: calc(100vw - var(--ui-dimension-32px));
+    transform: none;
+  }
+}
+
+/* Entre tablet e desktop, não há coluna lateral disponível:
+   mantém o aviso acima dos comandos fixos, encostado à borda direita. */
+@media (min-width: 721px) and (max-width: 1099px) {
+  .jogo-aviso,
+  .jogo-estrutura--risco .jogo-aviso {
+    right: var(--ui-dimension-16px);
+    width: min(20rem, calc(100vw - var(--ui-dimension-32px)));
+  }
 }
 
 /* O assistente de criação e a seleção de partidas acompanham a paleta do jogo. */
