@@ -67,13 +67,15 @@
   border-bottom: var(--ui-size-border) solid var(--ui-color-border);
 }
 
-.cabecalho strong {
+.painel .cabecalho strong {
   font: var(--ui-font-weight-regular) var(--ui-font-size-xl)/var(--ui-line-height-relaxed) var(--ui-font-family-display);
   color: var(--ui-color-text);
 }
 
-.cabecalho small,
-.textos small {
+/* A cascata do cabeçalho de recursos não pode esconder ou redimensionar os rótulos deste menu. */
+.painel .cabecalho small,
+.painel .textos small {
+  display: block;
   color: var(--ui-color-text-muted);
   font-family: var(--ui-font-family-body);
   font-size: var(--ui-font-size-xs);
@@ -152,7 +154,7 @@
   min-width: 0;
 }
 
-.textos strong {
+.painel .textos strong {
   font-size: var(--ui-font-size-sm);
   font-weight: var(--ui-font-weight-semibold);
   line-height: var(--ui-line-height-reading);

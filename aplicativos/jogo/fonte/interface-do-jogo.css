@@ -19,6 +19,13 @@ body {
   padding:var(--ui-space-0) var(--ui-space-0) var(--ui-space-36-5);
 }
 
+
+/* Quando o menu está aberto, o cabeçalho deve ficar acima dos toasts laterais.
+   Sem isso, a sobreposição do aviso captura o clique no menu. */
+.jogo-barraSuperior:has([aria-haspopup="menu"][aria-expanded="true"]) {
+  z-index: calc(var(--ui-z-panel) + 1);
+}
+
 .jogo-barraSuperior {
   position: sticky;
   top: 0;
