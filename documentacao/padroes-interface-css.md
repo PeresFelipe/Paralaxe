@@ -92,3 +92,14 @@ Caso o navegador não seja localizado automaticamente, defina `CHROME_PATH`.
 Para mudar a URL local do Vite, defina `PARALAXE_URL`.
 As capturas **não são aprovação visual automática**: revise o comparador e
 as telas reais do gameplay, inclusive saves, teclado, zoom e ambos os temas.
+
+## Formato do lockfile com pnpm 12
+
+O arquivo `pnpm-lock.yaml` **pode ter dois documentos YAML válidos**:
+um boot/env no início (com a versão resolvida do pnpm) e o lock do
+workspace no final. Isso é esperado para o `packageManager` fixado em
+`pnpm@12.3.4`; não apagar o primeiro documento. O verificador
+`verificarLockfile.mjs` aceita ambos os formatos e exige que o último
+documento descreva os pacotes do Paralaxe.
+
+Referência: https://github.com/pnpm/pnpm/blob/main/pnpm/docs/lockfile.md
