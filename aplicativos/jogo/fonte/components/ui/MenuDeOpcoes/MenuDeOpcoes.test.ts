@@ -1,5 +1,9 @@
 import { readFileSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
+import { createElement } from 'react'
+import { renderToStaticMarkup } from 'react-dom/server'
+import { Button } from '../Button/Button'
+import { MenuDeOpcoes } from './MenuDeOpcoes'
 
 /** Evita que os rótulos dos indicadores de recursos afetem outras grades do cabeçalho. */
 describe('isolamento visual do menu de opções', () => {
@@ -21,4 +25,22 @@ describe('isolamento visual do menu de opções', () => {
     expect(css).toMatch(/\.textos\s*\{[^}]*flex-direction:\s*column/s)
     expect(css).toMatch(/\.opcao\s*\{[^}]*display:\s*flex/s)
   })
+  it('mantém um slot de rótulo estável independente do nome gerado por CSS Modules', () => {
+    const html = renderToStaticMarkup(createElement(Button, { variant: 'secondary' }, 'Uma ação'))
+    expect(html).toContain('data-ui-slot="label"')
+    expect(html).toContain('Uma ação')
+    const css = readFileSync(new URL('../../../features/jornada/MetaDaJornada/MetaDaJornada.module.css', import.meta.url), 'utf8')
+    expect(css).toContain("[data-ui-slot='label']")
+    expect(css).not.toContain("[class*='label']")
+  })
+
+  it('renderiza o gatilho de opções com estado acessível e rótulo', () => {
+    const html = renderToStaticMarkup(createElement(MenuDeOpcoes, {
+      itens: [{ id: 'tema', grupo: 'Aparência', titulo: 'Ativar tema claro', acao: () => undefined }],
+    }))
+    expect(html).toContain('aria-haspopup="menu"')
+    expect(html).toContain('aria-expanded="false"')
+    expect(html).toContain('aria-label="Abrir opções do jogo"')
+  })
+
 })

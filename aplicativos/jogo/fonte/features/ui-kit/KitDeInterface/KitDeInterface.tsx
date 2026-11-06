@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import { Button, Card, Modal, ProgressBar, SelectField, TextField, type ButtonVariant } from '@/components/ui'
 import styles from './KitDeInterface.module.css'
+import { MenuDeOpcoes, type OpcaoDeMenu } from '@/components/ui/MenuDeOpcoes/MenuDeOpcoes'
+import { useTemaDaInterface } from '@/hooks/useTemaDaInterface'
 
 const variantes: ButtonVariant[] = [
   'primary', 'secondary', 'danger', 'ghost', 'profession', 'node', 'journey',
@@ -11,6 +13,24 @@ const variantes: ButtonVariant[] = [
 export function KitDeInterface() {
   const [dialogoAberto, definirDialogoAberto] = useState(false)
   const [profissao, definirProfissao] = useState('mineracao')
+  const [tema, definirTema] = useTemaDaInterface()
+  const [mensagemDeTeste, definirMensagemDeTeste] = useState('Nenhuma ação executada.')
+  const opcoesDeTeste: readonly OpcaoDeMenu[] = [
+    {
+      id: 'tema',
+      grupo: 'Aparência',
+      titulo: tema === 'escuro' ? 'Ativar tema claro' : 'Ativar tema escuro',
+      descricao: 'Teste a legibilidade da interface em ambos os temas.',
+      acao: () => definirTema(anterior => anterior === 'claro' ? 'escuro' : 'claro'),
+    },
+    {
+      id: 'personagem',
+      grupo: 'Partida',
+      titulo: 'Simular troca de personagem',
+      descricao: 'Teste do estado e fechamento; nenhuma partida será alterada.',
+      acao: () => definirMensagemDeTeste('Comando de personagem recebido no kit.'),
+    },
+  ]
 
   return (
     <main className={styles.screen}>
@@ -22,6 +42,19 @@ export function KitDeInterface() {
         </div>
         <a className={styles.backLink} href="/">Voltar ao jogo</a>
       </header>
+
+      <section className={styles.section} aria-labelledby="opcoes-titulo">
+        <h2 id="opcoes-titulo">Opções do jogo e temas</h2>
+        <Card className={styles.card}>
+          <h3>Menu reutilizável</h3>
+          <p>Confira foco, abertura, Esc, clique externo, textos e tema claro/escuro.</p>
+          <div className={styles.buttonGrid}>
+            <MenuDeOpcoes itens={opcoesDeTeste} />
+            <span aria-live="polite">Tema atual: {tema}</span>
+          </div>
+          <p role="status">{mensagemDeTeste}</p>
+        </Card>
+      </section>
 
       <section className={styles.section} aria-labelledby="botoes-titulo">
         <h2 id="botoes-titulo">Botões</h2>
