@@ -5,8 +5,8 @@ const fonte = (caminho: string) => readFileSync(new URL(caminho, import.meta.url
 
 describe('contratos de layout do Paralaxe', () => {
   it('define o grid realmente utilizado pela tela de Atividades', () => {
-    const tela = fonte('../atividades/TelaDeAtividades/TelaDeAtividades.tsx')
-    const estilos = fonte('../atividades/TelaDeAtividades/TelaDeAtividades.module.css')
+    const tela = fonte('../../atividades/TelaDeAtividades/TelaDeAtividades.tsx')
+    const estilos = fonte('../../atividades/TelaDeAtividades/TelaDeAtividades.module.css')
     expect(tela).toContain('className={estilos.layout}')
     expect(estilos).toMatch(/\.layout\s*\{\s*display:\s*grid;/)
     expect(estilos).toMatch(/grid-template-columns:\s*minmax\(0,\s*1fr\)/)
