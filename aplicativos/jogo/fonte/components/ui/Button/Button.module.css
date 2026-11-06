@@ -652,45 +652,68 @@
 .creation > .label {
   display: grid;
   justify-content: stretch;
-  gap:var(--ui-space-2);
+  align-content: center;
+  gap: var(--ui-space-2);
   min-width: 0;
   text-align: left;
 }
 
+/* Criação é uma decisão funcional: Antiquity Print fica nos títulos das telas,
+   não nos rótulos e descrições compactos dos cartões. */
 .creation > .label strong {
+  display: block;
   color: var(--ui-color-text);
-  font-family: var(--ui-font-family-display);
-  font-size: var(--ui-font-size-lg);
+  font-family: var(--ui-font-family-body);
+  font-size: var(--ui-font-size-md);
   font-weight: var(--ui-font-weight-semibold);
+  line-height: var(--ui-line-height-reading);
+  overflow-wrap: break-word;
 }
 
 .creation > .label > span:not([class]) {
+  display: block;
   color: var(--ui-color-text-muted);
   font-size: var(--ui-font-size-sm);
   line-height: var(--ui-line-height-normal);
+  overflow-wrap: break-word;
 }
 
 .creation[data-with-art='true'] > .label {
   grid-template-columns: var(--ui-size-creation-art-column) minmax(0, 1fr);
   align-items: center;
-  gap:var(--ui-space-4);
+  gap: var(--ui-space-4);
 }
 
-.creation .criacao-classe-texto {
+/* O markup da tela usa uma classe global; em CSS Modules é necessário
+   :global() para que nome e descrição não virem texto inline sobreposto. */
+.creation > .label > :global(.criacao-classe-texto) {
   display: grid;
-  gap:var(--ui-space-2);
+  align-content: center;
+  gap: var(--ui-space-2);
   min-width: 0;
-  overflow-wrap: anywhere;
+  overflow-wrap: break-word;
 }
 
-.creation .criacao-classe-texto > span {
+.creation > .label > :global(.criacao-classe-texto) > span {
+  display: block;
   color: var(--ui-color-text-muted);
+  font-family: var(--ui-font-family-body);
   font-size: var(--ui-font-size-sm);
+  font-weight: var(--ui-font-weight-regular);
   line-height: var(--ui-line-height-normal);
 }
 
-.creation .criacao-classe-texto strong {
-  color: var(--ui-color-text);
+@media (max-width: 30rem) {
+  .creation[data-with-art='true'] > .label {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--ui-space-2);
+    justify-items: start;
+  }
+
+  .creation[data-with-art='true'] > .label > :global(.criacao-classe-gif) {
+    width: var(--ui-dimension-100px);
+    height: var(--ui-dimension-100px);
+  }
 }
 
 .saveCard {

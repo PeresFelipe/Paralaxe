@@ -521,6 +521,19 @@ body {
 .criacao-foco > .secao-chamada,
 .entrada-cabecalho .secao-chamada { color: var(--ui-color-warning); }
 
+/* Mesma hierarquia tipográfica do jogo: título narrativo contido na área do assistente. */
+.criacao-foco > .destaque-titulo {
+  font-size: var(--ui-font-size-title-small);
+  line-height: var(--ui-line-height-relaxed);
+  overflow-wrap: break-word;
+}
+
+@media (max-width: 30rem) {
+  .criacao-foco > .destaque-titulo {
+    font-size: var(--ui-font-size-display-large);
+  }
+}
+
 .criacao-progresso span {
   border-color: var(--ui-color-border);
   color: var(--ui-color-text-muted);

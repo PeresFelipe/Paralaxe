@@ -233,7 +233,7 @@ function Aplicativo({ repositorioDePartidas }: AplicativoProps) {
             variant="secondary"
             onClick={() => definirTela("partida-listar")}
           >
-            Voltar aos partidas
+            Voltar às partidas
           </Button>
         ) : null}
       </header>
