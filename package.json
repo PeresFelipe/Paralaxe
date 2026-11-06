@@ -14,6 +14,7 @@
     "verificar:tipos": "pnpm -r --if-present run verificar:tipos",
     "testar": "pnpm -r --workspace-concurrency=1 --if-present run testar",
     "verificar": "pnpm analisar && pnpm verificar:tipos && pnpm testar && pnpm verificar:creditos",
-    "verificar:creditos": "node ferramentas/verificarCreditos.mjs"
+    "verificar:creditos": "node ferramentas/verificarCreditos.mjs",
+    "validar:visual": "node ferramentas/capturarInterfaceVisual.mjs"
   }
 }

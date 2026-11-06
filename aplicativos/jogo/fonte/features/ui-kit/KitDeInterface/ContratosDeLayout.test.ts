@@ -4,6 +4,15 @@ import { describe, expect, it } from 'vitest'
 const fonte = (caminho: string) => readFileSync(new URL(caminho, import.meta.url), 'utf8')
 
 describe('contratos de layout do Paralaxe', () => {
+  it('permite reproduzir cenários visuais de temas, menu e notificações', () => {
+    const kit = fonte('./KitDeInterface.tsx')
+    const menu = fonte('../../../components/ui/MenuDeOpcoes/MenuDeOpcoes.tsx')
+    expect(kit).toContain("parametrosVisuais?.get('menu')")
+    expect(kit).toContain("parametrosVisuais?.get('aviso')")
+    expect(kit).toContain('alinhamento="inicio"')
+    expect(menu).toContain("data-posicao={abrirAcima ? 'acima' : 'abaixo'}")
+  })
+
   it('define o grid realmente utilizado pela tela de Atividades', () => {
     const tela = fonte('../../atividades/TelaDeAtividades/TelaDeAtividades.tsx')
     const estilos = fonte('../../atividades/TelaDeAtividades/TelaDeAtividades.module.css')

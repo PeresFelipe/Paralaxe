@@ -13,3 +13,6 @@ node_modules
 
 # GIFs derivados automaticamente a partir dos originais pelo Vite.
 aplicativos/jogo/publico/arte/atividades/*-suave.gif
+
+# Screenshots locais gerados para revisão de interface.
+/artefatos/validacao-visual/

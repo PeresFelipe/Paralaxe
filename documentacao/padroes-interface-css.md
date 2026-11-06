@@ -79,3 +79,16 @@ somente após conferir seus consumidores. Não renomear tokens em massa às cega
   as cores principais de texto, legenda, aviso e ação sobre a superfície nos dois temas.
 - Estas verificações estáticas não garantem ausência de sobreposição; validar
   também no navegador conforme a matriz anterior.
+
+## Matriz visual reproduzível no navegador
+
+Inicie `pnpm desenvolver` e, em outro terminal, `pnpm validar:visual`.
+A ferramenta usa Chrome ou Edge headless e captura o `/ui-kit` nas larguras
+320, 375, 768, 1024 e 1440 px, nos temas claro e escuro, além dos cenários
+de menu aberto, viewport baixo e notificação. Salva PNGs e um comparador em
+`artefatos/validacao-visual/index.html` (ignorado pelo Git).
+
+Caso o navegador não seja localizado automaticamente, defina `CHROME_PATH`.
+Para mudar a URL local do Vite, defina `PARALAXE_URL`.
+As capturas **não são aprovação visual automática**: revise o comparador e
+as telas reais do gameplay, inclusive saves, teclado, zoom e ambos os temas.
