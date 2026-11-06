@@ -358,6 +358,8 @@ body {
 .lateral-folha .jornada-secao p { color: var(--ui-color-text-muted); }
 
 @media (max-width: 720px) {
+  .global-recursos-grupo { width: 100%; }
+  .global-recursos-grupo > .global-recursos { min-width: 0; }
   .jogo-estrutura { padding-bottom:calc(var(--ui-space-39-5) + var(--ui-size-hud-control) + env(safe-area-inset-bottom)); }
   .jogo-barraSuperior { grid-template-columns: minmax(0, 1fr); padding:var(--ui-space-2-75) var(--ui-space-3-25) var(--ui-space-2-5); gap:var(--ui-space-2); border-radius:var(--ui-radius-none) var(--ui-radius-none) var(--ui-radius-xl) var(--ui-radius-xl); }
   .jogo-disposicao { padding:var(--ui-space-2-5) var(--ui-space-3) var(--ui-space-5-5); }

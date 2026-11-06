@@ -969,7 +969,7 @@ summary:focus-visible,
 
   .global-recursos {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr)) var(--ui-dimension-44px);
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     gap:var(--ui-space-2);
     width: 100%;
   }

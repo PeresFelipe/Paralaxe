@@ -324,40 +324,42 @@ export default function EstruturaDoJogo({
             </span>
           </div>
         </div>
-        <dl
-          className="global-recursos"
-          aria-label="Estado global do personagem"
-        >
-          <div>
-            <span className="recurso-simbolo vida-simbolo">
-              <IconeDoJogo icone={iconeDoPainelPorId.vidaMaxima} tamanho={19} />
-            </span>
-            <dt>Vida máx.</dt>
-            <dd>{estatisticas.vidaMaxima}</dd>
-          </div>
-          <div>
-            <span className="recurso-simbolo mana-simbolo">
-              <IconeDoJogo icone={iconeDoPainelPorId.manaMaxima} tamanho={19} />
-            </span>
-            <dt>Mana máx.</dt>
-            <dd>{estatisticas.manaMaxima}</dd>
-          </div>
-          <div>
-            <span className="recurso-simbolo folego-simbolo">
-              <IconeDoJogo icone={iconeDoPainelPorId.folegoMaximo} tamanho={19} />
-            </span>
-            <dt>Fôlego máx.</dt>
-            <dd>{estatisticas.folegoMaximo}</dd>
-          </div>
-          <div>
-            <span className="recurso-simbolo moeda-simbolo">
-              <IconeDoJogo icone={iconeDoPainelPorId.ouro} tamanho={19} />
-            </span>
-            <dt>Moeda</dt>
-            <dd>{partida.personagem.ouro}</dd>
-          </div>
-        </dl>
-        <MenuDeOpcoes itens={opcoesDoMenu} />
+        <div className="global-recursos-grupo">
+          <dl
+            className="global-recursos"
+            aria-label="Estado global do personagem"
+          >
+            <div>
+              <span className="recurso-simbolo vida-simbolo">
+                <IconeDoJogo icone={iconeDoPainelPorId.vidaMaxima} tamanho={19} />
+              </span>
+              <dt>Vida máx.</dt>
+              <dd>{estatisticas.vidaMaxima}</dd>
+            </div>
+            <div>
+              <span className="recurso-simbolo mana-simbolo">
+                <IconeDoJogo icone={iconeDoPainelPorId.manaMaxima} tamanho={19} />
+              </span>
+              <dt>Mana máx.</dt>
+              <dd>{estatisticas.manaMaxima}</dd>
+            </div>
+            <div>
+              <span className="recurso-simbolo folego-simbolo">
+                <IconeDoJogo icone={iconeDoPainelPorId.folegoMaximo} tamanho={19} />
+              </span>
+              <dt>Fôlego máx.</dt>
+              <dd>{estatisticas.folegoMaximo}</dd>
+            </div>
+            <div>
+              <span className="recurso-simbolo moeda-simbolo">
+                <IconeDoJogo icone={iconeDoPainelPorId.ouro} tamanho={19} />
+              </span>
+              <dt>Moeda</dt>
+              <dd>{partida.personagem.ouro}</dd>
+            </div>
+          </dl>
+          <MenuDeOpcoes itens={opcoesDoMenu} />
+        </div>
       </header>
 
       <aside className="jogo-barraLateral" aria-label="Menu do jogo">
