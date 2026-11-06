@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Button, Card, Modal, ProgressBar, SelectField, TextField, type ButtonVariant } from '@/components/ui'
 import styles from './KitDeInterface.module.css'
 import { MenuDeOpcoes, type OpcaoDeMenu } from '@/components/ui/MenuDeOpcoes/MenuDeOpcoes'
@@ -15,6 +15,14 @@ export function KitDeInterface() {
   const [profissao, definirProfissao] = useState('mineracao')
   const [tema, definirTema] = useTemaDaInterface()
   const [mensagemDeTeste, definirMensagemDeTeste] = useState('Nenhuma ação executada.')
+  // Rota exclusiva do desenvolvimento: parâmetros reproduzem estados para screenshots.
+  const parametrosVisuais = import.meta.env.DEV ? new URLSearchParams(window.location.search) : null
+  const menuAbertoNoTeste = parametrosVisuais?.get('menu') === 'aberto'
+  const mostrarAvisoNoTeste = parametrosVisuais?.get('aviso') === '1'
+  useEffect(() => {
+    const preferencia = parametrosVisuais?.get('tema')
+    if (preferencia === 'claro' || preferencia === 'escuro') definirTema(preferencia)
+  }, [definirTema, parametrosVisuais?.get('tema')])
   const opcoesDeTeste: readonly OpcaoDeMenu[] = [
     {
       id: 'tema',
@@ -49,7 +57,7 @@ export function KitDeInterface() {
           <h3>Menu reutilizável</h3>
           <p>Confira foco, abertura, Esc, clique externo, textos e tema claro/escuro.</p>
           <div className={styles.buttonGrid}>
-            <MenuDeOpcoes itens={opcoesDeTeste} />
+            <MenuDeOpcoes itens={opcoesDeTeste} alinhamento="inicio" abertoInicial={menuAbertoNoTeste} />
             <span aria-live="polite">Tema atual: {tema}</span>
           </div>
           <p role="status">{mensagemDeTeste}</p>
@@ -115,6 +123,17 @@ export function KitDeInterface() {
           </Card>
         </div>
       </section>
+
+      {mostrarAvisoNoTeste ? (
+        <div className="jogo-aviso" role="status">
+          <span className="jogo-aviso-icone" aria-hidden="true">✦</span>
+          <div className="jogo-aviso-conteudo">
+            <span className="jogo-aviso-rotulo">Registro da jornada</span>
+            <p className="jogo-aviso-mensagem">+2 Giúis · +16 XP de Profissão</p>
+          </div>
+          <Button variant="icon" className="jogo-aviso-fechar" aria-label="Fechar aviso de teste">×</Button>
+        </div>
+      ) : null}
 
       {dialogoAberto ? (
         <Modal ariaLabel="Exemplo de diálogo" onClose={() => definirDialogoAberto(false)} className={styles.dialog}>

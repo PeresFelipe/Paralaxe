@@ -34,6 +34,14 @@ describe('isolamento visual do menu de opções', () => {
     expect(css).not.toContain("[class*='label']")
   })
 
+  it('permite alinhar o menu ao início para evitar corte na esquerda no UI Kit', () => {
+    const codigo = readFileSync(new URL('./MenuDeOpcoes.tsx', import.meta.url), 'utf8')
+    const estilos = readFileSync(new URL('./MenuDeOpcoes.module.css', import.meta.url), 'utf8')
+    expect(codigo).toContain("data-alinhamento={alinhamento}")
+    expect(estilos).toMatch(/\.painel\[data-alinhamento='inicio'\]\s*\{\s*left:\s*0;/)
+    expect(estilos).toMatch(/\.painel\[data-posicao='acima'\]/)
+  })
+
   it('renderiza o gatilho de opções com estado acessível e rótulo', () => {
     const html = renderToStaticMarkup(createElement(MenuDeOpcoes, {
       itens: [{ id: 'tema', grupo: 'Aparência', titulo: 'Ativar tema claro', acao: () => undefined }],

@@ -1,4 +1,4 @@
-import { useEffect, useId, useRef, useState, type KeyboardEvent, type ReactNode } from 'react'
+import { useEffect, useId, useLayoutEffect, useRef, useState, type KeyboardEvent, type ReactNode } from 'react'
 import styles from './MenuDeOpcoes.module.css'
 
 /** Contrato de opção reutilizável: apenas acrescente itens a uma lista no chamador. */
@@ -15,15 +15,45 @@ export type OpcaoDeMenu = {
 
 type PropriedadesDeMenu = {
   itens: readonly OpcaoDeMenu[]
+  alinhamento?: 'inicio' | 'fim'
+  abertoInicial?: boolean
 }
 
 /** Menu de cabeçalho com fechamento externo/Esc e navegação por teclado. */
-export function MenuDeOpcoes({ itens }: PropriedadesDeMenu) {
-  const [aberto, definirAberto] = useState(false)
+export function MenuDeOpcoes({ itens, alinhamento = 'fim', abertoInicial = false }: PropriedadesDeMenu) {
+  const [aberto, definirAberto] = useState(abertoInicial)
+  const [abrirAcima, definirAbrirAcima] = useState(false)
+  const [alturaDisponivel, definirAlturaDisponivel] = useState<number | null>(null)
   const idDoMenu = useId()
   const raizRef = useRef<HTMLSpanElement>(null)
   const disparadorRef = useRef<HTMLButtonElement>(null)
   const menuRef = useRef<HTMLSpanElement>(null)
+
+  // Calcula apenas enquanto o menu está aberto. Mantém a lista visível
+  // em janelas baixas e quando o componente está longe do topo (/ui-kit).
+  useLayoutEffect(() => {
+    if (!aberto) return
+
+    function atualizarPosicao() {
+      const gatilho = disparadorRef.current
+      if (!gatilho) return
+      const retangulo = gatilho.getBoundingClientRect()
+      const abaixo = Math.max(0, window.innerHeight - retangulo.bottom - 12)
+      const acima = Math.max(0, retangulo.top - 12)
+      const alturaMenu = menuRef.current?.scrollHeight ?? 320
+      const inverter = abaixo < alturaMenu && acima > abaixo
+      definirAbrirAcima(inverter)
+      definirAlturaDisponivel(Math.max(0, Math.min(512, inverter ? acima : abaixo)))
+    }
+
+    atualizarPosicao()
+    window.addEventListener('resize', atualizarPosicao)
+    window.addEventListener('scroll', atualizarPosicao, true)
+    return () => {
+      window.removeEventListener('resize', atualizarPosicao)
+      window.removeEventListener('scroll', atualizarPosicao, true)
+    }
+  }, [aberto])
 
   useEffect(() => {
     if (!aberto) return
@@ -101,6 +131,9 @@ export function MenuDeOpcoes({ itens }: PropriedadesDeMenu) {
           id={idDoMenu}
           ref={menuRef}
           className={styles.painel}
+          data-alinhamento={alinhamento}
+          data-posicao={abrirAcima ? 'acima' : 'abaixo'}
+          style={alturaDisponivel === null ? undefined : { maxHeight: alturaDisponivel }}
           role="menu"
           aria-label="Opções do jogo"
           onKeyDown={navegarPeloTeclado}
