@@ -47,6 +47,8 @@ import { obterIconeDoEquipamento, iconeDoPainelPorId, iconeDeProfissaoPorId, ico
 import { rotulosDasProfissoes } from "./rotulosDoJogo";
 import { rotulosDaInterface } from './rotulosDaInterface'
 import { Button, Card } from "./components/ui";
+import { MenuDeOpcoes, type OpcaoDeMenu } from "./components/ui/MenuDeOpcoes/MenuDeOpcoes";
+import type { TemaDaInterface } from "./hooks/useTemaDaInterface";
 
 type DestinoPrincipal = "personagem" | "atividades" | "aventura" | "cidade";
 type AbaDoPersonagem =
@@ -78,6 +80,8 @@ type PropriedadesDeEstruturaDoJogo = {
   riscoAtivo: boolean;
   aoAlterarEstadoDeRisco: (ativo: boolean) => void;
   aoAlternarPartida: () => void;
+  temaDaInterface: TemaDaInterface;
+  aoAlternarTema: () => void;
   aoPersistir: (partida: PartidaLocal, mensagem?: string) => void | Promise<void>;
   aoConcluirProjeto: AcoesDoLegado['aoConcluirProjeto'];
   aoComprarOfertaDoMercado: (idDaOferta: string) => Promise<void>;
@@ -161,6 +165,8 @@ export default function EstruturaDoJogo({
   riscoAtivo,
   aoAlterarEstadoDeRisco,
   aoAlternarPartida,
+  temaDaInterface,
+  aoAlternarTema,
   aoPersistir,
   aoConcluirProjeto,
   aoComprarOfertaDoMercado,
@@ -278,6 +284,30 @@ export default function EstruturaDoJogo({
 
   const principalClasse = `game-shell ${focadoRisco ? "jogo-estrutura--risco" : ""} ${preparacaoAtivo && !focadoRisco ? "jogo-estrutura--preparacao" : ""}`;
 
+  // Única configuração do menu: novas opções são acrescentadas nesta lista, sem alterar o componente.
+  const opcoesDoMenu: readonly OpcaoDeMenu[] = [
+    {
+      id: "alternar-tema",
+      grupo: "Aparência",
+      titulo: temaDaInterface === "escuro" ? "Ativar tema claro" : "Ativar tema escuro",
+      descricao: `Tema atual: ${temaDaInterface}. Preferência salva neste navegador.`,
+      icone: <span aria-hidden="true">{temaDaInterface === "escuro" ? "☀" : "☾"}</span>,
+      detalhe: "Alternar",
+      acao: aoAlternarTema,
+    },
+    {
+      id: "personagens",
+      grupo: "Partida",
+      titulo: "Escolher personagem",
+      descricao: focadoRisco
+        ? "Indisponível durante combate ou expedição."
+        : "Voltar aos personagens salvos sem apagar o progresso.",
+      icone: <IconeDoJogo icone="elmo-barbuta" tamanho={21} />,
+      desabilitada: focadoRisco,
+      acao: aoAlternarPartida,
+    },
+  ];
+
   return (
     <div className={principalClasse} data-destination={destino}>
       <a className="pular-ligacao" href="#jogo-conteudo">
@@ -327,15 +357,7 @@ export default function EstruturaDoJogo({
             <small>Moeda</small>
             <strong>{partida.personagem.ouro}</strong>
           </div>
-          <Button
-            variant="icon"
-            onClick={aoAlternarPartida}
-            disabled={focadoRisco}
-            aria-label="Trocar personagem"
-            title="Trocar personagem"
-          >
-            ⋯
-          </Button>
+          <MenuDeOpcoes itens={opcoesDoMenu} />
         </div>
       </header>
 

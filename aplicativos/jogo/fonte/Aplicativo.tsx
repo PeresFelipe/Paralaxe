@@ -19,6 +19,7 @@ import EstruturaDoJogo from "./EstruturaDoJogo";
 import EstadoDoJogoWeb from "./features/aplicativo-web/EstadoDoJogoWeb";
 import { Button, Card, TextField } from './components/ui'
 import { useAplicativoDaPartida } from "./hooks/useAplicativoDaPartida";
+import { useTemaDaInterface } from "./hooks/useTemaDaInterface";
 import { rotulosDaInterface } from './rotulosDaInterface'
 
 /** Relaciona a classe ao arquivo servido por publico. Os caminhos da URL começam em /arte, sem o prefixo publico. */
@@ -50,6 +51,7 @@ interface AplicativoProps {
 
 /** Compõe as telas e conecta eventos à camada de aplicação da partida. */
 function Aplicativo({ repositorioDePartidas }: AplicativoProps) {
+  const [temaDaInterface, definirTemaDaInterface] = useTemaDaInterface();
   const {
     tela, definirTela, partidas, partidaAtiva, nomeDoPersonagem, definirPersonagemNome,
     idDaClasseSelecionada, definirIdDaClasseSelecionada, selecionadoPresenteId,
@@ -136,6 +138,8 @@ function Aplicativo({ repositorioDePartidas }: AplicativoProps) {
           riscoAtivo={riscoAtivo}
           aoAlterarEstadoDeRisco={definirRiscoAtivo}
           aoAlternarPartida={alternarPartida}
+          temaDaInterface={temaDaInterface}
+          aoAlternarTema={() => definirTemaDaInterface(atual => atual === "escuro" ? "claro" : "escuro")}
           aoPersistir={persistirPartidaAtiva}
           prepararRisco={prepararRisco}
           aoIniciarAtividade={tratarIniciarAtividade}

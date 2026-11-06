@@ -1,0 +1,63 @@
+/* Aparência clara em tons de pergaminho: sobrescreve só cores semânticas.
+   O CSS das telas e componentes continua compartilhado com o tema escuro. */
+:root[data-tema="claro"] {
+  color-scheme: light;
+  --ui-color-primary: #79572b;
+  --ui-color-primary-hover: #62451f;
+  --ui-color-primary-text: #fff9ed;
+  --ui-color-primary-soft: #eee1c7;
+  --ui-color-primary-outline: rgb(121 87 43 / 24%);
+  --ui-color-secondary: #ebe4d7;
+  --ui-color-secondary-hover: #ded4c4;
+  --ui-color-danger: #a13f3a;
+  --ui-color-danger-hover: #882d29;
+  --ui-color-resource-mana: #326e94;
+  --ui-color-success: #326b48;
+  --ui-color-success-surface: #e0eee1;
+  --ui-color-success-border: #79a185;
+  --ui-color-warning: #97672b;
+  --ui-color-warning-text: #805620;
+  --ui-color-warning-surface: #f5ebd8;
+  --ui-color-danger-text: #873831;
+  --ui-color-danger-surface: #f7e3e0;
+  --ui-color-danger-border: #b66e67;
+  --ui-color-resource-health: #ab5b55;
+  --ui-color-resource-breath: #858b4b;
+  --ui-color-text: #292e30;
+  --ui-color-text-muted: #555e62;
+  --ui-color-text-metal: #50585b;
+  --ui-color-text-inverse: #fff8ea;
+  --ui-color-background: #ece7dc;
+  --ui-color-background-glow: #faf4e8;
+  --ui-color-card-shadow: rgb(58 48 35 / 18%);
+  --ui-color-surface: #fbf8f0;
+  --ui-color-surface-raised: #f1eadf;
+  --ui-color-surface-sunken: #e8dfd0;
+  --ui-color-border: #b4ad9f;
+  --ui-color-border-strong: #827e70;
+  --ui-color-focus: #906328;
+  --ui-color-overlay: rgb(30 25 20 / 68%);
+  /* As casas do inventário e a arte dos itens continuam escuras por legibilidade. */
+  --ui-color-inventory-text: #fff0cf;
+  --ui-color-inventory-slot: #2b322b;
+  --ui-color-inventory-slot-raised: #465143;
+  --ui-color-inventory-selected: #58614a;
+  --ui-color-inventory-selected-outline: #9a733c;
+  --ui-color-inventory-quantity-surface: rgb(27 32 23 / 88%);
+  --ui-color-inventory-icon-shadow: rgb(0 0 0 / 48%);
+  --ui-color-inventory-text-shadow: rgb(0 0 0 / 68%);
+}
+
+/* Sobre as imagens das atividades, legendas permanecem claras nos dois temas. */
+:root[data-tema="claro"] .atividade-cena-legenda {
+  color: #fff8ea;
+  text-shadow: 0 1px 3px rgb(0 0 0 / 76%);
+}
+
+/* A borda das molduras escuras foi feita para superfícies noturnas.
+   Em superfícies de papel os contornos usam as bordas semânticas do tema. */
+:root[data-tema="claro"] .avatar-marcador {
+  border-image: none;
+  border: var(--ui-size-border) solid var(--ui-color-border-strong);
+  border-radius: var(--ui-radius-md);
+}

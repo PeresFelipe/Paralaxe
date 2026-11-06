@@ -18,6 +18,7 @@ import './tema-do-jogo.css'
 import './jornada.css'
 import './interface-do-jogo.css'
 import './responsivo-refinamento.css'
+import './tema-claro.css'
 
 const raizElemento = document.getElementById("raiz")
 const repositorioDePartidas = criarRepositorioDePartidasIndexedDb()
