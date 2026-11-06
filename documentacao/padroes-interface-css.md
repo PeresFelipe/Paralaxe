@@ -70,3 +70,12 @@ pode sobrescrever as mesmas variáveis na raiz sem duplicar regras do componente
 
 Os tokens antigos de outras partes dos ofícios ainda existem e devem ser migrados
 somente após conferir seus consumidores. Não renomear tokens em massa às cegas.
+
+## Proteções automatizadas
+- `pnpm analisar` executa `ferramentas/verificarCssModules.mjs` para bloquear
+  acessos estáticos como `estilos.layout` quando a classe não existe no CSS Module.
+  O script não resolve nomes dinâmicos (`styles[variant]`), que exigem testes próprios.
+- `styles/ContrasteDeTemas.test.ts` exige contraste mínimo de 4,5:1 para
+  as cores principais de texto, legenda, aviso e ação sobre a superfície nos dois temas.
+- Estas verificações estáticas não garantem ausência de sobreposição; validar
+  também no navegador conforme a matriz anterior.
