@@ -1,8 +1,7 @@
 /* Avisos e memórias usados em diferentes telas da Jornada. */
 /* Destaque temporário reutilizado pelo aviso de uma conquista já registrada. */
-.jogo-aviso--conquista { border-color: var(--ui-color-success-border); background: var(--ui-color-success-surface); box-shadow: var(--ui-shadow-md); animation: jornada-revelacao var(--ui-transition-slow); }
-.jogo-aviso--conquista p { color: var(--ui-color-success); }
-.jogo-aviso--conquista > img { flex-shrink: 0; }
+/* A cor e o fundo da conquista vêm dos tokens de .jogo-aviso; aqui fica apenas a revelação. */
+.jogo-aviso--conquista { animation: jornada-revelacao var(--ui-transition-slow); }
 .ausente-meta-resultado { display: flex; align-items: center; gap:var(--ui-space-3-5); padding:var(--ui-space-4); margin:var(--ui-space-5) 0; background: var(--ui-color-success-surface); border-left: var(--ui-size-border-strong) solid var(--ui-color-success); }
 .ausente-meta-resultado p { margin:0; color: var(--ui-color-success); line-height: var(--ui-line-height-relaxed); overflow-wrap: anywhere; }
 .ausente-marco { color: var(--ui-color-warning-text); line-height: var(--ui-line-height-relaxed); }

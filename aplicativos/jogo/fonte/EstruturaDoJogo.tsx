@@ -585,12 +585,24 @@ export default function EstruturaDoJogo({
       {mensagem ? (
         <div
           className={`jogo-aviso ${tipoDaMensagem === "conquista" ? "jogo-aviso--conquista" : ""}`}
+          role="status"
+          aria-live="polite"
+          aria-atomic="true"
         >
-          {tipoDaMensagem === "conquista" ? (
-            <IconeDoJogo icone="ferreiro" tamanho={32} />
-          ) : null}
-          <p role="status">{mensagem}</p>
+          <span className="jogo-aviso-icone" aria-hidden="true">
+            <IconeDoJogo
+              icone={tipoDaMensagem === "conquista" ? "ferreiro" : /atividad|automátic/i.test(mensagem) ? "picareta" : "livro-abrir"}
+              tamanho={24}
+            />
+          </span>
+          <div className="jogo-aviso-conteudo">
+            <span className="jogo-aviso-rotulo">
+              {tipoDaMensagem === "conquista" ? "Conquista" : /atividad|automátic/i.test(mensagem) ? "Atividade" : "Registro da jornada"}
+            </span>
+            <p className="jogo-aviso-mensagem">{mensagem}</p>
+          </div>
           <Button
+            className="jogo-aviso-fechar"
             variant="icon"
             onClick={aoDispensarMensagem}
             aria-label="Dispensar mensagem"
