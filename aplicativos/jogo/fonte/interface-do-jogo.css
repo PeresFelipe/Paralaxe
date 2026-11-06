@@ -365,7 +365,9 @@ body {
   }
   .continuidade-acoes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .global-recursos > div { grid-template-columns: minmax(0, 1fr); grid-template-areas: "label" "value"; }
-  .global-recursos .recurso-simbolo { display: none; }
+  /* Igual ou maior especificidade que o display:grid do HUD base;
+     sem isso o ícone decorativo reaparece e esmaga os números em telas estreitas. */
+  .global-recursos > div > dt.recurso-simbolo { display: none; }
   .global-recursos > div > dt { overflow-wrap: normal; }
   .contexto-arte,
   .cidade-visaoGeral-disposicao > .contexto-arte,

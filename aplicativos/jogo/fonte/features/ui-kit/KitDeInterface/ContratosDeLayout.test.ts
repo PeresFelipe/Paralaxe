@@ -34,6 +34,13 @@ describe('contratos de layout do Paralaxe', () => {
     expect(tokens).toMatch(/--ui-motion-reduced-duration:\s*0\.01ms;/)
   })
 
+  it('oculta os ícones decorativos do HUD em telas pequenas sem perder para a cascata', () => {
+    const base = fonte('../../../estilos.css')
+    const responsivo = fonte('../../../interface-do-jogo.css')
+    expect(base).toContain('.global-recursos > div > dt.recurso-simbolo { grid-area: sig; display: grid; }')
+    expect(responsivo).toMatch(/@media \(max-width: 720px\)[\s\S]*?\.global-recursos > div > dt\.recurso-simbolo \{ display: none; \}/)
+  })
+
   it('preserva a estrutura semântica do HUD e o botão de opções fora da lista de descrições', () => {
     const jsx = fonte('../../../EstruturaDoJogo.tsx')
     const secao = jsx.slice(jsx.indexOf('<dl\n'), jsx.indexOf('</dl>') + 5)
