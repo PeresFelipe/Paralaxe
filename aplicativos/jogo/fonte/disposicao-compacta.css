@@ -260,22 +260,7 @@ summary {
 .tecnica-linhaDeDados small {
   font-size: var(--ui-font-size-body-large);
 }
-/* Trilho de profissões à esquerda e área de trabalho à direita; a opção móvel é alternativa visual. */
-.atividades-disposicao {
-  display: grid;
-  grid-template-columns: var(--ui-dimension-184px) minmax(0, 1fr);
-  gap:var(--ui-space-4);
-  align-items: start;
-}
-.atividades-profissao-trilho {
-  position: sticky;
-  top: var(--ui-dimension-120px);
-  display: grid;
-  gap:var(--ui-space-4);
-}
-.movel-profissao-seletor {
-  display: none;
-}
+/* O seletor atual de ofícios utiliza CSS Modules e Radix; o trilho legado foi removido. */
 /* A variável limita a cena sem impor uma largura mínima ao conteúdo textual. */
 .atividades-areaDeTrabalho {
   --atividade-cena-largura: var(--ui-dimension-224px);
@@ -463,10 +448,6 @@ progress::-moz-progress-bar {
   .jogo-conteudo {
     width: calc(100% - var(--ui-dimension-32px));
   }
-  .atividades-disposicao {
-    grid-template-columns: var(--ui-dimension-166px) minmax(0, 1fr);
-    gap:var(--ui-space-3);
-  }
   .atividades-areaDeTrabalho {
     --atividade-cena-largura: var(--ui-dimension-192px);
   }
@@ -537,31 +518,6 @@ progress::-moz-progress-bar {
     flex-direction: column;
     align-items: flex-start;
     gap:var(--ui-space-1);
-  }
-  .atividades-disposicao {
-    grid-template-columns: 1fr;
-    gap:var(--ui-space-3);
-  }
-  .atividades-profissao-trilho {
-    display: none;
-  }
-  .movel-profissao-seletor {
-    display: flex;
-    align-items: center;
-    gap:var(--ui-space-3);
-    font-size: var(--ui-font-size-sm);
-    color: var(--ui-color-text-muted);
-  }
-  .movel-profissao-seletor select {
-    min-width: 0;
-    flex: 1;
-    min-height: var(--ui-dimension-44px);
-    padding:var(--ui-space-2);
-    color: var(--ui-color-text);
-    background: var(--ui-color-surface);
-    border: var(--ui-size-border) solid var(--ui-color-border);
-    border-radius:var(--ui-radius-control);
-    font-size: var(--ui-font-size-md);
   }
   .atividades-areaDeTrabalho {
     --atividade-cena-largura: var(--ui-dimension-160px);

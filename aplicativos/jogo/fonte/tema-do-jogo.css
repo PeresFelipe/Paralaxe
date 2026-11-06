@@ -414,20 +414,12 @@ summary:focus-visible,
 }
 
 /* A profissão consultada e a tarefa em execução têm indicações distintas. */
-.atividades-disposicao {
-  grid-template-columns: var(--ui-dimension-156px) minmax(0, 1fr);
-  gap:var(--ui-space-5);
-}
 
 /* A consulta de contêiner adapta a atividade pela largura disponível dentro do painel, não só da janela. */
 .atividades-areaDeTrabalho {
   container: activity-workspace / inline-size;
 }
 
-.atividades-profissao-trilho {
-  position: static;
-  gap:var(--ui-space-5-5);
-}
 
 /* Este selo distingue trabalho em execução da profissão apenas consultada. */
 .atividade-estado {
@@ -881,10 +873,6 @@ summary:focus-visible,
     gap:var(--ui-space-3);
   }
 
-  .atividades-disposicao {
-    grid-template-columns: var(--ui-dimension-148px) minmax(0, 1fr);
-    gap:var(--ui-space-3-5);
-  }
 
   .atividade-etapa {
     grid-template-columns: minmax(0, var(--ui-dimension-192px)) minmax(0, 1fr);
@@ -1049,24 +1037,9 @@ summary:focus-visible,
     font-size: var(--ui-font-size-2xs);
   }
 
-  .atividades-disposicao {
-    grid-template-columns: 1fr;
-    gap:var(--ui-space-3-5);
-  }
 
-  .atividades-profissao-trilho {
-    display: none;
-  }
 
-  .movel-profissao-seletor {
-    display: flex;
-  }
 
-  .movel-profissao-seletor select {
-    border-radius:var(--ui-radius-none);
-    border-color: var(--ui-color-border);
-    background: var(--ui-color-surface);
-  }
 
   .atividade-etapa {
     grid-template-columns: minmax(0, var(--ui-dimension-160px)) minmax(0, 1fr);

@@ -188,26 +188,10 @@ body {
 .subnavegacao::-webkit-scrollbar { display: none; }
 
 
-/* As profissões viram seletores horizontais no topo da tela de atividade. */
-.atividades-disposicao {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap:var(--ui-space-3-5);
-}
 
-.atividades-profissao-trilho {
-  display: flex !important;
-  flex-direction: row;
-  gap:var(--ui-space-4);
-  margin:var(--ui-space-0) calc(var(--ui-space-0-5) * -1);
-  padding:var(--ui-space-0-5) var(--ui-space-0-5) var(--ui-space-2);
-  overflow-x: auto;
-  scrollbar-width: none;
-}
 
-.atividades-profissao-trilho::-webkit-scrollbar { display: none; }
 
-.movel-profissao-seletor { display: none !important; }
+
 
 .atividade-pronto { color: var(--ui-color-text); }
 .atividade-pronto h2 { color: var(--ui-color-text); }

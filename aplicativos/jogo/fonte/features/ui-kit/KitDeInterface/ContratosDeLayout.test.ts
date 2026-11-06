@@ -12,6 +12,18 @@ describe('contratos de layout do Paralaxe', () => {
     expect(estilos).toMatch(/grid-template-columns:\s*minmax\(0,\s*1fr\)/)
   })
 
+  it('não mantém seletores legados sem componentes consumidores', () => {
+    const folhas = [
+      '../../../disposicao-compacta.css',
+      '../../../tema-do-jogo.css',
+      '../../../interface-do-jogo.css',
+    ]
+    for (const folha of folhas) {
+      const css = fonte(folha)
+      expect(css).not.toMatch(/\.(?:atividades-disposicao|atividades-profissao-trilho|movel-profissao-seletor)\b/)
+    }
+  })
+
   it('não deixa o aviso lateral com três colunas estreitas no desktop', () => {
     const css = fonte('../../../interface-do-jogo.css')
     expect(css).toMatch(/\.jogo-aviso-conteudo\s*\{\s*grid-column:\s*1\s*\/\s*-1;\s*grid-row:\s*2;/)
