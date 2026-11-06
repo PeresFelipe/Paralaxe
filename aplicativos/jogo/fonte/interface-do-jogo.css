@@ -609,7 +609,26 @@ body {
       var(--jogo-recuo-paineis, var(--ui-dimension-16px)) auto auto;
     width: min(var(--ui-dimension-230px), calc((100vw - var(--ui-dimension-760px)) / 2 - var(--ui-dimension-24px)));
     max-width: calc(100vw - var(--ui-dimension-32px));
+    /* A coluna lateral estreita não comporta ícone + mensagem + fechar
+       na mesma linha. Texto passa para uma segunda linha sem ser comprimido. */
+    grid-template-columns: minmax(0, 1fr) var(--ui-size-icon-button);
+    gap: var(--ui-space-2);
     transform: none;
+  }
+
+  .jogo-aviso-icone {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .jogo-aviso .jogo-aviso-fechar {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .jogo-aviso-conteudo {
+    grid-column: 1 / -1;
+    grid-row: 2;
   }
 }
 

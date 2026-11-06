@@ -1,3 +1,17 @@
+/* Estrutura local: o JSX usa estilos.layout (não as regras globais legadas).
+   Uma coluna mantém o seletor acima da área de trabalho em qualquer viewport. */
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+  gap: var(--ui-space-3-5);
+  min-width: 0;
+}
+
+.layout > * {
+  min-width: 0;
+}
+
 /* A escala medieval é limitada apenas nesta tela: preserva Antiquity Print nos demais módulos. */
 :global(.atividades-telaDoJogo) .pageTitle {
   font-family: var(--ui-font-family-display);

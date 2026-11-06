@@ -353,6 +353,8 @@
   --ui-shadow-inset-progress: inset 0 var(--ui-size-border) 0.125rem var(--ui-color-card-shadow);
   --ui-shadow-inset-navigation-edge: inset -1px 0 var(--ui-color-border);
   --ui-shadow-inventory-text: 1px 1px var(--ui-color-inventory-text-shadow);
+  /* Duração quase nula usada pela preferência de movimento reduzido. */
+  --ui-motion-reduced-duration: 0.01ms;
   --ui-transition-fast: 120ms ease;
   --ui-transition-normal: 180ms ease;
   --ui-transition-slow: 260ms ease;
