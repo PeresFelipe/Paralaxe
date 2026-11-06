@@ -27,6 +27,7 @@ describe('contratos de layout do Paralaxe', () => {
     const secao = jsx.slice(jsx.indexOf('<dl\n'), jsx.indexOf('</dl>') + 5)
     expect(secao).toContain('className="global-recursos"')
     expect((secao.match(/<dt>/g) ?? []).length).toBe(4)
+    expect((secao.match(/<dt className="recurso-simbolo/g) ?? []).length).toBe(4)
     expect((secao.match(/<dd>/g) ?? []).length).toBe(4)
     expect(secao).not.toContain('MenuDeOpcoes')
     expect(jsx.indexOf('<MenuDeOpcoes itens={opcoesDoMenu} />')).toBeGreaterThan(jsx.indexOf('</dl>'))

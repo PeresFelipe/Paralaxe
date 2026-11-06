@@ -330,30 +330,30 @@ export default function EstruturaDoJogo({
             aria-label="Estado global do personagem"
           >
             <div>
-              <span className="recurso-simbolo vida-simbolo">
+              <dt className="recurso-simbolo vida-simbolo" aria-hidden="true">
                 <IconeDoJogo icone={iconeDoPainelPorId.vidaMaxima} tamanho={19} />
-              </span>
+              </dt>
               <dt>Vida máx.</dt>
               <dd>{estatisticas.vidaMaxima}</dd>
             </div>
             <div>
-              <span className="recurso-simbolo mana-simbolo">
+              <dt className="recurso-simbolo mana-simbolo" aria-hidden="true">
                 <IconeDoJogo icone={iconeDoPainelPorId.manaMaxima} tamanho={19} />
-              </span>
+              </dt>
               <dt>Mana máx.</dt>
               <dd>{estatisticas.manaMaxima}</dd>
             </div>
             <div>
-              <span className="recurso-simbolo folego-simbolo">
+              <dt className="recurso-simbolo folego-simbolo" aria-hidden="true">
                 <IconeDoJogo icone={iconeDoPainelPorId.folegoMaximo} tamanho={19} />
-              </span>
+              </dt>
               <dt>Fôlego máx.</dt>
               <dd>{estatisticas.folegoMaximo}</dd>
             </div>
             <div>
-              <span className="recurso-simbolo moeda-simbolo">
+              <dt className="recurso-simbolo moeda-simbolo" aria-hidden="true">
                 <IconeDoJogo icone={iconeDoPainelPorId.ouro} tamanho={19} />
-              </span>
+              </dt>
               <dt>Moeda</dt>
               <dd>{partida.personagem.ouro}</dd>
             </div>

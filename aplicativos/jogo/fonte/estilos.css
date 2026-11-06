@@ -85,6 +85,7 @@ input:focus-visible, select:focus-visible { outline: var(--ui-size-focus-ring) s
 .global-recursos-grupo > .global-recursos { flex: 1 1 auto; min-width: 0; }
 .global-recursos { display: flex; align-items: center; gap:var(--ui-space-3-25); margin: 0; padding: 0; }
 .global-recursos > div > dt { margin: 0; }
+.global-recursos > div > dt.recurso-simbolo { grid-area: sig; display: grid; }
 .global-recursos > div > dd { margin: 0; font-weight: var(--ui-font-weight-bold); }
 .global-recursos > div { display: grid; grid-template-columns: auto auto; grid-template-areas: "sig label" "sig value"; column-gap:var(--ui-space-1-5); align-items: center; }
 .global-recursos > div > dt { grid-area: label; color: var(--ui-color-text-muted); font-size: var(--ui-font-size-3xs); text-transform: uppercase; }
