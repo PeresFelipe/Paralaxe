@@ -198,7 +198,7 @@
   .opcao[aria-pressed='true'] { outline: var(--ui-size-border) solid Highlight; }
 }
 
-.options .opcao :global([class*='label']) {
+.options .opcao :global([data-ui-slot='label']) {
   display: grid;
   justify-items: stretch;
   width: 100%;

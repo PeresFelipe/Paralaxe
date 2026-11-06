@@ -81,10 +81,12 @@ input:focus-visible, select:focus-visible { outline: var(--ui-size-focus-ring) s
 .jogador-identidade > div:last-child { display: grid; }
 .jogador-nome { font-size: var(--ui-font-size-md); text-transform: uppercase; letter-spacing: var(--ui-letter-spacing-compact); }
 .jogador-identidade span { color: var(--ui-color-text-muted); font-size: var(--ui-font-size-2xs); }
-.global-recursos { display: flex; align-items: center; gap:var(--ui-space-3-25); }
+.global-recursos { display: flex; align-items: center; gap:var(--ui-space-3-25); margin: 0; padding: 0; }
+.global-recursos > div > dt { margin: 0; }
+.global-recursos > div > dd { margin: 0; font-weight: var(--ui-font-weight-bold); }
 .global-recursos > div { display: grid; grid-template-columns: auto auto; grid-template-areas: "sig label" "sig value"; column-gap:var(--ui-space-1-5); align-items: center; }
-.global-recursos > div > small { grid-area: label; color: var(--ui-color-text-muted); font-size: var(--ui-font-size-3xs); text-transform: uppercase; }
-.global-recursos > div > strong { grid-area: value; font-size: var(--ui-font-size-xs); }
+.global-recursos > div > dt { grid-area: label; color: var(--ui-color-text-muted); font-size: var(--ui-font-size-3xs); text-transform: uppercase; }
+.global-recursos > div > dd { grid-area: value; font-size: var(--ui-font-size-xs); }
 .recurso-simbolo { grid-area: sig; min-width: var(--ui-dimension-19px); height: var(--ui-dimension-19px); padding:0 var(--ui-space-1); display: grid; place-items: center; border: var(--ui-size-border) solid currentColor; border-radius:var(--ui-radius-md); font-size: var(--ui-font-size-3xs); font-weight: var(--ui-font-weight-bold); }
 .recurso-simbolo .jogo-icone { width: var(--ui-dimension-19px); height: var(--ui-dimension-19px); }
 .vida-simbolo { color: var(--ui-color-resource-health); }.mana-simbolo { color: var(--ui-color-resource-mana); }.folego-simbolo { color: var(--ui-color-resource-breath); }.moeda-simbolo { color: var(--ui-color-warning); }
@@ -172,7 +174,7 @@ input:focus-visible, select:focus-visible { outline: var(--ui-size-focus-ring) s
 @media (max-width: 980px) {
   .jogo-barraSuperior { padding-inline:var(--ui-space-3-5); }
   .global-recursos { gap:var(--ui-space-1-75); }
-  .global-recursos > div > small { display: none; }
+  .global-recursos > div > dt { display: none; }
   .principal-navegacao { padding:0 var(--ui-space-3-5); }
   .jogo-conteudo { width: calc(100% - var(--ui-dimension-28px)); }
   .personagem-disposicao, .preparacao-disposicao { grid-template-columns: 1fr; }
@@ -192,7 +194,7 @@ input:focus-visible, select:focus-visible { outline: var(--ui-size-focus-ring) s
   .global-recursos { display: grid; grid-template-columns: repeat(4,auto); }
   .global-recursos > div { display: flex; gap:var(--ui-space-1); }
   .global-recursos .recurso-simbolo { min-width: var(--ui-dimension-17px); height: var(--ui-dimension-17px); }
-  .global-recursos > div > strong { font-size: var(--ui-font-size-caption); }
+  .global-recursos > div > dd { font-size: var(--ui-font-size-caption); }
   .principal-navegacao { position: fixed; top: auto; bottom: 0; left: 0; right: 0; height: var(--ui-dimension-60px); z-index: var(--ui-z-navigation-mobile); justify-content: space-around; border-top: var(--ui-size-border) solid var(--ui-color-border); }
   .jogo-estrutura--risco .principal-navegacao { display: none; }
   .risco-estado-faixa { padding:0 var(--ui-space-3-5); }

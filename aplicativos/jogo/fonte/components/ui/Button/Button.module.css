@@ -845,12 +845,6 @@
   }
 }
 
-@media (max-width: 42rem) {
-  :global(.global-recursos) > .icon {
-    display: inline-flex;
-  }
-}
-
 @media (forced-colors: active) {
   .inventory {
     border-image: none;

@@ -324,7 +324,7 @@ export default function EstruturaDoJogo({
             </span>
           </div>
         </div>
-        <div
+        <dl
           className="global-recursos"
           aria-label="Estado global do personagem"
         >
@@ -332,32 +332,32 @@ export default function EstruturaDoJogo({
             <span className="recurso-simbolo vida-simbolo">
               <IconeDoJogo icone={iconeDoPainelPorId.vidaMaxima} tamanho={19} />
             </span>
-            <small>Vida máx.</small>
-            <strong>{estatisticas.vidaMaxima}</strong>
+            <dt>Vida máx.</dt>
+            <dd>{estatisticas.vidaMaxima}</dd>
           </div>
           <div>
             <span className="recurso-simbolo mana-simbolo">
               <IconeDoJogo icone={iconeDoPainelPorId.manaMaxima} tamanho={19} />
             </span>
-            <small>Mana máx.</small>
-            <strong>{estatisticas.manaMaxima}</strong>
+            <dt>Mana máx.</dt>
+            <dd>{estatisticas.manaMaxima}</dd>
           </div>
           <div>
             <span className="recurso-simbolo folego-simbolo">
               <IconeDoJogo icone={iconeDoPainelPorId.folegoMaximo} tamanho={19} />
             </span>
-            <small>Fôlego máx.</small>
-            <strong>{estatisticas.folegoMaximo}</strong>
+            <dt>Fôlego máx.</dt>
+            <dd>{estatisticas.folegoMaximo}</dd>
           </div>
           <div>
             <span className="recurso-simbolo moeda-simbolo">
               <IconeDoJogo icone={iconeDoPainelPorId.ouro} tamanho={19} />
             </span>
-            <small>Moeda</small>
-            <strong>{partida.personagem.ouro}</strong>
+            <dt>Moeda</dt>
+            <dd>{partida.personagem.ouro}</dd>
           </div>
-          <MenuDeOpcoes itens={opcoesDoMenu} />
-        </div>
+        </dl>
+        <MenuDeOpcoes itens={opcoesDoMenu} />
       </header>
 
       <aside className="jogo-barraLateral" aria-label="Menu do jogo">

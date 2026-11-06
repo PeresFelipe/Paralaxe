@@ -43,7 +43,7 @@ export function Button({
       type={type}
     >
       {loading ? <span aria-hidden="true" className={styles.spinner} /> : icon ? <span aria-hidden="true" className={styles.iconContent}>{icon}</span> : null}
-      <span className={styles.label}>{children}</span>
+      <span className={styles.label} data-ui-slot="label">{children}</span>
     </button>
   )
 }

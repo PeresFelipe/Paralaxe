@@ -44,11 +44,11 @@
 .global-recursos {
   gap:var(--ui-space-3-5);
 }
-.global-recursos > div > small {
+.global-recursos > div > dt {
   font-size: var(--ui-font-size-xs);
   text-transform: none;
 }
-.global-recursos > div > strong {
+.global-recursos > div > dd {
   font-size: var(--ui-font-size-sm);
   font-variant-numeric: tabular-nums;
 }
@@ -517,10 +517,10 @@ progress::-moz-progress-bar {
   .global-recursos > div:nth-child(4) {
     display: flex;
   }
-  .global-recursos > div > strong {
+  .global-recursos > div > dd {
     font-size: var(--ui-font-size-body-large);
   }
-  .global-recursos > div > small {
+  .global-recursos > div > dt {
     display: none;
   }
   .principal-navegacao {
