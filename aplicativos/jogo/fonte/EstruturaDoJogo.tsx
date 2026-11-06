@@ -292,7 +292,6 @@ export default function EstruturaDoJogo({
       titulo: temaDaInterface === "escuro" ? "Ativar tema claro" : "Ativar tema escuro",
       descricao: `Tema atual: ${temaDaInterface}. Preferência salva neste navegador.`,
       icone: <span aria-hidden="true">{temaDaInterface === "escuro" ? "☀" : "☾"}</span>,
-      detalhe: "Alternar",
       acao: aoAlternarTema,
     },
     {

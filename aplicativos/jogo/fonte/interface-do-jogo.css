@@ -54,7 +54,7 @@ body {
 }
 
 .jogador-identidade span,
-.global-recursos small {
+.global-recursos > div > small {
   color: var(--ui-color-text-muted);
 }
 
@@ -70,7 +70,7 @@ body {
   background: var(--ui-color-surface-raised);
 }
 
-.global-recursos strong {
+.global-recursos > div > strong {
   color: var(--ui-color-text);
 }
 
@@ -380,7 +380,7 @@ body {
   .continuidade-acoes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .global-recursos > div { grid-template-columns: minmax(0, 1fr); grid-template-areas: "label" "value"; }
   .global-recursos .recurso-simbolo { display: none; }
-  .global-recursos small { overflow-wrap: normal; }
+  .global-recursos > div > small { overflow-wrap: normal; }
   .contexto-arte,
   .cidade-visaoGeral-disposicao > .contexto-arte,
   .aventura-visaoGeral-disposicao > .contexto-arte { aspect-ratio: 1.38 / 1; border-radius:var(--ui-radius-xl); }
@@ -478,12 +478,12 @@ body {
 .jogo-barraSuperior { background: color-mix(in srgb, var(--ui-color-surface) 93%, transparent); }
 .global-recursos > div { border-color: var(--ui-color-border); background: var(--ui-color-surface); }
 .jogador-nome,
-.global-recursos strong,
+.global-recursos > div > strong,
 .funcionalidade-telaDoJogo .destaque-titulo,
 .funcionalidade-telaDoJogo h2,
 .funcionalidade-telaDoJogo h3 { color: var(--ui-color-text); }
 .jogador-identidade span,
-.global-recursos small,
+.global-recursos > div > small,
 .funcionalidade-telaDoJogo .atenuado { color: var(--ui-color-text-muted); }
 .funcionalidade-telaDoJogo p:not(.atividade-cena-legenda) { color: var(--ui-color-text-muted); }
 
@@ -520,7 +520,7 @@ body {
 .prioridade-indice { border-color: var(--ui-color-border); color: var(--ui-color-warning); }
 
 .jogador-nome,
-.global-recursos strong,
+.global-recursos > div > strong,
 .entrada-estrutura .entrada-marca,
 .entrada-estrutura .destaque-titulo,
 .funcionalidade-telaDoJogo .destaque-titulo,
@@ -528,7 +528,7 @@ body {
 .funcionalidade-telaDoJogo h3 { color: var(--ui-color-text); }
 
 .jogador-identidade span,
-.global-recursos small,
+.global-recursos > div > small,
 .funcionalidade-telaDoJogo .atenuado,
 .funcionalidade-telaDoJogo p:not(.atividade-cena-legenda) { color: var(--ui-color-text-muted); }
 

@@ -285,12 +285,12 @@ summary:focus-visible,
   border-bottom-color: var(--ui-color-warning);
 }
 
-.global-recursos small {
+.global-recursos > div > small {
   display: block;
   font-size: var(--ui-font-size-2xs-large);
 }
 
-.global-recursos strong {
+.global-recursos > div > strong {
   font-size: var(--ui-font-size-body-3xl);
   font-weight: var(--ui-font-weight-medium);
   color: var(--ui-color-text);
@@ -987,13 +987,13 @@ summary:focus-visible,
     display: grid;
   }
 
-  .global-recursos small {
+  .global-recursos > div > small {
     display: block;
     font-size: var(--ui-font-size-3xs);
     overflow-wrap: anywhere;
   }
 
-  .global-recursos strong {
+  .global-recursos > div > strong {
     font-size: var(--ui-font-size-xs);
     overflow-wrap: anywhere;
   }

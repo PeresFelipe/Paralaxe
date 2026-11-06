@@ -44,7 +44,8 @@
   top: calc(100% + var(--ui-space-3));
   right: 0;
   z-index: var(--ui-z-panel);
-  display: grid;
+  display: flex;
+  flex-direction: column;
   width: min(19rem, calc(100vw - 1.5rem));
   max-height: min(80dvh, 32rem);
   overflow-y: auto;
@@ -61,14 +62,21 @@
 }
 
 .cabecalho {
-  display: grid;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
   gap: var(--ui-space-1);
   padding: var(--ui-space-3) var(--ui-space-3) var(--ui-space-3-5);
   border-bottom: var(--ui-size-border) solid var(--ui-color-border);
 }
 
 .painel .cabecalho strong {
-  font: var(--ui-font-weight-regular) var(--ui-font-size-xl)/var(--ui-line-height-relaxed) var(--ui-font-family-display);
+  display: block;
+  grid-area: auto;
+  font-family: var(--ui-font-family-body);
+  font-size: var(--ui-font-size-lg);
+  font-weight: var(--ui-font-weight-bold);
+  line-height: var(--ui-line-height-reading);
   color: var(--ui-color-text);
 }
 
@@ -76,6 +84,7 @@
 .painel .cabecalho small,
 .painel .textos small {
   display: block;
+  grid-area: auto;
   color: var(--ui-color-text-muted);
   font-family: var(--ui-font-family-body);
   font-size: var(--ui-font-size-xs);
@@ -83,7 +92,8 @@
 }
 
 .grupo {
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: var(--ui-space-1);
   padding: var(--ui-space-2) 0 var(--ui-space-1);
 }
@@ -103,9 +113,8 @@
 }
 
 .opcao {
-  display: grid;
-  grid-template-columns: var(--ui-dimension-36px) minmax(0, 1fr) auto;
-  align-items: center;
+  display: flex;
+  align-items: flex-start;
   gap: var(--ui-space-2);
   width: 100%;
   min-height: var(--ui-dimension-60px);
@@ -132,6 +141,7 @@
 
 .icone {
   display: grid;
+  flex: 0 0 var(--ui-dimension-36px);
   place-items: center;
   width: var(--ui-dimension-36px);
   height: var(--ui-dimension-36px);
@@ -149,12 +159,18 @@
 }
 
 .textos {
-  display: grid;
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  align-items: stretch;
   gap: var(--ui-space-1);
   min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .painel .textos strong {
+  display: block;
+  grid-area: auto;
   font-size: var(--ui-font-size-sm);
   font-weight: var(--ui-font-weight-semibold);
   line-height: var(--ui-line-height-reading);
@@ -166,7 +182,9 @@
 }
 
 .detalhe {
-  align-self: start;
+  align-self: flex-start;
+  flex: 0 0 auto;
+  white-space: nowrap;
   padding-top: var(--ui-space-1);
   color: var(--ui-color-warning-text);
   font-size: var(--ui-font-size-2xs);
@@ -179,7 +197,6 @@
 
 @media (max-width: 30rem) {
   .painel { width: min(18rem, calc(100vw - 1.5rem)); }
-  .opcao { grid-template-columns: var(--ui-dimension-36px) minmax(0, 1fr); }
   .detalhe { display: none; }
 }
 
