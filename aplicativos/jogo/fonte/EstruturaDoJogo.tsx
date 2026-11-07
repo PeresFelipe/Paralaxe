@@ -48,6 +48,7 @@ import { rotulosDasProfissoes } from "./rotulosDoJogo";
 import { rotulosDaInterface } from './rotulosDaInterface'
 import { Button, Card } from "./components/ui";
 import { MenuDeOpcoes, type OpcaoDeMenu } from "./components/ui/MenuDeOpcoes/MenuDeOpcoes";
+import { SeloDeNavegacao } from "./components/ui/SeloDeNavegacao/SeloDeNavegacao";
 import type { TemaDaInterface } from "./hooks/useTemaDaInterface";
 
 type DestinoPrincipal = "personagem" | "atividades" | "aventura" | "cidade";
@@ -224,6 +225,14 @@ export default function EstruturaDoJogo({
     (item) => item.id === partida.personagem.idDaClasse,
   )?.nome;
   const trabalho = ativoTrabalho(partida);
+  const numeroDeTrabalhosAtivos = [
+    partida.ocioso.atividadeAtiva,
+    partida.ocioso.atividadeSecundaria,
+    partida.ocioso.atividadeTerciaria,
+    partida.fabricacao.receitaAtiva,
+    partida.fabricacao.receitaSecundaria,
+    partida.fabricacao.receitaTerciaria,
+  ].filter(Boolean).length;
   const jornada = obterHistoriaDaJornada(partida);
   const masmorraAtivo = Boolean(partida.masmorra.expedicaoAtiva || partida.masmorra.incursaoAutomaticaAtiva);
   // O risco temporário do combate e a expedição persistida bloqueiam a navegação e pausam a barra de trabalho.
@@ -386,10 +395,14 @@ export default function EstruturaDoJogo({
               key={id}
               disabled={focadoRisco}
               aria-current={destino === id ? "page" : undefined}
+              aria-label={id === "atividades" && numeroDeTrabalhosAtivos > 0
+                ? `Atividades, ${numeroDeTrabalhosAtivos} trabalho(s) em andamento`
+                : rotulo}
               onClick={() => ir(id)}
             >
               <span>
                 {rotulo}
+                {id === "atividades" ? <SeloDeNavegacao quantidade={numeroDeTrabalhosAtivos} /> : null}
                 <small>{detalhe}</small>
               </span>
             </Button>

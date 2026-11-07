@@ -1,0 +1,18 @@
+/* NavbarIcon, ciefa (MIT): badge adaptado aos tokens existentes do Paralaxe. */
+.contador {
+  position: absolute;
+  inset-block-start: var(--ui-space-1);
+  inset-inline-end: var(--ui-space-1);
+  display: inline-grid;
+  place-items: center;
+  min-width: var(--ui-dimension-20px);
+  min-height: var(--ui-dimension-20px);
+  padding: var(--ui-space-0) var(--ui-space-1);
+  border: var(--ui-size-border) solid var(--ui-color-border-strong);
+  border-radius: var(--ui-radius-pill);
+  background: var(--ui-color-primary);
+  color: var(--ui-color-primary-text);
+  font: var(--ui-font-weight-semibold) var(--ui-font-size-2xs)/var(--ui-line-height-normal) var(--ui-font-family-body);
+  font-variant-numeric: tabular-nums;
+  pointer-events: none;
+}
