@@ -7,6 +7,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import type { PartidaLocal } from "@paralaxe/dominio";
 import { obterProgressoDoTrabalho, type EspacoDoTrabalho } from '@/services/visualizacaoDoTrabalho';
 import { rotulosDasProfissoes } from '@/rotulosDoJogo';
+import { formatarDuracao } from '@/services/formatarDuracao';
 import estilos from "./IndicadorDeProgressoOcioso.module.css";
 
 export type PropriedadesDeIndicadorDeProgressoOcioso = {
@@ -171,7 +172,7 @@ export default function IndicadorDeProgressoOcioso({
           </span>
           <span>
             <small>Próximo nível (estimativa base)</small>
-            <strong>{pausado ? 'Retoma ao sair do risco' : trabalho.segundosEstimadosParaProximoNivel === null ? 'Nível máximo' : `~${Math.max(1, Math.ceil(trabalho.segundosEstimadosParaProximoNivel / 60))} min`}</strong>
+            <strong>{pausado ? 'Retoma ao sair do risco' : trabalho.segundosEstimadosParaProximoNivel === null ? 'Nível máximo' : `~${formatarDuracao(trabalho.segundosEstimadosParaProximoNivel)}`}</strong>
           </span>
         </div>
         <details className={estilos.explicacao}>
