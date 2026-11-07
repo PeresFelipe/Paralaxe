@@ -55,6 +55,7 @@ import {
   processarTrabalhoAtual,
 } from "../services/partida";
 import { mensagensDeErroDaInterface } from "@/rotulosDaInterface";
+import { obterDetalhesDoRetorno } from "../services/resumoDoRetorno";
 
 type Tela = "carregando" | "partida-listar" | "criar" | "jogo" | "erro";
 type ResumoDoPeriodoAusente = {
@@ -62,6 +63,7 @@ type ResumoDoPeriodoAusente = {
   resultado: string;
   meta: string | null;
   marco: string | null;
+  detalhes: readonly string[];
 };
 
 export function useAplicativoDaPartida(repositorioDePartidas: RepositorioDePartidasLocais) {
@@ -314,6 +316,7 @@ export function useAplicativoDaPartida(repositorioDePartidas: RepositorioDeParti
           resultado: resultado.textoExibido,
           meta: obterResumoDeRetornoDaJornada(armazenado, partidaProcessada),
           marco: obterAvisoDeFabricacaoDaJornada(armazenado, partidaProcessada),
+          detalhes: obterDetalhesDoRetorno(armazenado, partidaProcessada, ausencia, resultado.textoExibido),
         });
       } else if (resultado.textoExibido) {
         const marco = obterAvisoDeFabricacaoDaJornada(armazenado, partidaProcessada);

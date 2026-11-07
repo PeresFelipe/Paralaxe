@@ -104,6 +104,12 @@ function Aplicativo({ repositorioDePartidas }: AplicativoProps) {
               <span>Durante sua ausência</span>
               <strong>{ausenteResumo.resultado}</strong>
             </div>
+            {ausenteResumo.detalhes.length > 0 ? (
+              <section className="ausente-detalhes" aria-label="Detalhes do progresso durante a ausência">
+                <h2>O que mudou</h2>
+                <ul>{ausenteResumo.detalhes.map((detalhe) => <li key={detalhe}>{detalhe}</li>)}</ul>
+              </section>
+            ) : null}
             {ausenteResumo.meta ? (
               <div className="ausente-meta-resultado">
                 <IconeDoJogo icone="livro-abrir" tamanho={32} />
