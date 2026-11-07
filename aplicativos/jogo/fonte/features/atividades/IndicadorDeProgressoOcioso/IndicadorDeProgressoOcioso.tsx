@@ -151,7 +151,8 @@ export default function IndicadorDeProgressoOcioso({
         <span ref={preenchimentoReferencia} className={`${estilos.preenchimento} ocioso-progressoPreenchimento`} />
       </div>
       {!compacto ? (
-        <div className={`${estilos.detalhes} ocioso-progressoDetalhes`}>
+        <>
+          <div className={`${estilos.detalhes} ocioso-progressoDetalhes`}>
           <span>
             <small>Próxima conclusão</small>
             <strong>
@@ -179,6 +180,7 @@ export default function IndicadorDeProgressoOcioso({
           <summary>Por que esta velocidade?</summary>
           <p>{trabalho.motivoDaPrioridade} As taxas são estimativas base, sem bônus temporários, materiais insuficientes ou inventário cheio.</p>
         </details>
+        </>
       ) : null}
     </div>
   );
