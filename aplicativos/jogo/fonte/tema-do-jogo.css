@@ -1277,16 +1277,6 @@ summary:focus-visible,
   }
 }
 
-/* Reserva a coluna da animação de classe; o texto ocupa o espaço restante e pode quebrar. */
-/* width e height controlam a área exibida; contain preserva a proporção e pixelated evita suavização. */
-.criacao-classe-gif {
-  display: block;
-  width: var(--ui-dimension-160px);
-  height: var(--ui-dimension-160px);
-  object-fit: contain;
-  image-rendering: pixelated;
-}
-
 /* Cartões da Cidade permanecem uma composição de tela; a apresentação dos controles vem de Button. */
 .cidade-visaoGeral-disposicao {
   grid-template-columns: minmax(0, 1fr);

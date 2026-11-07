@@ -681,28 +681,6 @@ body {
 .criacao-resumo-emExecucao strong { color: var(--ui-color-text); }
 .criacao-foco :where(input, select):focus-visible { outline-color: var(--ui-color-warning); }
 
-.criacao-classe-sprite {
-  display: block;
-  width: var(--ui-dimension-80px);
-  height: var(--ui-dimension-80px);
-  justify-self: center;
-  background-repeat: no-repeat;
-  background-position: 0 0;
-  /* A folha tem seis quadros e repete o primeiro no fim: seis passos exatos fecham o loop. */
-  background-size: 700% 100%;
-  image-rendering: pixelated;
-  animation: joanna-idle var(--ui-transition-character-idle) infinite;
-}
-
-@keyframes joanna-idle {
-  from { background-position: 0 0; }
-  to { background-position: 100% 0; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .criacao-classe-sprite { animation: none; }
-}
-
 /* Visão de sessão: duas decisões próximas, com reflow sem largura mínima. */
 .sessao-resumo {
   display: grid;
@@ -758,30 +736,4 @@ body {
   .jogo-aviso::before { background: Highlight; }
   .jogo-aviso-icone { border-color: CanvasText; background: Canvas; }
   .jogo-aviso-rotulo { color: CanvasText; }
-}
-
-/* Faixas Idle integradas: proporção original e primeiro quadro repetido no fim. */
-.criacao-classe-sprite--acolito,
-.criacao-classe-sprite--errante {
-  background-size: 500% auto;
-  animation-name: classe-idle-centralizado;
-  animation-timing-function: steps(4, end);
-}
-.criacao-classe-sprite--ladino {
-  background-size: 300% auto;
-  animation-name: classe-idle-centralizado;
-  animation-timing-function: steps(2, end);
-}
-@keyframes classe-idle-centralizado {
-  from { background-position: 0 50%; }
-  to { background-position: 100% 50%; }
-}
-/* Sem movimento, exibir o primeiro quadro centralizado. */
-@media (prefers-reduced-motion: reduce) {
-  .criacao-classe-sprite--acolito,
-  .criacao-classe-sprite--ladino,
-  .criacao-classe-sprite--errante {
-    animation: none;
-    background-position: 0 50%;
-  }
 }

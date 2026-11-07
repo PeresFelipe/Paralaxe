@@ -65,6 +65,15 @@ export default defineConfig({
     workbox: {
       // Inclui também os avisos de autoria e fontes no cache disponível sem conexão.
       globPatterns: ['**/*.{js,css,html,svg,png,webp,gif,ttf}', 'fontes/**/*.txt', 'arte/**/*.txt', 'creditos/**/*.txt'],
+      // Fontes de geração e animações não utilizadas permanecem no repositório,
+      // mas não são necessárias ao jogo offline. Todas as artes ativas e licenças ficam no cache.
+      globIgnores: [
+        'arte/classes/guerreiro/MattzArt/Sprites/**',
+        'arte/classes/mago/LuizMelo/Wizard Pack/*.png',
+        'arte/cidade/interface/vigilia-brasa.png',
+        'arte/cidade/interface/vigilia-cronometro.png',
+        'arte/atividades/{mineracao,lenhador,pesca,herbologia,metalurgia,forja,culinaria}.gif',
+      ],
       // Limite por arquivo do pré-cache; não é o limite de tamanho das partidas salvas.
       maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
       cleanupOutdatedCaches: true,

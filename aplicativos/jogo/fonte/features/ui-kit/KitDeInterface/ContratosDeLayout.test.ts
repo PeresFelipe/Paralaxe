@@ -1,17 +1,62 @@
+import { createElement, type ComponentProps } from 'react'
+import { renderToStaticMarkup } from 'react-dom/server'
+import { CLASSES_DE_PERSONAGEM, PRESENTES_INICIAIS, ATIVIDADES_OCIOSAS_INICIAIS } from '@paralaxe/conteudo'
+import { criarPartidaLocal, iniciarAtividadeOciosa } from '@paralaxe/dominio'
+import EstruturaDoJogo from '../../../EstruturaDoJogo'
 import { readFileSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
 
 const fonte = (caminho: string) => readFileSync(new URL(caminho, import.meta.url), 'utf8')
 
+/** Renderização real do shell, sem depender da grafia ou da organização do JSX. */
+function renderizarEstrutura(riscoAtivo = false) {
+  const base = criarPartidaLocal({ idDaPartida: 'layout', criadoEm: '2026-11-07T00:00:00.000Z',
+    versaoDoConteudo: 'teste', nomeDoPersonagem: 'Aedan', classeDoPersonagem: CLASSES_DE_PERSONAGEM[0]!, presente: PRESENTES_INICIAIS[0]! })
+  const partida = iniciarAtividadeOciosa(base, ATIVIDADES_OCIOSAS_INICIAIS[0]!, base.criadoEm)
+  const semEfeito = async () => {}
+  const props: ComponentProps<typeof EstruturaDoJogo> = {
+    partida, mensagem: null, tipoDaMensagem: 'informacao', ultimoResultadoDoTrabalho: null, riscoAtivo,
+    aoDispensarMensagem: semEfeito, aoAlterarEstadoDeRisco: semEfeito, aoAlternarPartida: semEfeito,
+    temaDaInterface: 'escuro', aoAlternarTema: semEfeito, prepararRisco: async () => partida,
+    aoPersistir: async alterar => alterar(partida),
+    aoConcluirProjeto: semEfeito,
+    aoComprarOfertaDoMercado: semEfeito,
+    aoIniciarAtividade: semEfeito,
+    aoIniciarAtividadeSecundaria: semEfeito,
+    aoPararAtividadeSecundaria: semEfeito,
+    aoIniciarAtividadeTerciaria: semEfeito,
+    aoPararAtividadeTerciaria: semEfeito,
+    aoAlterarPrioridade: semEfeito,
+    aoResponderMinigame: semEfeito,
+    aoIniciarReceitaSecundaria: semEfeito,
+    aoPararReceitaSecundaria: semEfeito,
+    aoIniciarReceitaTerciaria: semEfeito,
+    aoPararReceitaTerciaria: semEfeito,
+    aoIniciarReceita: semEfeito,
+    aoEscolherMetaDaJornada: semEfeito,
+    aoPararTrabalho: semEfeito,
+    aoPrestigiarProfissao: semEfeito,
+    aoEquipar: semEfeito,
+    aoDistribuirAtributos: semEfeito,
+    aoRealizarPrestigioDoPersonagem: semEfeito,
+    aoDesbloquearNoDePrestigio: semEfeito,
+    aoDepositarPilhaNoBanco: semEfeito,
+    aoRetirarPilhaDoBanco: semEfeito,
+    aoDepositarEquipamentoNoBanco: semEfeito,
+    aoRetirarEquipamentoDoBanco: semEfeito,
+  }
+  return renderToStaticMarkup(createElement(EstruturaDoJogo, props))
+}
+
 describe('contratos de layout do Paralaxe', () => {
   it('mantém larguras responsivas e contador de trabalhos acessível', () => {
     const css = fonte('../../../responsivo-refinamento.css')
-    const estrutura = fonte('../../../EstruturaDoJogo.tsx')
+    const estrutura = renderizarEstrutura()
     expect(css).toContain('@media (min-width: 900px)')
     expect(css).toContain("[data-largura='compacta']")
     expect(css).toContain("[data-largura='ampla']")
-    expect(estrutura).toContain('data-largura={larguraDeLeitura}')
-    expect(estrutura).toContain('<SeloDeNavegacao quantidade={numeroDeTrabalhosAtivos} />')
+    expect(estrutura).toMatch(/data-largura="(?:compacta|normal|ampla)"/)
+    expect(estrutura).toContain('href="#jogo-conteudo"')
     expect(estrutura).toContain('trabalho(s) em andamento')
   })
 
@@ -73,14 +118,14 @@ describe('contratos de layout do Paralaxe', () => {
   })
 
   it('preserva a estrutura semântica do HUD e o botão de opções fora da lista de descrições', () => {
-    const jsx = fonte('../../../EstruturaDoJogo.tsx')
-    const secao = jsx.slice(jsx.indexOf('<dl\n'), jsx.indexOf('</dl>') + 5)
-    expect(secao).toContain('className="global-recursos"')
+    const html = renderizarEstrutura()
+    const secao = html.match(/<dl class="global-recursos"[\s\S]*?<\/dl>/)?.[0] ?? ''
+    expect(secao).toContain('aria-label="Estado global do personagem"')
     expect((secao.match(/<dt>/g) ?? []).length).toBe(4)
-    expect((secao.match(/<dt className="recurso-simbolo/g) ?? []).length).toBe(4)
+    expect((secao.match(/<dt class="recurso-simbolo/g) ?? []).length).toBe(4)
     expect((secao.match(/<dd>/g) ?? []).length).toBe(4)
-    expect(secao).not.toContain('MenuDeOpcoes')
-    expect(jsx.indexOf('<MenuDeOpcoes ')).toBeGreaterThan(jsx.indexOf('</dl>'))
+    expect(secao).not.toContain('<button')
+    expect(html.indexOf('Opções')).toBeGreaterThan(html.indexOf('</dl>'))
   })
 
   it('pré-aplica o tema salvo e atualiza a cor da barra do navegador', () => {

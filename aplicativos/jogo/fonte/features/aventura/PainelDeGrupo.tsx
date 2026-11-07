@@ -1,3 +1,4 @@
+import type { PersistirAlteracaoDaPartida } from "@/services/alteracoesDaPartida"
 /** @file Grupo, formação e prévia tática não-canônica até a segunda Masmorra. */
 import { useState } from 'react'
 import {
@@ -13,7 +14,7 @@ import estilos from './PainelDeGrupo.module.css'
 
 interface Propriedades {
   partida: PartidaLocal
-  aoPersistir: (partida: PartidaLocal, mensagem?: string) => Promise<void> | void
+  aoPersistir: PersistirAlteracaoDaPartida
   aoVoltar: () => void
 }
 const catalogo = {
@@ -56,9 +57,11 @@ export default function PainelDeGrupo({ partida, aoPersistir, aoVoltar }: Propri
     if (ocupado || emRisco || !mira?.recrutado) return
     definirOcupado(true)
     try {
-      const novo = ativos.includes(ID_DE_MIRA) ? ativos.filter(id => id !== ID_DE_MIRA) : [...ativos, ID_DE_MIRA]
-      const proxima = configurarFormacaoDoGrupo(partida, novo, new Date().toISOString())
-      await aoPersistir(proxima, 'Formação de Grupo atualizada.')
+      await aoPersistir(atual => {
+        const formacao = atual.grupo.idsDosParceirosAtivos
+        const novo = formacao.includes(ID_DE_MIRA) ? formacao.filter(id => id !== ID_DE_MIRA) : [...formacao, ID_DE_MIRA]
+        return configurarFormacaoDoGrupo(atual, novo, new Date().toISOString())
+      }, 'Formação de Grupo atualizada.')
       definirMensagem('Formação salva.')
       definirResultado(null)
     } catch (erro) {
@@ -72,7 +75,7 @@ export default function PainelDeGrupo({ partida, aoPersistir, aoVoltar }: Propri
     if (ocupado || emRisco || partida.grupo.marcoDeMira !== 'recrutavel') return
     definirOcupado(true)
     try {
-      await aoPersistir(recrutarMira(partida, new Date().toISOString()), 'Mira foi recrutada.')
+      await aoPersistir(atual => recrutarMira(atual, new Date().toISOString()), 'Mira foi recrutada.')
       definirMensagem('Mira é agora uma parceira recrutada. Escolha incluí-la na formação.')
     } catch (erro) {
       definirMensagem(erro instanceof Error ? erro.message : 'Não foi possível recrutar Mira.')

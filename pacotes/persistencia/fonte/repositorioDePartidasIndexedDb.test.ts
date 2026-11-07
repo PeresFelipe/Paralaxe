@@ -74,6 +74,15 @@ describe("repositório de partidas em IndexedDB", () => {
     await excluirBancoDeDados()
   })
 
+  it('recusa uma gravação corrompida antes de substituir o último save válido', async () => {
+    const atual = criarPartidaLocal({ idDaPartida: 'integridade-na-gravacao', criadoEm: '2026-11-07T00:00:00.000Z',
+      versaoDoConteudo: 'teste', nomeDoPersonagem: 'Aedan', classeDoPersonagem, presente })
+    const repo = criarRepositorioDePartidasIndexedDb()
+    await repo.salvar(atual)
+    await expect(repo.salvar({ ...atual, personagem: { ...atual.personagem, ouro: -1 } })).rejects.toThrow('personagem.ouro')
+    expect(await repo.obter(atual.idDaPartida)).toEqual(atual)
+  })
+
   it('migra v12 para o Legado preservando os níveis, ouro e Brasas não gastas', async () => {
     const atual = criarPartidaLocal({
       idDaPartida: 'migra-v12-legado', criadoEm: '2026-11-03T12:00:00.000Z',

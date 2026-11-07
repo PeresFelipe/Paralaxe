@@ -1,76 +1,48 @@
+import type { PersistirAlteracaoDaPartida } from "./services/alteracoesDaPartida";
+import { catalogoDeCombate } from './services/combateDaEstrada';
 /**
  * @file Estrutura visual da partida e navegação entre Personagem, Atividades, Aventura e Cidade.
  * Recebe a partida persistida e callbacks de Aplicativo; suas abas e painéis são estado
  * transitório de apresentação. Consultar outra tela não inicia nem cancela um trabalho.
  */
-import { useEffect, useMemo, useRef, useState } from "react";
-import { usePreferenciaDeTela } from "./hooks/usePreferenciaDeTela";
-import { MODOS_DE_LARGURA, proximoModoDeLargura, rotuloDoModoDeLargura, type ModoDeLargura } from "./features/navegacao/modosDeLargura";
 import {
-  CLASSES_DE_PERSONAGEM,
-  RECEITAS_INICIAIS_DE_FABRICACAO,
   ATIVIDADES_OCIOSAS_INICIAIS,
-  obterDefinicaoDeHabilidadeDeCombate,
-  obterDefinicaoDeConsumivelDeCombate,
-  obterDefinicaoDeInimigo,
-  obterDefinicaoDeEquipamento,
+  CLASSES_DE_PERSONAGEM,
   obterHistoriaDaJornada,
-  obterDialogoDeBrann,
+  RECEITAS_INICIAIS_DE_FABRICACAO
 } from "@paralaxe/conteudo";
 import {
   derivarEstatisticasDeCombateDoJogador,
-  obterValorPrincipalDoEquipamento,
   type DistribuicaoDeAtributos,
-  type PartidaLocal,
   type IdDaProfissao,
-  type PrioridadeDeOficio,
+  type PartidaLocal,
+  type PrioridadeDeOficio
 } from "@paralaxe/dominio";
-import BancadaDeCombate from "./features/aventura/BancadaDeCombate";
-import BancadaDaMasmorra from "./features/aventura/BancadaDaMasmorra";
-import BancadaDoMercado from "./features/cidade/BancadaDoMercado";
-import PainelDeAtributos from "./features/personagem/PainelDeAtributos";
-import PainelDoBanco from "./features/cidade/PainelDoBanco";
+import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
 import IndicadorDeProgressoOcioso from "./features/atividades/IndicadorDeProgressoOcioso";
-import TelaDeAtividades from "./features/atividades/TelaDeAtividades";
-import PainelDePrestigio from "./features/personagem/PainelDePrestigio";
-import PainelDoCodice from "./features/cidade/PainelDoCodice";
-import {
-  ResumoDaCidade, PainelDeProjetos, type AcoesDoLegado,
-} from './features/cidade/LegadoDaCidade';
-import PainelDeDesafios from "./features/aventura/PainelDeDesafios";
-import PainelDeGrupo from "./features/aventura/PainelDeGrupo";
-import PainelRapido from "./features/navegacao/PainelRapido";
-import CreditosDosRecursos from "./components/jogo/CreditosDosRecursos";
+import { MODOS_DE_LARGURA, proximoModoDeLargura, rotuloDoModoDeLargura, type ModoDeLargura } from "./features/navegacao/modosDeLargura";
+import { usePreferenciaDeTela } from "./hooks/usePreferenciaDeTela";
+
 import { IconeDoJogo } from "./components/jogo";
-import GradeDoInventario from "./features/inventario/GradeDoInventario";
-import MetaDaJornada, { ResumoDaMetaDaJornada } from "./features/jornada/MetaDaJornada";
-import { obterIconeDoEquipamento, iconeDoPainelPorId, iconeDeProfissaoPorId, iconeDeAtalhoPorId } from "./iconesDosRecursos";
-import { rotulosDasProfissoes } from "./rotulosDoJogo";
-import { rotulosDaInterface } from './rotulosDaInterface'
+import CreditosDosRecursos from "./components/jogo/CreditosDosRecursos";
 import { Button, Card } from "./components/ui";
 import { MenuDeOpcoes, type OpcaoDeMenu } from "./components/ui/MenuDeOpcoes/MenuDeOpcoes";
 import { SeloDeNavegacao } from "./components/ui/SeloDeNavegacao/SeloDeNavegacao";
+import {
+  type AcoesDoLegado
+} from './features/cidade/LegadoDaCidade';
+import GradeDoInventario from "./features/inventario/GradeDoInventario";
+import MetaDaJornada, { ResumoDaMetaDaJornada } from "./features/jornada/MetaDaJornada";
+import PainelRapido from "./features/navegacao/PainelRapido";
 import type { TemaDaInterface } from "./hooks/useTemaDaInterface";
+import { iconeDeAtalhoPorId, iconeDeProfissaoPorId, iconeDoPainelPorId } from "./iconesDosRecursos";
+import { rotulosDasProfissoes } from "./rotulosDoJogo";
 
-type DestinoPrincipal = "personagem" | "atividades" | "aventura" | "cidade";
-type AbaDoPersonagem =
-  | "visaoGeral"
-  | "atributos"
-  | "equipamento"
-  | "tecnicas"
-  | "inventario"
-  | "prestigio";
-type TelaDeAventura = "visaoGeral" | "servico" | "masmorra" | "desafios" | "grupo";
-type TelaDaCidade =
-  | "visaoGeral"
-  | "taverna"
-  | "mercado"
-  | "ferreiro"
-  | "banco"
-  | "relicario"
-  | "codice"
-  | "reconstrucao";
-type PainelRapidoAtivo = "jornada" | "inventario" | null;
+import type { AbaDoPersonagem, DestinoPrincipal, PainelRapidoAtivo, TelaDaCidade, TelaDeAventura } from "./features/navegacao/tiposDeNavegacao";
+const TelaDoPersonagem = lazy(() => import("./features/personagem/TelaDoPersonagem"));
+const ComponenteDaTelaDeAventura = lazy(() => import("./features/aventura/TelaDeAventura"));
+const ComponenteDaTelaDaCidade = lazy(() => import("./features/cidade/TelaDaCidade"));
+const TelaDeAtividades = lazy(() => import("./features/atividades/TelaDeAtividades"));
 
 /** Contrato entre a coordenação da partida e suas telas. Alterações são enviadas pelos callbacks, não ao IndexedDB. */
 type PropriedadesDeEstruturaDoJogo = {
@@ -84,7 +56,7 @@ type PropriedadesDeEstruturaDoJogo = {
   aoAlternarPartida: () => void;
   temaDaInterface: TemaDaInterface;
   aoAlternarTema: () => void;
-  aoPersistir: (partida: PartidaLocal, mensagem?: string) => void | Promise<void>;
+  aoPersistir: PersistirAlteracaoDaPartida;
   aoConcluirProjeto: AcoesDoLegado['aoConcluirProjeto'];
   aoComprarOfertaDoMercado: (idDaOferta: string) => Promise<void>;
   prepararRisco: () => Promise<PartidaLocal>;
@@ -117,13 +89,6 @@ type PropriedadesDeEstruturaDoJogo = {
   ) => Promise<void>;
   aoDepositarEquipamentoNoBanco: (idDaInstancia: string) => Promise<void>;
   aoRetirarEquipamentoDoBanco: (idDaInstancia: string) => Promise<void>;
-};
-
-const combateCatalogo = {
-  obterDefinicaoDeEquipamento,
-  obterDefinicaoDeHabilidade: obterDefinicaoDeHabilidadeDeCombate,
-  obterDefinicaoDeInimigo,
-  obterDefinicaoDeConsumivel: obterDefinicaoDeConsumivelDeCombate,
 };
 
 /** Resume a coleta ou receita efetivamente selecionada na partida, independentemente da tela em consulta. */
@@ -222,7 +187,7 @@ export default function EstruturaDoJogo({
   const [preparacaoAtivo, definirPreparacaoAtivo] = useState(false);
 
   const estatisticas = useMemo(
-    () => derivarEstatisticasDeCombateDoJogador(partida, combateCatalogo),
+    () => derivarEstatisticasDeCombateDoJogador(partida, catalogoDeCombate),
     [partida],
   );
   const nomeDaClasse = CLASSES_DE_PERSONAGEM.find(
@@ -456,6 +421,7 @@ export default function EstruturaDoJogo({
 
       <div className="jogo-disposicao">
         <main ref={conteudoRef} className="jogo-conteudo" id="jogo-conteudo" tabIndex={-1}>
+          <Suspense fallback={<p role="status">Carregando tela…</p>}>
           {!focadoRisco ? (
             <ResumoDaMetaDaJornada
               partida={partida}
@@ -558,6 +524,7 @@ export default function EstruturaDoJogo({
           <div className="movel-creditos">
             <CreditosDosRecursos />
           </div>
+          </Suspense>
         </main>
         {/* Resumo para telas amplas; a disposição compacta oferece os mesmos acessos em outros pontos da estrutura. */}
         <aside className="jogo-companheiro" aria-label="Resumo da jornada">
@@ -715,606 +682,6 @@ export default function EstruturaDoJogo({
         </PainelRapido>
       ) : null}
     </div>
-  );
-}
-
-/** Distribui abas de atributos, equipamentos, técnicas, inventário e prestígio usando os mesmos dados da partida. */
-function TelaDoPersonagem({
-  partida,
-  aba,
-  aoAba,
-  aoEquipar,
-  aoIniciarReceita,
-  aoDistribuirAtributos,
-  aoRealizarPrestigioDoPersonagem,
-  aoDesbloquearNoDePrestigio,
-}: {
-  partida: PartidaLocal;
-  aba: AbaDoPersonagem;
-  aoAba: (aba: AbaDoPersonagem) => void;
-  aoEquipar: (idDaInstancia: string) => Promise<void>;
-  aoIniciarReceita: (
-    idDaDefinicaoDaReceita: string,
-    idDaInstanciaDoEquipamentoAlvo?: string | null,
-  ) => Promise<void>;
-  aoDistribuirAtributos: (distribuicao: DistribuicaoDeAtributos) => Promise<void>;
-  aoRealizarPrestigioDoPersonagem: () => Promise<void>;
-  aoDesbloquearNoDePrestigio: (noId: string) => Promise<void>;
-}) {
-  const reforcos = RECEITAS_INICIAIS_DE_FABRICACAO.filter(
-    (receita) => receita.saida.tipo === "equipamento-reforco",
-  );
-
-  return (
-    <section className="funcionalidade-telaDoJogo">
-      <div className="telaDoJogo-tituloDaSecao">
-        <div>
-          <p className="secao-chamada">Personagem</p>
-          <h1 className="destaque-titulo">{partida.personagem.nome}</h1>
-          <p className="atenuado">Toda jornada deixa suas marcas.</p>
-        </div>
-      </div>
-      <div className="subnavegacao" aria-label="Personagem">
-        {(
-          [
-            ["visaoGeral", "Visão Geral"],
-            ["atributos", "Atributos"],
-            ["equipamento", "Equipamento"],
-            ["tecnicas", "Técnicas"],
-            ["inventario", "Inventário"],
-            ["prestigio", "Prestígio"],
-          ] as const
-        ).map(([id, rotulo]) => (
-          <Button
-            variant="tab"
-            key={id}
-            aria-pressed={aba === id}
-            onClick={() => aoAba(id)}
-          >
-            {rotulo}
-          </Button>
-        ))}
-      </div>
-
-      {aba === "visaoGeral" ? (
-        <div className="personagem-disposicao">
-          <div className="personagem-efigie">
-            <div className="retrato-marcador" aria-hidden="true" />
-            <p className="efigie-rotulo">EQUIPAMENTO EM USO</p>
-            <div className="equipado-suporte">
-              {partida.personagem.itensDeEquipamento
-                .filter((item) =>
-                  Object.values(partida.personagem.equipamento).includes(
-                    item.idDaInstancia,
-                  ),
-                )
-                .map((item) => (
-                  <Button
-                    variant="inventory"
-                    key={item.idDaInstancia}
-                    title={obterDefinicaoDeEquipamento(item.idDaDefinicao)?.nome}
-                    aria-label={`Ver ${obterDefinicaoDeEquipamento(item.idDaDefinicao)?.nome ?? "equipamento"}`}
-                    onClick={() => aoAba("equipamento")}
-                  >
-                    <IconeDoJogo
-                      icone={obterIconeDoEquipamento(item.idDaDefinicao)}
-                      tamanho={32}
-                    />
-                  </Button>
-                ))}
-            </div>
-          </div>
-          <div className="visaoGeral-pilha">
-            <Card>
-              <p className="secao-chamada">Seu legado</p>
-              <h2>
-                {partida.personagem.nome} · Nível {partida.personagem.nivel}
-              </h2>
-              <div className="informacoes-gradeVisual">
-                <div>
-                  <span>XP geral</span>
-                  <strong>{partida.personagem.xp}</strong>
-                </div>
-                <div>
-                  <span>Pontos disponíveis</span>
-                  <strong>{partida.personagem.pontosDeAtributoDisponiveis}</strong>
-                </div>
-                <div>
-                  <span>Equipamentos</span>
-                  <strong>{partida.personagem.itensDeEquipamento.length}</strong>
-                </div>
-                <div>
-                  <span>Técnicas conhecidas</span>
-                  <strong>{partida.personagem.idsDasHabilidadesConhecidas.length}</strong>
-                </div>
-              </div>
-            </Card>
-            <Card>
-              <p className="secao-chamada">Domínio dos ofícios</p>
-              <div className="profissao-resumo-gradeVisual">
-                {Object.entries(partida.profissoes).map(([idDaProfissao, progresso]) => (
-                  <div key={idDaProfissao}>
-                    <span className="profissao-resumo-rotulo">
-                      <IconeDoJogo
-                        icone={iconeDeProfissaoPorId[idDaProfissao as IdDaProfissao]}
-                        tamanho={22}
-                      />
-                      <span>{rotulosDasProfissoes[idDaProfissao as IdDaProfissao]}</span>
-                    </span>
-                    <strong>Nv. {progresso.nivel}</strong>
-                  </div>
-                ))}
-              </div>
-            </Card>
-          </div>
-        </div>
-      ) : null}
-
-      {aba === "atributos" ? (
-        <PainelDeAtributos
-          partida={partida}
-          aoDistribuirAtributos={aoDistribuirAtributos}
-        />
-      ) : null}
-
-      {aba === "equipamento" ? (
-        <div className="equipamento-gradeVisual-emExecucao">
-          {partida.personagem.itensDeEquipamento.map((instancia) => {
-            const definicao = obterDefinicaoDeEquipamento(instancia.idDaDefinicao);
-            if (!definicao) return null;
-            const equipado = Object.values(partida.personagem.equipamento).includes(
-              instancia.idDaInstancia,
-            );
-            const principal = obterValorPrincipalDoEquipamento(
-              definicao,
-              instancia.nivelDeReforco,
-            );
-            const reforcoReceita = reforcos.find(receita =>
-              receita.saida.tipo === 'equipamento-reforco' &&
-              (receita.saida.nivelDeReforcoAlvo ?? 1) === instancia.nivelDeReforco + 1,
-            );
-            return (
-              <article
-                className={`item-cartao ${equipado ? "selecionado-cartao" : ""}`}
-                key={instancia.idDaInstancia}
-              >
-                <div className="item-miniatura" aria-hidden="true">
-                  <IconeDoJogo
-                    icone={obterIconeDoEquipamento(instancia.idDaDefinicao)}
-                    tamanho={64}
-                  />
-                </div>
-                <div className="item-cartaoCorpo">
-                  <p className="secao-chamada">{definicao.espaco}</p>
-                  <h3>
-                    {definicao.nome} +{instancia.nivelDeReforco}
-                  </h3>
-                  <p className="atenuado">
-                    {definicao.bonusDeColeta
-                      ? `+${definicao.bonusDeColeta.xpAdicionalPorAcao} XP de ${definicao.bonusDeColeta.idDaProfissao} por ciclo, sem durabilidade`
-                      : principal !== null
-                        ? `${definicao.estatisticaPrincipal?.tipo === "ataque" ? "Poder" : "Defesa"} ${principal}`
-                        : "Sem valor primário"}
-                  </p>
-                  <div className="botao-linhaDeDados">
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      disabled={equipado}
-                      onClick={() => void aoEquipar(instancia.idDaInstancia)}
-                    >
-                      {equipado ? "Equipado" : "Equipar"}
-                    </Button>
-                    {reforcoReceita &&
-                    instancia.nivelDeReforco < 2 &&
-                    definicao.estatisticaPrincipal ? (
-                      <Button
-                        variant="secondary"
-                        size="sm"
-                        onClick={() =>
-                          void aoIniciarReceita(
-                            reforcoReceita.id,
-                            instancia.idDaInstancia,
-                          )
-                        }
-                      >
-                        Reforçar +{instancia.nivelDeReforco + 1}
-                      </Button>
-                    ) : null}
-                  </div>
-                </div>
-              </article>
-            );
-          })}
-        </div>
-      ) : null}
-
-      {aba === "tecnicas" ? (
-        <Card className="dense-painel">
-          <div className="painel-tituloDaSecao">
-            <div>
-              <p className="secao-chamada">Estilo</p>
-              <h2>{partida.combate.preferencias.estilo}</h2>
-            </div>
-            <span className="situacao-selo">ordem = prioridade real</span>
-          </div>
-          <div className="tecnica-listar">
-            {partida.personagem.espacosDeHabilidadesAtivas.map((habilidadeId, indice) => {
-              const habilidade = habilidadeId
-                ? obterDefinicaoDeHabilidadeDeCombate(habilidadeId)
-                : null;
-              return (
-                <div
-                  className="tecnica-linhaDeDados"
-                  key={`${habilidadeId ?? "vazio"}-${indice}`}
-                >
-                  <span className="prioridade-indice">{indice + 1}</span>
-                  <div>
-                    <strong>{habilidade?.nome ?? "Espaço vazio"}</strong>
-                    <small>
-                      {habilidade
-                        ? `CD ${habilidade.segundosDeRecarga}s${habilidade.custoDeRecurso !== undefined ? ` · custo ${habilidade.custoDeRecurso} ${habilidade.recurso ?? ""}` : ""}`
-                        : "Nenhuma Técnica equipada"}
-                    </small>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </Card>
-      ) : null}
-
-      {aba === "inventario" ? (
-        <Card className="inventario-painel">
-          <GradeDoInventario partida={partida} aoEquipar={aoEquipar} />
-        </Card>
-      ) : null}
-
-      {aba === "prestigio" ? (
-        <PainelDePrestigio
-          partida={partida}
-          aoRealizarPrestigio={aoRealizarPrestigioDoPersonagem}
-          aoDesbloquearNo={aoDesbloquearNoDePrestigio}
-        />
-      ) : null}
-    </section>
-  );
-}
-
-/** Alterna a visão geral e as bancadas de serviço ou masmorra; cada bancada controla sua preparação e resolução. */
-function ComponenteDaTelaDeAventura({
-  partida,
-  telaDoJogo,
-  aoTelaDoJogo,
-  prepararRisco,
-  aoPersistir,
-  aoAlterarEstadoDeRisco,
-  aoAlterarEstadoDePreparacao,
-}: {
-  partida: PartidaLocal;
-  telaDoJogo: TelaDeAventura;
-  aoTelaDoJogo: (telaDoJogo: TelaDeAventura) => void;
-  prepararRisco: () => Promise<PartidaLocal>;
-  aoPersistir: (partida: PartidaLocal, mensagem?: string) => void | Promise<void>;
-  aoAlterarEstadoDeRisco: (ativo: boolean) => void;
-  aoAlterarEstadoDePreparacao: (ativo: boolean) => void;
-}) {
-  if (telaDoJogo === "grupo") {
-    return <PainelDeGrupo partida={partida} aoPersistir={aoPersistir} aoVoltar={() => aoTelaDoJogo("visaoGeral")} />;
-  }
-  if (telaDoJogo === "desafios") {
-    return <PainelDeDesafios partida={partida} aoVoltar={() => aoTelaDoJogo("visaoGeral")} />;
-  }
-  if (telaDoJogo === "servico") {
-    return (
-      <BancadaDeCombate
-        partida={partida}
-        prepararRisco={prepararRisco}
-        aoAlterarPartida={aoPersistir}
-        aoAlterarEstadoDeRisco={aoAlterarEstadoDeRisco}
-        aoRetorno={() => aoTelaDoJogo("visaoGeral")}
-      />
-    );
-  }
-  if (telaDoJogo === "masmorra") {
-    return (
-      <BancadaDaMasmorra
-        partida={partida}
-        prepararRisco={prepararRisco}
-        aoAlterarPartida={aoPersistir}
-        aoAlterarEstadoDeRisco={aoAlterarEstadoDeRisco}
-        aoAlterarEstadoDePreparacao={aoAlterarEstadoDePreparacao}
-        aoRetorno={() => aoTelaDoJogo("visaoGeral")}
-      />
-    );
-  }
-
-  return (
-    <section className="funcionalidade-telaDoJogo">
-      <div className="telaDoJogo-tituloDaSecao">
-        <div>
-          <p className="secao-chamada">Aventura</p>
-          <h1 className="destaque-titulo">Além da segurança</h1>
-          <p className="atenuado">
-            Serviços são encontros menores; Masmorras são expedições prolongadas
-            com risco acumulado.
-          </p>
-        </div>
-      </div>
-      <div className="aventura-visaoGeral-disposicao secao-espacamento">
-        <div className="contexto-arte contexto-arte--aventura" aria-hidden="true">
-          <span>ARTE 16:9 · AVENTURA</span>
-        </div>
-        <div className="aventura-gradeVisual">
-          <Card className="aventura-cartao">
-            <p className="secao-chamada">Serviço</p>
-            <h2>Estrada Baixa</h2>
-            <p className="atenuado">
-              Presença hostil confirmada. Encontro de curta duração.
-            </p>
-            <div className="informacao-linhaDeDados">
-              <span>Estado</span>
-              <strong>
-                {partida.combate.loboDerrotado
-                  ? "Concluído anteriormente"
-                  : "Disponível"}
-              </strong>
-            </div>
-            <Button
-              variant="secondary"
-              size="sm"
-              onClick={() => aoTelaDoJogo("servico")}
-            >
-              Preparar serviço
-            </Button>
-          </Card>
-          <Card className="aventura-cartao risco-painel">
-            <p className="secao-chamada">Masmorra</p>
-            <h2>Dún Liath</h2>
-            <p className="atenuado">
-              Fortaleza Cinzenta · expedição prolongada · Bolsa de Expedição.
-            </p>
-            <div className="informacao-linhaDeDados">
-              <span>Contrato</span>
-              <strong>
-                {partida.masmorra.contratoAceito || partida.masmorra.contratoConcluido
-                  ? "Conhecido"
-                  : "Ainda não aceito"}
-              </strong>
-            </div>
-            <Button
-              variant="primary"
-              size="sm"
-              onClick={() => aoTelaDoJogo("masmorra")}
-            >
-              {(partida.masmorra.expedicaoAtiva || partida.masmorra.incursaoAutomaticaAtiva) ? "Retomar atividade" : "Ver Dún Liath"}
-            </Button>
-          </Card>
-          <Card className="aventura-cartao">
-            <p className="secao-chamada">Grupo · Ameaça</p>
-            <h2>Parceiros e formação</h2>
-            <p className="atenuado">
-              Prepare até três parceiros, conheça as regras de foco dos inimigos
-              e acompanhe a jornada de Mira após Dún Liath.
-            </p>
-            <div className="informacao-linhaDeDados">
-              <span>Parceiros ativos</span>
-              <strong>{partida.grupo.idsDosParceirosAtivos.length}/3</strong>
-            </div>
-            <Button variant="secondary" size="sm" icon={<IconeDoJogo icone={iconeDeAtalhoPorId.grupo} tamanho={16} />} onClick={() => aoTelaDoJogo("grupo")}>
-              Consultar Grupo
-            </Button>
-          </Card>
-          <Card className="aventura-cartao">
-            <p className="secao-chamada">Desafios</p>
-            <h2>Marcos da jornada</h2>
-            <p className="atenuado">Acompanhe contratos, descobertas e seu progresso.</p>
-            <div className="informacao-linhaDeDados"><span>Concluídos</span><strong>{partida.desafios.idsConcluidos.length}</strong></div>
-            <Button variant="secondary" size="sm" onClick={() => aoTelaDoJogo("desafios")}>Consultar desafios</Button>
-          </Card>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/** Encaminha os serviços implementados e apresenta o contexto dos locais ainda sem mecânica funcional. */
-function ComponenteDaTelaDaCidade({
-  partida,
-  telaDoJogo,
-  aoTelaDoJogo,
-  aoAbrirAventura,
-  aoConcluirProjeto,
-  aoComprarOfertaDoMercado,
-  aoDepositarPilhaNoBanco,
-  aoRetirarPilhaDoBanco,
-  aoDepositarEquipamentoNoBanco,
-  aoRetirarEquipamentoDoBanco,
-}: {
-  partida: PartidaLocal;
-  telaDoJogo: TelaDaCidade;
-  aoTelaDoJogo: (telaDoJogo: TelaDaCidade) => void;
-  aoAbrirAventura: () => void;
-  aoConcluirProjeto: AcoesDoLegado['aoConcluirProjeto'];
-  aoComprarOfertaDoMercado: (idDaOferta: string) => Promise<void>;
-  aoDepositarPilhaNoBanco: (idDaDefinicao: string, quantidade: number) => Promise<void>;
-  aoRetirarPilhaDoBanco: (
-    idDaDefinicao: string,
-    quantidade: number,
-  ) => Promise<void>;
-  aoDepositarEquipamentoNoBanco: (idDaInstancia: string) => Promise<void>;
-  aoRetirarEquipamentoDoBanco: (idDaInstancia: string) => Promise<void>;
-}) {
-  if (telaDoJogo === 'reconstrucao') {
-    return <PainelDeProjetos partida={partida} aoVoltar={() => aoTelaDoJogo('visaoGeral')}
-      aoConcluirProjeto={aoConcluirProjeto} />;
-  }
-  if (telaDoJogo === "codice") {
-    return <PainelDoCodice partida={partida} aoVoltar={() => aoTelaDoJogo("visaoGeral")} />;
-  }
-  if (telaDoJogo === "mercado")
-    return (
-      <BancadaDoMercado
-        partida={partida}
-        aoComprarOferta={aoComprarOfertaDoMercado}
-        aoVoltar={() => aoTelaDoJogo("visaoGeral")}
-      />
-    );
-  if (telaDoJogo === "banco") {
-    return (
-      <PainelDoBanco
-        partida={partida}
-        aoDepositarPilha={aoDepositarPilhaNoBanco}
-        aoRetirarPilha={aoRetirarPilhaDoBanco}
-        aoDepositarEquipamento={aoDepositarEquipamentoNoBanco}
-        aoRetirarEquipamento={aoRetirarEquipamentoDoBanco}
-        aoVoltar={() => aoTelaDoJogo("visaoGeral")}
-      />
-    );
-  }
-
-  if (telaDoJogo === "taverna") {
-    const dialogo = obterDialogoDeBrann(partida);
-    return (
-      <section className="funcionalidade-telaDoJogo">
-        <div className="telaDoJogo-tituloDaSecao">
-          <div>
-            <p className="secao-chamada">Cidade · Taverna</p>
-            <h1 className="destaque-titulo">Taverna</h1>
-            <p className="atenuado">Conversas e contratos.</p>
-          </div>
-          <Button
-            variant="secondary"
-            size="sm"
-            onClick={() => aoTelaDoJogo("visaoGeral")}
-          >
-            {rotulosDaInterface.voltarACidade}
-          </Button>
-        </div>
-        <div className="cidade-contexto-disposicao">
-          <div className="contexto-arte contexto-arte--cidade" aria-hidden="true">
-            <span>ARTE 16:9 · TAVERNA</span>
-          </div>
-          <Card className="pnj-cartao">
-            <div
-              className="retrato-marcador retrato-marcador--pnj"
-              aria-hidden="true"
-            >
-              <span>PNJ 4:5</span>
-            </div>
-            <div>
-              <p className="secao-chamada">
-                Brann
-                {partida.masmorra.contratoConcluido ? " · Contrato concluído" : ""}
-              </p>
-              <h2>{dialogo.titulo}</h2>
-              <p className="atenuado">{dialogo.corpo}</p>
-              {dialogo.lembranca ? (
-                <blockquote className="brann-lembranca">
-                  {dialogo.lembranca}
-                </blockquote>
-              ) : null}
-              {dialogo.acao ? (
-                <Button
-                  variant="primary"
-                  size="sm"
-                  onClick={aoAbrirAventura}
-                >
-                  {dialogo.acao}
-                </Button>
-              ) : null}
-            </div>
-          </Card>
-        </div>
-      </section>
-    );
-  }
-
-  // Ferreiro e Relicário possuem apresentação contextual, mas não executam novos serviços nesta versão.
-  if (telaDoJogo !== "visaoGeral") {
-    const texto: Record<
-      Exclude<TelaDaCidade, "visaoGeral" | "taverna" | "mercado" | "banco" | "reconstrucao">,
-      { titulo: string; corpo: string }
-    > = {
-      ferreiro: {
-        titulo: "Ferreiro",
-        corpo: "Serviços de PNJ pertencem à Cidade. A Profissão Forja continua em Atividades. Nenhum novo serviço do Ferreiro está implementado nesta configuração.",
-      },
-      relicario: {
-        titulo: "Relicário",
-        corpo: "Relíquias descobertas serão apresentadas aqui. O sistema funcional de Relicário ainda não está implementado nesta configuração.",
-      },
-      codice: {
-        titulo: "Códice",
-        corpo: "Registro das descobertas do personagem.",
-      },
-    };
-    const atual = texto[telaDoJogo];
-    return (
-      <section className="funcionalidade-telaDoJogo">
-        <div className="telaDoJogo-tituloDaSecao">
-          <div>
-            <p className="secao-chamada">Cidade</p>
-            <h1 className="destaque-titulo">{atual.titulo}</h1>
-            <p className="atenuado">{atual.corpo}</p>
-          </div>
-          <Button
-            variant="secondary"
-            size="sm"
-            onClick={() => aoTelaDoJogo("visaoGeral")}
-          >
-            {rotulosDaInterface.voltarACidade}
-          </Button>
-        </div>
-        <div className="contexto-arte contexto-arte--cidade" aria-hidden="true">
-          <span>ARTE 16:9 · {atual.titulo.toUpperCase()}</span>
-        </div>
-      </section>
-    );
-  }
-
-  return (
-    <section className="funcionalidade-telaDoJogo">
-      <div className="telaDoJogo-tituloDaSecao">
-        <div>
-          <p className="secao-chamada">Cidade</p>
-          <h1 className="destaque-titulo">Cidade Livre</h1>
-          <p className="atenuado">
-            Trégua, necessidade e comércio sustentam este território neutro.
-          </p>
-        </div>
-      </div>
-      <div className="cidade-visaoGeral-disposicao secao-espacamento">
-        <ResumoDaCidade partida={partida}
-          aoAbrirProjetos={() => aoTelaDoJogo('reconstrucao')} />
-        <div className="cidade-localDoJogo-gradeVisual">
-          <Button variant="location" icon={<IconeDoJogo icone="livro-abrir" tamanho={32} />} onClick={() => aoTelaDoJogo("taverna")}>
-            <strong>Taverna</strong>
-            <span>Contratos e conversas</span>
-          </Button>
-          <Button variant="location" icon={<IconeDoJogo icone="coroa-moeda" tamanho={32} />} onClick={() => aoTelaDoJogo("mercado")}>
-            <strong>Mercado</strong>
-            <span>Compra e venda</span>
-          </Button>
-          <Button variant="location" icon={<IconeDoJogo icone="ferreiro" tamanho={32} />} onClick={() => aoTelaDoJogo("ferreiro")}>
-            <strong>Ferreiro</strong>
-            <span>Serviços de equipamento</span>
-          </Button>
-          <Button variant="location" icon={<IconeDoJogo icone={iconeDeAtalhoPorId.banco} tamanho={32} />} onClick={() => aoTelaDoJogo("banco")}>
-            <strong>Banco</strong>
-            <span>Armazenamento seguro</span>
-          </Button>
-          <Button variant="location" icon={<IconeDoJogo icone="pedraRunica" tamanho={32} />} onClick={() => aoTelaDoJogo("relicario")}>
-            <strong>Relicário</strong>
-            <span>Relíquias e memória</span>
-          </Button>
-          <Button variant="location" icon={<IconeDoJogo icone="livro-abrir" tamanho={32} />} onClick={() => aoTelaDoJogo("codice")}>
-            <strong>Códice</strong>
-            <span>Descobertas e conhecimento</span>
-          </Button>
-        </div>
-      </div>
-    </section>
   );
 }
 

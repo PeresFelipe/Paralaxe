@@ -1,3 +1,4 @@
+import { validarIntegridadeDaPartida } from './validarIntegridadeDaPartida'
 /**
  * @file Persistência IndexedDB, leitura do formato legado e migração de esquemas de partida.
  * Cada operação abre sua conexão, aguarda a transação e a fecha em finally. Migrações
@@ -457,7 +458,7 @@ function migrarPartidaAnterior(dadosArmazenados: unknown): Omit<PartidaLocal, 'v
 }
 
 /** Migra o legado sem reembolsar investimentos, e preserva a Vigília somente como histórico. */
-function migrarPartida(dadosArmazenados: unknown): PartidaLocal {
+function normalizarPartida(dadosArmazenados: unknown): PartidaLocal {
   const anterior = migrarPartidaAnterior(dadosArmazenados)
   // Todos os legados anteriores ao v14 recebem o segundo espaço vazio sem perder a atividade principal.
   const migrada = {
@@ -483,6 +484,13 @@ function migrarPartida(dadosArmazenados: unknown): PartidaLocal {
   }
   const vigilia = criarEstadoInicialDaVigilia()
   return { ...migrada, vigilia, legado: criarLegadoInicial(vigilia) }
+}
+
+/** Valida o agregado já migrado antes de entregá-lo à aplicação. */
+function migrarPartida(dadosArmazenados: unknown): PartidaLocal {
+  const partida = normalizarPartida(dadosArmazenados)
+  validarIntegridadeDaPartida(partida)
+  return partida
 }
 
 /** Abre a base publicada e cria a coleção apenas na atualização inicial da estrutura. */
@@ -557,6 +565,12 @@ export function criarRepositorioDePartidasIndexedDb(): RepositorioDePartidasLoca
 
     // Escuta a conclusão antes do put para não perder o evento; só depois dela a operação é considerada salva.
     async salvar(partida) {
+      // Os legados só são validados depois de migrados; gravações atuais falham antes de substituir o registro.
+      if (partida.versaoDoEsquemaDaPartida === VERSAO_DO_ESQUEMA_DA_PARTIDA) {
+        validarIntegridadeDaPartida(partida)
+        validarEstadoDaVigilia(partida.vigilia)
+        validarLegado(partida.legado)
+      }
       const bancoDeDados = await abrirBancoDeDados()
 
       try {

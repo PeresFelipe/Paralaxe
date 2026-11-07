@@ -1,3 +1,4 @@
+import CartaoDaClasse from './features/criacao/CartaoDaClasse'
 /**
  * @file Coordenação principal da aplicação: carregar, criar, selecionar e salvar partidas.
  * Conecta intenções da interface às regras puras do domínio e serializa as gravações
@@ -21,19 +22,6 @@ import { Button, Card, TextField } from './components/ui'
 import { useAplicativoDaPartida } from "./hooks/useAplicativoDaPartida";
 import { useTemaDaInterface } from "./hooks/useTemaDaInterface";
 import { rotulosDaInterface } from './rotulosDaInterface'
-
-/** Relaciona a classe ao arquivo servido por publico. Os caminhos da URL começam em /arte, sem o prefixo publico. */
-const GIFS_DAS_CLASSES: Partial<Record<IdDaClasseDoPersonagem, string>> = {
-  guerreiro: "/arte/classes/guerreiro/MattzArt/guerreiro.gif",
-  mago: "/arte/classes/mago/LuizMelo/mago.gif",
-};
-
-const FOLHAS_DE_ANIMACAO_DAS_CLASSES: Partial<Record<IdDaClasseDoPersonagem, string>> = {
-  cacador: "/arte/classes/cacador/Otsoga/joanna-idle-strip.png?v=2",
-  acolito: "/arte/classes/acolito/tattuattor/acolito-idle.png",
-  ladino: "/arte/classes/ladino/SpriteForge/ladino-idle.png",
-  errante: "/arte/classes/errante/rvros/errante-idle.png",
-};
 
 function obterNomeDaClasse(idDaClasse: IdDaClasseDoPersonagem) {
   return (
@@ -313,7 +301,7 @@ function Aplicativo({ repositorioDePartidas }: AplicativoProps) {
           </div>
         ) : null}
 
-        {/* O GIF é decorativo; a escolha e sua identificação acessível continuam no botão da classe. */}
+        {/* A arte é decorativa; a escolha e sua identificação acessível continuam no botão da classe. */}
         {criacaoPasso === 2 ? (
           <div className="criacao-foco amplo">
             <p className="secao-chamada">Classe inicial</p>
@@ -322,41 +310,9 @@ function Aplicativo({ repositorioDePartidas }: AplicativoProps) {
               A classe define seu início, não seu destino.
             </p>
             <div className="criacao-escolha-gradeVisual">
-              {CLASSES_DE_PERSONAGEM.map((definicao) => {
-                const gif = GIFS_DAS_CLASSES[definicao.id];
-                const folhaDeAnimacao = FOLHAS_DE_ANIMACAO_DAS_CLASSES[definicao.id];
-
-                return (
-                  <Button
-                    key={definicao.id}
-                    variant="creation"
-                    data-with-art={gif || folhaDeAnimacao ? 'true' : 'false'}
-                    aria-pressed={idDaClasseSelecionada === definicao.id}
-                    onClick={() => definirIdDaClasseSelecionada(definicao.id)}
-                  >
-                    {folhaDeAnimacao ? (
-                      <span
-                        className={`criacao-classe-sprite criacao-classe-sprite--${definicao.id}`}
-                        aria-hidden="true"
-                        style={{ backgroundImage: `url("${folhaDeAnimacao}")` }}
-                      />
-                    ) : gif ? (
-                      <img
-                        className="criacao-classe-gif"
-                        src={gif}
-                        alt=""
-                        width={80}
-                        height={80}
-                      />
-                    ) : null}
-
-                    <span className="criacao-classe-texto">
-                      <strong>{definicao.nome}</strong>
-                      <span>{definicao.resumo}</span>
-                    </span>
-                  </Button>
-                );
-              })}
+              {CLASSES_DE_PERSONAGEM.map(definicao => <CartaoDaClasse key={definicao.id}
+                definicao={definicao} selecionada={idDaClasseSelecionada === definicao.id}
+                aoSelecionar={definirIdDaClasseSelecionada} />)}
             </div>
             <div className="botao-linhaDeDados">
               <Button variant="secondary" onClick={() => definirCriacaoPasso(1)}>

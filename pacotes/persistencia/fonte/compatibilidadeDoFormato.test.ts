@@ -58,6 +58,17 @@ describe('compatibilidade com a main anterior à tradução', () => {
     })
   })
 
+  it('recusa corrupção de estrutura no banco sem regravar ou apagar a entrada', async () => {
+    await inserirPartidaAntiga(partidaLegadaV10)
+    const repo = criarRepositorioDePartidasIndexedDb()
+    const atual = (await repo.obter('warrior'))!
+    const corrompida = gravarFormatoLegado({ ...atual, personagem: { ...atual.personagem,
+      inventario: [{ idDaDefinicao: 'item.teste', quantidade: -2 }] } })
+    await inserirPartidaAntiga(corrompida)
+    await expect(repo.obter('warrior')).rejects.toThrow('inventario')
+    expect(await lerGravacaoBruta()).toEqual(corrompida)
+  })
+
   it('lê uma partida antiga sem modificar os dados armazenados', async () => {
     await inserirPartidaAntiga(partidaLegadaV10)
     const repositorio = criarRepositorioDePartidasIndexedDb()

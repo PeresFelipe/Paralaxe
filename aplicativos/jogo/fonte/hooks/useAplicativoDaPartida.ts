@@ -1,60 +1,60 @@
+import { mensagensDeErroDaInterface } from "@/rotulosDaInterface";
+import { criarAcoesDoBanco } from "@/services/acoesDoBanco";
 import {
-  CLASSES_DE_PERSONAGEM,
-  VERSAO_DO_CONTEUDO,
-  PRESENTES_INICIAIS,
-  obterDefinicaoDeReceitaDeFabricacao,
-  obterDefinicaoDeEquipamento,
-  obterDefinicaoDeAtividadeOciosa,
-  obterAvisoDeFabricacaoDaJornada,
-  obterResumoDeRetornoDaJornada,
   atualizarCodiceEDesafios,
+  CLASSES_DE_PERSONAGEM,
+  obterAvisoDeFabricacaoDaJornada,
+  obterDefinicaoDeAtividadeOciosa,
+  obterDefinicaoDeEquipamento,
+  obterDefinicaoDeReceitaDeFabricacao,
+  obterProjetoDaCidade,
+  obterResumoDeRetornoDaJornada,
+  OFERTAS_INICIAIS_DO_MERCADO_DE_PNJ,
+  PRESENTES_INICIAIS,
+  VERSAO_DO_CONTEUDO,
 } from "@paralaxe/conteudo";
 import {
-  distribuirPontosDeAtributo,
-  escolherMetaDaJornada,
+  comprarOfertaDoMercadoDePnj,
+  concluirProjeto,
+  configurarPrioridadeDaColeta,
+  configurarPrioridadeDaFabricacao,
   criarPartidaLocal,
-  depositarEquipamentoNoBanco,
-  depositarPilhaDoInventarioNoBanco,
+  desbloquearNoDePrestigioDoPersonagem,
+  distribuirPontosDeAtributo,
   equiparItem,
-  pausarTrabalhoAtualDuranteRisco,
-  realizarPrestigioDoPersonagem,
-  iniciarReceitaDeFabricacao,
-  iniciarReceitaSecundaria,
-  interromperReceitaSecundaria,
+  escolherMetaDaJornada,
   iniciarAtividadeOciosa,
   iniciarAtividadeSecundaria,
   iniciarAtividadeTerciaria,
-  interromperAtividadeTerciaria,
+  iniciarReceitaDeFabricacao,
+  iniciarReceitaSecundaria,
   iniciarReceitaTerciaria,
-  interromperReceitaTerciaria,
-  configurarPrioridadeDaColeta,
-  configurarPrioridadeDaFabricacao,
-  responderMinigameDeOficio,
-  type PrioridadeDeOficio,
-  interromperAtividadeSecundaria,
-  realizarPrestigioDaProfissao,
-  interromperReceitaDeFabricacao,
   interromperAtividadeOciosa,
-  desbloquearNoDePrestigioDoPersonagem,
-  retirarEquipamentoDoBanco,
-  retirarPilhaDoBancoParaInventario,
+  interromperAtividadeSecundaria,
+  interromperAtividadeTerciaria,
+  interromperReceitaDeFabricacao,
+  interromperReceitaSecundaria,
+  interromperReceitaTerciaria,
+  pausarTrabalhoAtualDuranteRisco,
+  realizarPrestigioDaProfissao,
+  realizarPrestigioDoPersonagem,
+  responderMinigameDeOficio,
   type DistribuicaoDeAtributos,
   type IdDaClasseDoPersonagem,
-  type IdDoPresente,
   type IdDaProfissao,
+  type IdDoPresente,
   type PartidaLocal,
+  type PrioridadeDeOficio
 } from "@paralaxe/dominio";
 import type { RepositorioDePartidasLocais } from "@paralaxe/interface";
-import { obterProjetoDaCidade, OFERTAS_INICIAIS_DO_MERCADO_DE_PNJ } from '@paralaxe/conteudo'
-import { concluirProjeto, comprarOfertaDoMercadoDePnj } from '@paralaxe/dominio'
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { criarFilaDeAlteracoesDaPartida, type AlteracaoDaPartida, type MensagemDaAlteracao } from "../services/alteracoesDaPartida";
 import {
   atualizarPartidaNaLista,
   criarIdDaPartida,
   formatarAusencia,
   processarTrabalhoAtual,
 } from "../services/partida";
-import { mensagensDeErroDaInterface } from "@/rotulosDaInterface";
 import { obterDetalhesDoRetorno } from "../services/resumoDoRetorno";
 
 type Tela = "carregando" | "partida-listar" | "criar" | "jogo" | "erro";
@@ -85,10 +85,25 @@ export function useAplicativoDaPartida(repositorioDePartidas: RepositorioDeParti
     null,
   );
   const [ehSalvando, definirEhSalvando] = useState(false);
-  const [riscoAtivo, definirRiscoAtivo] = useState(false);
+  const [riscoAtivo, atualizarRiscoAtivo] = useState(false);
+  const referenciaDeRisco = useRef(false);
+  const definirRiscoAtivo = useCallback((ativo: boolean) => {
+    referenciaDeRisco.current = ativo;
+    atualizarRiscoAtivo(ativo);
+  }, []);
   // A referência permite consultar a versão corrente dentro de Promises e intervalos, sem capturar uma renderização antiga.
   const referenciaDaPartidaAtiva = useRef<PartidaLocal | null>(null);
-  const gravarFila = useRef<Promise<void>>(Promise.resolve());
+  const filaRef = useRef<ReturnType<typeof criarFilaDeAlteracoesDaPartida> | null>(null);
+  if (!filaRef.current) filaRef.current = criarFilaDeAlteracoesDaPartida({
+    obterAtual: () => referenciaDaPartidaAtiva.current,
+    salvar: partida => repositorioDePartidas.salvar(partida),
+    confirmar: partida => {
+      referenciaDaPartidaAtiva.current = partida;
+      definirAtivoPartida(partida);
+      definirPartidas(anterior => atualizarPartidaNaLista(anterior, partida));
+    },
+  });
+  const filaDeAlteracoes = filaRef.current;
 
   function definirMensagem(textoExibido: string | null) {
     definirAviso(textoExibido ? { textoExibido, tipo: "informacao" } : null);
@@ -110,30 +125,15 @@ export function useAplicativoDaPartida(repositorioDePartidas: RepositorioDeParti
     atualizar: (atual: PartidaLocal) => PartidaLocal,
     textoExibido?: string | (() => string | undefined),
   ): Promise<PartidaLocal> {
-    const idDaPartida = referenciaDaPartidaAtiva.current?.idDaPartida;
-    const tarefa = gravarFila.current.then(async () => {
-      const atual = referenciaDaPartidaAtiva.current;
-      if (!atual || atual.idDaPartida !== idDaPartida)
-        throw new Error("O personagem ativo mudou. Tente novamente.");
-      const proximo = atualizarCodiceEDesafios(atualizar(atual));
-      if (proximo === atual) return atual;
-      await repositorioDePartidas.salvar(proximo);
-      if (referenciaDaPartidaAtiva.current?.idDaPartida === idDaPartida) {
-        selecionarPartidaAtiva(proximo);
-        definirPartidas((anterior) => atualizarPartidaNaLista(anterior, proximo));
-        const marco = obterAvisoDeFabricacaoDaJornada(atual, proximo);
+    return filaDeAlteracoes.aplicar(
+      atual => atualizarCodiceEDesafios(atualizar(atual)),
+      (antes, proxima) => {
+        const marco = obterAvisoDeFabricacaoDaJornada(antes, proxima);
         const informacao = typeof textoExibido === "function" ? textoExibido() : textoExibido;
         if (marco) definirAviso({ textoExibido: marco, tipo: "conquista" });
         else if (informacao) definirMensagem(informacao);
-      }
-      return proximo;
-    });
-    // Uma falha deve chegar ao solicitante, mas não pode deixar a fila rejeitada e bloquear todas as próximas gravações.
-    gravarFila.current = tarefa.then(
-      () => undefined,
-      () => undefined,
+      },
     );
-    return tarefa;
   }
 
   // A carga inicial escolhe a lista de partidas ou o assistente. A limpeza impede atualizar uma montagem já cancelada.
@@ -173,6 +173,8 @@ export function useAplicativoDaPartida(repositorioDePartidas: RepositorioDeParti
       let resultado: ReturnType<typeof processarTrabalhoAtual> | null = null;
       void aplicarAlteracaoNaPartidaAtiva(
         (atual) => {
+          // Um disparo já enfileirado pode sobreviver à limpeza do intervalo pelo React.
+          if (referenciaDeRisco.current || atual.masmorra.expedicaoAtiva || atual.masmorra.incursaoAutomaticaAtiva) return atual;
           resultado = processarTrabalhoAtual(atual, new Date().toISOString());
           return resultado.partida;
         },
@@ -198,12 +200,9 @@ export function useAplicativoDaPartida(repositorioDePartidas: RepositorioDeParti
     return () => window.clearInterval(temporizador);
   }, [tela, partidaAtiva, riscoAtivo]);
 
-  /** Recebe uma partida calculada por uma bancada e preserva a jornada atual mantida pela fila central. */
-  async function persistirPartidaAtiva(partida: PartidaLocal, textoExibido?: string) {
-    await aplicarAlteracaoNaPartidaAtiva(
-      (atual) => ({ ...partida, jornada: atual.jornada }),
-      textoExibido,
-    );
+  /** Comandos de telas recebem a versão corrente da fila, preservando alterações independentes. */
+  function persistirPartidaAtiva(alterar: AlteracaoDaPartida, textoExibido?: MensagemDaAlteracao) {
+    return aplicarAlteracaoNaPartidaAtiva(alterar, textoExibido);
   }
 
   /**
@@ -276,7 +275,7 @@ export function useAplicativoDaPartida(repositorioDePartidas: RepositorioDeParti
     definirAusenteResumo(null);
     definirUltimoTrabalhoResultado(null);
     try {
-      await gravarFila.current;
+      await filaDeAlteracoes.aguardar();
       const partidaLida = await repositorioDePartidas.obter(idDaPartida);
       if (!partidaLida) {
         definirMensagem("Esse partida não foi encontrado no armazenamento local.");
@@ -648,97 +647,9 @@ export function useAplicativoDaPartida(repositorioDePartidas: RepositorioDeParti
     }
   }
 
-  /** Encaminha o depósito pela fila central, preservando consistência com coletas que também alteram o inventário. */
-  async function tratarDepositarBancoPilha(
-    idDaDefinicao: string,
-    quantidade: number,
-  ) {
-    if (!partidaAtiva) return;
-    try {
-      await aplicarAlteracaoNaPartidaAtiva(
-        (atual) =>
-          depositarPilhaDoInventarioNoBanco(
-            atual,
-            idDaDefinicao,
-            quantidade,
-            new Date().toISOString(),
-          ),
-        `Depósito realizado: ${quantidade} item(ns).`,
-      );
-    } catch (erro) {
-      definirMensagem(
-        erro instanceof Error
-          ? erro.message
-          : "Não foi possível depositar no Banco.",
-      );
-    }
-  }
-
-  /** Solicita retirada de uma quantidade; o domínio valida estoque e capacidade antes da gravação. */
-  async function tratarRetirarBancoPilha(
-    idDaDefinicao: string,
-    quantidade: number,
-  ) {
-    if (!partidaAtiva) return;
-    try {
-      await aplicarAlteracaoNaPartidaAtiva(
-        (atual) =>
-          retirarPilhaDoBancoParaInventario(
-            atual,
-            idDaDefinicao,
-            quantidade,
-            new Date().toISOString(),
-          ),
-        `Retirada realizada: ${quantidade} item(ns).`,
-      );
-    } catch (erro) {
-      definirMensagem(
-        erro instanceof Error
-          ? erro.message
-          : "Não foi possível retirar do Banco.",
-      );
-    }
-  }
-
-  /** Encaminha o ID da instância para guardar exatamente a peça escolhida, com seus afixos e reforço. */
-  async function tratarDepositarBancoEquipamento(idDaInstancia: string) {
-    if (!partidaAtiva) return;
-    try {
-      await aplicarAlteracaoNaPartidaAtiva(
-        (atual) =>
-          depositarEquipamentoNoBanco(atual, idDaInstancia, new Date().toISOString()),
-        "Equipamento depositado no Banco.",
-      );
-    } catch (erro) {
-      definirMensagem(
-        erro instanceof Error
-          ? erro.message
-          : "Não foi possível depositar o equipamento.",
-      );
-    }
-  }
-
-  /** Move a instância do banco para a mochila através da mesma fila usada pelas demais alterações. */
-  async function tratarRetirarBancoEquipamento(idDaInstancia: string) {
-    if (!partidaAtiva) return;
-    try {
-      await aplicarAlteracaoNaPartidaAtiva(
-        (atual) =>
-          retirarEquipamentoDoBanco(
-            atual,
-            idDaInstancia,
-            new Date().toISOString(),
-          ),
-        "Equipamento retirado do Banco.",
-      );
-    } catch (erro) {
-      definirMensagem(
-        erro instanceof Error
-          ? erro.message
-          : "Não foi possível retirar o equipamento.",
-      );
-    }
-  }
+  const { tratarDepositarBancoPilha, tratarRetirarBancoPilha,
+    tratarDepositarBancoEquipamento, tratarRetirarBancoEquipamento } =
+    criarAcoesDoBanco(aplicarAlteracaoNaPartidaAtiva, definirMensagem);
 
   /** Limpa somente as escolhas transitórias do assistente; criar outro personagem não remove partidas existentes. */
   function iniciarNovoPartida() {

@@ -1,47 +1,20 @@
+import { useCombateDaEstrada, type PropriedadesDoCombateDaEstrada } from "@/hooks/useCombateDaEstrada";
 /**
  * @file Preparação, apresentação e confirmação do serviço contra o lobo da estrada.
  * O domínio calcula a luta inteira antes da exibição; o temporizador desta tela revela
  * o registro aos poucos. Ao fim da apresentação, aplica o resultado e solicita sua gravação.
  */
-import { useEffect, useMemo, useState } from "react";
+import { Button, Card, SelectField, TextField } from '@/components/ui';
+import { rotulosDaInterface } from '@/rotulosDaInterface';
 import {
   CONSUMIVEIS_DE_COMBATE,
-  obterDefinicaoDeHabilidadeDeCombate,
-  obterDefinicaoDeConsumivelDeCombate,
-  obterDefinicaoDeInimigo,
-  obterDefinicaoDeEquipamento,
+  obterDefinicaoDeHabilidadeDeCombate
 } from "@paralaxe/conteudo";
 import {
-  aplicarResultadoDoCombateNaEstrada,
-  configurarEspacoDeConsumivelDeCombate,
-  derivarEstatisticasDeCombateDoJogador,
-  retomarTrabalhoAposRisco,
-  simularCombate,
-  type ResultadoDeCombate,
-  type RecursoDoLimiarDeCombate,
   type PartidaLocal,
+  type RecursoDoLimiarDeCombate
 } from "@paralaxe/dominio";
-import { Button, Card, SelectField, TextField } from '@/components/ui'
-import { rotulosDaInterface } from '@/rotulosDaInterface'
-import estilos from './BancadaDeCombate.module.css'
-
-type PropriedadesDaTelaDeCombate = {
-  partida: PartidaLocal;
-  prepararRisco: () => Promise<PartidaLocal>;
-  aoAlterarPartida: (
-    partida: PartidaLocal,
-    mensagem?: string,
-  ) => void | Promise<void>;
-  aoAlterarEstadoDeRisco?: (ativo: boolean) => void;
-  aoRetorno?: () => void;
-};
-
-const combateCatalogo = {
-  obterDefinicaoDeEquipamento,
-  obterDefinicaoDeHabilidade: obterDefinicaoDeHabilidadeDeCombate,
-  obterDefinicaoDeInimigo,
-  obterDefinicaoDeConsumivel: obterDefinicaoDeConsumivelDeCombate,
-};
+import estilos from './BancadaDeCombate.module.css';
 
 function formatoRecurso(valor: number) {
   return Math.max(0, Math.round(valor));
@@ -68,185 +41,11 @@ function habilidadeDetalhesAdicionais(habilidadeId: string | null) {
 }
 
 /** Mantém resultado e tempo visível como estado transitório e usa callbacks para pausar trabalho e persistir a luta. */
-export default function BancadaDeCombate({
-  partida,
-  prepararRisco,
-  aoAlterarPartida,
-  aoAlterarEstadoDeRisco,
-  aoRetorno,
-}: PropriedadesDaTelaDeCombate) {
-  const [resultado, definirResultado] = useState<ResultadoDeCombate | null>(null);
-  const [combateBasePartida, definirCombateBasePartida] = useState<PartidaLocal | null>(
-    null,
-  );
-  const [visivelSegundos, definirVisivelSegundos] = useState(0);
-  const [executando, definirExecutando] = useState(false);
-  const [mensagem, definirMensagem] = useState<string | null>(null);
-  const [registroAbrir, definirRegistroAbrir] = useState(false);
-
-  const estatisticas = useMemo(
-    () => derivarEstatisticasDeCombateDoJogador(partida, combateCatalogo),
-    [partida],
-  );
-  // Filtra o registro já calculado pelo relógio da apresentação; não executa novas ações de combate.
-  const visivelRegistro =
-    resultado?.registro.filter((entrada) => entrada.instanteEmSegundos <= visivelSegundos + 0.001) ??
-    [];
-  const progresso =
-    resultado && resultado.duracaoEmSegundos > 0
-      ? Math.min(100, (visivelSegundos / resultado.duracaoEmSegundos) * 100)
-      : 0;
-  const maisRecenteAvisoDeAtaque =
-    [...visivelRegistro].reverse().find((entrada) => entrada.tipo === "avisoDeAtaque") ??
-    null;
-
-  // Este intervalo avança apenas a reprodução visual em passos de 0,1 segundo.
-  useEffect(() => {
-    if (!executando || !resultado) return;
-
-    const temporizador = window.setInterval(() => {
-      definirVisivelSegundos((atual) =>
-        Math.min(resultado.duracaoEmSegundos, atual + 0.1),
-      );
-    }, 100);
-
-    return () => window.clearInterval(temporizador);
-  }, [executando, resultado]);
-
-  // Quando a reprodução termina, usa a partida-base daquela luta para aplicar recompensas e consumos.
-  useEffect(() => {
-    if (!executando || !resultado || !combateBasePartida) return;
-    if (visivelSegundos + 0.0001 < resultado.duracaoEmSegundos) return;
-
-    definirExecutando(false);
-    const agora = new Date().toISOString();
-    const primeiroServicoConcluir =
-      resultado.desfecho === "vitoria" && !combateBasePartida.combate.loboDerrotado;
-    const aplicado = aplicarResultadoDoCombateNaEstrada(combateBasePartida, resultado, agora);
-    // O horário do trabalho é reiniciado no retorno para que a duração da luta não gere coleta ou fabricação.
-    const atualizado = retomarTrabalhoAposRisco(aplicado, agora);
-    const perdidoMoedas = Math.max(
-      0,
-      combateBasePartida.personagem.ouro - aplicado.personagem.ouro,
-    );
-    const textoExibido =
-      resultado.desfecho === "vitoria"
-        ? primeiroServicoConcluir
-          ? `Serviço concluído: +${resultado.xpConcedido + 25} XP geral e +40 moedas. Atividade automática retomada.`
-          : `Vitória persistida: +${resultado.xpConcedido} XP geral. Atividade automática retomada.`
-        : `Derrota persistida: ${perdidoMoedas} moeda(s) perdida(s). O personagem retornou à Cidade Livre e a atividade automática foi retomada.`;
-
-    void Promise.resolve(aoAlterarPartida(atualizado, textoExibido)).then(() => {
-      definirMensagem(textoExibido);
-      aoAlterarEstadoDeRisco?.(false);
-    });
-  }, [
-    combateBasePartida,
-    aoAlterarEstadoDeRisco,
-    aoAlterarPartida,
-    resultado,
-    executando,
-    visivelSegundos,
-  ]);
-
-  useEffect(() => () => aoAlterarEstadoDeRisco?.(false), [aoAlterarEstadoDeRisco]);
-
-  /** Mescla somente os campos alterados de um espaço e aplica a configuração pelo domínio antes de salvar. */
-  async function atualizarConsumivelEspaco(
-    espacoIndice: 0 | 1,
-    valores: {
-      idDaDefinicao?: string | null;
-      recurso?: RecursoDoLimiarDeCombate | null;
-      limiar?: number | null;
-    },
-  ) {
-    if (executando) return;
-    const atual = partida.combate.preferencias.espacosDeConsumiveis[espacoIndice];
-    const atualizado = configurarEspacoDeConsumivelDeCombate(
-      partida,
-      espacoIndice,
-      valores.idDaDefinicao === undefined
-        ? atual.idDaDefinicao
-        : valores.idDaDefinicao,
-      valores.recurso === undefined ? atual.recursoDeUsoAutomatico : valores.recurso,
-      valores.limiar === undefined
-        ? atual.porcentagemDoLimiarDeUsoAutomatico
-        : valores.limiar,
-      new Date().toISOString(),
-    );
-    await aoAlterarPartida(
-      atualizado,
-      `Espaço ${espacoIndice + 1} de consumível atualizado.`,
-    );
-    definirMensagem(`Espaço ${espacoIndice + 1} de consumível atualizado.`);
-  }
-
-  /** Prepara o contexto de risco, cria a semente de 32 bits e solicita a simulação para iniciar sua apresentação. */
-  async function iniciarLuta(manualEspaco?: 0 | 1) {
-    if (executando) return;
-
-    try {
-      definirMensagem(null);
-      const riscoPartida = await prepararRisco();
-      const semente = Date.now() >>> 0;
-      // O simulador valida seus próprios pré-requisitos, inclusive ausência de trabalho ativo; falhas são exibidas pelo catch.
-      const simulado = simularCombate(
-        riscoPartida,
-        combateCatalogo,
-        "inimigo.estrada-lobo",
-        semente,
-        180,
-        undefined,
-        manualEspaco,
-      );
-      definirCombateBasePartida(riscoPartida);
-      definirResultado(simulado);
-      definirVisivelSegundos(0);
-      definirRegistroAbrir(false);
-      aoAlterarEstadoDeRisco?.(true);
-      definirExecutando(true);
-    } catch (erro) {
-      definirMensagem(
-        erro instanceof Error
-          ? erro.message
-          : "Não foi possível iniciar o combate.",
-      );
-      aoAlterarEstadoDeRisco?.(false);
-    }
-  }
-
-  /** Reutiliza a semente anterior; a partida pode ter mudado, portanto isso não garante repetir o resultado anterior. */
-  function repetirSemente() {
-    if (!resultado || executando) return;
-    void iniciarComSemente(resultado.semente);
-  }
-
-  /** Inicia outra luta com a semente fornecida e o estado atual preparado para risco. */
-  async function iniciarComSemente(semente: number) {
-    try {
-      const riscoPartida = await prepararRisco();
-      const simulado = simularCombate(
-        riscoPartida,
-        combateCatalogo,
-        "inimigo.estrada-lobo",
-        semente,
-      );
-      definirCombateBasePartida(riscoPartida);
-      definirResultado(simulado);
-      definirVisivelSegundos(0);
-      definirRegistroAbrir(false);
-      aoAlterarEstadoDeRisco?.(true);
-      definirExecutando(true);
-    } catch (erro) {
-      definirMensagem(
-        erro instanceof Error
-          ? erro.message
-          : "Não foi possível repetir o combate.",
-      );
-      aoAlterarEstadoDeRisco?.(false);
-    }
-  }
-
+export default function BancadaDeCombate(props: PropriedadesDoCombateDaEstrada) {
+  const { partida, aoRetorno } = props;
+  const { resultado, executando, visivelSegundos, mensagem, registroAbrir, definirRegistroAbrir,
+    estatisticas, visivelRegistro, progresso, maisRecenteAvisoDeAtaque, iniciarLuta,
+    repetirSemente, atualizarConsumivelEspaco, confirmarResultado, retomarTrabalho, falhaAoRetomar, falhaAoSalvar, salvando } = useCombateDaEstrada(props);
   const habilidadeEspacos = partida.personagem.espacosDeHabilidadesAtivas;
 
   return (
@@ -272,6 +71,15 @@ export default function BancadaDeCombate({
         ) : null}
       </div>
 
+      {falhaAoRetomar ? <div role="alert" className="informacao-alerta">
+        <p>{mensagem} A retomada do trabalho precisa ser gravada.</p>
+        <Button variant="primary" onClick={() => void retomarTrabalho()}>Tentar retomar trabalho</Button>
+      </div> : null}
+      {falhaAoSalvar ? <div role="alert" className="informacao-alerta">
+        <p>{mensagem} O resultado permanece pendente de gravação.</p>
+        <Button variant="primary" onClick={() => void confirmarResultado()}>Tentar salvar novamente</Button>
+      </div> : null}
+      {salvando ? <p role="status">Salvando resultado do combate…</p> : null}
       {!executando && !resultado ? (
         <div className="preparacao-disposicao">
           <div className="contexto-arte contexto-arte--risco" aria-hidden="true">
