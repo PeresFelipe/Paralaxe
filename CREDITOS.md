@@ -1,8 +1,12 @@
 # Créditos e atribuições do Paralaxe
 
-Revisão: 16/09/2026. Os créditos aparecem no jogo em **Créditos e licenças**, tanto na criação/seleção de personagens quanto durante a partida.
+Revisão: 07/11/2026. Os créditos aparecem no jogo em **Créditos e licenças**, tanto na criação/seleção de personagens quanto durante a partida.
 
 ## Arte e identidade visual
+
+### Auditoria da seleção de personagens — 07/11/2026
+
+A auditoria de criação confirmou três classes com arte adequada à escolha inicial: Guerreiro (Mattz Art), Mago (LuizMelo) e Caçador (Otsoga). As permissões comerciais e as alterações existentes foram revistas nas páginas originais e nos avisos locais. Nenhuma arte nova foi incorporada; os candidatos pagos Dark Fantasy Heroes Vol. 1 (NightCat Works) e Dark Fantasy HD: Knights & Heroes (Leckie Pixel Studio) ficam registrados como alternativas que exigem aquisição e conferência dos pacotes licenciados. [Relatório da auditoria](documentacao/arte/auditoria-assets-personagens-2026-11-07.md).
 
 | Contribuição | Recurso e autoria | Licença / registro | Adaptação |
 | --- | --- | --- | --- |

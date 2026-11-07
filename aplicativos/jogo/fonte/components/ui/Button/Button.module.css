@@ -687,6 +687,13 @@
 
 /* O markup da tela usa uma classe global; em CSS Modules é necessário
    :global() para que nome e descrição não virem texto inline sobreposto. */
+.creation > .label > :global(.criacao-classe-gif) {
+  width: var(--ui-dimension-80px);
+  height: var(--ui-dimension-80px);
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+
 .creation > .label > :global(.criacao-classe-texto) {
   display: grid;
   align-content: center;

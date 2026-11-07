@@ -94,7 +94,7 @@
         "nome": "Licença própria do autor",
         "url": "/arte/classes/cacador/Otsoga/License.txt"
       },
-      "origem": null,
+      "origem": "https://otsoga.itch.io/free-medieval-npcs-witch-and-swordswoman",
       "modificacoes": "Folha horizontal montada com os seis quadros originais Idle e o primeiro quadro repetido para fechar o loop; animação feita por CSS. Os PNGs de origem não foram incluídos no jogo.",
       "avisos": [
         {
