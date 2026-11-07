@@ -12,6 +12,7 @@ import {
   NOS_DE_PRESTIGIO,
   RAMOS_PUROS_DE_PRESTIGIO,
   obterProntidaoParaPrestigioDoPersonagem,
+  obterPreviaDoPrestigioDoPersonagem,
   obterDisponibilidadeDoNoDePrestigio,
   type PartidaLocal,
   type DefinicaoDeNoDePrestigio,
@@ -42,6 +43,7 @@ export default function PainelDePrestigio({ partida, aoRealizarPrestigio, aoDesb
   const possuiAtivoTrabalho = Boolean(partida.ocioso.atividadeAtiva || partida.fabricacao.receitaAtiva)
   const podeRealizarPrestigio = prontidao.pronto && prestigio.nivel < NIVEL_MAXIMO_DE_PRESTIGIO_DO_PERSONAGEM && !possuiAtivoTrabalho
   const proximoPrestigioRotulo = prestigioNivelRotulos[prestigio.nivel] ?? '—'
+  const previa = obterPreviaDoPrestigioDoPersonagem(partida)
 
   const portaoTitulo = !prontidao.pronto
     ? 'Árvore bloqueada'
@@ -98,6 +100,23 @@ export default function PainelDePrestigio({ partida, aoRealizarPrestigio, aoDesb
         </div>
       </Card>
 
+      <Card className={estilos.marcos} as="section" aria-label="Marcos permanentes de Prestígio">
+        <div>
+          <p className="secao-chamada">Marcos permanentes</p>
+          <h3>Três novos começos</h3>
+          <p className="atenuado">Cada marco concede {PONTOS_DE_PRESTIGIO_POR_NIVEL} pontos; seus nós já conquistados permanecem.</p>
+        </div>
+        <ol className={estilos.marcosLista}>
+          {prestigioNivelRotulos.map((rotulo, indice) => (
+            <li key={rotulo} data-situacao={prestigio.nivel > indice ? 'concluido' : prestigio.nivel === indice ? 'proximo' : 'futuro'}>
+              <strong>Prestígio {rotulo}</strong>
+              <span>{prestigio.nivel > indice ? 'Conquistado' : prestigio.nivel === indice ? 'Próximo marco' : 'Bloqueado'}</span>
+              <small>+{PONTOS_DE_PRESTIGIO_POR_NIVEL} pontos</small>
+            </li>
+          ))}
+        </ol>
+      </Card>
+
       <Card className={`${estilos.gate} ${prontidao.pronto && prestigio.nivel > 0 ? estilos.gateReady : ''}`}>
         <div className={estilos.gateMain}>
           <p className="secao-chamada">Requisito da árvore</p>
@@ -120,7 +139,14 @@ export default function PainelDePrestigio({ partida, aoRealizarPrestigio, aoDesb
         {/* A confirmação permite revisar o reinício de nível e atributos antes de enviar a alteração permanente. */}
         {confirmandoPrestigio ? (
           <div className={estilos.confirmation} role="group" aria-labelledby="prestigio-confirmacao-titulo">
-            <p id="prestigio-confirmacao-titulo"><strong>Reinício permanente da jornada.</strong> O nível e os atributos normais voltam ao início; Profissões, equipamentos, inventário e nós já desbloqueados permanecem.</p>
+            <p id="prestigio-confirmacao-titulo"><strong>Prévia do Prestígio {proximoPrestigioRotulo}.</strong> Revise exatamente o que muda antes de confirmar.</p>
+            <dl className={estilos.previa}>
+              <div><dt>Nível do personagem</dt><dd>{previa.nivelPersonagemAtual} → {previa.nivelPersonagemPosterior}</dd></div>
+              <div><dt>Pontos de Prestígio</dt><dd>{previa.pontosAtuais} → {previa.pontosPosteriores}</dd></div>
+              <div><dt>XP e pontos de atributo disponíveis</dt><dd>Reiniciam em {previa.xpPosterior} XP e {previa.pontosDeAtributoPosteriores} pontos</dd></div>
+              <div><dt>Permanece</dt><dd>{previa.profissoesPreservadas} profissões, {previa.equipamentosPreservados} equipamentos, {previa.pilhasPreservadas} pilhas no inventário e {previa.nosPreservados} nós desbloqueados</dd></div>
+            </dl>
+            <p className={estilos.avisoPrevia}>Os atributos normais retornam aos valores iniciais da classe. Banco, progresso dos ofícios e demais dados da partida permanecem. Nenhuma alteração ocorre antes da confirmação.</p>
             <div className="botao-linhaDeDados">
               <Button variant="secondary" size="sm" disabled={ehRealizandoPrestigio} onClick={() => definirConfirmandoPrestigio(false)}>{rotulosDaInterface.cancelar}</Button>
               <Button variant="primary" size="sm" disabled={!podeRealizarPrestigio || ehRealizandoPrestigio} loading={ehRealizandoPrestigio} onClick={() => void realizarPrestigio()}>{ehRealizandoPrestigio ? 'Aplicando…' : `${rotulosDaInterface.confirmar} Prestígio ${proximoPrestigioRotulo}`}</Button>

@@ -231,6 +231,34 @@ export function desbloquearNoDePrestigioDoPersonagem(
   }
 }
 
+/** Prévia derivada das mesmas constantes do reinício; não grava nem modifica a partida. */
+export function obterPreviaDoPrestigioDoPersonagem(partida: PartidaLocal) {
+  const nivelAtual = partida.personagem.prestigio.nivel
+  const pontosAtuais = partida.personagem.prestigio.pontos
+  const nivelPosterior = Math.min(NIVEL_MAXIMO_DE_PRESTIGIO_DO_PERSONAGEM, nivelAtual + 1)
+  const podeRealizar = personagemPodeRealizarPrestigio(partida)
+    && nivelAtual < NIVEL_MAXIMO_DE_PRESTIGIO_DO_PERSONAGEM
+    && !partida.ocioso.atividadeAtiva
+    && !partida.fabricacao.receitaAtiva
+  return {
+    nivelPrestigioAtual: nivelAtual,
+    nivelPrestigioPosterior: nivelPosterior,
+    pontosAtuais,
+    pontosPosteriores: nivelPosterior > nivelAtual
+      ? Math.min(PONTOS_MAXIMOS_DE_PRESTIGIO, pontosAtuais + PONTOS_DE_PRESTIGIO_POR_NIVEL)
+      : pontosAtuais,
+    nivelPersonagemAtual: partida.personagem.nivel,
+    nivelPersonagemPosterior: nivelPosterior > nivelAtual ? 1 : partida.personagem.nivel,
+    xpPosterior: nivelPosterior > nivelAtual ? 0 : partida.personagem.xp,
+    pontosDeAtributoPosteriores: nivelPosterior > nivelAtual ? 0 : partida.personagem.pontosDeAtributoDisponiveis,
+    nosPreservados: partida.personagem.prestigio.idsDosNosDesbloqueados.length,
+    equipamentosPreservados: partida.personagem.itensDeEquipamento.length,
+    pilhasPreservadas: partida.personagem.inventario.length,
+    profissoesPreservadas: Object.keys(partida.profissoes).length,
+    podeRealizar,
+  }
+}
+
 /**
  * Eleva o prestígio e acrescenta pontos, reiniciando nível, XP e atributos para a base da classe.
  * Os demais campos são preservados pelo espalhamento do estado; trabalhos ativos impedem a operação.

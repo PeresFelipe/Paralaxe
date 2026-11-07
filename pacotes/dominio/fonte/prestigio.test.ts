@@ -9,6 +9,7 @@ import { realizarPrestigioDaProfissao } from './ocioso'
 import {
   NOS_DE_PRESTIGIO,
   obterProntidaoParaPrestigioDoPersonagem,
+  obterPreviaDoPrestigioDoPersonagem,
   obterDisponibilidadeDoNoDePrestigio,
   personagemPodeRealizarPrestigio,
   realizarPrestigioDoPersonagem,
@@ -128,6 +129,19 @@ describe("Árvore de Prestígio do personagem", () => {
     expect(obterDisponibilidadeDoNoDePrestigio(partida, "prestigio.hibrido.corpo-arcano.encantada-arma").situacao).toBe("disponivel")
     partida = desbloquearNoDePrestigioDoPersonagem(partida, "prestigio.hibrido.corpo-arcano.encantada-arma", '2026-09-09T12:02:00.000Z')
     expect(partida.personagem.prestigio.pontos).toBe(11)
+  })
+
+  it("a prévia reproduz o saldo e o nível futuros sem modificar a partida", () => {
+    const original = prontoPartida(2)
+    const antes = JSON.stringify(original)
+    const previa = obterPreviaDoPrestigioDoPersonagem(original)
+    const realizado = realizarPrestigioDoPersonagem(original, classeDoPersonagem.atributos, '2026-09-09T12:10:00.000Z')
+    expect(previa.podeRealizar).toBe(true)
+    expect(previa.nivelPrestigioPosterior).toBe(realizado.personagem.prestigio.nivel)
+    expect(previa.pontosPosteriores).toBe(realizado.personagem.prestigio.pontos)
+    expect(previa.nivelPersonagemPosterior).toBe(realizado.personagem.nivel)
+    expect(previa.nosPreservados).toBe(realizado.personagem.prestigio.idsDosNosDesbloqueados.length)
+    expect(JSON.stringify(original)).toBe(antes)
   })
 
   it("realiza o primeiro Prestígio, reinicia a jornada e preserva a árvore", () => {

@@ -229,3 +229,48 @@
 }
 .branchHeading { padding-bottom: var(--ui-space-1-5); }
 .nodeList { gap: var(--ui-space-1); }
+
+.marcos { display: grid; gap: var(--ui-space-3); }
+.marcos h3 { margin: 0; }
+.marcos .marcosLista {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--ui-space-2);
+  margin: 0;
+  padding: 0;
+}
+.marcosLista li {
+  display: grid;
+  min-width: 0;
+  gap: var(--ui-space-1);
+  padding: var(--ui-space-3);
+  border: var(--ui-size-border) solid var(--ui-color-border);
+  border-radius: var(--ui-radius-md);
+  background: var(--ui-color-surface-raised);
+}
+.marcosLista li[data-situacao='concluido'] { border-color: var(--ui-color-success-border); background: var(--ui-color-success-surface); }
+.marcosLista li[data-situacao='proximo'] { border-color: var(--ui-color-warning); }
+.marcosLista strong { font-size: var(--ui-font-size-sm); }
+.marcosLista span, .marcosLista small { color: var(--ui-color-text-muted); font-size: var(--ui-font-size-xs); }
+.previa {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--ui-space-2);
+  margin: 0;
+}
+.previa > div {
+  display: grid;
+  min-width: 0;
+  gap: var(--ui-space-1);
+  padding: var(--ui-space-2);
+  border-radius: var(--ui-radius-md);
+  background: var(--ui-color-surface-raised);
+}
+.previa dt { color: var(--ui-color-text-muted); font-size: var(--ui-font-size-xs); }
+.previa dd { margin: 0; color: var(--ui-color-text); font-weight: var(--ui-font-weight-semibold); overflow-wrap: anywhere; }
+.confirmation .avisoPrevia { color: var(--ui-color-text); }
+@media (max-width: 720px) {
+  .marcos .marcosLista { grid-template-columns: 1fr; }
+  .previa { grid-template-columns: 1fr; }
+}
