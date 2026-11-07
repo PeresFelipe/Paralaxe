@@ -15,6 +15,7 @@ import { SeletorDeOficios } from '../SeletorDeOficios/SeletorDeOficios'
 import { CenaDoOficio } from '../CenaDoOficio/CenaDoOficio'
 import estilos from './TelaDeAtividades.module.css'
 import PainelRapido from '@/features/navegacao/PainelRapido'
+import { obterSugestaoDePrioridadeDaJornada } from '@/services/sugestaoDePrioridade'
 
 type PropriedadesDeTelaDeAtividades = {
   partida: PartidaLocal
@@ -57,6 +58,7 @@ export default function TelaDeAtividades({ partida, ultimoResultadoDoTrabalho, p
   const receitaSecundaria = RECEITAS_INICIAIS_DE_FABRICACAO.find(r => r.id === partida.fabricacao.receitaSecundaria?.idDaDefinicaoDaReceita)
   const receitaTerciaria = RECEITAS_INICIAIS_DE_FABRICACAO.find(r => r.id === partida.fabricacao.receitaTerciaria?.idDaDefinicaoDaReceita)
   const trabalho = ocioso?.nomeDoResultado ?? fabricar?.nome
+  const sugestao = obterSugestaoDePrioridadeDaJornada(partida)
   const minigame = obterOportunidadeDeMinigame(partida, profissaoSelecionada, new Date().toISOString())
   const ativoProfissao = ocioso?.idDaProfissao ?? fabricar?.idDaProfissao
   const possuido = (id: string) => partida.personagem.inventario.find((pilha) => pilha.idDaDefinicao === id)?.quantidade ?? 0
@@ -145,6 +147,13 @@ export default function TelaDeAtividades({ partida, ultimoResultadoDoTrabalho, p
                   return <Button key={opcao} variant={atual === opcao ? 'primary' : 'secondary'} size="sm"
                     disabled={pendente || atual === opcao} onClick={() => void agir(() => aoAlterarPrioridade(opcao))}>{nome}</Button>
                 })}
+                {sugestao ? <div className={estilos.sugestao} role="note">
+                  <strong>Recomendação da Jornada: {sugestao.prioridade === 'equilibrado' ? 'Equilibrado' : sugestao.prioridade === 'principal' ? 'Prioridade principal' : 'Prioridade secundária'}</strong>
+                  <p>{sugestao.motivo} A decisão final é sua.</p>
+                  {(ocioso ? partida.ocioso.prioridade ?? 'equilibrado' : partida.fabricacao.prioridade ?? 'equilibrado') !== sugestao.prioridade
+                    ? <Button variant="secondary" size="sm" disabled={pendente} onClick={() => void agir(() => aoAlterarPrioridade(sugestao.prioridade))}>Aplicar sugestão</Button>
+                    : <span>A prioridade recomendada já está ativa.</span>}
+                </div> : null}
               </div>
             ) : null}
             <details><summary>Detalhes</summary><p>Prestígio: {progresso.prestigio}. Prestígio I permite dois trabalhos do mesmo Ofício; II permite ajustar a prioridade; III permite três. O prazo de cada trabalho considera a prioridade selecionada.</p></details>

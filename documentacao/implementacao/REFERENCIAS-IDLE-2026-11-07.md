@@ -14,3 +14,6 @@ Os autores, páginas originais e licenças estão em CREDITOS.md e no catálogo 
 
 ## Testes e aceite
 Executar pnpm verificar, pnpm compilar e pnpm verificar:creditos, além de conferir a UI em ambos os temas com e sem atividades. Inspeção estática não substitui execução. Nenhuma alteração de save, economia, balanceamento ou conexões externas foi intencionalmente adicionada.
+
+## Recomendações contextuais opcionais
+Com uma meta de fabricação pendente e duas atividades simultâneas, a UI identifica se o trabalho principal, o secundário ou ambos produzem um material em falta. Recomenda a prioridade e explica o motivo. A sugestão só é aplicada se o jogador clicar no botão; o motor ocioso e os dados salvos permanecem inalterados.

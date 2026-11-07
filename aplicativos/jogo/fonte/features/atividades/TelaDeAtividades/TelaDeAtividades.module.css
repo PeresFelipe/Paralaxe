@@ -245,3 +245,9 @@
 @media (max-width: 45rem) {
   .catalogControls { grid-template-columns: minmax(0, 1fr); }
 }
+
+/* Assistente de prioridades: sempre opcional e sem alteração automática de estado. */
+.sugestao { display: grid; gap: var(--ui-space-2); margin-top: var(--ui-space-3); padding: var(--ui-space-3); border: var(--ui-size-border) solid var(--ui-color-border); border-radius: var(--ui-radius-lg); background: var(--ui-color-surface-raised); }
+.sugestao strong { color: var(--ui-color-warning-text); font-size: var(--ui-font-size-sm); }
+.sugestao p, .sugestao span { margin: 0; color: var(--ui-color-text); font-size: var(--ui-font-size-xs); line-height: var(--ui-line-height-normal); }
+.sugestao button { justify-self: start; }
