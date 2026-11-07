@@ -39,6 +39,11 @@ describe('prazo exibido dos trabalhos', () => {
     expect(obterProgressoDoTrabalho(partida, 'secundaria')?.segundosPorAcao).toBe(Math.ceil(stan.segundosPorAcao / 0.75))
     expect(obterProgressoDoTrabalho(partida, 'terciaria')?.segundosPorAcao).toBe(Math.ceil(copar.segundosPorAcao / 0.33))
     expect(obterProgressoDoTrabalho(partida, 'secundaria')?.titulo).toContain('Stán')
+    const indicador = obterProgressoDoTrabalho(partida, 'secundaria')!;
+    expect(indicador.motivoDaPrioridade).toContain('75%');
+    expect(indicador.xpBasePorHora).toBeCloseTo(stan.xpDeProfissaoPorAcao * 3600 / indicador.segundosPorAcao);
+    expect(indicador.producaoBasePorHora).toBeCloseTo(3600 / indicador.segundosPorAcao);
+    expect(indicador.segundosEstimadosParaProximoNivel).not.toBeNull();
     expect(JSON.stringify(partida)).toBe(antes)
   })
   it('produção secundária usa sua própria receita e duração reduzida por eficiência', () => {
@@ -53,5 +58,7 @@ describe('prazo exibido dos trabalhos', () => {
     expect(exibido?.titulo).toContain('Lingote de Stán')
     expect(exibido?.segundosPorAcao).toBe(b.segundosPorAcao * 2)
     expect(exibido?.proximoResultado).toContain('→')
+    expect(exibido?.xpBasePorHora).toBe(12 * 3600 / (b.segundosPorAcao * 2) * 2);
+    expect(exibido?.motivoDaPrioridade).toContain('50%');
   })
 })

@@ -12,3 +12,15 @@ export function segundosPorAcaoComPrioridade(
 ): number {
   return Math.max(1, Math.ceil(segundos / EFICIENCIAS_POR_PRIORIDADE[prioridade ?? 'equilibrado'][espaco]))
 }
+
+/** Explica a configuração escolhida pelo jogador; não há IA nem decisão oculta. */
+export function explicarPrioridadeDeOficio(
+  prioridade: PrioridadeDeOficio | undefined,
+  espaco: 'principal' | 'secundaria' | 'terciaria',
+): string {
+  const escolha = prioridade ?? 'equilibrado'
+  const eficiencia = EFICIENCIAS_POR_PRIORIDADE[escolha][espaco]
+  const nomes = { equilibrado: 'Equilibrado', principal: 'Prioridade principal', secundaria: 'Prioridade secundária' }
+  const trabalhos = { principal: 'trabalho principal', secundaria: 'trabalho secundário', terciaria: 'terceiro trabalho' }
+  return `${nomes[escolha]}: o ${trabalhos[espaco]} recebe eficiência de ${Math.round(eficiencia * 100)}% conforme sua configuração. Essa eficiência altera o tempo do ciclo, não a chance de recompensa.`
+}

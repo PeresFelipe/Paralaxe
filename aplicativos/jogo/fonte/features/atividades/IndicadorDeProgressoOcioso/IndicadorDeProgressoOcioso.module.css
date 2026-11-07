@@ -118,3 +118,22 @@
     transition: none;
   }
 }
+
+/* Informações secundárias ficam atrás de uma decisão explícita; preserva o HUD compacto. */
+.explicacao {
+  min-width: 0;
+  border-top: var(--ui-size-border) solid var(--ui-color-border);
+  padding-top: var(--ui-space-2);
+  font-family: var(--ui-font-family-body);
+  font-size: var(--ui-font-size-xs);
+  color: var(--ui-color-text-muted);
+}
+.explicacao summary {
+  cursor: pointer;
+  color: var(--ui-color-text);
+  font-weight: var(--ui-font-weight-semibold);
+}
+.explicacao p {
+  margin: var(--ui-space-2) 0 0;
+  line-height: var(--ui-line-height-normal);
+}

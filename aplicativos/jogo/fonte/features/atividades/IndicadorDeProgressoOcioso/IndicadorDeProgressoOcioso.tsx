@@ -165,7 +165,19 @@ export default function IndicadorDeProgressoOcioso({
               {rotulosDasProfissoes[trabalho.idDaProfissao]} Nv. {profissao.nivel} · {profissao.xp} XP
             </strong>
           </span>
+          <span>
+            <small>Rendimento base estimado</small>
+            <strong>{pausado ? 'Pausado' : `${trabalho.producaoBasePorHora.toLocaleString('pt-BR', { maximumFractionDigits: 1 })} un./h · ${trabalho.xpBasePorHora.toLocaleString('pt-BR', { maximumFractionDigits: 0 })} XP/h`}</strong>
+          </span>
+          <span>
+            <small>Próximo nível (estimativa base)</small>
+            <strong>{pausado ? 'Retoma ao sair do risco' : trabalho.segundosEstimadosParaProximoNivel === null ? 'Nível máximo' : `~${Math.max(1, Math.ceil(trabalho.segundosEstimadosParaProximoNivel / 60))} min`}</strong>
+          </span>
         </div>
+        <details className={estilos.explicacao}>
+          <summary>Por que esta velocidade?</summary>
+          <p>{trabalho.motivoDaPrioridade} As taxas são estimativas base, sem bônus temporários, materiais insuficientes ou inventário cheio.</p>
+        </details>
       ) : null}
     </div>
   );
