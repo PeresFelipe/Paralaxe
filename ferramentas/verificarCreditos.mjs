@@ -48,6 +48,25 @@ for (const recurso of catalogo.recursos) {
     if (!caminho.startsWith('/') || caminho.includes('..') || !recursosVisuais.some((arquivo) => pertence(arquivo, caminho))) erros.push(`Caminho sem recurso correspondente: ${recurso.id} → ${caminho}`)
   }
 }
+// Projetos MIT efetivamente copiados exigem o copyright e o aviso completo
+// distribuídos na mesma versão do jogo, além dos links da janela de créditos.
+for (const [id, aviso, autor] of [
+  ['referencia-universal-ai', '/creditos/universal-ai-MIT.txt', 'TechLuddite'],
+  ['referencia-iktahmetrics', '/creditos/iktahmetrics-MIT.txt', 'Merrill Lines'],
+]) {
+  const entrada = catalogo.recursos.find((recurso) => recurso.id === id)
+  if (!entrada?.avisos.some((item) => item.url === aviso)) erros.push(`Crédito de código MIT sem aviso: ${id}`)
+  try {
+    const licenca = await readFile(resolve(publico, '.' + aviso), 'utf8')
+    if (!licenca.includes('MIT License') || !licenca.includes('Copyright (c) 2026 ' + autor) ||
+        !licenca.includes('THE SOFTWARE IS PROVIDED')) {
+      erros.push(`Aviso MIT incompleto ou titular incorreto: ${id}`)
+    }
+  } catch {
+    erros.push(`Arquivo obrigatório de copyright MIT ausente: ${id}`)
+  }
+}
+
 // Cada arquivo deve ter exatamente um registro proprietário; isso detecta omissões e sobreposições.
 for (const arquivo of recursosVisuais) {
   const autores = catalogo.recursos.filter((recurso) => recurso.arquivos.some((caminho) => pertence(arquivo, caminho)))

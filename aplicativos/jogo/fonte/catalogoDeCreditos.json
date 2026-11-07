@@ -360,14 +360,19 @@
           "url": "https://github.com/TechLuddite/Universal-AI"
         }
       ],
-      "contribuicao": "Automação determinística e explicação de prioridades. Nenhum motor ou modelo WebLLM importado.",
+      "contribuicao": "Código MIT adaptado de pontuação de decisões e ordenação de alternativas; integrado às prioridades da Jornada. Sem WebLLM.",
       "licenca": {
         "nome": "MIT",
-        "url": "https://opensource.org/license/mit"
+        "url": "/creditos/universal-ai-MIT.txt"
       },
       "origem": "https://github.com/TechLuddite/Universal-AI",
-      "modificacoes": "Inspiração conceitual apenas. Implementação própria do Paralaxe; nenhum arquivo de código, arte, áudio ou documentação reutilizado.",
-      "avisos": [],
+      "modificacoes": "Reaproveitadas e adaptadas as funções genéricas scored/rankActions de src/game/overseer/utility.ts: tipagem do Paralaxe, valores finitos, desempate estável e integração com tempos de produção. Código original do restante do jogo permanece independente.",
+      "avisos": [
+        {
+          "rotulo": "Licença MIT e copyright de TechLuddite",
+          "url": "/creditos/universal-ai-MIT.txt"
+        }
+      ],
       "arquivos": [],
       "creditosComplementares": []
     },
@@ -381,14 +386,19 @@
           "url": "https://github.com/Linesmerrill/IktahMetrics"
         }
       ],
-      "contribuicao": "Métricas de XP/h, produção/h e ETA. OCR e Electron não utilizados.",
+      "contribuicao": "Código MIT adaptado de formatação legível de duração para o ETA das profissões; sem OCR, Electron ou recursos do macOS.",
       "licenca": {
         "nome": "MIT",
-        "url": "https://opensource.org/license/mit"
+        "url": "/creditos/iktahmetrics-MIT.txt"
       },
       "origem": "https://github.com/Linesmerrill/IktahMetrics",
-      "modificacoes": "Inspiração conceitual apenas. Implementação própria do Paralaxe; nenhum arquivo de código, arte, áudio ou documentação reutilizado.",
-      "avisos": [],
+      "modificacoes": "Reutilizada e adaptada a função fmtDuration de src/renderer.js: TypeScript, arredondamento consistente e uso na interface do Paralaxe.",
+      "avisos": [
+        {
+          "rotulo": "Licença MIT e copyright de Merrill Lines",
+          "url": "/creditos/iktahmetrics-MIT.txt"
+        }
+      ],
       "arquivos": [],
       "creditosComplementares": []
     },

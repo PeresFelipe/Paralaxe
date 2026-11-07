@@ -1,5 +1,5 @@
 CRÉDITOS E ATRIBUIÇÕES — PARALAXE
-Revisão: 16/09/2026
+Revisão: 07/11/2026
 
 Arte dos personagens
 - Guerreiro: FREE - Knight 2D Pixel Art, por Mattz Art.
@@ -36,6 +36,18 @@ Software
 - Workbox: Google LLC — MIT.
 - idb: Jake Archibald — ISC.
   Avisos completos: /creditos/software.txt
+
+Código MIT adaptado de projetos de jogos ociosos
+- Universal-AI, por TechLuddite (copyright 2026), MIT.
+  Trechos de pontuação/ranking adaptados de src/game/overseer/utility.ts.
+  Origem: https://github.com/TechLuddite/Universal-AI
+  Licença e copyright originais: /creditos/universal-ai-MIT.txt
+- IktahMetrics, por Merrill Lines (copyright 2026), MIT.
+  Função fmtDuration adaptada de src/renderer.js.
+  Origem: https://github.com/Linesmerrill/IktahMetrics
+  Licença e copyright originais: /creditos/iktahmetrics-MIT.txt
+- Os demais projetos listados em Créditos e licenças são apenas referências.
+  Nenhum código GPL, sem licença ou assets desses projetos foi integrado.
 
 Os caminhos acima são relativos à raiz do jogo. Estes avisos também estão
 incluídos no cache de produção para consulta após o preparo do modo sem conexão.
