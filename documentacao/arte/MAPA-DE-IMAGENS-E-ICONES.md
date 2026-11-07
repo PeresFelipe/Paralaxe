@@ -4,6 +4,21 @@ Data: **07/11/2026** · Branch: **develop** · Código de referência: [`6d6d1a8
 
 Este documento informa **nome do arquivo, localização física, URL servida, uso na interface e ponto do código**. Os links de código usam o commit acima para manter os números de linha verificáveis. Atualizações futuras podem mudar as linhas.
 
+### Organização atual após a revisão de arquitetura
+
+Os links abaixo do inventário continuam apontando para o snapshot documentado. Na implementação atual da `develop`, estes consumidores foram extraídos sem mover nem substituir as imagens:
+
+| Uso | Ponto atual do código |
+| --- | --- |
+| GIFs e faixas Idle das seis classes | `aplicativos/jogo/fonte/features/criacao/CartaoDaClasse/CartaoDaClasse.tsx` |
+| Animação e dimensão da arte de classe | `aplicativos/jogo/fonte/features/criacao/CartaoDaClasse/CartaoDaClasse.module.css` |
+| Ícones das abas do personagem | `aplicativos/jogo/fonte/features/personagem/TelaDoPersonagem.tsx` |
+| Ícones dos atalhos de Aventura | `aplicativos/jogo/fonte/features/aventura/TelaDeAventura.tsx` |
+| Ícones dos locais da Cidade | `aplicativos/jogo/fonte/features/cidade/TelaDaCidade.tsx` |
+
+As URLs, autores e licenças do inventário permanecem os mesmos. As imagens de origem utilizadas apenas na geração e as animações sem consumidor continuam distribuídas, mas não entram no pré-cache offline. As versões exibidas no jogo e os avisos de licença continuam incluídos.
+
+
 ## Como localizar uma imagem
 
 - `aplicativos/jogo/publico/` é a raiz dos arquivos servidos pelo navegador. Por exemplo, `publico/arte/icones/kenney/lanca.png` corresponde à URL `/arte/icones/kenney/lanca.png`.

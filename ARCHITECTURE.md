@@ -181,3 +181,19 @@ pnpm verificar
 3. Extrair um componente somente quando houver reutilização real; variantes específicas do jogo devem ser oficiais e documentadas.
 4. Remover regras antigas sem uso ao alterar uma área da interface.
 5. Preservar funções, estado, navegação, regras e conteúdo do jogo durante todo o trabalho visual.
+
+## Comandos e confirmação de gravação
+
+As telas enviam `AlteracaoDaPartida` (`services/alteracoesDaPartida.ts`), uma transformação avaliada **dentro da fila**, sobre a última partida confirmada. Não enviar uma cópia completa calculada a partir das props: isso pode apagar progresso de outra ação. A fila serializa as gravações, verifica a identidade do personagem e só atualiza memória depois da confirmação da transação. Uma rejeição chega ao chamador sem impedir os próximos comandos. Notificações posteriores não transformam uma transação concluída em falha de gravação.
+
+`useAplicativoDaPartida` injeta o repositório e conecta a fila ao React. `acoesDoBanco`, `acoesDaMasmorra` e `combateDaEstrada` coordenam casos de uso com as regras existentes do domínio. `useMasmorra` e `useCombateDaEstrada` mantêm somente apresentação, bloqueio de operações, relógios visuais e envio dos comandos. Tempo e semente chegam às transições por parâmetro.
+
+O fim da reprodução visual não confirma um combate: o risco permanece bloqueado enquanto o resultado não for salvo. A confirmação deduplica chamadas da mesma reprodução; uma falha permite tentar novamente. Falhas entre a pausa do trabalho e o início de um encontro também oferecem retomada explícita. O disparo periódico revalida o risco ao executar um comando já enfileirado.
+
+## Integridade, carregamento e estilos por funcionalidade
+
+- A persistência verifica a integridade do agregado depois das migrações e antes de substituir um save atual. Valida estrutura, datas, números finitos, quantidades, IDs duplicados e referências entre equipamentos/habilidades. As validações existentes de Vigília e Legado continuam sendo aplicadas. Não consultar catálogos de conteúdo no adaptador nem alterar o formato histórico para organizar código.
+- `EstruturaDoJogo` compõe o shell. `TelaDoPersonagem`, `TelaDeAventura`, `TelaDaCidade` e `TelaDeAtividades` carregam por `React.lazy`, com `Suspense` na área de conteúdo. Cabeçalho e navegação permanecem montados durante o carregamento.
+- Todos os módulos da distribuição, imagens efetivamente exibidas, fontes e avisos de licença permanecem no pré-cache da PWA. Apenas fontes de geração e artes sem consumidor são excluídas por `globIgnores`; continuam disponíveis no repositório e na distribuição. Reavaliar essas exclusões se um arquivo passar a ser usado pela interface.
+- `features/criacao/CartaoDaClasse` possui a seleção, arte decorativa e CSS Module da classe. `Button` recebe conteúdo genérico; não estiliza `.criacao-classe-*`. Preservar tokens, proporções, quadros e redução de movimento ao modificar esse componente.
+- Testes de concorrência e falha exercitam a fila/casos de uso; testes semânticos renderizam HTML. Testes estáticos de CSS continuam úteis para tokens/cascata, mas não substituem verificação visual em navegador.
