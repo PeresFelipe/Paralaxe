@@ -53,12 +53,15 @@ for (const recurso of catalogo.recursos) {
 for (const [id, aviso, autor] of [
   ['referencia-universal-ai', '/creditos/universal-ai-MIT.txt', 'TechLuddite'],
   ['referencia-iktahmetrics', '/creditos/iktahmetrics-MIT.txt', 'Merrill Lines'],
+  ['referencia-idle-game-template', '/creditos/idle-game-template-MIT.txt', 'ciefa'],
+  ['referencia-skill-issue-chronicles', '/creditos/skill-issue-chronicles-MIT.txt', 'Gylan Salih'],
 ]) {
   const entrada = catalogo.recursos.find((recurso) => recurso.id === id)
   if (!entrada?.avisos.some((item) => item.url === aviso)) erros.push(`Crédito de código MIT sem aviso: ${id}`)
   try {
     const licenca = await readFile(resolve(publico, '.' + aviso), 'utf8')
-    if (!licenca.includes('MIT License') || !licenca.includes('Copyright (c) 2026 ' + autor) ||
+    const copyright = autor === 'Gylan Salih' ? 'Copyright (c) 2025 Gylan Salih' : 'Copyright (c) 2026 ' + autor
+    if (!licenca.includes('MIT License') || !licenca.includes(copyright) ||
         !licenca.includes('THE SOFTWARE IS PROVIDED')) {
       erros.push(`Aviso MIT incompleto ou titular incorreto: ${id}`)
     }

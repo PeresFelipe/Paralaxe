@@ -46,6 +46,14 @@ Código MIT adaptado de projetos de jogos ociosos
   Função fmtDuration adaptada de src/renderer.js.
   Origem: https://github.com/Linesmerrill/IktahMetrics
   Licença e copyright originais: /creditos/iktahmetrics-MIT.txt
+- Idle Game Template, por ciefa (copyright 2026), MIT.
+  Contador da navegação adaptado de NavbarIcon.tsx.
+  Origem: https://github.com/ciefa/idle-game-template
+  Licença integral: /creditos/idle-game-template-MIT.txt
+- Skill Issue Chronicles, por Gylan Salih (copyright 2025), MIT.
+  Perfis compact/normal/wide adaptados de content-width SCSS.
+  Origem: https://github.com/GylanSalih/Skill-Issue-Chronicles
+  Licença integral: /creditos/skill-issue-chronicles-MIT.txt
 - Os demais projetos listados em Créditos e licenças são apenas referências.
   Nenhum código GPL, sem licença ou assets desses projetos foi integrado.
 

@@ -59,7 +59,7 @@ function JanelaDeCreditos({ aoFechar }: { aoFechar: () => void }) {
       </section>)}
       <details className={estilos.technology}>
         <summary>Referências de jogos idle — autores e licenças</summary>
-        <p>Trechos de código MIT adaptados de Universal-AI e IktahMetrics, com licenças completas disponíveis abaixo. Os demais projetos são apenas referências conceituais; nenhum asset foi copiado.</p>
+        <p>Trechos de código MIT adaptados de Universal-AI, IktahMetrics, Idle Game Template e Skill Issue Chronicles, com as licenças completas abaixo. Os demais projetos são referências conceituais; nenhum asset foi copiado.</p>
         <ListaDeContribuicoes grupo="referencias" />
       </details>
       {/* As dependências de software ficam em uma seção expansível para priorizar a autoria visual. */}

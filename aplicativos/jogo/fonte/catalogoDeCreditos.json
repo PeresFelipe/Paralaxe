@@ -479,6 +479,58 @@
       "avisos": [],
       "arquivos": [],
       "creditosComplementares": []
+    },
+    {
+      "id": "referencia-idle-game-template",
+      "grupo": "referencias",
+      "titulo": "Idle Game Template — NavbarIcon",
+      "autores": [
+        {
+          "nome": "ciefa",
+          "url": "https://github.com/ciefa/idle-game-template"
+        }
+      ],
+      "contribuicao": "Código MIT adaptado do contador de navegação e indicador de trabalhos ativos.",
+      "licenca": {
+        "nome": "MIT",
+        "url": "/creditos/idle-game-template-MIT.txt"
+      },
+      "origem": "https://github.com/ciefa/idle-game-template/blob/main/src/ui/shell/NavbarIcon.tsx",
+      "modificacoes": "Adaptado badgeCount e limite 99+ para CSS Modules, tokens e Button do Paralaxe. Rótulo acessível no botão, sem Tailwind.",
+      "avisos": [
+        {
+          "rotulo": "Licença MIT e copyright de ciefa",
+          "url": "/creditos/idle-game-template-MIT.txt"
+        }
+      ],
+      "arquivos": [],
+      "creditosComplementares": []
+    },
+    {
+      "id": "referencia-skill-issue-chronicles",
+      "grupo": "referencias",
+      "titulo": "Skill Issue Chronicles — perfis de largura",
+      "autores": [
+        {
+          "nome": "Gylan Salih",
+          "url": "https://github.com/GylanSalih/Skill-Issue-Chronicles"
+        }
+      ],
+      "contribuicao": "Estilos MIT adaptados de compact/normal/wide para largura de leitura desktop.",
+      "licenca": {
+        "nome": "MIT",
+        "url": "/creditos/skill-issue-chronicles-MIT.txt"
+      },
+      "origem": "https://github.com/GylanSalih/Skill-Issue-Chronicles/tree/main/src/features/pages/content-width",
+      "modificacoes": "SCSS de content-width adaptado a tokens CSS e preferência local, sem assets, animações ou estilos gerais de terceiros.",
+      "avisos": [
+        {
+          "rotulo": "Licença MIT e copyright de Gylan Salih",
+          "url": "/creditos/skill-issue-chronicles-MIT.txt"
+        }
+      ],
+      "arquivos": [],
+      "creditosComplementares": []
     }
   ]
 }

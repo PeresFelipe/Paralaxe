@@ -4,6 +4,17 @@ import { describe, expect, it } from 'vitest'
 const fonte = (caminho: string) => readFileSync(new URL(caminho, import.meta.url), 'utf8')
 
 describe('contratos de layout do Paralaxe', () => {
+  it('mantém larguras responsivas e contador de trabalhos acessível', () => {
+    const css = fonte('../../../responsivo-refinamento.css')
+    const estrutura = fonte('../../../EstruturaDoJogo.tsx')
+    expect(css).toContain('@media (min-width: 900px)')
+    expect(css).toContain("[data-largura='compacta']")
+    expect(css).toContain("[data-largura='ampla']")
+    expect(estrutura).toContain('data-largura={larguraDeLeitura}')
+    expect(estrutura).toContain('<SeloDeNavegacao quantidade={numeroDeTrabalhosAtivos} />')
+    expect(estrutura).toContain('trabalho(s) em andamento')
+  })
+
   it('permite reproduzir cenários visuais de temas, menu e notificações', () => {
     const kit = fonte('./KitDeInterface.tsx')
     const menu = fonte('../../../components/ui/MenuDeOpcoes/MenuDeOpcoes.tsx')

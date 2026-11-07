@@ -20,3 +20,9 @@ Com uma meta de fabricação pendente e duas atividades simultâneas, a UI ident
 
 ## Revisão de qualidade para distribuição comercial
 Copiados apenas trechos independentes, com valor direto: fórmula de pontuação/classificação e formatador de ETA. Não foram importados motores inteiros, WebLLM, Electron, OCR, imagens ou bancos de dados de outros jogos. As regras de Prestígio, inventário, saves e recompensas permanecem no domínio do Paralaxe. Validar build, testes e telas antes do lançamento.
+
+## Layout MIT integrado
+- **Idle Game Template — ciefa, MIT, © 2026:** reaproveita o badge do `NavbarIcon.tsx` como contador de trabalhos ativos na navegação, sem Tailwind nem gerenciador de janelas.
+- **Skill Issue Chronicles — Gylan Salih, MIT, © 2025:** adapta os perfis SCSS de `content-width/compact`, `normal` e `wide` a tokens CSS e uma opção de aparência salva no navegador. Somente desktop.
+- Textos MIT integrais em `publico/creditos/idle-game-template-MIT.txt` e `skill-issue-chronicles-MIT.txt`, com URLs e autoria no catálogo de Créditos. Nenhum asset copiado.
+- Projetos incertos, GPL ou com restrição não comercial foram excluídos. Progress Knight (Unlicense) não foi importado por não apresentar melhoria compatível com o layout existente.
