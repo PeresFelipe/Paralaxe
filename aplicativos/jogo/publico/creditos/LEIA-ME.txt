@@ -70,3 +70,9 @@ sem confirmação; não foi substituída por nomes presumidos.
 
 Cada recurso mantém seus próprios termos. Este índice não concede uma licença
 única para o jogo ou para o conjunto dos recursos de terceiros.
+
+Integração de personagens — 07/11/2026
+Acólito — /creditos/acolito.txt — Tattuattor, Village Starter FREE.
+Ladino — /creditos/ladino.txt — SpriteForge e Tiago Patrício, FREE Rogue Character.
+Errante — /creditos/errante.txt — rvros, Animated Pixel Adventurer.
+Licença original Tattuattor: /arte/classes/acolito/tattuattor/LICENSE.txt

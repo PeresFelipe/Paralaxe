@@ -1,0 +1,14 @@
+Village Starter FREE — Cleric
+Autoria: Tattuattor
+Origem: https://tattuattor.itch.io/village-starter-free
+Verificação: 2026-11-07
+
+A licença original dentro do ZIP autoriza jogos comerciais e edição, redimensionamento e combinação. Proíbe redistribuição avulsa ou em pacotes, templates e kits. Crédito opcional. Arte criada com PixelLab e editada pelo autor.
+
+Arquivos de origem: Village_Starter_FREE/characters/cleric/idle/east/frame_000.png a frame_003.png
+ZIP SHA-256: f0b5fb5522c39a75978c56e4e859d970f41726e195a7e932a24464db2e843429
+Arquivo integrado: /arte/classes/acolito/tattuattor/acolito-idle.png
+Adaptação: montagem de quatro quadros Idle/east de 68 × 68 em faixa 340 × 68, repetindo o primeiro quadro para o loop. Pixels e proporção preservados, sem recoloração. Animação por CSS; movimento reduzido exibe quadro estático.
+
+Este é um registro preparado pelo Paralaxe, não uma licença original do autor.
+Licença original preservada em /arte/classes/acolito/tattuattor/LICENSE.txt

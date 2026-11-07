@@ -759,3 +759,29 @@ body {
   .jogo-aviso-icone { border-color: CanvasText; background: Canvas; }
   .jogo-aviso-rotulo { color: CanvasText; }
 }
+
+/* Faixas Idle integradas: proporção original e primeiro quadro repetido no fim. */
+.criacao-classe-sprite--acolito,
+.criacao-classe-sprite--errante {
+  background-size: 500% auto;
+  animation-name: classe-idle-centralizado;
+  animation-timing-function: steps(4, end);
+}
+.criacao-classe-sprite--ladino {
+  background-size: 300% auto;
+  animation-name: classe-idle-centralizado;
+  animation-timing-function: steps(2, end);
+}
+@keyframes classe-idle-centralizado {
+  from { background-position: 0 50%; }
+  to { background-position: 100% 50%; }
+}
+/* Sem movimento, exibir o primeiro quadro centralizado. */
+@media (prefers-reduced-motion: reduce) {
+  .criacao-classe-sprite--acolito,
+  .criacao-classe-sprite--ladino,
+  .criacao-classe-sprite--errante {
+    animation: none;
+    background-position: 0 50%;
+  }
+}

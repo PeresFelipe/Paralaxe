@@ -1,0 +1,14 @@
+FREE Rogue Character 2D PixelArt
+Autoria: SpriteForge e Tiago Patrício
+Origem: https://spriteforge.itch.io/2d-pixelart-rogue-character
+Verificação: 2026-11-07
+
+A seção License da página original autoriza jogos comerciais e modificações, permite distribuição integrada ao projeto e proíbe redistribuição como asset avulso e NFTs. Crédito opcional. O ZIP gratuito não contém arquivo de licença separado.
+
+Arquivos de origem: CharacterFree/Animations/Idle/IdleFrame_1.png e IdleFrame_2.png
+ZIP SHA-256: 3480782e4622d755c0dc8c7b000247a5e9da6415057c28bc9d3882d6a748d7ff
+Arquivo integrado: /arte/classes/ladino/SpriteForge/ladino-idle.png
+Adaptação: montagem de dois quadros Idle de 85 × 64 em faixa 255 × 64, repetindo o primeiro quadro para o loop. Pixels e proporção preservados, sem recoloração. Animação por CSS; movimento reduzido exibe quadro estático.
+
+Este é um registro preparado pelo Paralaxe, não uma licença original do autor.
+Termos originais consultados na seção de licença da página acima.

@@ -6,7 +6,7 @@ Revisão: 07/11/2026. Os créditos aparecem no jogo em **Créditos e licenças**
 
 ### Auditoria da seleção de personagens — 07/11/2026
 
-A auditoria de criação confirmou três classes com arte adequada à escolha inicial: Guerreiro (Mattz Art), Mago (LuizMelo) e Caçador (Otsoga). As permissões comerciais e as alterações existentes foram revistas nas páginas originais e nos avisos locais. Nenhuma arte nova foi incorporada; os candidatos pagos Dark Fantasy Heroes Vol. 1 (NightCat Works) e Dark Fantasy HD: Knights & Heroes (Leckie Pixel Studio) ficam registrados como alternativas que exigem aquisição e conferência dos pacotes licenciados. [Relatório da auditoria](documentacao/arte/auditoria-assets-personagens-2026-11-07.md).
+Correção da auditoria: o catálogo possui seis classes. Guerreiro, Mago e Caçador já tinham arte; Acólito, Ladino e Errante estavam sem sprites na seleção. Foram integradas três animações Idle gratuitas com permissão comercial: Cleric (Tattuattor), FREE Rogue Character (SpriteForge e Tiago Patrício) e Animated Pixel Adventurer (rvros). [Relatório corrigido e proveniência](documentacao/arte/auditoria-assets-personagens-2026-11-07.md).
 
 | Contribuição | Recurso e autoria | Licença / registro | Adaptação |
 | --- | --- | --- | --- |
@@ -107,3 +107,13 @@ Os trechos MIT efetivamente incorporados acima preservam os textos integrais de 
 A interface lê esse catálogo. A verificação exige atribuição para cada recurso visual público, impede registros duplicados e verifica caminhos de avisos. Ela verifica consistência do inventário; não certifica a licença nem identifica automaticamente o autor de uma imagem nova.
 
 Os avisos locais são incluídos no cache de produção após o preparo do modo sem conexão. Links externos de autores e licenças continuam exigindo acesso à internet. Cada contribuição conserva seus próprios termos; este documento não concede licença única ao jogo nem aos recursos de terceiros.
+
+## Personagens integrados gratuitamente — 07/11/2026
+
+| Classe | Recurso e autoria | Licença e adaptação |
+| --- | --- | --- |
+| acolito | [Village Starter FREE — Cleric](https://tattuattor.itch.io/village-starter-free), Tattuattor | Uso comercial e edição permitidos; sem redistribuição avulsa. Faixa Idle por CSS. [Registro](aplicativos/jogo/publico/creditos/acolito.txt). |
+| ladino | [FREE Rogue Character 2D PixelArt](https://spriteforge.itch.io/2d-pixelart-rogue-character), SpriteForge e Tiago Patrício | Uso comercial e edição permitidos; sem redistribuição avulsa. Faixa Idle por CSS. [Registro](aplicativos/jogo/publico/creditos/ladino.txt). |
+| errante | [Animated Pixel Adventurer](https://rvros.itch.io/animated-pixel-hero), rvros | Uso comercial e edição permitidos; sem redistribuição avulsa. Faixa Idle por CSS. [Registro](aplicativos/jogo/publico/creditos/errante.txt). |
+
+Cleric: arte com assistência de IA (PixelLab), conforme declaração do autor. A licença original permanece no diretório do recurso. Nenhum pacote pago foi utilizado.

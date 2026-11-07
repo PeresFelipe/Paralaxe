@@ -1,0 +1,14 @@
+Animated Pixel Adventurer
+Autoria: rvros
+Origem: https://rvros.itch.io/animated-pixel-hero
+Verificação: 2026-11-07
+
+A seção License Permissions da página original autoriza uso comercial e modificações. Proíbe revenda/redistribuição do asset em si; utilização integrada ao jogo. Crédito opcional. O ZIP examinado não contém arquivo separado de licença.
+
+Arquivos de origem: Individual Sprites/adventurer-idle-00.png a adventurer-idle-03.png (Adventurer-1.5.zip)
+ZIP SHA-256: 0bf3f9253fcf77f6bf23af2ebb83c7776490414223b3e37ae798d6135e134a7c
+Arquivo integrado: /arte/classes/errante/rvros/errante-idle.png
+Adaptação: montagem de quatro quadros Idle de 50 × 37 em faixa 250 × 37, repetindo o primeiro quadro para o loop. Pixels e proporção preservados, sem recoloração. Animação por CSS; movimento reduzido exibe quadro estático.
+
+Este é um registro preparado pelo Paralaxe, não uma licença original do autor.
+Termos originais consultados na seção de licença da página acima.

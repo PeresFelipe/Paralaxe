@@ -531,6 +531,94 @@
       ],
       "arquivos": [],
       "creditosComplementares": []
+    },
+    {
+      "id": "acolito",
+      "grupo": "personagens",
+      "titulo": "Village Starter FREE — Cleric",
+      "autores": [
+        {
+          "nome": "Tattuattor",
+          "url": "https://tattuattor.itch.io/"
+        }
+      ],
+      "contribuicao": "Animação Idle de acolito na criação de personagem.",
+      "licenca": {
+        "nome": "Licença própria do autor — uso comercial permitido",
+        "url": "/arte/classes/acolito/tattuattor/LICENSE.txt"
+      },
+      "origem": "https://tattuattor.itch.io/village-starter-free",
+      "modificacoes": "Montagem de quatro quadros Idle/east de 68 × 68, sem recoloração, com primeiro quadro repetido no fim; spritesheet CSS.",
+      "avisos": [
+        {
+          "rotulo": "Proveniência e termos comerciais",
+          "url": "/creditos/acolito.txt"
+        },
+        {
+          "rotulo": "Licença original do pacote",
+          "url": "/arte/classes/acolito/tattuattor/LICENSE.txt"
+        }
+      ],
+      "arquivos": [
+        "/arte/classes/acolito/tattuattor/acolito-idle.png"
+      ],
+      "creditosComplementares": []
+    },
+    {
+      "id": "ladino",
+      "grupo": "personagens",
+      "titulo": "FREE Rogue Character 2D PixelArt",
+      "autores": [
+        {
+          "nome": "SpriteForge e Tiago Patrício",
+          "url": "https://spriteforge.itch.io/"
+        }
+      ],
+      "contribuicao": "Animação Idle de ladino na criação de personagem.",
+      "licenca": {
+        "nome": "Licença própria do autor — uso comercial permitido",
+        "url": "/creditos/ladino.txt"
+      },
+      "origem": "https://spriteforge.itch.io/2d-pixelart-rogue-character",
+      "modificacoes": "Montagem de dois quadros Idle de 85 × 64, sem recoloração, com primeiro quadro repetido no fim; spritesheet CSS.",
+      "avisos": [
+        {
+          "rotulo": "Proveniência e termos comerciais",
+          "url": "/creditos/ladino.txt"
+        }
+      ],
+      "arquivos": [
+        "/arte/classes/ladino/SpriteForge/ladino-idle.png"
+      ],
+      "creditosComplementares": []
+    },
+    {
+      "id": "errante",
+      "grupo": "personagens",
+      "titulo": "Animated Pixel Adventurer",
+      "autores": [
+        {
+          "nome": "rvros",
+          "url": "https://rvros.itch.io/"
+        }
+      ],
+      "contribuicao": "Animação Idle de errante na criação de personagem.",
+      "licenca": {
+        "nome": "Licença própria do autor — uso comercial permitido",
+        "url": "/creditos/errante.txt"
+      },
+      "origem": "https://rvros.itch.io/animated-pixel-hero",
+      "modificacoes": "Montagem de quatro quadros Idle de 50 × 37, sem recoloração, com primeiro quadro repetido no fim; spritesheet CSS.",
+      "avisos": [
+        {
+          "rotulo": "Proveniência e termos comerciais",
+          "url": "/creditos/errante.txt"
+        }
+      ],
+      "arquivos": [
+        "/arte/classes/errante/rvros/errante-idle.png"
+      ],
+      "creditosComplementares": []
     }
   ]
 }

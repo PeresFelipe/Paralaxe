@@ -30,6 +30,9 @@ const GIFS_DAS_CLASSES: Partial<Record<IdDaClasseDoPersonagem, string>> = {
 
 const FOLHAS_DE_ANIMACAO_DAS_CLASSES: Partial<Record<IdDaClasseDoPersonagem, string>> = {
   cacador: "/arte/classes/cacador/Otsoga/joanna-idle-strip.png?v=2",
+  acolito: "/arte/classes/acolito/tattuattor/acolito-idle.png",
+  ladino: "/arte/classes/ladino/SpriteForge/ladino-idle.png",
+  errante: "/arte/classes/errante/rvros/errante-idle.png",
 };
 
 function obterNomeDaClasse(idDaClasse: IdDaClasseDoPersonagem) {
@@ -333,7 +336,7 @@ function Aplicativo({ repositorioDePartidas }: AplicativoProps) {
                   >
                     {folhaDeAnimacao ? (
                       <span
-                        className="criacao-classe-sprite"
+                        className={`criacao-classe-sprite criacao-classe-sprite--${definicao.id}`}
                         aria-hidden="true"
                         style={{ backgroundImage: `url("${folhaDeAnimacao}")` }}
                       />
