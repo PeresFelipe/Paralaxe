@@ -17,10 +17,11 @@ type PropriedadesDeMenu = {
   itens: readonly OpcaoDeMenu[]
   alinhamento?: 'inicio' | 'fim'
   abertoInicial?: boolean
+  iconeDoGatilho?: ReactNode
 }
 
 /** Menu de cabeçalho com fechamento externo/Esc e navegação por teclado. */
-export function MenuDeOpcoes({ itens, alinhamento = 'fim', abertoInicial = false }: PropriedadesDeMenu) {
+export function MenuDeOpcoes({ itens, alinhamento = 'fim', abertoInicial = false, iconeDoGatilho }: PropriedadesDeMenu) {
   const [aberto, definirAberto] = useState(abertoInicial)
   const [abrirAcima, definirAbrirAcima] = useState(false)
   const [alturaDisponivel, definirAlturaDisponivel] = useState<number | null>(null)
@@ -123,7 +124,7 @@ export function MenuDeOpcoes({ itens, alinhamento = 'fim', abertoInicial = false
         aria-expanded={aberto}
         onClick={() => definirAberto(valor => !valor)}
       >
-        <span aria-hidden="true">⋯</span>
+        <span aria-hidden="true">{iconeDoGatilho ?? "⋯"}</span>
       </button>
 
       {aberto ? (

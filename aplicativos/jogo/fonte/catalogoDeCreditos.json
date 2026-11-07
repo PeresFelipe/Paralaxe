@@ -145,17 +145,21 @@
           "url": "https://crusenho.itch.io/"
         }
       ],
-      "contribuicao": "Ícones dos atalhos de Inventário, Banco e Grupo.",
+      "contribuicao": "Ícones de Inventário, Banco, Grupo, opções, aparência, largura de leitura e transferências do Banco.",
       "licenca": {
         "nome": "CC BY 4.0",
         "url": "https://creativecommons.org/licenses/by/4.0/"
       },
       "origem": "https://crusenho.itch.io/icons-essential-pack-free-icons",
-      "modificacoes": "Três PNGs de 16 × 16, com nomes adaptados para o jogo e pixels originais preservados.",
+      "modificacoes": "Oito PNGs de 16 × 16 apenas renomeados, sem alteração dos pixels. Cinco ícones adicionados em 07/11/2026. Licença original do ZIP preservada sem alterações.",
       "avisos": [
         {
           "rotulo": "Licença original do pacote",
           "url": "/arte/icones/crusenho/LICENSE.txt"
+        },
+        {
+          "rotulo": "Proveniência e mapeamento dos ícones",
+          "url": "/creditos/icones-crusenho.txt"
         }
       ],
       "arquivos": [
@@ -617,6 +621,38 @@
       ],
       "arquivos": [
         "/arte/classes/errante/rvros/errante-idle.png"
+      ],
+      "creditosComplementares": []
+    },
+    {
+      "id": "icones-kenney",
+      "grupo": "interface",
+      "titulo": "Tiny Dungeon — lança",
+      "autores": [
+        {
+          "nome": "Kenney",
+          "url": "https://kenney.nl/"
+        }
+      ],
+      "contribuicao": "Ícone das Lanças de Viagem e do Vigia.",
+      "licenca": {
+        "nome": "CC0 1.0",
+        "url": "https://creativecommons.org/publicdomain/zero/1.0/"
+      },
+      "origem": "https://kenney-assets.itch.io/tiny-dungeon",
+      "modificacoes": "Tiles/tile_0131.png apenas renomeado para lanca.png; pixels originais preservados.",
+      "avisos": [
+        {
+          "rotulo": "Licença original",
+          "url": "/arte/icones/kenney/LICENSE.txt"
+        },
+        {
+          "rotulo": "Proveniência",
+          "url": "/creditos/icones-kenney.txt"
+        }
+      ],
+      "arquivos": [
+        "/arte/icones/kenney/lanca.png"
       ],
       "creditosComplementares": []
     }

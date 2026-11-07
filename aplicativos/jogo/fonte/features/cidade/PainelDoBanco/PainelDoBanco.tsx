@@ -118,6 +118,7 @@ export default function PainelDoBanco({
                 <div className="botao-linhaDeDados">
                   <Button
                     variant="secondary"
+                    icon={<IconeDoJogo icone="depositar" tamanho={16} />}
                     size="sm"
                     disabled={pendente}
                     onClick={() => void transferir(() => aoDepositarPilha(pilha.idDaDefinicao, 1))}
@@ -127,6 +128,7 @@ export default function PainelDoBanco({
                   {pilha.quantidade > 1 ? (
                     <Button
                       variant="secondary"
+                    icon={<IconeDoJogo icone="depositar" tamanho={16} />}
                       size="sm"
                     disabled={pendente}
                       onClick={() =>
@@ -157,6 +159,7 @@ export default function PainelDoBanco({
                   </div>
                   <Button
                     variant="secondary"
+                    icon={<IconeDoJogo icone="depositar" tamanho={16} />}
                     size="sm"
                     disabled={pendente}
                     onClick={() => void transferir(() => aoDepositarEquipamento(instancia.idDaInstancia))}
@@ -194,7 +197,7 @@ export default function PainelDoBanco({
                   <small>×{pilha.quantidade}</small>
                 </div>
                 <div className="botao-linhaDeDados">
-                  <Button
+                  <Button icon={<IconeDoJogo icone="retirar" tamanho={16} />}
                     variant="secondary"
                     size="sm"
                     disabled={pendente}
@@ -203,7 +206,7 @@ export default function PainelDoBanco({
                     Retirar 1
                   </Button>
                   {pilha.quantidade > 1 ? (
-                    <Button
+                    <Button icon={<IconeDoJogo icone="retirar" tamanho={16} />}
                       variant="secondary"
                       size="sm"
                     disabled={pendente}
@@ -233,7 +236,7 @@ export default function PainelDoBanco({
                     </span>
                     <small>Equipamento · +{instancia.nivelDeReforco}</small>
                   </div>
-                  <Button
+                  <Button icon={<IconeDoJogo icone="retirar" tamanho={16} />}
                     variant="secondary"
                     size="sm"
                     disabled={pendente}

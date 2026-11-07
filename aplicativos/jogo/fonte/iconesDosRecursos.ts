@@ -2,6 +2,7 @@
  * @file Mapeamento entre identificadores do jogo e os ícones dos pacotes de arte.
  * Os nomes descrevem arquivos visuais; trocar uma associação não muda atributos ou recompensas.
  */
+import { ATIVIDADES_DE_PRESTIGIO, RECEITAS_DE_PRESTIGIO, EQUIPAMENTOS_DE_PRESTIGIO } from "@paralaxe/conteudo";
 import type { IdDaProfissao } from "@paralaxe/dominio";
 
 /** Nomes aceitos para os PNGs publicados em publico/arte/icones/shikashi. */
@@ -60,10 +61,20 @@ export const iconeDeAtalhoPorId = {
   grupo: "equipe",
 } as const;
 
-type NomeDoIconeCrusenho = (typeof iconeDeAtalhoPorId)[keyof typeof iconeDeAtalhoPorId];
-export type NomeDoIconeDoJogo = NomeDoIconeShikashi | NomeDoIconeCrusenho;
+/** Ícones das ações visuais, sem substituir o rótulo dos botões. */
+export const iconeDeAcaoPorId = {
+  opcoes: "opcoes",
+  aparencia: "aparencia",
+  largura: "largura",
+  depositar: "depositar",
+  retirar: "retirar",
+} as const;
 
-const iconesCrusenho: ReadonlySet<NomeDoIconeDoJogo> = new Set(Object.values(iconeDeAtalhoPorId));
+type NomeDoIconeCrusenho = (typeof iconeDeAtalhoPorId)[keyof typeof iconeDeAtalhoPorId]
+  | (typeof iconeDeAcaoPorId)[keyof typeof iconeDeAcaoPorId];
+export type NomeDoIconeDoJogo = NomeDoIconeShikashi | NomeDoIconeCrusenho | "lanca";
+
+const iconesCrusenho: ReadonlySet<NomeDoIconeDoJogo> = new Set([...Object.values(iconeDeAtalhoPorId), ...Object.values(iconeDeAcaoPorId)]);
 
 /** Associação completa das profissões; o tipo exige uma entrada para cada profissão. */
 export const iconeDeProfissaoPorId: Record<IdDaProfissao, NomeDoIconeShikashi> = {
@@ -84,8 +95,27 @@ export const iconeDoPainelPorId = {
   ouro: "coroa-moeda",
 } as const satisfies Record<string, NomeDoIconeShikashi>;
 
+/** Identidade visual dos recursos de Prestígio, gerada dos mesmos catálogos do jogo. */
+const iconeDeMaterialPorProfissao: Record<IdDaProfissao, NomeDoIconeShikashi> = {
+  mineracao: "cristal-bruto", lenhador: "madeira", pesca: "peixe", herbologia: "erva",
+  metalurgia: "ouro-lingote", forja: "espada-longa", culinaria: "pocao-verde",
+};
+
+function iconeDaReceitaDePrestigio(receita: (typeof RECEITAS_DE_PRESTIGIO)[number]): NomeDoIconeShikashi {
+  if (receita.idDaProfissao !== "culinaria") return iconeDeMaterialPorProfissao[receita.idDaProfissao];
+  const nome = receita.nome.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  return /\b(racao|refeicao|banquete|mesa|conservacao)\b/i.test(nome) ? "cozido-peixe" : "pocao-verde";
+}
+
 /** Associação de definições de itens empilháveis e de missão. */
-export const iconeDeItemPorId: Record<string, NomeDoIconeShikashi> = {
+export const iconeDeItemPorId: Record<string, NomeDoIconeDoJogo> = {
+  ...Object.fromEntries(ATIVIDADES_DE_PRESTIGIO.map(atividade => [
+    atividade.idDaDefinicaoDoItemProduzido, iconeDeMaterialPorProfissao[atividade.idDaProfissao],
+  ])),
+  ...Object.fromEntries(RECEITAS_DE_PRESTIGIO.flatMap(receita => receita.saida.tipo === "item" ? [[
+    receita.saida.idDaDefinicao, iconeDaReceitaDePrestigio(receita),
+  ]] : [])),
+  "item.fairtheoir-fragmento": "pedraRunica",
   "item.dun-liath.sucata": "pedra",
   "item.dun-liath.viga": "viga-madeira",
   "item.dun-liath.registro-arquivo": "livro-abrir",
@@ -156,7 +186,10 @@ export const iconeDeItemPorId: Record<string, NomeDoIconeShikashi> = {
 };
 
 /** Associação de modelos de equipamento, compartilhada por todas as suas instâncias. */
-export const iconeDeEquipamentoPorId: Record<string, NomeDoIconeShikashi> = {
+export const iconeDeEquipamentoPorId: Record<string, NomeDoIconeDoJogo> = {
+  ...Object.fromEntries(EQUIPAMENTOS_DE_PRESTIGIO.map(equipamento => [equipamento.id, "espada-longa" as const])),
+  "arma.viagem-lanca": "lanca",
+  "arma.vigia-lanca": "lanca",
   "ferramenta.mineracao.picareta": "picareta",
   "ferramenta.lenhador.machado-corte": "machado",
   "ferramenta.pesca.equipamento-pesca": "pesca-vara",
@@ -204,17 +237,18 @@ export const iconeDeEquipamentoPorId: Record<string, NomeDoIconeShikashi> = {
 
 /** Resolve o arquivo público do pacote ao qual pertence o ícone. */
 export function obterCaminhoDoIconeDoJogo(icone: NomeDoIconeDoJogo) {
+  if (icone === "lanca") return "/arte/icones/kenney/lanca.png";
   if (iconesCrusenho.has(icone)) return `/arte/icones/crusenho/${icone}.png`;
   return `/arte/icones/shikashi/${icone}.png?v=1`;
 }
 
 /** Consulta o símbolo de um item; IDs sem associação resultam em undefined. */
-export function obterIconeDoItem(idDaDefinicao: string): NomeDoIconeShikashi | undefined {
+export function obterIconeDoItem(idDaDefinicao: string): NomeDoIconeDoJogo | undefined {
   return Object.hasOwn(iconeDeItemPorId, idDaDefinicao) ? iconeDeItemPorId[idDaDefinicao] : undefined;
 }
 
 /** Consulta pelo ID da definição, e não pelo ID individual da peça do jogador. */
-export function obterIconeDoEquipamento(idDaDefinicao: string): NomeDoIconeShikashi | undefined {
+export function obterIconeDoEquipamento(idDaDefinicao: string): NomeDoIconeDoJogo | undefined {
   return Object.hasOwn(iconeDeEquipamentoPorId, idDaDefinicao) ? iconeDeEquipamentoPorId[idDaDefinicao] : undefined;
 }
 

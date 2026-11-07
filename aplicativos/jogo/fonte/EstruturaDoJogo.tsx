@@ -304,7 +304,7 @@ export default function EstruturaDoJogo({
       grupo: "Aparência",
       titulo: temaDaInterface === "escuro" ? "Ativar tema claro" : "Ativar tema escuro",
       descricao: `Tema atual: ${temaDaInterface}. Preferência salva neste navegador.`,
-      icone: <span aria-hidden="true">{temaDaInterface === "escuro" ? "☀" : "☾"}</span>,
+      icone: <IconeDoJogo icone="aparencia" tamanho={21} />,
       acao: aoAlternarTema,
     },
     {
@@ -312,7 +312,7 @@ export default function EstruturaDoJogo({
       grupo: "Aparência",
       titulo: `Largura de leitura: ${rotuloDoModoDeLargura[larguraDeLeitura]}`,
       descricao: "Alternar entre foco, confortável e ampla em telas maiores. Não modifica o personagem.",
-      icone: <span aria-hidden="true">▤</span>,
+      icone: <IconeDoJogo icone="largura" tamanho={21} />,
       acao: () => definirLarguraDeLeitura(atual => proximoModoDeLargura(atual)),
     },
     {
@@ -379,7 +379,7 @@ export default function EstruturaDoJogo({
               <dd>{partida.personagem.ouro}</dd>
             </div>
           </dl>
-          <MenuDeOpcoes itens={opcoesDoMenu} />
+          <MenuDeOpcoes itens={opcoesDoMenu} iconeDoGatilho={<IconeDoJogo icone="opcoes" tamanho={20} />} />
         </div>
       </header>
 

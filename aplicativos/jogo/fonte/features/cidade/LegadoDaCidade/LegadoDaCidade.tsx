@@ -1,3 +1,5 @@
+import { IconeDoJogo } from "@/components/jogo"
+import { obterIconeDoItem } from "@/iconesDosRecursos"
 /** Cidade Viva: apresentação de projetos, sem temporizadores ou regras de economia no React. */
 import { useMemo, useState } from 'react'
 import { Button, Card, ProgressBar } from '@/components/ui'
@@ -155,10 +157,10 @@ export function PainelDeProjetos({ partida, aoVoltar, aoConcluirProjeto }: { par
             </ul> : null}
             <div className={estilos.materiais} aria-label="Materiais e recursos necessários">
               {consulta.materiais.map(mat => <div key={mat.idDaDefinicao}>
-                <span>{mat.nome}</span><strong>{Math.min(mat.possuido, mat.quantidade)}/{mat.quantidade}</strong>
+                <span className={estilos.nomeMaterial}><IconeDoJogo icone={obterIconeDoItem(mat.idDaDefinicao)} tamanho={20} />{mat.nome}</span><strong>{Math.min(mat.possuido, mat.quantidade)}/{mat.quantidade}</strong>
                 <div className={estilos.barraMaterial}><div className={estilos.barraMaterialPreenchida} style={{ width: `${Math.min(100, mat.possuido / mat.quantidade * 100)}%` }} /></div>
               </div>)}
-              <div className={estilos.linhaOuro}><span>Ouro</span><strong>{consulta.ouroDisponivel}/{consulta.ouroNecessario}</strong></div>
+              <div className={estilos.linhaOuro}><span className={estilos.nomeMaterial}><IconeDoJogo icone="coroa-moeda" tamanho={20} />Ouro</span><strong>{consulta.ouroDisponivel}/{consulta.ouroNecessario}</strong></div>
               {consulta.descontoEmOuro > 0 ? <small>Desconto de {consulta.descontoEmOuro} ouro por {consulta.creditosAplicaveis} créditos históricos.</small> : null}
             </div>
             </details>

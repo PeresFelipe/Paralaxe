@@ -76,3 +76,8 @@ Acólito — /creditos/acolito.txt — Tattuattor, Village Starter FREE.
 Ladino — /creditos/ladino.txt — SpriteForge e Tiago Patrício, FREE Rogue Character.
 Errante — /creditos/errante.txt — rvros, Animated Pixel Adventurer.
 Licença original Tattuattor: /arte/classes/acolito/tattuattor/LICENSE.txt
+
+Ícones — revisão 07/11/2026
+Crusenho: /creditos/icones-crusenho.txt — CC BY 4.0.
+Kenney: /creditos/icones-kenney.txt — CC0 1.0.
+Licenças originais em /arte/icones/crusenho/LICENSE.txt e /arte/icones/kenney/LICENSE.txt.

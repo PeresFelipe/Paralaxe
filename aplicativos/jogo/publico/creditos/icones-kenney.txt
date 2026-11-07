@@ -1,0 +1,13 @@
+Tiny Dungeon 1.0 — Kenney
+Origem: https://kenney-assets.itch.io/tiny-dungeon
+Autor: https://kenney.nl/
+Licença: CC0 1.0 — https://creativecommons.org/publicdomain/zero/1.0/
+Verificado em: 07/11/2026
+ZIP SHA-256: c109438ab06f65fd80f9b2686a4cf9c7c11dc64444b47333ec71d602f8bb5fc7
+
+A página do autor e License.txt do ZIP declaram CC0 e permitem projetos comerciais. A licença permite adaptar e redistribuir. Atribuição opcional, oferecida pelo projeto.
+Original: Tiles/tile_0131.png, 16 × 16.
+No jogo: /arte/icones/kenney/lanca.png.
+Alteração: apenas renomeado, pixels intactos; uso nas Lanças de Viagem e do Vigia.
+Licença original preservada byte a byte em /arte/icones/kenney/LICENSE.txt.
+Este é um registro de proveniência preparado pelo Paralaxe.

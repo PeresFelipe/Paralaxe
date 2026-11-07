@@ -117,3 +117,16 @@ Os avisos locais são incluídos no cache de produção após o preparo do modo 
 | errante | [Animated Pixel Adventurer](https://rvros.itch.io/animated-pixel-hero), rvros | Uso comercial e edição permitidos; sem redistribuição avulsa. Faixa Idle por CSS. [Registro](aplicativos/jogo/publico/creditos/errante.txt). |
 
 Cleric: arte com assistência de IA (PixelLab), conforme declaração do autor. A licença original permanece no diretório do recurso. Nenhum pacote pago foi utilizado.
+
+## Cobertura dos ícones — 07/11/2026
+
+As sete profissões, Vida/Mana/Fôlego/Ouro, Inventário/Banco/Grupo e a maior parte dos itens normais já tinham ícones. Foram completadas as associações dos recursos, ligas, preparações e armas dos Prestígios I–III usando os ícones existentes por categoria; não há uma imagem exclusiva para cada material.
+
+| Recurso integrado | Autor e origem | Licença | Arquivos e uso |
+| --- | --- | --- | --- |
+| Icons Essential Pack v1.2 | [Crusenho Agus Hennihuno](https://crusenho.itch.io/icons-essential-pack-free-icons) | [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) | Gear, PaintBrush, Monitor, Upload e Download, apenas renomeados para opções, aparência, largura, depositar e retirar. [Proveniência](aplicativos/jogo/publico/creditos/icones-crusenho.txt). |
+| Tiny Dungeon 1.0 | [Kenney](https://kenney-assets.itch.io/tiny-dungeon) | [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/) | tile_0131.png apenas renomeado para lanca.png, usado nas Lanças de Viagem e do Vigia. [Licença original](aplicativos/jogo/publico/arte/icones/kenney/LICENSE.txt). |
+
+Os créditos de Acólito (Tattuattor), Ladino (SpriteForge e Tiago Patrício) e Errante (rvros) da etapa anterior foram conferidos e permanecem no catálogo acessível pelo jogo, com seus avisos e URLs. Nenhum crédito de recurso em uso foi removido.
+
+A licença Crusenho agora preserva os bytes originais do ZIP; o URL do produto, que havia sido inserido no texto do aviso anterior, consta no registro de proveniência separado. Os novos recursos são gratuitos; nenhum pacote pago foi adquirido ou incorporado.

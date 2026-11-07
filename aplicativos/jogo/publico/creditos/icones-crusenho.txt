@@ -1,0 +1,22 @@
+Icons Essential Pack v1.2 — Crusenho Agus Hennihuno
+Origem: https://crusenho.itch.io/icons-essential-pack-free-icons
+Licença: CC BY 4.0 — https://creativecommons.org/licenses/by/4.0/
+Verificado em: 07/11/2026
+ZIP SHA-256: a3e5d175a5e3eb82b9464aae5f4278a17cde8b9fd8eb54ee16532ae303a4ec79
+
+A página e License.txt do ZIP permitem uso comercial, edição e redistribuição, com atribuição, link da licença e indicação de alterações.
+A licença original extraída está em /arte/icones/crusenho/LICENSE.txt.
+
+Arquivos originais em Icons_Essential/v1.2/Icons/ e nomes no jogo:
+Backpack.png → mochila.png (já utilizado)
+ChestTreasure.png → bau.png (já utilizado)
+Team.png → equipe.png (já utilizado)
+Gear.png → opcoes.png
+PaintBrush.png → aparencia.png
+Monitor.png → largura.png
+Upload.png → depositar.png
+Download.png → retirar.png
+
+Alterações: somente nomes dos arquivos. Pixels de 16 × 16 preservados.
+As imagens estão em /arte/icones/crusenho/ e a atribuição aparece em Créditos e licenças.
+Este registro foi preparado pelo Paralaxe; a licença original permanece separada.

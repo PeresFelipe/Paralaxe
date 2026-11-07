@@ -80,7 +80,7 @@ describe('contratos de layout do Paralaxe', () => {
     expect((secao.match(/<dt className="recurso-simbolo/g) ?? []).length).toBe(4)
     expect((secao.match(/<dd>/g) ?? []).length).toBe(4)
     expect(secao).not.toContain('MenuDeOpcoes')
-    expect(jsx.indexOf('<MenuDeOpcoes itens={opcoesDoMenu} />')).toBeGreaterThan(jsx.indexOf('</dl>'))
+    expect(jsx.indexOf('<MenuDeOpcoes ')).toBeGreaterThan(jsx.indexOf('</dl>'))
   })
 
   it('pré-aplica o tema salvo e atualiza a cor da barra do navegador', () => {
