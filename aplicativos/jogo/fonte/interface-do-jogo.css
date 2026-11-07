@@ -23,7 +23,7 @@ body {
 /* Quando o menu está aberto, o cabeçalho deve ficar acima dos toasts laterais.
    Sem isso, a sobreposição do aviso captura o clique no menu. */
 .jogo-barraSuperior:has([aria-haspopup="menu"][aria-expanded="true"]) {
-  z-index: calc(var(--ui-z-panel) + 1);
+  z-index: var(--ui-z-panel-open);
 }
 
 .jogo-barraSuperior {
@@ -593,7 +593,7 @@ body {
      A largura segue a coluna livre: a cena central nunca fica encoberta. */
   .jogo-aviso,
   .jogo-estrutura--risco .jogo-aviso {
-    inset: clamp(var(--ui-dimension-12px), calc(50dvh - 20rem), var(--ui-dimension-100px))
+    inset: clamp(var(--ui-dimension-12px), calc(50dvh - var(--ui-size-toast-center-offset)), var(--ui-dimension-100px))
       var(--jogo-recuo-paineis, var(--ui-dimension-16px)) auto auto;
     width: min(var(--ui-dimension-230px), calc((100vw - var(--ui-dimension-760px)) / 2 - var(--ui-dimension-24px)));
     max-width: calc(100vw - var(--ui-dimension-32px));
@@ -626,7 +626,7 @@ body {
   .jogo-aviso,
   .jogo-estrutura--risco .jogo-aviso {
     right: var(--ui-dimension-16px);
-    width: min(20rem, calc(100vw - var(--ui-dimension-32px)));
+    width: min(var(--ui-size-toast-center-offset), calc(100vw - var(--ui-dimension-32px)));
   }
 }
 

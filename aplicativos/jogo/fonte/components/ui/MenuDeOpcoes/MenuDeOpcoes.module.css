@@ -23,8 +23,8 @@
 
 .disparador > span {
   font-size: var(--ui-font-size-2xl);
-  line-height: 0.7;
-  transform: translateY(-0.12em);
+  line-height: var(--ui-line-height-menu-trigger);
+  transform: translateY(var(--ui-size-menu-ellipsis-offset-y));
 }
 
 .disparador:hover,
@@ -46,8 +46,8 @@
   z-index: var(--ui-z-panel);
   display: flex;
   flex-direction: column;
-  width: min(19rem, calc(100vw - 1.5rem));
-  max-height: min(32rem, calc(100dvh - var(--ui-dimension-100px)));
+  width: min(var(--ui-size-menu-panel-width), calc(100vw - var(--ui-space-6)));
+  max-height: min(var(--ui-size-menu-panel-max-height), calc(100dvh - var(--ui-dimension-100px)));
   overflow-y: auto;
   overscroll-behavior: contain;
   padding: var(--ui-space-2);
@@ -206,7 +206,7 @@
 }
 
 @media (max-width: 30rem) {
-  .painel { width: min(18rem, calc(100vw - 1.5rem)); }
+  .painel { width: min(var(--ui-size-menu-panel-width-compact), calc(100vw - var(--ui-space-6))); }
   .detalhe { display: none; }
 }
 

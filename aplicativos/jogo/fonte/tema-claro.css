@@ -50,8 +50,8 @@
 
 /* Sobre as imagens das atividades, legendas permanecem claras nos dois temas. */
 :root[data-tema="claro"] .atividade-cena-legenda {
-  color: #fff8ea;
-  text-shadow: 0 1px 3px rgb(0 0 0 / 76%);
+  color: var(--ui-color-text-inverse);
+  text-shadow: var(--ui-shadow-text-on-art);
 }
 
 /* A borda das molduras escuras foi feita para superfícies noturnas.

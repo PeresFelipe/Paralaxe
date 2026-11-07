@@ -141,6 +141,7 @@ for (const nome of grafoPacotes.keys()) visitarPacote(nome);
 
 const cssArquivos = await arquivosEm(join(app, 'fonte'), ['.css']);
 const cssTokens = join(app, 'fonte', 'styles', 'tokens.css');
+const cssTemaClaro = join(app, 'fonte', 'tema-claro.css');
 const unidadeCrua = /(?<![\w-])\d+(?:\.\d+)?(?:px|rem|em|ms|s)\b/;
 const corCrua = /#[\da-f]{3,8}\b|\b(?:rgba?|hsla?)\s*\(/i;
 const corNomeadaCrua = /(?:^|[;{])\s*(?:color|background(?:-color)?|border(?:-[\w-]+)?|outline|fill|stroke)\s*:\s*(?:[^;]*\b)(?:black|white|red|green|blue|gray|grey|yellow|orange|purple|pink|brown|navy|teal|silver|maroon|olive|lime|aqua|fuchsia)\b/i;
@@ -161,8 +162,15 @@ for (const arquivo of cssArquivos) {
     if (/^\s*@(media|container)\b/.test(linha)) {
       continue;
     }
-    if (unidadeCrua.test(linha)) erros.push(`${arquivo}:${indice + 1}: medida literal CSS deve usar token`);
-    if (corCrua.test(linha) || corNomeadaCrua.test(linha)) erros.push(`${arquivo}:${indice + 1}: cor literal CSS deve usar token`);
+    // A paleta clara é uma sobreposição de *definições* de tokens semânticos.
+    // Valores brutos são permitidos somente nesses tokens já declarados na base;
+    // regras visuais comuns continuam obrigadas a usar var(--ui-*).
+    const tokenDaPaletaClara = arquivo === cssTemaClaro
+      ? linha.match(/^\s*(--ui-[\w-]+)\s*:/)?.[1]
+      : null;
+    const ehSobrescritaDeToken = Boolean(tokenDaPaletaClara && tokensDeclarados.has(tokenDaPaletaClara));
+    if (!ehSobrescritaDeToken && unidadeCrua.test(linha)) erros.push(`${arquivo}:${indice + 1}: medida literal CSS deve usar token`);
+    if (!ehSobrescritaDeToken && (corCrua.test(linha) || corNomeadaCrua.test(linha))) erros.push(`${arquivo}:${indice + 1}: cor literal CSS deve usar token`);
     if (/\bfont-family\s*:\s*(?!\s*(?:var\(|inherit\b|initial\b|unset\b))/i.test(linha) && !dentroDeFontFace && !/--ui-font-family/.test(linha)) {
       erros.push(`${arquivo}:${indice + 1}: família tipográfica deve usar token`);
     }
