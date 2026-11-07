@@ -251,3 +251,12 @@
 .sugestao strong { color: var(--ui-color-warning-text); font-size: var(--ui-font-size-sm); }
 .sugestao p, .sugestao span { margin: 0; color: var(--ui-color-text); font-size: var(--ui-font-size-xs); line-height: var(--ui-line-height-normal); }
 .sugestao button { justify-self: start; }
+
+/* Comparação progressiva: não aumenta a densidade do painel até o jogador abrir. */
+.comparacao { min-width: 0; font-size: var(--ui-font-size-xs); }
+.comparacao summary { cursor: pointer; font-weight: var(--ui-font-weight-semibold); color: var(--ui-color-text); }
+.comparacao summary:focus-visible { outline: var(--ui-size-focus-ring) solid var(--ui-color-focus); outline-offset: var(--ui-space-1); }
+.comparacao ol { display: grid; gap: var(--ui-space-2); list-style-position: inside; padding: var(--ui-space-2) 0 0; margin: 0; }
+.comparacao li { display: grid; gap: var(--ui-space-1); min-width: 0; padding: var(--ui-space-2); border: var(--ui-size-border) solid var(--ui-color-border); border-radius: var(--ui-radius-md); }
+.comparacao li strong { color: var(--ui-color-text); font-size: var(--ui-font-size-xs); }
+.comparacao li span { color: var(--ui-color-text-muted); font-size: var(--ui-font-size-xs); line-height: var(--ui-line-height-normal); overflow-wrap: anywhere; }

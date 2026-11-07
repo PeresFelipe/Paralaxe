@@ -150,6 +150,17 @@ export default function TelaDeAtividades({ partida, ultimoResultadoDoTrabalho, p
                 {sugestao ? <div className={estilos.sugestao} role="note">
                   <strong>Recomendação da Jornada: {sugestao.prioridade === 'equilibrado' ? 'Equilibrado' : sugestao.prioridade === 'principal' ? 'Prioridade principal' : 'Prioridade secundária'}</strong>
                   <p>{sugestao.motivo} A decisão final é sua.</p>
+                  <details className={estilos.comparacao}>
+                    <summary>Comparar as 3 prioridades</summary>
+                    <ol>
+                      {sugestao.opcoes.map(opcao => (
+                        <li key={opcao.id}>
+                          <strong>{opcao.id === 'equilibrado' ? 'Equilibrado' : opcao.id === 'principal' ? 'Principal' : 'Secundária'} · {(opcao.pontuacao * 100).toFixed(0)}/100</strong>
+                          <span>{opcao.motivo}</span>
+                        </li>
+                      ))}
+                    </ol>
+                  </details>
                   {(ocioso ? partida.ocioso.prioridade ?? 'equilibrado' : partida.fabricacao.prioridade ?? 'equilibrado') !== sugestao.prioridade
                     ? <Button variant="secondary" size="sm" disabled={pendente} onClick={() => void agir(() => aoAlterarPrioridade(sugestao.prioridade))}>Aplicar sugestão</Button>
                     : <span>A prioridade recomendada já está ativa.</span>}
