@@ -15,7 +15,7 @@ function preparar() {
   return escolherMetaDaJornada(comPrestigio, RECEITAS_INICIAIS_DE_FABRICACAO.find(r => r.id === 'receita.metalurgia.tratada-cloch')!, agora)
 }
 describe('sugestão de prioridade', () => {
-  it('sugere principal sem alterar a partida', () => {
+  it('mantém a prioridade atual quando o arredondamento elimina o ganho', () => {
     const p = iniciarAtividadeSecundaria(iniciarAtividadeOciosa(preparar(), cloch, agora), stan, agora)
     const snapshot = JSON.stringify(p)
     const sugestao = obterSugestaoDePrioridadeDaJornada(p)
@@ -30,7 +30,9 @@ describe('sugestão de prioridade', () => {
   it('sugere secundária quando só ela traz o ingrediente', () => {
     const p = iniciarAtividadeSecundaria(iniciarAtividadeOciosa(preparar(), stan, agora), cloch, agora)
     expect(obterSugestaoDePrioridadeDaJornada(p)?.prioridade).toBe('secundaria')
-  })  it('não inventa conselho quando a meta já foi atendida ou há menos de dois trabalhos', () => {
+  })
+
+  it('não inventa conselho quando a meta já foi atendida ou há menos de dois trabalhos', () => {
     const p = preparar()
     expect(obterSugestaoDePrioridadeDaJornada(p)).toBeNull()
     const uma = iniciarAtividadeOciosa(p, cloch, agora)
