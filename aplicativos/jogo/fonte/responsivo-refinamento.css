@@ -78,3 +78,22 @@ html, body, #raiz {
     transition: none;
   }
 }
+
+/*
+ * Layout compact/normal/wide adaptado de Skill Issue Chronicles (Gylan Salih, MIT).
+ * Ajusta somente a largura do conteúdo em desktop; não altera o HUD nem o mobile.
+ * A preferência visual é local e não é serializada no save do personagem.
+ */
+@media (min-width: 900px) {
+  .game-shell[data-largura='compacta'] .jogo-disposicao {
+    width: min(var(--ui-size-layout-reading-compact), 100%);
+  }
+
+  .game-shell[data-largura='normal'] .jogo-disposicao {
+    width: min(var(--ui-size-layout-reading-normal), 100%);
+  }
+
+  .game-shell[data-largura='ampla'] .jogo-disposicao {
+    width: min(var(--ui-size-layout-reading-wide), 100%);
+  }
+}

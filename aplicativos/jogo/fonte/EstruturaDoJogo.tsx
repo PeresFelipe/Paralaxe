@@ -5,6 +5,7 @@
  */
 import { useEffect, useMemo, useRef, useState } from "react";
 import { usePreferenciaDeTela } from "./hooks/usePreferenciaDeTela";
+import { MODOS_DE_LARGURA, proximoModoDeLargura, rotuloDoModoDeLargura, type ModoDeLargura } from "./features/navegacao/modosDeLargura";
 import {
   CLASSES_DE_PERSONAGEM,
   RECEITAS_INICIAIS_DE_FABRICACAO,
@@ -214,6 +215,9 @@ export default function EstruturaDoJogo({
   const [cidadeTelaDoJogo, definirCidadeTelaDoJogo] = usePreferenciaDeTela<TelaDaCidade>(
     `${chaveDaTela}.cidade`, "visaoGeral", ["visaoGeral", "taverna", "mercado", "ferreiro", "banco", "relicario", "codice", "reconstrucao"],
   );
+  const [larguraDeLeitura, definirLarguraDeLeitura] = usePreferenciaDeTela<ModoDeLargura>(
+    "largura-de-leitura", "normal", MODOS_DE_LARGURA,
+  );
   const [rapidoPainel, definirRapidoPainel] = useState<PainelRapidoAtivo>(null);
   const [preparacaoAtivo, definirPreparacaoAtivo] = useState(false);
 
@@ -304,6 +308,14 @@ export default function EstruturaDoJogo({
       acao: aoAlternarTema,
     },
     {
+      id: "largura-leitura",
+      grupo: "Aparência",
+      titulo: `Largura de leitura: ${rotuloDoModoDeLargura[larguraDeLeitura]}`,
+      descricao: "Alternar entre foco, confortável e ampla em telas maiores. Não modifica o personagem.",
+      icone: <span aria-hidden="true">▤</span>,
+      acao: () => definirLarguraDeLeitura(atual => proximoModoDeLargura(atual)),
+    },
+    {
       id: "personagens",
       grupo: "Partida",
       titulo: "Escolher personagem",
@@ -317,7 +329,7 @@ export default function EstruturaDoJogo({
   ];
 
   return (
-    <div className={principalClasse} data-destination={destino}>
+    <div className={principalClasse} data-destination={destino} data-largura={larguraDeLeitura}>
       <a className="pular-ligacao" href="#jogo-conteudo">
         Ir para o jogo
       </a>

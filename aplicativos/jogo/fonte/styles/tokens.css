@@ -87,6 +87,10 @@
   --ui-size-progress-marker: 0.125rem;
   --ui-size-viewport-min: 20rem;
   --ui-size-content-max-width: 78.75rem;
+  /* Perfis de largura do conteúdo (Gylan Salih, MIT, adaptados). */
+  --ui-size-layout-reading-compact: 37.5rem;
+  --ui-size-layout-reading-normal: 47.5rem;
+  --ui-size-layout-reading-wide: 60rem;
   --ui-size-panel-width: 25.625rem;
   --ui-size-status-message-min: 11.25rem;
   --ui-size-prestige-summary-min: 11rem;
