@@ -43,7 +43,7 @@ for (const recurso of catalogo.recursos) {
     if (link.startsWith('/') && !link.startsWith('//')) avisos.add(link)
     else if (!link.startsWith('https://')) erros.push(`Link inválido: ${link}`)
   }
-  if (recurso.grupo !== 'tecnologia' && !recurso.arquivos.length) erros.push(`Crédito sem arquivos: ${recurso.id}`)
+  if (!['tecnologia', 'referencias'].includes(recurso.grupo) && !recurso.arquivos.length) erros.push(`Crédito sem arquivos: ${recurso.id}`)
   for (const caminho of recurso.arquivos) {
     if (!caminho.startsWith('/') || caminho.includes('..') || !recursosVisuais.some((arquivo) => pertence(arquivo, caminho))) erros.push(`Caminho sem recurso correspondente: ${recurso.id} → ${caminho}`)
   }

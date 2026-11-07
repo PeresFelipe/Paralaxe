@@ -53,10 +53,15 @@ function JanelaDeCreditos({ aoFechar }: { aoFechar: () => void }) {
       <Button variant="icon" aria-label="Fechar créditos" onClick={aoFechar}>×</Button>
     </header>
     <div className={estilos.content} tabIndex={0} role="region" aria-label="Contribuições ao Paralaxe">
-      {catalogo.grupos.filter((grupo) => grupo.id !== 'tecnologia').map((grupo) => <section key={grupo.id} className={estilos.group} aria-labelledby={`${id}-${grupo.id}`}>
+      {catalogo.grupos.filter((grupo) => grupo.id !== 'tecnologia' && grupo.id !== 'referencias').map((grupo) => <section key={grupo.id} className={estilos.group} aria-labelledby={`${id}-${grupo.id}`}>
         <h3 id={`${id}-${grupo.id}`}>{grupo.titulo}</h3>
         <ListaDeContribuicoes grupo={grupo.id} />
       </section>)}
+      <details className={estilos.technology}>
+        <summary>Referências de jogos idle — autores e licenças</summary>
+        <p>Ideias e padrões estudados; nenhum código ou asset desses projetos foi incorporado.</p>
+        <ListaDeContribuicoes grupo="referencias" />
+      </details>
       {/* As dependências de software ficam em uma seção expansível para priorizar a autoria visual. */}
       <details className={estilos.technology}>
         <summary>Tecnologia e licenças de software</summary>

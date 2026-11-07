@@ -1,5 +1,5 @@
 {
-  "revisadoEm": "2026-11-03",
+  "revisadoEm": "2026-11-07",
   "grupos": [
     {
       "id": "personagens",
@@ -16,6 +16,10 @@
     {
       "id": "tecnologia",
       "titulo": "Tecnologia"
+    },
+    {
+      "id": "referencias",
+      "titulo": "Referências e inspirações de jogos ociosos"
     }
   ],
   "recursos": [
@@ -342,6 +346,126 @@
       },
       "origem": "https://github.com/jakearchibald/idb",
       "modificacoes": "Avisos de direitos autorais e licenças incluídos na distribuição.",
+      "avisos": [],
+      "arquivos": [],
+      "creditosComplementares": []
+    },
+    {
+      "id": "referencia-universal-ai",
+      "grupo": "referencias",
+      "titulo": "Universal-AI",
+      "autores": [
+        {
+          "nome": "TechLuddite",
+          "url": "https://github.com/TechLuddite/Universal-AI"
+        }
+      ],
+      "contribuicao": "Automação determinística e explicação de prioridades. Nenhum motor ou modelo WebLLM importado.",
+      "licenca": {
+        "nome": "MIT",
+        "url": "https://opensource.org/license/mit"
+      },
+      "origem": "https://github.com/TechLuddite/Universal-AI",
+      "modificacoes": "Inspiração conceitual apenas. Implementação própria do Paralaxe; nenhum arquivo de código, arte, áudio ou documentação reutilizado.",
+      "avisos": [],
+      "arquivos": [],
+      "creditosComplementares": []
+    },
+    {
+      "id": "referencia-iktahmetrics",
+      "grupo": "referencias",
+      "titulo": "IktahMetrics",
+      "autores": [
+        {
+          "nome": "Merrill Lines",
+          "url": "https://github.com/Linesmerrill/IktahMetrics"
+        }
+      ],
+      "contribuicao": "Métricas de XP/h, produção/h e ETA. OCR e Electron não utilizados.",
+      "licenca": {
+        "nome": "MIT",
+        "url": "https://opensource.org/license/mit"
+      },
+      "origem": "https://github.com/Linesmerrill/IktahMetrics",
+      "modificacoes": "Inspiração conceitual apenas. Implementação própria do Paralaxe; nenhum arquivo de código, arte, áudio ou documentação reutilizado.",
+      "avisos": [],
+      "arquivos": [],
+      "creditosComplementares": []
+    },
+    {
+      "id": "referencia-septenary",
+      "grupo": "referencias",
+      "titulo": "The Septenary Forest",
+      "autores": [
+        {
+          "nome": "Yrahcaz7",
+          "url": "https://github.com/Yrahcaz7/The-Septenary-Forest"
+        }
+      ],
+      "contribuicao": "Marcos e camadas de Prestígio. Nenhum motor The Modding Tree integrado.",
+      "licenca": {
+        "nome": "MIT",
+        "url": "https://github.com/Yrahcaz7/The-Septenary-Forest/blob/main/LICENSE.txt"
+      },
+      "origem": "https://github.com/Yrahcaz7/The-Septenary-Forest",
+      "modificacoes": "Inspiração conceitual apenas. Implementação própria do Paralaxe; nenhum arquivo de código, arte, áudio ou documentação reutilizado.",
+      "avisos": [],
+      "arquivos": [],
+      "creditosComplementares": [
+        {
+          "nome": "Acamaeda — The Modding Tree",
+          "url": "https://github.com/Acamaeda/The-Modding-Tree",
+          "licenca": "MIT",
+          "urlLicenca": "https://github.com/Yrahcaz7/The-Septenary-Forest/blob/main/modding-tree-license.txt",
+          "observacao": "Autor da base citada pela referência; nenhum código integrado."
+        },
+        {
+          "nome": "Jacorb — The Prestige Tree",
+          "url": "https://github.com/Jacorb90/Prestige-Tree",
+          "licenca": "MIT",
+          "urlLicenca": "https://github.com/Yrahcaz7/The-Septenary-Forest/blob/main/prestige-tree-license.txt",
+          "observacao": "Autor do motor de prestígio citado pela referência; nenhum código integrado."
+        }
+      ]
+    },
+    {
+      "id": "referencia-prestige-preview",
+      "grupo": "referencias",
+      "titulo": "PrestigePreview",
+      "autores": [
+        {
+          "nome": "seanpm2001",
+          "url": "https://github.com/seanpm2001/PrestigePreview"
+        }
+      ],
+      "contribuicao": "Prévia das consequências do Prestígio. Nenhum código GPL incorporado.",
+      "licenca": {
+        "nome": "GPL-3.0 — somente conceito",
+        "url": "https://www.gnu.org/licenses/gpl-3.0.html"
+      },
+      "origem": "https://github.com/seanpm2001/PrestigePreview",
+      "modificacoes": "Inspiração conceitual apenas. Implementação própria do Paralaxe; nenhum arquivo de código, arte, áudio ou documentação reutilizado.",
+      "avisos": [],
+      "arquivos": [],
+      "creditosComplementares": []
+    },
+    {
+      "id": "referencia-idle-hero",
+      "grupo": "referencias",
+      "titulo": "Idle Hero",
+      "autores": [
+        {
+          "nome": "alexis-labs",
+          "url": "https://github.com/alexis-labs/idle-hero"
+        }
+      ],
+      "contribuicao": "Somente estudo de arquitetura e retorno offline. Nenhum código ou asset copiado.",
+      "licenca": {
+        "nome": "Sem licença de reutilização publicada",
+        "url": null
+      },
+      "origem": "https://github.com/alexis-labs/idle-hero",
+      "modificacoes": "Inspiração conceitual apenas. Implementação própria do Paralaxe; nenhum arquivo de código, arte, áudio ou documentação reutilizado.",
       "avisos": [],
       "arquivos": [],
       "creditosComplementares": []

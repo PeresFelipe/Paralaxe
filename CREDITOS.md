@@ -74,6 +74,23 @@ A moldura escura de Dark Ages UI passou a compor os painéis Agora, Formação e
 
 Os [textos completos de licença](aplicativos/jogo/publico/creditos/software.txt) acompanham a distribuição e são acessíveis pelo jogo. O inventário abrange o código entregue ao navegador; ferramentas usadas somente na compilação não são apresentadas como recursos visuais ou bibliotecas da partida.
 
+
+## Referências open source estudadas — 07/11/2026
+
+As melhorias de progressão e UX foram programadas originalmente para o Paralaxe. Nenhum código, asset, fonte, música ou texto dos repositórios abaixo foi copiado. Os créditos são concedidos voluntariamente às referências e não as classificam como bibliotecas distribuídas com o jogo.
+
+| Referência e autoria | Licença identificada | Inspiração |
+| --- | --- | --- |
+| [Universal-AI](https://github.com/TechLuddite/Universal-AI) — **TechLuddite** | MIT — © 2026 TechLuddite | Explicação determinística das prioridades de atividades, sem IA externa. |
+| [IktahMetrics](https://github.com/Linesmerrill/IktahMetrics) — **Merrill Lines** | MIT — © 2026 Merrill Lines | Rendimento, XP/h e estimativa do próximo nível, sem OCR ou Electron. |
+| [The Septenary Forest](https://github.com/Yrahcaz7/The-Septenary-Forest) — **Yrahcaz7** | MIT — © 2025 Yrahcaz7 | Marcos de Prestígio; os motores MIT citados nessa obra são de **Acamaeda** (The Modding Tree) e **Jacorb** (The Prestige Tree), também não incorporados. |
+| [PrestigePreview](https://github.com/seanpm2001/PrestigePreview) — **seanpm2001** | GPL-3.0 | Apenas o conceito de prévia antes de reiniciar o personagem; nenhum código GPL incorporado. |
+| [Idle Hero](https://github.com/alexis-labs/idle-hero) — **alexis-labs** | Sem licença de reutilização publicada | Apenas referência conceitual de arquitetura e progresso offline; nenhum código ou arte reutilizados. |
+
+Fontes de licença: [Universal-AI](https://github.com/TechLuddite/Universal-AI/blob/main/LICENSE), [IktahMetrics](https://github.com/Linesmerrill/IktahMetrics/blob/main/LICENSE), [The Septenary Forest](https://github.com/Yrahcaz7/The-Septenary-Forest/blob/main/LICENSE.txt), [PrestigePreview](https://github.com/seanpm2001/PrestigePreview/blob/main/LICENSE.txt). O README do Idle Hero declara não possuir licença open source definida.
+
+Se futuramente código MIT for efetivamente incorporado, seus avisos completos de copyright e licença deverão acompanhar a distribuição. Projetos GPL e sem licença não podem ser tratados como componentes livres de restrições.
+
 ## Adicionar ou atualizar uma arte
 
 1. Guarde os arquivos na pasta do recurso/autor e preserve os avisos originais.
