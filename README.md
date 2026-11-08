@@ -34,6 +34,10 @@ pnpm compilar
 
 **Compatibilidade:** o nome interno do banco IndexedDB permanece `greywake` para que as partidas existentes sejam carregadas normalmente. Esse identificador legado não altera o nome exibido do jogo.
 
+## Acesso ao jogo
+
+A tela inicial oferece **Entrar localmente**, com usuário ou e-mail apenas como identificação de entrada e opção de lembrar o usuário. Cadastro, recuperação de senha e Google estão preparados visualmente, mas desabilitados. Não há conta online nem coleta de senha nesta etapa. As partidas existentes continuam neste navegador. Consulte [Acesso local e autenticação](documentacao/implementacao/ACESSO-LOCAL-E-AUTENTICACAO.md).
+
 ## Debug para testes
 
 No menu de opções, junto ao tema, use **Debug: tudo no máximo** para abrir uma cópia de teste do personagem. O original é preservado. Dentro do debug, **Repor tudo no máximo** restaura o preset. Consulte [Debug local](documentacao/implementacao/DEBUG-LOCAL.md).

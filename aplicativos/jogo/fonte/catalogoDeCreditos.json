@@ -1,5 +1,5 @@
 {
-  "revisadoEm": "2026-11-07",
+  "revisadoEm": "2026-11-08",
   "grupos": [
     {
       "id": "personagens",
@@ -117,7 +117,7 @@
           "url": "https://hypnobius.itch.io/"
         }
       ],
-      "contribuicao": "Molduras, ornamentos e espaços da interface, incluindo os painéis Agora, Formação e Bolsa de Expedição.",
+      "contribuicao": "Molduras, ornamentos e espaços da interface, incluindo os painéis Agora, Formação e Bolsa de Expedição. Ornamento dourado da tela de acesso local.",
       "licenca": {
         "nome": "Licença do autor",
         "url": "/arte/interface/dark-ages/LICENSE.txt"

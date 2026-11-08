@@ -397,6 +397,16 @@ export function useAplicativoDaPartida(repositorioDePartidas: RepositorioDeParti
     definirTela("partida-listar");
   }
 
+  async function encerrarAcessoLocal(aoSair: () => void) {
+    try {
+      if (referenciaDeRisco.current || debugPendente.current || ehSalvando) throw new Error("Conclua a ação atual antes de sair.");
+      await filaDeAlteracoes.aguardar();
+      if (referenciaDeRisco.current || referenciaDaPartidaAtiva.current?.masmorra.expedicaoAtiva || referenciaDaPartidaAtiva.current?.masmorra.incursaoAutomaticaAtiva) throw new Error("Retorne a um lugar seguro antes de sair.");
+      alternarPartida();
+      aoSair();
+    } catch (erro) { definirMensagem(erro instanceof Error ? erro.message : "Não foi possível encerrar o acesso local."); }
+  }
+
 
   return {
     tela,
@@ -456,5 +466,6 @@ export function useAplicativoDaPartida(repositorioDePartidas: RepositorioDeParti
     prepararRisco,
     iniciarNovoPartida,
     alternarPartida,
+    encerrarAcessoLocal,
   };
 }

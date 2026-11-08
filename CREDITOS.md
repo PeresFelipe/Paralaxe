@@ -130,3 +130,7 @@ As sete profissões, Vida/Mana/Fôlego/Ouro, Inventário/Banco/Grupo e a maior p
 Os créditos de Acólito (Tattuattor), Ladino (SpriteForge e Tiago Patrício) e Errante (rvros) da etapa anterior foram conferidos e permanecem no catálogo acessível pelo jogo, com seus avisos e URLs. Nenhum crédito de recurso em uso foi removido.
 
 A licença Crusenho agora preserva os bytes originais do ZIP; o URL do produto, que havia sido inserido no texto do aviso anterior, consta no registro de proveniência separado. Os novos recursos são gratuitos; nenhum pacote pago foi adquirido ou incorporado.
+
+## Tela de acesso local — 08/11/2026
+
+A entrada do jogo reutiliza o ornamento dourado do **Dark Ages UI**, de [Hypnobius](https://hypnobius.itch.io/dark-ages-ui), a cena existente da Cidade Livre e os ícones já creditados. Sem novo pacote distribuído. A [pesquisa e arquitetura do acesso](documentacao/implementacao/ACESSO-LOCAL-E-AUTENTICACAO.md) registra os packs avaliados no itch.io e seus limites de licença.

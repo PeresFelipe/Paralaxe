@@ -55,6 +55,7 @@ type PropriedadesDeEstruturaDoJogo = {
   riscoAtivo: boolean;
   aoAlterarEstadoDeRisco: (ativo: boolean) => void;
   aoAlternarPartida: () => void;
+  aoSairDoAcesso?: () => Promise<void>;
   aoAbrirDebug: () => Promise<void>;
   debugPendente: boolean;
   temaDaInterface: TemaDaInterface;
@@ -135,6 +136,7 @@ export default function EstruturaDoJogo({
   riscoAtivo,
   aoAlterarEstadoDeRisco,
   aoAlternarPartida,
+  aoSairDoAcesso,
   aoAbrirDebug,
   debugPendente,
   temaDaInterface,
@@ -309,6 +311,12 @@ export default function EstruturaDoJogo({
       desabilitada: focadoRisco || debugPendente,
       acao: aoAlternarPartida,
     },
+    ...(aoSairDoAcesso ? [{
+      id: "sair-acesso", grupo: "Acesso", titulo: "Sair do acesso local",
+      descricao: "Voltar à entrada. Seus personagens permanecem salvos.",
+      desabilitada: focadoRisco || debugPendente,
+      acao: () => { void aoSairDoAcesso(); },
+    }] : []),
   ];
 
   return (

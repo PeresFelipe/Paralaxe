@@ -38,10 +38,11 @@ function obterNomeDoPresente(idDoPresente: IdDoPresente) {
 
 interface AplicativoProps {
   repositorioDePartidas: RepositorioDePartidasLocais;
+  aoSairDoAcesso?: () => void;
 }
 
 /** Compõe as telas e conecta eventos à camada de aplicação da partida. */
-function Aplicativo({ repositorioDePartidas }: AplicativoProps) {
+function Aplicativo({ repositorioDePartidas, aoSairDoAcesso }: AplicativoProps) {
   const [temaDaInterface, definirTemaDaInterface] = useTemaDaInterface();
   const {
     tela, definirTela, partidas, partidaAtiva, nomeDoPersonagem, definirPersonagemNome,
@@ -56,7 +57,7 @@ function Aplicativo({ repositorioDePartidas }: AplicativoProps) {
     tratarRetirarBancoPilha, tratarDepositarBancoEquipamento, tratarRetirarBancoEquipamento,
     tratarConcluirProjeto, tratarComprarOfertaDoMercado,
     persistirPartidaAtiva, prepararRisco,
-    iniciarNovoPartida, alternarPartida,
+    iniciarNovoPartida, alternarPartida, encerrarAcessoLocal,
   } = useAplicativoDaPartida(repositorioDePartidas);
 
   // A renderização segue a máquina de telas: inicialização/erro, partida ativa, lista e, por último, criação.
@@ -135,6 +136,7 @@ function Aplicativo({ repositorioDePartidas }: AplicativoProps) {
           riscoAtivo={riscoAtivo}
           aoAlterarEstadoDeRisco={definirRiscoAtivo}
           aoAlternarPartida={alternarPartida}
+          {...(aoSairDoAcesso ? { aoSairDoAcesso: () => encerrarAcessoLocal(aoSairDoAcesso) } : {})}
           aoAbrirDebug={tratarAbrirDebug}
           debugPendente={ehPreparandoDebug}
           temaDaInterface={temaDaInterface}
@@ -218,6 +220,7 @@ function Aplicativo({ repositorioDePartidas }: AplicativoProps) {
             </Button>
           ))}
         </section>
+        {aoSairDoAcesso ? <Button variant="ghost" disabled={ehSalvando || ehPreparandoDebug} onClick={() => void encerrarAcessoLocal(aoSairDoAcesso)}>Sair do acesso local</Button> : null}
         <CreditosDosRecursos />
       </main>
     );
@@ -407,7 +410,8 @@ function Aplicativo({ repositorioDePartidas }: AplicativoProps) {
           </div>
         ) : null}
       </section>
-      <CreditosDosRecursos />
+      {aoSairDoAcesso ? <Button variant="ghost" disabled={ehSalvando || ehPreparandoDebug} onClick={() => void encerrarAcessoLocal(aoSairDoAcesso)}>Sair do acesso local</Button> : null}
+        <CreditosDosRecursos />
     </main>
   );
 }

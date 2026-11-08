@@ -5,7 +5,7 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { criarRepositorioDePartidasIndexedDb } from '@paralaxe/persistencia'
-import Aplicativo from './Aplicativo'
+import EntradaDoJogo from './features/acesso/EntradaDoJogo'
 import { KitDeInterface } from './features/ui-kit/KitDeInterface'
 // A ordem das folhas importa: a base vem primeiro, seguida dos ajustes de disposição,
 // tipografia, tema e componentes. Regras posteriores podem sobrescrever as anteriores.
@@ -32,6 +32,6 @@ createRoot(raizElemento).render(
   <StrictMode>
     {import.meta.env.DEV && window.location.pathname === '/ui-kit'
       ? <KitDeInterface />
-      : <Aplicativo repositorioDePartidas={repositorioDePartidas} />}
+      : <EntradaDoJogo repositorioDePartidas={repositorioDePartidas} />}
   </StrictMode>,
 )

@@ -9,3 +9,4 @@ export interface RepositorioDePartidasLocais {
   obter(idDaPartida: string): Promise<PartidaLocal | null>
   salvar(partida: PartidaLocal): Promise<void>
 }
+export type { CredenciaisDeEntrada, CadastroDeConta, ContaAutenticada, ProvedorDeAutenticacao } from './autenticacao'
