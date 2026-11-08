@@ -523,3 +523,15 @@
   --ui-oficios-linha-116: var(--ui-letter-spacing-relaxed);
 }
 
+
+:root {
+ --ui-dungeon-fundo: #141820;
+ --ui-dungeon-pedra: #303b49;
+ --ui-dungeon-juntas: #677385;
+ --ui-dungeon-texto: #eee6d5;
+ --ui-dungeon-heroi: #78c5bd;
+ --ui-dungeon-encontro: #c47e69;
+ --ui-dungeon-sombra: #0b1018;
+ --ui-dungeon-altura: 22rem;
+ --ui-dungeon-svg-fonte: 10px;
+}
