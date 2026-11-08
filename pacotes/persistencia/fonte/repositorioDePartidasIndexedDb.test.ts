@@ -3,8 +3,8 @@
  * Verificam expedições interrompidas e a introdução de equipamentos, prestígio e jornada
  * em partidas antigas. Não dependem de um navegador nem acessam partidas reais.
  */
-import { beforeEach, describe, expect, it } from 'vitest'
-import { indexedDB } from 'fake-indexeddb'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { indexedDB, IDBDatabase } from 'fake-indexeddb'
 import {
   aceitarContratoDeDunLiath,
   criarPartidaLocal,
@@ -72,6 +72,35 @@ function excluirBancoDeDados() {
 describe("repositório de partidas em IndexedDB", () => {
   beforeEach(async () => {
     await excluirBancoDeDados()
+  })
+
+  it('propaga aborto de transação sem rejeição órfã e preserva o registro anterior', async () => {
+    const repo = criarRepositorioDePartidasIndexedDb()
+    const atual = criarPartidaLocal({ idDaPartida: 'aborto-debug', criadoEm: '2026-11-08T00:00:00.000Z',
+      versaoDoConteudo: 'teste', nomeDoPersonagem: 'Aedan', classeDoPersonagem, presente })
+    await repo.salvar(atual)
+    const transacionar = IDBDatabase.prototype.transaction
+    const spy = vi.spyOn(IDBDatabase.prototype, 'transaction').mockImplementationOnce(function (this: IDBDatabase, ...args) {
+      const tx = transacionar.apply(this, args)
+      queueMicrotask(() => tx.abort())
+      return tx
+    })
+    try {
+      await expect(repo.salvar({ ...atual, personagem: { ...atual.personagem, ouro: 99 } })).rejects.toThrow()
+    } finally { spy.mockRestore() }
+    expect(await repo.obter(atual.idDaPartida)).toEqual(atual)
+  })
+
+  it('preserva a marca de debug no formato histórico e mantém saves normais separados', async () => {
+    const repo = criarRepositorioDePartidasIndexedDb()
+    const original = criarPartidaLocal({ idDaPartida: 'original-debug', criadoEm: '2026-11-08T00:00:00.000Z',
+      versaoDoConteudo: 'teste', nomeDoPersonagem: 'Aedan', classeDoPersonagem, presente })
+    const debug = { ...original, idDaPartida: 'copia-debug', depuracao: { idDaPartidaOriginal: original.idDaPartida } }
+    await repo.salvar(original)
+    await repo.salvar(debug)
+    expect(await repo.obter(debug.idDaPartida)).toEqual(debug)
+    expect(await repo.obter(original.idDaPartida)).toEqual(original)
+    await expect(repo.salvar({ ...debug, depuracao: { idDaPartidaOriginal: debug.idDaPartida } })).rejects.toThrow('ID próprio')
   })
 
   it('recusa uma gravação corrompida antes de substituir o último save válido', async () => {

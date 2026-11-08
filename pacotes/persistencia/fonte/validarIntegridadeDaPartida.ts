@@ -70,6 +70,11 @@ export function validarIntegridadeDaPartida(valor: unknown): void {
   const partida = registro(valor, 'raiz')
   numerosFinitos(partida, 'raiz')
   texto(partida.idDaPartida, 'idDaPartida')
+  if (partida.depuracao !== undefined) {
+    const depuracao = registro(partida.depuracao, 'depuracao')
+    texto(depuracao.idDaPartidaOriginal, 'depuracao.idDaPartidaOriginal')
+    if (depuracao.idDaPartidaOriginal === partida.idDaPartida) falhar('depuracao: cópia deve ter ID próprio')
+  }
   texto(partida.versaoDoConteudo, 'versaoDoConteudo')
   if (partida.modoDaPartida !== 'LOCAL') falhar('modoDaPartida')
   data(partida.criadoEm, 'criadoEm'); data(partida.atualizadoEm, 'atualizadoEm')

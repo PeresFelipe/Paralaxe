@@ -48,7 +48,7 @@ function Aplicativo({ repositorioDePartidas }: AplicativoProps) {
     idDaClasseSelecionada, definirIdDaClasseSelecionada, selecionadoPresenteId,
     definirSelecionadoPresenteId, criacaoPasso, definirCriacaoPasso, aviso, mensagem,
     definirMensagem, ultimoResultadoDoTrabalho,
-    ausenteResumo, definirAusenteResumo, ehSalvando, riscoAtivo, definirRiscoAtivo,
+    ausenteResumo, definirAusenteResumo, ehSalvando, ehPreparandoDebug, tratarAbrirDebug, riscoAtivo, definirRiscoAtivo,
     tratarCriarPartida, tratarCarregarPartida, tratarIniciarAtividade, tratarIniciarAtividadeSecundaria,
     tratarPararAtividadeSecundaria, tratarIniciarAtividadeTerciaria, tratarPararAtividadeTerciaria, tratarIniciarReceita, tratarIniciarReceitaSecundaria, tratarPararReceitaSecundaria, tratarIniciarReceitaTerciaria, tratarPararReceitaTerciaria, tratarAlterarPrioridadeDeOficio, tratarResponderMinigame,
     tratarPararTrabalho, tratarPrestigiarProfissao, tratarEscolherJornadaMeta, tratarEquipar, tratarDistribuirAtributos,
@@ -135,6 +135,8 @@ function Aplicativo({ repositorioDePartidas }: AplicativoProps) {
           riscoAtivo={riscoAtivo}
           aoAlterarEstadoDeRisco={definirRiscoAtivo}
           aoAlternarPartida={alternarPartida}
+          aoAbrirDebug={tratarAbrirDebug}
+          debugPendente={ehPreparandoDebug}
           temaDaInterface={temaDaInterface}
           aoAlternarTema={() => definirTemaDaInterface(atual => atual === "escuro" ? "claro" : "escuro")}
           aoPersistir={persistirPartidaAtiva}

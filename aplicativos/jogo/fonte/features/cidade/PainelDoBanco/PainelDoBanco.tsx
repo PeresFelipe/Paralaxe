@@ -11,8 +11,8 @@ import { rotulosDaInterface } from '@/rotulosDaInterface';
 import { rotulosDosItens } from '@/rotulosDoJogo';
 import { obterDefinicaoDeEquipamento } from "@paralaxe/conteudo";
 import {
-  LIMITE_DE_ESPACOS_DO_BANCO_V01,
-  LIMITE_DE_ESPACOS_DO_INVENTARIO_V01,
+  obterLimiteDeEspacosDoBanco,
+  obterLimiteDeEspacosDoInventario,
   obterUsoDeEspacosDoBanco,
   obterUsoDeEspacosDoInventario,
   type PartidaLocal,
@@ -73,13 +73,13 @@ export default function PainelDoBanco({
         <Card className={estilos.capacity}>
           <span className="secao-chamada">Inventário</span>
           <strong>
-            {inventarioUso} / {LIMITE_DE_ESPACOS_DO_INVENTARIO_V01} espaços
+            {inventarioUso} / {obterLimiteDeEspacosDoInventario(partida)} espaços
           </strong>
         </Card>
         <Card className={estilos.capacity}>
           <span className="secao-chamada">Banco</span>
           <strong>
-            {bancoUso} / {LIMITE_DE_ESPACOS_DO_BANCO_V01} espaços
+            {bancoUso} / {obterLimiteDeEspacosDoBanco(partida)} espaços
           </strong>
         </Card>
       </div>

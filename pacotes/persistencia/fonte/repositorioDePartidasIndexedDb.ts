@@ -535,8 +535,7 @@ export function criarRepositorioDePartidasIndexedDb(): RepositorioDePartidasLoca
         const transacao = bancoDeDados.transaction(ARMAZENAMENTO_DE_PARTIDAS, 'readonly')
         const concluida = transacaoParaPromessa(transacao)
         const requisicao = transacao.objectStore(ARMAZENAMENTO_DE_PARTIDAS).getAll()
-        const brutoPartidas = await requisicaoParaPromessa(requisicao)
-        await concluida
+        const [brutoPartidas] = await Promise.all([requisicaoParaPromessa(requisicao), concluida])
 
         return brutoPartidas
           .map((partida) => migrarPartida(partida))
@@ -554,8 +553,7 @@ export function criarRepositorioDePartidasIndexedDb(): RepositorioDePartidasLoca
         const transacao = bancoDeDados.transaction(ARMAZENAMENTO_DE_PARTIDAS, 'readonly')
         const concluida = transacaoParaPromessa(transacao)
         const requisicao = transacao.objectStore(ARMAZENAMENTO_DE_PARTIDAS).get(idDaPartida)
-        const brutoPartida = await requisicaoParaPromessa(requisicao)
-        await concluida
+        const [brutoPartida] = await Promise.all([requisicaoParaPromessa(requisicao), concluida])
 
         return brutoPartida === undefined ? null : migrarPartida(brutoPartida)
       } finally {
@@ -577,8 +575,7 @@ export function criarRepositorioDePartidasIndexedDb(): RepositorioDePartidasLoca
         const transacao = bancoDeDados.transaction(ARMAZENAMENTO_DE_PARTIDAS, 'readwrite')
         const concluida = transacaoParaPromessa(transacao)
         const requisicao = transacao.objectStore(ARMAZENAMENTO_DE_PARTIDAS).put(gravarFormatoLegado(partida))
-        await requisicaoParaPromessa(requisicao)
-        await concluida
+        await Promise.all([requisicaoParaPromessa(requisicao), concluida])
       } finally {
         bancoDeDados.close()
       }

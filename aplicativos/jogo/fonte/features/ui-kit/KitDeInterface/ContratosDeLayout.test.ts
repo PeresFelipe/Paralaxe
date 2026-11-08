@@ -15,7 +15,9 @@ function renderizarEstrutura(riscoAtivo = false) {
   const partida = iniciarAtividadeOciosa(base, ATIVIDADES_OCIOSAS_INICIAIS[0]!, base.criadoEm)
   const semEfeito = async () => {}
   const props: ComponentProps<typeof EstruturaDoJogo> = {
-    partida, mensagem: null, tipoDaMensagem: 'informacao', ultimoResultadoDoTrabalho: null, riscoAtivo,
+    partida,
+    aoAbrirDebug: async () => {},
+    debugPendente: false, mensagem: null, tipoDaMensagem: 'informacao', ultimoResultadoDoTrabalho: null, riscoAtivo,
     aoDispensarMensagem: semEfeito, aoAlterarEstadoDeRisco: semEfeito, aoAlternarPartida: semEfeito,
     temaDaInterface: 'escuro', aoAlternarTema: semEfeito, prepararRisco: async () => partida,
     aoPersistir: async alterar => alterar(partida),

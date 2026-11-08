@@ -1,3 +1,4 @@
+import { criarPartidaDeDebug } from '@/services/partidaDeDebug';
 import { criarAcoesDaCidade } from '@/services/acoesDaCidade';
 import { criarAcoesDeOficios } from '@/services/acoesDeOficios';
 import { criarAcoesDoBanco } from "@/services/acoesDoBanco";
@@ -56,6 +57,8 @@ export function useAplicativoDaPartida(repositorioDePartidas: RepositorioDeParti
     null,
   );
   const [ehSalvando, definirEhSalvando] = useState(false);
+  const [ehPreparandoDebug, definirEhPreparandoDebug] = useState(false);
+  const debugPendente = useRef(false);
   const [riscoAtivo, atualizarRiscoAtivo] = useState(false);
   const referenciaDeRisco = useRef(false);
   const definirRiscoAtivo = useCallback((ativo: boolean) => {
@@ -185,6 +188,7 @@ export function useAplicativoDaPartida(repositorioDePartidas: RepositorioDeParti
    * Se a gravação falhar, remove o bloqueio e propaga o erro ao componente que iniciou a ação.
    */
   async function prepararRisco() {
+    if (debugPendente.current) throw new Error("Aguarde a preparação do debug antes de iniciar um encontro.");
     if (!partidaAtiva) throw new Error("Nenhum personagem ativo.");
     definirRiscoAtivo(true);
     try {
@@ -308,6 +312,46 @@ export function useAplicativoDaPartida(repositorioDePartidas: RepositorioDeParti
     }
   }
 
+  /** Salva uma cópia de testes antes de selecioná-la; o personagem de origem permanece intacto. */
+  async function tratarAbrirDebug() {
+    if (debugPendente.current) return;
+    debugPendente.current = true;
+    definirEhPreparandoDebug(true);
+    const idEsperado = referenciaDaPartidaAtiva.current?.idDaPartida;
+    try {
+      await filaDeAlteracoes.aguardar();
+      const origem = referenciaDaPartidaAtiva.current;
+      if (!origem || origem.idDaPartida !== idEsperado) throw new Error("O personagem ativo mudou. Tente novamente.");
+      if (referenciaDeRisco.current || origem.masmorra.expedicaoAtiva || origem.masmorra.incursaoAutomaticaAtiva) {
+        throw new Error("Abra o debug após retornar a um lugar seguro.");
+      }
+      const id = origem.depuracao ? origem.idDaPartida : `debug-${criarIdDaPartida()}`;
+      const debug = origem.depuracao
+        ? await aplicarAlteracaoNaPartidaAtiva(atual => {
+            if (referenciaDeRisco.current || atual.masmorra.expedicaoAtiva || atual.masmorra.incursaoAutomaticaAtiva) {
+              throw new Error("Reponha o debug após retornar a um lugar seguro.");
+            }
+            return criarPartidaDeDebug(atual, id, new Date().toISOString());
+          })
+        : criarPartidaDeDebug(origem, id, new Date().toISOString());
+      if (!origem.depuracao) await repositorioDePartidas.salvar(debug);
+      definirPartidas(atuais => [debug, ...atuais.filter(p => p.idDaPartida !== debug.idDaPartida)]);
+      // Não rouba o foco se o jogador trocou de personagem enquanto a gravação estava em curso.
+      if (referenciaDaPartidaAtiva.current?.idDaPartida !== idEsperado) return;
+      selecionarPartidaAtiva(debug);
+      definirRiscoAtivo(false);
+      definirAusenteResumo(null);
+      definirUltimoTrabalhoResultado(null);
+      definirMensagem("Debug pronto: nível 99, Prestígio III, recursos e conteúdo liberados. Para voltar ao personagem original, use Escolher personagem.");
+      definirTela("jogo");
+    } catch (erro) {
+      definirMensagem(erro instanceof Error ? erro.message : "Não foi possível preparar a partida de debug.");
+    } finally {
+      debugPendente.current = false;
+      definirEhPreparandoDebug(false);
+    }
+  }
+
   const portasDasAcoes = {
     persistir: persistirPartidaAtiva,
     agora: () => new Date().toISOString(),
@@ -377,6 +421,8 @@ export function useAplicativoDaPartida(repositorioDePartidas: RepositorioDeParti
     ausenteResumo,
     definirAusenteResumo,
     ehSalvando,
+    ehPreparandoDebug,
+    tratarAbrirDebug,
     riscoAtivo,
     definirRiscoAtivo,
     tratarCriarPartida,

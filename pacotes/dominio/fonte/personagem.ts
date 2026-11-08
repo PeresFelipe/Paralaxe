@@ -151,6 +151,8 @@ export const VERSAO_DO_ESQUEMA_DA_PARTIDA = 18 as const
 export interface PartidaLocal {
   idDaPartida: string
   modoDaPartida: "LOCAL"
+  /** Cópia de teste separada; ausente em partidas normais e saves anteriores. */
+  depuracao?: { idDaPartidaOriginal: string }
   versaoDoEsquemaDaPartida: typeof VERSAO_DO_ESQUEMA_DA_PARTIDA
   versaoDoConteudo: string
   criadoEm: string

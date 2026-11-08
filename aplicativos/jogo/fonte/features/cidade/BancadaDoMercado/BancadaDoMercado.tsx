@@ -5,7 +5,7 @@
  */
 import { useState } from 'react'
 import { OFERTAS_INICIAIS_DO_MERCADO_DE_PNJ } from '@paralaxe/conteudo'
-import { obterUsoDeEspacosDoInventario, LIMITE_DE_ESPACOS_DO_INVENTARIO_V01, type PartidaLocal } from '@paralaxe/dominio'
+import { obterUsoDeEspacosDoInventario, obterLimiteDeEspacosDoInventario, type PartidaLocal } from '@paralaxe/dominio'
 import { Button, Card } from '@/components/ui'
 import IconeDoJogo from '@/components/jogo/IconeDoJogo'
 import { obterIconeDoProduto } from '@/iconesDosRecursos'
@@ -62,7 +62,7 @@ export default function BancadaDoMercado({ partida, aoComprarOferta, aoVoltar }:
       <div className={`contexto-arte contexto-arte--compacto ${estilos.art}`} aria-hidden="true">
         <span>ARTE 16:9 · MERCADO</span>
       </div>
-      <p className="atenuado">Inventário: {obterUsoDeEspacosDoInventario(partida)} / {LIMITE_DE_ESPACOS_DO_INVENTARIO_V01} espaços. A compra entrega o item na bolsa.</p>
+      <p className="atenuado">Inventário: {obterUsoDeEspacosDoInventario(partida)} / {obterLimiteDeEspacosDoInventario(partida)} espaços. A compra entrega o item na bolsa.</p>
       {mensagem ? <p className="emLinha-mensagem" role="status">{mensagem}</p> : null}
 
       <div className={estilos.offers}>

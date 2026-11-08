@@ -10,6 +10,14 @@ export const LIMITE_DE_ESPACOS_DO_BANCO_V01 = 80
 export const LIMITE_DE_PILHA_DE_MATERIAIS_V01 = 9_999
 export const LIMITE_DE_PILHA_DE_CONSUMIVEIS_V01 = 99
 
+/** Espaço ampliado somente na cópia de debug, para comportar o catálogo de testes. */
+export function obterLimiteDeEspacosDoInventario(partida: PartidaLocal) {
+  return partida.depuracao ? 1000 : LIMITE_DE_ESPACOS_DO_INVENTARIO_V01
+}
+export function obterLimiteDeEspacosDoBanco(partida: PartidaLocal) {
+  return partida.depuracao ? 1000 : LIMITE_DE_ESPACOS_DO_BANCO_V01
+}
+
 function validarQuantidade(quantidade: number) {
   if (!Number.isInteger(quantidade) || quantidade <= 0) {
     throw new Error('A quantidade transferida precisa ser um inteiro positivo.')
@@ -21,7 +29,9 @@ function equipadoInstanciaIds(partida: PartidaLocal) {
 }
 
 /** Consumíveis e comidas usam pilhas de 99; os demais itens usam o limite de materiais de 9.999. */
-export function obterPilhaLimite(idDaDefinicao: string) {
+export function obterPilhaLimite(idDaDefinicao: string, partida?: PartidaLocal) {
+  // Estoques do preset usam os máximos normais; esta folga permite receber loot sem travar os testes.
+  if (partida?.depuracao) return 1_000_000
   return idDaDefinicao.startsWith("item.consumivel.") || idDaDefinicao.startsWith("item.comida.")
     ? LIMITE_DE_PILHA_DE_CONSUMIVEIS_V01
     : LIMITE_DE_PILHA_DE_MATERIAIS_V01
@@ -44,20 +54,20 @@ export function obterUsoDeEspacosDoBanco(partida: PartidaLocal) {
 /** Uma pilha existente ainda pode crescer com a mochila cheia, até seu limite de quantidade. */
 export function obterEspacoParaPilhaNoInventario(partida: PartidaLocal, idDaDefinicao: string) {
   const existente = partida.personagem.inventario.find((pilha) => pilha.idDaDefinicao === idDaDefinicao)
-  if (!existente && obterUsoDeEspacosDoInventario(partida) >= LIMITE_DE_ESPACOS_DO_INVENTARIO_V01) return 0
-  return Math.max(0, obterPilhaLimite(idDaDefinicao) - (existente?.quantidade ?? 0))
+  if (!existente && obterUsoDeEspacosDoInventario(partida) >= obterLimiteDeEspacosDoInventario(partida)) return 0
+  return Math.max(0, obterPilhaLimite(idDaDefinicao, partida) - (existente?.quantidade ?? 0))
 }
 
 /** Calcula a quantidade admissível, levando em conta tanto uma pilha existente quanto os 80 espaços. */
 export function obterEspacoParaPilhaNoBanco(partida: PartidaLocal, idDaDefinicao: string) {
   const existente = partida.personagem.banco.inventario.find((pilha) => pilha.idDaDefinicao === idDaDefinicao)
-  if (!existente && obterUsoDeEspacosDoBanco(partida) >= LIMITE_DE_ESPACOS_DO_BANCO_V01) return 0
-  return Math.max(0, obterPilhaLimite(idDaDefinicao) - (existente?.quantidade ?? 0))
+  if (!existente && obterUsoDeEspacosDoBanco(partida) >= obterLimiteDeEspacosDoBanco(partida)) return 0
+  return Math.max(0, obterPilhaLimite(idDaDefinicao, partida) - (existente?.quantidade ?? 0))
 }
 
 /** Cada nova instância precisa de um espaço livre, independentemente de sua definição ou raridade. */
 export function obterEspacoParaEquipamentoNoInventario(partida: PartidaLocal) {
-  return Math.max(0, LIMITE_DE_ESPACOS_DO_INVENTARIO_V01 - obterUsoDeEspacosDoInventario(partida))
+  return Math.max(0, obterLimiteDeEspacosDoInventario(partida) - obterUsoDeEspacosDoInventario(partida))
 }
 
 /** Lança erro se a quantidade for inválida ou não couber integralmente; não faz uma entrega parcial. */
@@ -171,7 +181,7 @@ export function depositarEquipamentoNoBanco(
   if (equipadoInstanciaIds(partida).has(idDaInstancia)) {
     throw new Error('Desequipe o item antes de depositá-lo no Banco.')
   }
-  if (obterUsoDeEspacosDoBanco(partida) >= LIMITE_DE_ESPACOS_DO_BANCO_V01) {
+  if (obterUsoDeEspacosDoBanco(partida) >= obterLimiteDeEspacosDoBanco(partida)) {
     throw new Error("O Banco está sem espaços livres.")
   }
 

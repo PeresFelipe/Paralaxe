@@ -55,6 +55,8 @@ type PropriedadesDeEstruturaDoJogo = {
   riscoAtivo: boolean;
   aoAlterarEstadoDeRisco: (ativo: boolean) => void;
   aoAlternarPartida: () => void;
+  aoAbrirDebug: () => Promise<void>;
+  debugPendente: boolean;
   temaDaInterface: TemaDaInterface;
   aoAlternarTema: () => void;
   aoPersistir: PersistirAlteracaoDaPartida;
@@ -133,6 +135,8 @@ export default function EstruturaDoJogo({
   riscoAtivo,
   aoAlterarEstadoDeRisco,
   aoAlternarPartida,
+  aoAbrirDebug,
+  debugPendente,
   temaDaInterface,
   aoAlternarTema,
   aoPersistir,
@@ -282,6 +286,19 @@ export default function EstruturaDoJogo({
       acao: () => definirLarguraDeLeitura(atual => proximoModoDeLargura(atual)),
     },
     {
+      id: "debug-maximo",
+      grupo: "Testes",
+      titulo: debugPendente ? "Preparando debug…" : partida.depuracao ? "Repor tudo no máximo" : "Debug: tudo no máximo",
+      descricao: focadoRisco
+        ? "Disponível ao retornar a um lugar seguro."
+        : partida.depuracao
+          ? "Restaura progressão e estoques desta partida de teste."
+          : "Abre uma cópia de teste com tudo liberado. Seu personagem atual é preservado.",
+      icone: <IconeDoJogo icone="opcoes" tamanho={21} />,
+      desabilitada: focadoRisco || debugPendente,
+      acao: () => { void aoAbrirDebug(); },
+    },
+    {
       id: "personagens",
       grupo: "Partida",
       titulo: "Escolher personagem",
@@ -289,7 +306,7 @@ export default function EstruturaDoJogo({
         ? "Indisponível durante combate ou expedição."
         : "Voltar aos personagens salvos sem apagar o progresso.",
       icone: <IconeDoJogo icone="elmo-barbuta" tamanho={21} />,
-      desabilitada: focadoRisco,
+      desabilitada: focadoRisco || debugPendente,
       acao: aoAlternarPartida,
     },
   ];
