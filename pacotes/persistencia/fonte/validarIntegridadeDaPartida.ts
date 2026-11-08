@@ -1,5 +1,5 @@
 /** Validação de integridade depois da migração, sem consultar catálogos nem alterar o formato salvo. */
-import { CHAVES_DOS_ATRIBUTOS, ESPACOS_DE_EQUIPAMENTO } from '@paralaxe/dominio'
+import { CHAVES_DOS_ATRIBUTOS, ESPACOS_DE_EQUIPAMENTO, VINCULOS, MARCOS_DE_MIRA, DIFICULDADES_DE_DUN_LIATH } from '@paralaxe/dominio'
 
 function falhar(caminho: string): never { throw new Error(`Partida inválida: ${caminho}.`) }
 function registro(valor: unknown, caminho: string): Record<string, unknown> {
@@ -18,6 +18,16 @@ function natural(valor: unknown, caminho: string, minimo = 0) {
 }
 function data(valor: unknown, caminho: string) {
   if (typeof valor !== 'string' || !Number.isFinite(Date.parse(valor))) falhar(caminho)
+}
+function opcao(valor: unknown, opcoes: readonly string[], caminho: string) {
+  if (typeof valor !== 'string' || !opcoes.includes(valor)) falhar(caminho)
+}
+function booleano(valor: unknown, caminho: string) {
+  if (typeof valor !== 'boolean') falhar(caminho)
+}
+function semente(valor: unknown, caminho: string) {
+  natural(valor, caminho)
+  if ((valor as number) > 0xffffffff) falhar(caminho)
 }
 function ids(valor: unknown, caminho: string) {
   const valores = lista(valor, caminho)
@@ -40,6 +50,8 @@ function equipamentos(valor: unknown, caminho: string, vistos: Set<unknown>) {
     texto(equipamento.idDaInstancia, caminho)
     texto(equipamento.idDaDefinicao, caminho)
     natural(equipamento.nivelDeReforco, caminho)
+    if ((equipamento.nivelDeReforco as number) > 2) falhar(`${caminho}.nivelDeReforco`)
+    if (equipamento.raridade !== undefined) opcao(equipamento.raridade, ['comum', 'incomum', 'raro'], `${caminho}.raridade`)
     if (vistos.has(equipamento.idDaInstancia)) falhar(`${caminho}: instância repetida`)
     vistos.add(equipamento.idDaInstancia)
     if (equipamento.idsDosAfixos !== undefined) ids(equipamento.idsDosAfixos, caminho)
@@ -126,11 +138,20 @@ export function validarIntegridadeDaPartida(valor: unknown): void {
     const expedicao = registro(masmorra.expedicaoAtiva, 'expedicao')
     texto(expedicao.idDaDefinicaoDaMasmorra, 'expedicao.idDaDefinicaoDaMasmorra')
     texto(expedicao.idDaSalaAtual, 'expedicao.idDaSalaAtual')
+    opcao(expedicao.dificuldade, DIFICULDADES_DE_DUN_LIATH, 'expedicao.dificuldade')
+    semente(expedicao.semente, 'expedicao.semente')
+    for (const campo of ['registroDeSuprimentosRecuperado', 'fragmentoDoTratadoRecuperado', 'extracaoSeguraDisponivel', 'concluido']) booleano(expedicao[campo], `expedicao.${campo}`)
+    if (expedicao.decisaoSobreOProtetor !== null) opcao(expedicao.decisaoSobreOProtetor, ['morto', 'poupado'], 'expedicao.decisaoSobreOProtetor')
     ids(expedicao.idsDasSalasVisitadas, 'expedicao.idsDasSalasVisitadas')
     ids(expedicao.idsDasSalasResolvidas, 'expedicao.idsDasSalasResolvidas')
     pilhas(expedicao.bolsaDaExpedicao, 'expedicao.bolsaDaExpedicao')
-    lista(expedicao.equipamentosDaExpedicao, 'expedicao.equipamentosDaExpedicao')
-    registro(expedicao.ramificacoesEscolhidas, 'expedicao.ramificacoesEscolhidas')
+    for (const item of lista(expedicao.equipamentosDaExpedicao, 'expedicao.equipamentosDaExpedicao')) {
+      const equipamento = registro(item, 'expedicao.equipamento')
+      texto(equipamento.idDaDefinicao, 'expedicao.equipamento.idDaDefinicao')
+      opcao(equipamento.raridade, ['comum', 'incomum', 'raro'], 'expedicao.equipamento.raridade')
+      ids(equipamento.idsDosAfixos, 'expedicao.equipamento.idsDosAfixos')
+    }
+    for (const destino of Object.values(registro(expedicao.ramificacoesEscolhidas, 'expedicao.ramificacoesEscolhidas'))) texto(destino, 'expedicao.ramificacoesEscolhidas')
     const recursos = registro(expedicao.recursos, 'expedicao.recursos')
     for (const chave of ['vida', 'vidaMaxima', 'mana', 'manaMaxima', 'folego', 'folegoMaximo']) if (typeof recursos[chave] !== 'number' || recursos[chave] < 0) falhar(`expedicao.recursos.${chave}`)
     data(expedicao.iniciadoEm, 'expedicao.iniciadoEm'); data(expedicao.atualizadoEm, 'expedicao.atualizadoEm')
@@ -138,12 +159,31 @@ export function validarIntegridadeDaPartida(valor: unknown): void {
   if (masmorra.incursaoAutomaticaAtiva != null) {
     const incursao = registro(masmorra.incursaoAutomaticaAtiva, 'incursao')
     data(incursao.iniciadaEm, 'incursao.iniciadaEm'); data(incursao.terminaEm, 'incursao.terminaEm')
+    if (Date.parse(incursao.terminaEm as string) <= Date.parse(incursao.iniciadaEm as string)) falhar('incursao.terminaEm')
+    opcao(incursao.preset, ['cautelosa', 'equilibrada', 'ousada'], 'incursao.preset')
+    semente(incursao.semente, 'incursao.semente')
+    if (typeof incursao.chanceDeSucesso !== 'number' || incursao.chanceDeSucesso < 0 || incursao.chanceDeSucesso > 1) falhar('incursao.chanceDeSucesso')
     pilhas(incursao.recompensaPossivel, 'incursao.recompensaPossivel')
   }
   const grupo = registro(partida.grupo, 'grupo')
-  ids(grupo.idsDosParceirosAtivos, 'grupo.idsDosParceirosAtivos'); registro(grupo.parceiros, 'grupo.parceiros')
+  ids(grupo.idsDosParceirosAtivos, 'grupo.idsDosParceirosAtivos')
+  opcao(grupo.marcoDeMira, MARCOS_DE_MIRA, 'grupo.marcoDeMira')
+  const parceiros = registro(grupo.parceiros, 'grupo.parceiros')
+  for (const [id, valor] of Object.entries(parceiros)) {
+    texto(id, 'grupo.parceiro.id')
+    const parceiro = registro(valor, `grupo.parceiros.${id}`)
+    opcao(parceiro.vinculo, VINCULOS, `grupo.parceiros.${id}.vinculo`)
+    booleano(parceiro.recrutado, `grupo.parceiros.${id}.recrutado`)
+  }
+  for (const id of grupo.idsDosParceirosAtivos as string[]) if (!Object.hasOwn(parceiros, id)) falhar('grupo: parceiro ativo ausente')
   const jornada = registro(partida.jornada, 'jornada')
   ids(jornada.idsDasReceitasFabricadas, 'jornada.idsDasReceitasFabricadas')
+  if (jornada.meta !== null) {
+    const meta = registro(jornada.meta, 'jornada.meta')
+    texto(meta.idDaDefinicaoDaReceita, 'jornada.meta.idDaDefinicaoDaReceita')
+    data(meta.selecionadoEm, 'jornada.meta.selecionadoEm')
+    if (meta.concluidoEm !== null) data(meta.concluidoEm, 'jornada.meta.concluidoEm')
+  }
   ids(registro(partida.codice, 'codice').idsDescobertos, 'codice.idsDescobertos')
   ids(registro(partida.desafios, 'desafios').idsConcluidos, 'desafios.idsConcluidos')
 }

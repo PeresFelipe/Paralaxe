@@ -1,3 +1,4 @@
+import { useRelogioDaInterface, lerHorarioCivil } from './useRelogioDaInterface'
 /** Estado de apresentação e envio de comandos de expedição; as transições ficam nos casos de uso. */
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { consultarResultadoDaIncursaoAutomatica, obterDificuldadesDesbloqueadasDaMasmorra, retomarTrabalhoAposRisco,
@@ -23,9 +24,9 @@ export function useMasmorra({ partida, prepararRisco, aoAlterarPartida, aoAltera
   const [dificuldadeSelecionada, definirDificuldadeSelecionada] = useState<DificuldadeDaMasmorra>('facil')
   const [preparando, definirPreparando] = useState(false)
   const [presetDeIncursao, definirPresetDeIncursao] = useState<PresetDeIncursao>('cautelosa')
-  const [relogioIncursao, definirRelogioIncursao] = useState(() => Date.now())
   const execucao = partida.masmorra.expedicaoAtiva
   const incursaoAtiva = partida.masmorra.incursaoAutomaticaAtiva ?? null
+  const relogioIncursao = useRelogioDaInterface(Boolean(incursaoAtiva), 1000, lerHorarioCivil)
   const resultadoDaIncursao = incursaoAtiva ? consultarResultadoDaIncursaoAutomatica(incursaoAtiva, new Date(relogioIncursao).toISOString()) : null
   const progressoDaIncursao = incursaoAtiva ? Math.max(0, Math.min(100, 100 * (relogioIncursao - Date.parse(incursaoAtiva.iniciadaEm)) / Math.max(1, Date.parse(incursaoAtiva.terminaEm) - Date.parse(incursaoAtiva.iniciadaEm)))) : 0
   const nomesDosPresets: Record<PresetDeIncursao, string> = { cautelosa: 'Cautelosa', equilibrada: 'Equilibrada', ousada: 'Ousada' }
@@ -35,12 +36,6 @@ export function useMasmorra({ partida, prepararRisco, aoAlterarPartida, aoAltera
   const salaResolvido = Boolean(atualSala && execucao?.idsDasSalasResolvidas.includes(atualSala.id))
   useEffect(() => { aoAlterarEstadoDeRisco?.(Boolean(execucao || incursaoAtiva || falhaAoRetomar)) }, [aoAlterarEstadoDeRisco, execucao, incursaoAtiva, falhaAoRetomar])
   useEffect(() => () => aoAlterarEstadoDeRisco?.(false), [aoAlterarEstadoDeRisco])
-  useEffect(() => {
-    if (!incursaoAtiva) return
-    definirRelogioIncursao(Date.now())
-    const timer = window.setInterval(() => definirRelogioIncursao(Date.now()), 1000)
-    return () => window.clearInterval(timer)
-  }, [incursaoAtiva])
   useEffect(() => { aoAlterarEstadoDePreparacao?.(preparando) }, [aoAlterarEstadoDePreparacao, preparando])
   useEffect(() => () => aoAlterarEstadoDePreparacao?.(false), [aoAlterarEstadoDePreparacao])
 

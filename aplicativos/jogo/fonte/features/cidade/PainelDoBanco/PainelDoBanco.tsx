@@ -1,9 +1,14 @@
+import { useAcaoAssincrona } from '@/hooks/useAcaoAssincrona'
 /**
  * @file Consulta e transferência entre mochila e banco da Cidade Livre.
  * A tela mostra capacidades calculadas pelo domínio e envia quantidade ou ID de instância
  * aos callbacks; estoque e validação de espaço permanecem na camada de regras.
  */
-import { useState } from "react";
+import { IconeDoJogo } from "@/components/jogo";
+import { Button, Card } from '@/components/ui';
+import { obterIconeDoEquipamento, obterIconeDoItem } from "@/iconesDosRecursos";
+import { rotulosDaInterface } from '@/rotulosDaInterface';
+import { rotulosDosItens } from '@/rotulosDoJogo';
 import { obterDefinicaoDeEquipamento } from "@paralaxe/conteudo";
 import {
   LIMITE_DE_ESPACOS_DO_BANCO_V01,
@@ -12,12 +17,7 @@ import {
   obterUsoDeEspacosDoInventario,
   type PartidaLocal,
 } from "@paralaxe/dominio";
-import { IconeDoJogo } from "@/components/jogo";
-import { obterIconeDoEquipamento, obterIconeDoItem } from "@/iconesDosRecursos";
-import { Button, Card } from '@/components/ui'
-import { rotulosDaInterface } from '@/rotulosDaInterface'
-import { rotulosDosItens } from '@/rotulosDoJogo'
-import estilos from './PainelDoBanco.module.css'
+import estilos from './PainelDoBanco.module.css';
 
 type PropriedadesDePainelDoBanco = {
   partida: PartidaLocal;
@@ -41,18 +41,9 @@ export default function PainelDoBanco({
   aoRetirarEquipamento,
   aoVoltar,
 }: PropriedadesDePainelDoBanco) {
-  const [pendente, definirPendente] = useState(false);
-  const [mensagem, definirMensagem] = useState<string | null>(null);
-  const [erro, definirErro] = useState(false);
-  async function transferir(acao: () => Promise<void>) {
-    if (pendente) return;
-    definirPendente(true);
-    definirMensagem(null);
-    definirErro(false);
-    try { await acao(); definirMensagem('Transferência concluída. As quantidades foram atualizadas.'); }
-    catch (causa) { definirErro(true); definirMensagem(causa instanceof Error ? causa.message : 'Não foi possível transferir o item. Tente novamente.'); }
-    finally { definirPendente(false); }
-  }
+  const { executar, pendente, mensagem, erro } = useAcaoAssincrona();
+  const transferir = (acao: () => Promise<void>) => executar(acao, 'Transferência concluída.');
+
   const equipadoIds = new Set(Object.values(partida.personagem.equipamento));
   // Equipamentos vestidos não aparecem como candidatos ao depósito; o domínio também impede guardá-los enquanto equipados.
   const desequipadoEquipamento = partida.personagem.itensDeEquipamento.filter(

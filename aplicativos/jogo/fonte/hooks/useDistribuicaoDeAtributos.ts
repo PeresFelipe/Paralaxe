@@ -1,17 +1,18 @@
-import { useMemo, useState } from 'react'
 import {
-  obterDefinicaoDeHabilidadeDeCombate,
   obterDefinicaoDeConsumivelDeCombate,
-  obterDefinicaoDeInimigo,
   obterDefinicaoDeEquipamento,
+  obterDefinicaoDeHabilidadeDeCombate,
+  obterDefinicaoDeInimigo,
 } from '@paralaxe/conteudo'
 import {
   CHAVES_DOS_ATRIBUTOS,
   derivarEstatisticasDeCombateDoJogador,
-  type DistribuicaoDeAtributos,
   type ChaveDeAtributo,
+  type DistribuicaoDeAtributos,
   type PartidaLocal,
 } from '@paralaxe/dominio'
+import { useMemo, useState } from 'react'
+import { useAcaoAssincrona } from './useAcaoAssincrona'
 
 const catalogoDeCombate = {
   obterDefinicaoDeEquipamento,
@@ -25,6 +26,7 @@ export interface DistribuicaoDeAtributosController {
   pendentePontos: number
   faltamPontos: number
   ehSalvando: boolean
+  erro: string | null
   atualEstatisticas: ReturnType<typeof derivarEstatisticasDeCombateDoJogador>
   previaEstatisticas: ReturnType<typeof derivarEstatisticasDeCombateDoJogador>
   alteracaoAtributo: (chave: ChaveDeAtributo, diferenca: number) => void
@@ -38,7 +40,7 @@ export function useDistribuicaoDeAtributos(
   aoDistribuirAtributos: (distribuicao: DistribuicaoDeAtributos) => Promise<void>,
 ): DistribuicaoDeAtributosController {
   const [rascunho, definirRascunho] = useState<DistribuicaoDeAtributos>({})
-  const [ehSalvando, definirEhSalvando] = useState(false)
+  const { executar, pendente: ehSalvando, mensagem: erro } = useAcaoAssincrona()
 
   const pendentePontos = CHAVES_DOS_ATRIBUTOS.reduce(
     (total, chave) => total + (rascunho[chave] ?? 0),
@@ -73,13 +75,8 @@ export function useDistribuicaoDeAtributos(
 
   async function confirmar(): Promise<void> {
     if (pendentePontos <= 0 || ehSalvando) return
-    definirEhSalvando(true)
-    try {
-      await aoDistribuirAtributos(rascunho)
-      definirRascunho({})
-    } finally {
-      definirEhSalvando(false)
-    }
+    const sucesso = await executar(() => aoDistribuirAtributos(rascunho))
+    if (sucesso) definirRascunho({})
   }
 
   return {
@@ -87,6 +84,7 @@ export function useDistribuicaoDeAtributos(
     pendentePontos,
     faltamPontos,
     ehSalvando,
+    erro,
     atualEstatisticas,
     previaEstatisticas,
     alteracaoAtributo,

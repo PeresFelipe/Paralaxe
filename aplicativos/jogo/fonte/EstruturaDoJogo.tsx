@@ -1,3 +1,4 @@
+import LimiteDeErroDaTela from './components/jogo/LimiteDeErroDaTela/LimiteDeErroDaTela'
 import type { PersistirAlteracaoDaPartida } from "./services/alteracoesDaPartida";
 import { catalogoDeCombate } from './services/combateDaEstrada';
 /**
@@ -421,6 +422,7 @@ export default function EstruturaDoJogo({
 
       <div className="jogo-disposicao">
         <main ref={conteudoRef} className="jogo-conteudo" id="jogo-conteudo" tabIndex={-1}>
+          <LimiteDeErroDaTela>
           <Suspense fallback={<p role="status">Carregando tela…</p>}>
           {!focadoRisco ? (
             <ResumoDaMetaDaJornada
@@ -525,6 +527,7 @@ export default function EstruturaDoJogo({
             <CreditosDosRecursos />
           </div>
           </Suspense>
+          </LimiteDeErroDaTela>
         </main>
         {/* Resumo para telas amplas; a disposição compacta oferece os mesmos acessos em outros pontos da estrutura. */}
         <aside className="jogo-companheiro" aria-label="Resumo da jornada">

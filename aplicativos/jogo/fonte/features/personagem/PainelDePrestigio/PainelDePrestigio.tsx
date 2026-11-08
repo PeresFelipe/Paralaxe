@@ -1,3 +1,4 @@
+import { useAcaoAssincrona } from '@/hooks/useAcaoAssincrona'
 /**
  * @file Apresentação da árvore de prestígio e confirmação de reinício do personagem.
  * Disponibilidade, custos e pré-requisitos vêm do domínio. O componente agrupa os nós
@@ -33,6 +34,7 @@ const prestigioNivelRotulos = ['I', 'II', 'III'] as const
 
 /** Mostra a prontidão das profissões, os pontos conquistados/gastos e a próxima etapa de prestígio. */
 export default function PainelDePrestigio({ partida, aoRealizarPrestigio, aoDesbloquearNo }: PropriedadesDePainelDePrestigio) {
+  const { executar, mensagem } = useAcaoAssincrona()
   const [idDoNoPendente, definirPendenteNoId] = useState<string | null>(null)
   const [confirmandoPrestigio, definirConfirmandoPrestigio] = useState(false)
   const [ehRealizandoPrestigio, definirEhRealizandoPrestigio] = useState(false)
@@ -67,7 +69,7 @@ export default function PainelDePrestigio({ partida, aoRealizarPrestigio, aoDesb
     if (idDoNoPendente) return
     definirPendenteNoId(noId)
     try {
-      await aoDesbloquearNo(noId)
+      await executar(() => aoDesbloquearNo(noId))
     } finally {
       definirPendenteNoId(null)
     }
@@ -78,8 +80,7 @@ export default function PainelDePrestigio({ partida, aoRealizarPrestigio, aoDesb
     if (!podeRealizarPrestigio || ehRealizandoPrestigio) return
     definirEhRealizandoPrestigio(true)
     try {
-      await aoRealizarPrestigio()
-      definirConfirmandoPrestigio(false)
+      if (await executar(aoRealizarPrestigio)) definirConfirmandoPrestigio(false)
     } finally {
       definirEhRealizandoPrestigio(false)
     }
@@ -87,6 +88,7 @@ export default function PainelDePrestigio({ partida, aoRealizarPrestigio, aoDesb
 
   return (
     <section className={estilos.screen} aria-labelledby="prestigio-titulo">
+      {mensagem ? <p role="alert">{mensagem}</p> : null}
       <Card className={estilos.summary}>
         <div>
           <p className="secao-chamada">Progressão permanente</p>

@@ -1,3 +1,4 @@
+import { useAcaoAssincrona } from '@/hooks/useAcaoAssincrona'
 /** @file Abas de atributos, equipamentos, técnicas, inventário e prestígio. */
 import { IconeDoJogo } from "@/components/jogo";
 import { Button, Card } from "@/components/ui";
@@ -43,12 +44,14 @@ export default function TelaDoPersonagem({
   aoRealizarPrestigioDoPersonagem: () => Promise<void>;
   aoDesbloquearNoDePrestigio: (noId: string) => Promise<void>;
 }) {
+  const { executar, pendente, mensagem } = useAcaoAssincrona();
   const reforcos = RECEITAS_INICIAIS_DE_FABRICACAO.filter(
     (receita) => receita.saida.tipo === "equipamento-reforco",
   );
 
   return (
     <section className="funcionalidade-telaDoJogo">
+      {mensagem ? <p role="alert">{mensagem}</p> : null}
       <div className="telaDoJogo-tituloDaSecao">
         <div>
           <p className="secao-chamada">Personagem</p>
@@ -202,8 +205,8 @@ export default function TelaDoPersonagem({
                     <Button
                       variant="secondary"
                       size="sm"
-                      disabled={equipado}
-                      onClick={() => void aoEquipar(instancia.idDaInstancia)}
+                      disabled={equipado || pendente}
+                      onClick={() => void executar(() => aoEquipar(instancia.idDaInstancia))}
                     >
                       {equipado ? "Equipado" : "Equipar"}
                     </Button>
@@ -213,11 +216,12 @@ export default function TelaDoPersonagem({
                       <Button
                         variant="secondary"
                         size="sm"
+                        disabled={pendente}
                         onClick={() =>
-                          void aoIniciarReceita(
+                          void executar(() => aoIniciarReceita(
                             reforcoReceita.id,
                             instancia.idDaInstancia,
-                          )
+                          ))
                         }
                       >
                         Reforçar +{instancia.nivelDeReforco + 1}

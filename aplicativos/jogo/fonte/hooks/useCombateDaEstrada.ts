@@ -1,3 +1,4 @@
+import { useRelogioDaInterface, lerTempoMonotonico } from './useRelogioDaInterface'
 /** Coordena reprodução visual e confirmação da luta, mantendo a falha de save recuperável. */
 import { useEffect, useMemo, useRef, useState } from 'react'
 import {
@@ -20,7 +21,9 @@ export function useCombateDaEstrada({ partida, prepararRisco, aoAlterarPartida, 
   const [resultado, definirResultado] = useState<ResultadoDeCombate | null>(null)
   const confirmacao = useMemo(() => resultado ? criarConfirmacaoDoCombate(resultado) : null, [resultado])
   const [fase, definirFase] = useState<Fase>('ocioso')
-  const [visivelSegundos, definirVisivelSegundos] = useState(0)
+  const [inicioDaReproducao, definirInicioDaReproducao] = useState(0)
+  const agora = useRelogioDaInterface(fase === 'reproduzindo', 100, lerTempoMonotonico)
+  const visivelSegundos = resultado ? Math.min(resultado.duracaoEmSegundos, Math.max(0, (agora - inicioDaReproducao) / 1000)) : 0
   const [mensagem, definirMensagem] = useState<string | null>(null)
   const [registroAbrir, definirRegistroAbrir] = useState(false)
   const operacaoPendente = useRef(false)
@@ -29,12 +32,6 @@ export function useCombateDaEstrada({ partida, prepararRisco, aoAlterarPartida, 
   const visivelRegistro = resultado?.registro.filter(entrada => entrada.instanteEmSegundos <= visivelSegundos + 0.001) ?? []
   const progresso = resultado && resultado.duracaoEmSegundos > 0 ? Math.min(100, visivelSegundos / resultado.duracaoEmSegundos * 100) : 0
   const maisRecenteAvisoDeAtaque = [...visivelRegistro].reverse().find(entrada => entrada.tipo === 'avisoDeAtaque') ?? null
-
-  useEffect(() => {
-    if (fase !== 'reproduzindo' || !resultado) return
-    const temporizador = window.setInterval(() => definirVisivelSegundos(atual => Math.min(resultado.duracaoEmSegundos, atual + 0.1)), 100)
-    return () => window.clearInterval(temporizador)
-  }, [fase, resultado])
 
   async function confirmarResultado() {
     if (!confirmacao || operacaoPendente.current) return
@@ -103,7 +100,7 @@ export function useCombateDaEstrada({ partida, prepararRisco, aoAlterarPartida, 
       const preparada = await prepararRisco()
       const simulado = simularCombate(preparada, catalogoDeCombate, 'inimigo.estrada-lobo', semente, 180, undefined, manualEspaco)
       definirResultado(simulado)
-      definirVisivelSegundos(0)
+      definirInicioDaReproducao(lerTempoMonotonico())
       definirRegistroAbrir(false)
       aoAlterarEstadoDeRisco?.(true)
       definirFase('reproduzindo')

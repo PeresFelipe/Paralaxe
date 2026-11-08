@@ -36,3 +36,29 @@ describe('integridade do agregado migrado', () => {
     expect(() => validarIntegridadeDaPartida(circular)).toThrow('circular')
   })
 })
+
+describe('subsistemas retomáveis', () => {
+  it.each([
+    ['parceiro ativo ausente', (p: PartidaLocal) => { p.grupo.idsDosParceirosAtivos = ['ausente'] }],
+    ['vínculo inválido', (p: PartidaLocal) => { (p.grupo.parceiros['parceira.mira'] as unknown as Record<string, unknown>).vinculo = 'inválido' }],
+    ['meta sem horário', (p: PartidaLocal) => { p.jornada.meta = { idDaDefinicaoDaReceita: 'receita', selecionadoEm: '', concluidoEm: null } }],
+    ['reforço fora do domínio', (p: PartidaLocal) => { (p.personagem.itensDeEquipamento[0] as unknown as Record<string, unknown>).nivelDeReforco = 3 }],
+  ])('recusa %s sem reparar ou apagar o save', (_nome, corromper) => {
+    const atual = partida()
+    corromper(atual)
+    const copia = structuredClone(atual)
+    expect(() => validarIntegridadeDaPartida(atual)).toThrow('Partida inválida')
+    expect(atual).toEqual(copia)
+  })
+  it.each([
+    { preset: 'inexistente' }, { semente: -1 }, { chanceDeSucesso: 2 },
+    { terminaEm: '2026-11-06T00:00:00.000Z' },
+  ])('recusa plano de incursão corrompido: %j', alteracao => {
+    const atual = partida()
+    Object.assign(atual.masmorra, { incursaoAutomaticaAtiva: {
+      preset: 'cautelosa', semente: 1, chanceDeSucesso: 0.82, recompensaPossivel: [],
+      iniciadaEm: '2026-11-07T00:00:00.000Z', terminaEm: '2026-11-07T00:15:00.000Z', ...alteracao,
+    } })
+    expect(() => validarIntegridadeDaPartida(atual)).toThrow('Partida inválida')
+  })
+})

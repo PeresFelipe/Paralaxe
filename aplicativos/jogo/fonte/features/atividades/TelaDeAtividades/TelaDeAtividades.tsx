@@ -1,3 +1,4 @@
+import { useAcaoAssincrona } from '@/hooks/useAcaoAssincrona'
 /**
  * @file Consulta de profissões e comandos de coleta, produção e acompanhamento de receitas.
  * Distingue a profissão aberta da profissão realmente ativa. Apenas os callbacks de
@@ -41,11 +42,10 @@ type PropriedadesDeTelaDeAtividades = {
 
 /** Filtra o catálogo pela profissão selecionada e combina requisitos com o inventário para explicar as ações disponíveis. */
 export default function TelaDeAtividades({ partida, ultimoResultadoDoTrabalho, profissaoSelecionada, aoSelecionarProfissao, aoIniciarAtividade, aoIniciarAtividadeSecundaria, aoPararAtividadeSecundaria, aoIniciarAtividadeTerciaria, aoPararAtividadeTerciaria, aoIniciarReceita, aoIniciarReceitaSecundaria, aoPararReceitaSecundaria, aoIniciarReceitaTerciaria, aoPararReceitaTerciaria, aoAlterarPrioridade, aoResponderMinigame, aoPararTrabalho, aoPrestigiarProfissao, aoTrilhaReceita }: PropriedadesDeTelaDeAtividades) {
-  const [pendente, definirPendente] = useState(false)
+  const { executar: agir, pendente, mensagem: acaoErro, limparMensagem } = useAcaoAssincrona()
   const [busca, definirBusca] = useState('')
   const [mostrarBloqueados, definirMostrarBloqueados] = useState(false)
   const [confirmacao, definirConfirmacao] = useState<{ nome: string; acao: () => Promise<void> } | null>(null)
-  const [acaoErro, definirAcaoErro] = useState<string | null>(null)
   const progresso = partida.profissoes[profissaoSelecionada]
   const proximoNivelXp = obterXpDeProfissaoParaProximoNivel(progresso.nivel)
   const atividades: readonly DefinicaoDeAtividadeOciosa[] = ATIVIDADES_OCIOSAS_INICIAIS.filter((atividade) => atividade.idDaProfissao === profissaoSelecionada)
@@ -63,19 +63,9 @@ export default function TelaDeAtividades({ partida, ultimoResultadoDoTrabalho, p
   const ativoProfissao = ocioso?.idDaProfissao ?? fabricar?.idDaProfissao
   const possuido = (id: string) => partida.personagem.inventario.find((pilha) => pilha.idDaDefinicao === id)?.quantidade ?? 0
 
-  /** Bloqueia repetição enquanto a Promise está pendente, apresenta a falha local e libera os controles no finally. */
-  async function agir(acao: () => Promise<void>) {
-    if (pendente) return
-    definirPendente(true)
-    definirAcaoErro(null)
-    try { await acao(); return true }
-    catch (erro) { definirAcaoErro(erro instanceof Error ? erro.message : 'Não foi possível concluir a ação. Tente novamente.'); return false }
-    finally { definirPendente(false) }
-  }
-
   /** Troca a consulta e limpa o erro anterior, sem chamar início, parada ou persistência de atividade. */
   function escolherProfissao(profissao: IdDaProfissao) {
-    definirAcaoErro(null)
+    limparMensagem()
     definirBusca('')
     aoSelecionarProfissao(profissao)
   }
