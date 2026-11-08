@@ -1,0 +1,16 @@
+.cena { border-radius: var(--ui-radius-md); background: var(--ui-dungeon-fundo); color: var(--ui-dungeon-texto); overflow: hidden; }
+.legenda { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--ui-space-2); padding: var(--ui-space-3); }
+.palco { display: block; width: 100%; max-height: var(--ui-dungeon-altura); }
+.palco text { fill: var(--ui-dungeon-texto); font-size: var(--ui-dungeon-svg-fonte); }
+.piso { fill: var(--ui-dungeon-pedra); stroke: var(--ui-dungeon-juntas); stroke-width: 1; }
+.heroi { fill: var(--ui-dungeon-heroi); }
+.encontro { fill: var(--ui-dungeon-encontro); }
+.concluida { fill: none; color: var(--ui-dungeon-heroi); }
+.arma { fill: none; stroke: var(--ui-dungeon-texto); stroke-width: 3; }
+.sombra { fill: var(--ui-dungeon-sombra); }
+.mapa { padding: var(--ui-space-3); }
+.mapa summary { cursor: pointer; }
+.mapa svg { display: block; width: 100%; max-height: var(--ui-dungeon-altura); }
+.mapa line { stroke: var(--ui-dungeon-juntas); stroke-width: 1; }
+.visitada { fill: var(--ui-dungeon-heroi); }
+.desconhecida { fill: var(--ui-dungeon-fundo); stroke: var(--ui-dungeon-texto); }

@@ -655,6 +655,58 @@
         "/arte/icones/kenney/lanca.png"
       ],
       "creditosComplementares": []
+    },
+    {
+      "id": "dungeon-crawler-now",
+      "grupo": "tecnologia",
+      "titulo": "Dungeon Crawler Now",
+      "autores": [
+        {
+          "nome": "John VonDrashek",
+          "url": "https://github.com/JohnVonDrashek/dungeon-crawler-now"
+        }
+      ],
+      "contribuicao": "Gerador de salas copiado e adaptado; estados de sala extraídos de RoomManager. Geometria visual ligada ao grafo do Paralaxe.",
+      "licenca": {
+        "nome": "MIT",
+        "url": "/creditos/dungeon-crawler-now.txt"
+      },
+      "origem": "https://github.com/JohnVonDrashek/dungeon-crawler-now",
+      "modificacoes": "Gerador de salas copiado e adaptado; estados de sala extraídos de RoomManager. Geometria visual ligada ao grafo do Paralaxe.",
+      "avisos": [
+        {
+          "rotulo": "Copyright e licença MIT integral",
+          "url": "/creditos/dungeon-crawler-now.txt"
+        }
+      ],
+      "arquivos": [],
+      "creditosComplementares": []
+    },
+    {
+      "id": "hexa-battle",
+      "grupo": "tecnologia",
+      "titulo": "Hexa Battle",
+      "autores": [
+        {
+          "nome": "Giacomo Tagliabue",
+          "url": "https://github.com/itajaja/hb"
+        }
+      ],
+      "contribuicao": "Fórmulas de projeção e vértices hexagonais copiadas de iso.ts para o piso 2D. Removidas dependências do motor original.",
+      "licenca": {
+        "nome": "MIT",
+        "url": "/creditos/hexa-battle.txt"
+      },
+      "origem": "https://github.com/itajaja/hb",
+      "modificacoes": "Fórmulas de projeção e vértices hexagonais copiadas de iso.ts para o piso 2D. Removidas dependências do motor original.",
+      "avisos": [
+        {
+          "rotulo": "Copyright e licença MIT integral",
+          "url": "/creditos/hexa-battle.txt"
+        }
+      ],
+      "arquivos": [],
+      "creditosComplementares": []
     }
   ]
 }

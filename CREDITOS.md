@@ -134,3 +134,10 @@ A licença Crusenho agora preserva os bytes originais do ZIP; o URL do produto, 
 ## Tela de acesso local — 08/11/2026
 
 A entrada do jogo reutiliza o ornamento dourado do **Dark Ages UI**, de [Hypnobius](https://hypnobius.itch.io/dark-ages-ui), a cena existente da Cidade Livre e os ícones já creditados. Sem novo pacote distribuído. A [pesquisa e arquitetura do acesso](documentacao/implementacao/ACESSO-LOCAL-E-AUTENTICACAO.md) registra os packs avaliados no itch.io e seus limites de licença.
+
+## Código da dungeon 2D
+
+- Dungeon Crawler Now — John VonDrashek, MIT: gerador de salas e estados extraídos do RoomManager. Aviso integral em `aplicativos/jogo/publico/creditos/dungeon-crawler-now.txt`.
+- Hexa Battle — Giacomo Tagliabue, MIT: fórmulas de projeção isométrica e vértices do piso. Aviso integral em `aplicativos/jogo/publico/creditos/hexa-battle.txt`.
+
+Versões, caminhos e modificações: `documentacao/implementacao/DUNGEON-2D-REUSO.md`.

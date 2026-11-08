@@ -1,3 +1,4 @@
+import CenaDaMasmorra from "../CenaDaMasmorra/CenaDaMasmorra";
 import { nomesDasDificuldades, useMasmorra, type PropriedadesDaMasmorra } from "@/hooks/useMasmorra";
 import { ativoTrabalhoRotulo } from "@/services/acoesDaMasmorra";
 /**
@@ -96,591 +97,497 @@ export default function BancadaDaMasmorra(props: PropriedadesDaMasmorra) {
   </section>;
   // A preparação só existe sem viagem ativa e informa as consequências antes de chamar tratarIniciar.
   if (!execucao && !incursaoAtiva && preparando) {
-    const vazioTecnicas = partida.personagem.espacosDeHabilidadesAtivas.filter(
-      (espaco) => !espaco,
-    ).length;
-    const vazioConsumiveis = partida.combate.preferencias.espacosDeConsumiveis.filter(
-      (espaco) => !espaco.idDaDefinicao,
-    ).length;
+    const vazi…6747 tokens truncated…lor-text: #eee8dc;
+  --ui-color-text-muted: #b6bbb9;
+  --ui-color-text-metal: #b6bbb9;
+  --ui-color-text-inverse: #fff8ea;
+  --ui-color-background: #101416;
+  --ui-color-background-glow: #20272a;
+  --ui-color-card-shadow: rgb(0 0 0 / 18%);
+  --ui-color-surface: #191f22;
+  --ui-color-surface-raised: #232b2f;
+  --ui-color-surface-sunken: #12181a;
+  --ui-color-border: #485258;
+  --ui-color-border-strong: #6b777c;
+  --ui-color-focus: #f5ce82;
+  --ui-color-overlay: rgb(5 8 10 / 76%);
+  --ui-color-inventory-text: #f0e4c9;
+  --ui-color-inventory-slot: #181f14;
+  --ui-color-inventory-slot-raised: #3e4731;
+  --ui-color-inventory-selected: #414831;
+  --ui-color-inventory-selected-outline: #d0b477;
+  --ui-color-inventory-quantity-surface: rgb(17 25 13 / 87%);
+  --ui-color-inventory-icon-shadow: rgb(0 0 0 / 53%);
+  --ui-color-inventory-text-shadow: rgb(0 0 0 / 75%);
+  --ui-frame-inventory: url('/arte/interface/dark-ages/slot-iron.png');
+  --ui-frame-gold: url('/arte/interface/dark-ages/frame-gold.png');
+  --ui-frame-dark: url('/arte/interface/dark-ages/frame-dark.png');
+  --ui-frame-dark-slice: 12;
+  --ui-flourish-gold: url('/arte/interface/dark-ages/flourish-gold.png');
+  --ui-image-generated-scene: url('/arte/cenas-geradas.webp?v=6');
+  --ui-image-generated-portrait: url('/arte/retratos-gerados.webp?v=6');
+  --ui-size-inventory-slot-min-height: 3.25rem;
+  --ui-size-inventory-compact-slot-min-height: 2.75rem;
+  --ui-size-inventory-frame-width: 7px;
+  --ui-size-inventory-compact-frame-width: 4px;
+  --ui-size-inventory-compact-frame-image-width: 5px;
+  --ui-size-inventory-frame-slice: 8;
+  --ui-size-inventory-icon: 2rem;
+  --ui-size-icon-button: 2.75rem;
+  --ui-size-navigation-control: 2.75rem;
+  --ui-size-navigation-icon: 1.5rem;
+  --ui-size-hud-control: 2.75rem;
+  --ui-size-activity-icon: 2rem;
+  --ui-size-activity-max-width: 34rem;
+  --ui-size-location-card: 7rem;
+  --ui-size-dialog-lg: 53.75rem;
+  --ui-size-control-sm: 2.75rem;
+  --ui-size-button-md: 2.75rem;
+  --ui-size-button-lg: 3rem;
+  --ui-size-profession-icon: 1.375rem;
+  --ui-size-creation-art-column: 10rem;
+  --ui-size-creation-card: 6.875rem;
+  --ui-size-save-card: 11.25rem;
+  --ui-size-save-card-compact: 9rem;
+  --ui-size-progress-track: 0.5rem;
+  --ui-size-progress-track-compact: 0.375rem;
+  --ui-size-progress-marker: 0.125rem;
+  --ui-size-viewport-min: 20rem;
+  --ui-size-content-max-width: 78.75rem;
+  /* Perfis de largura do conteúdo (Gylan Salih, MIT, adaptados). */
+  --ui-size-layout-reading-compact: 37.5rem;
+  --ui-size-layout-reading-normal: 47.5rem;
+  --ui-size-layout-reading-wide: 60rem;
+  --ui-size-panel-width: 25.625rem;
+  --ui-size-status-message-min: 11.25rem;
+  --ui-size-prestige-summary-min: 11rem;
+  --ui-size-prestige-confirmation-max: 47.5rem;
+  --ui-size-activity-option-icon: 3.25rem;
+  --ui-size-activity-option-icon-compact: 2.75rem;
+  --ui-size-activity-option-icon-inner: 2rem;
+  --ui-size-ingredient-label-basis: 8.125rem;
+  --ui-size-work-result-min-height: 3.875rem;
+  --ui-size-combat-progress-height: 0.5rem;
+  --ui-size-combat-log-time-column: 3rem;
+  --ui-size-combat-log-max-height: 16.25rem;
+  --ui-size-border-emphasis: 0.125rem;
+  --ui-size-border: 1px;
+  --ui-size-border-strong: 0.1875rem;
+  --ui-size-focus-ring: 0.125rem;
+  --ui-size-field-control: 2.75rem;
+  --ui-size-ui-kit-column: 20rem;
 
-    return (
-      <section
-        className="funcionalidade-telaDoJogo preparacao-telaDoJogo"
-        aria-labelledby="preparacao-titulo"
-      >
-        <div className="telaDoJogo-tituloDaSecao">
-          <div>
-            <p className="secao-chamada">Dún Liath · Preparação</p>
-            <h2 id="preparacao-titulo" className="destaque-titulo">
-              Antes da expedição
-            </h2>
-            <p className="atenuado">
-              A preparação ainda é um contexto seguro. Sua atividade automática
-              continua até a entrada ser confirmada.
-            </p>
-          </div>
-          <Button
-            variant="secondary"
-            size="sm"
-            onClick={() => definirPreparando(false)}
-          >
-            {rotulosDaInterface.voltar}
-          </Button>
-        </div>
+  /* Camadas do shell da aplicação. O diálogo nativo usa a top layer do navegador. */
+  --ui-z-access-backdrop: -1;
+  --ui-z-navigation: 29;
+  --ui-z-header: 30;
+  --ui-z-continuity: 31;
+  --ui-z-sidebar: 34;
+  --ui-z-floating-content: 35;
+  --ui-z-navigation-mobile: 40;
+  --ui-z-toast: 45;
+  --ui-z-panel: 50;
+  --ui-z-panel-open: 51;
+  --ui-z-skip-link: 100;
 
-        <div className="preparacao-disposicao">
-          <div className="contexto-arte contexto-arte--risco" aria-hidden="true">
-            <span>ARTE 16:9 · DÚN LIATH</span>
-          </div>
-          <Card as="aside" className="preparacao-resumo">
-            <p className="secao-chamada">Estado do personagem</p>
-            <h3>
-              {partida.personagem.nome} · Nv. {partida.personagem.nivel}
-            </h3>
-            <div className="informacao-linhaDeDados">
-              <span>Estilo</span>
-              <strong>{partida.combate.preferencias.estilo}</strong>
-            </div>
-            <div className="informacao-linhaDeDados">
-              <span>Técnicas vazias</span>
-              <strong>{vazioTecnicas}</strong>
-            </div>
-            <div className="informacao-linhaDeDados">
-              <span>Consumíveis vazios</span>
-              <strong>{vazioConsumiveis}</strong>
-            </div>
-            <div className="informacao-linhaDeDados">
-              <span>Dificuldade</span>
-              <strong>{nomesDasDificuldades[dificuldadeSelecionada]}</strong>
-            </div>
-            <div className="informacao-linhaDeDados">
-              <span>Atividade atual</span>
-              <strong>{ativoTrabalhoRotulo(partida)}</strong>
-            </div>
-          </Card>
-        </div>
+  /* Escala de espaçamento */
+  --ui-space-0: 0;
+  --ui-space-0-25: 0.0625rem;
+  --ui-space-0-5: 0.125rem;
+  --ui-space-1: 0.25rem;
+  --ui-space-0-75: 0.1875rem;
+  --ui-space-1-5: 0.375rem;
+  --ui-space-2: 0.5rem;
+  --ui-space-2-5: 0.625rem;
+  --ui-space-3: 0.75rem;
+  --ui-space-3-5: 0.875rem;
+  --ui-space-4: 1rem;
+  --ui-space-4-5: 1.125rem;
+  --ui-space-5: 1.25rem;
+  --ui-space-6: 1.5rem;
+  --ui-size-menu-ellipsis-offset-y: -0.12em;
+  --ui-size-menu-panel-width: 19rem;
+  --ui-size-menu-panel-width-compact: 18rem;
+  --ui-size-menu-panel-max-height: 32rem;
+  --ui-size-toast-center-offset: 20rem;
+  --ui-space-section: 1.375rem;
+  --ui-space-8: 2rem;
+  --ui-space-10: 2.5rem;
+  --ui-space-12: 3rem;
+  --ui-space-16: 4rem;
+  --ui-space-pixel: 1px;
+  --ui-space-1-25: 0.3125rem;
+  --ui-space-1-75: 0.4375rem;
+  --ui-space-2-25: 0.5625rem;
+  --ui-space-2-75: 0.6875rem;
+  --ui-space-3-25: 0.8125rem;
+  --ui-space-3-75: 0.9375rem;
+  --ui-space-4-25: 1.0625rem;
+  --ui-space-5-5: 1.375rem;
+  --ui-space-6-25: 1.5625rem;
+  --ui-space-6-5: 1.625rem;
+  --ui-space-7: 1.75rem;
+  --ui-space-9: 2.25rem;
+  --ui-space-11: 2.75rem;
+  --ui-space-13-5: 3.375rem;
+  --ui-space-15: 3.75rem;
+  --ui-space-19: 4.75rem;
+  --ui-space-36-5: 9.125rem;
+  --ui-size-viewport-width: 100vw;
+  --ui-space-8-5: 2.125rem;
+  --ui-space-17-5: 4.375rem;
+  --ui-space-25: 6.25rem;
+  --ui-space-27-5: 6.875rem;
+  --ui-space-29-5: 7.375rem;
+  --ui-space-30: 7.5rem;
+  --ui-space-34: 8.5rem;
+  --ui-space-39-5: 9.875rem;
+  /* Medidas de layout legadas consolidadas em tokens. */
+  --ui-dimension-1px: 1px;
+  --ui-dimension-3px: 3px;
+  --ui-dimension-2px: 2px;
+  --ui-dimension-1em: 1em;
+  --ui-dimension-1180px: 1180px;
+  --ui-dimension-60px: 60px;
+  --ui-dimension-68px: 68px;
+  --ui-dimension-44px: 44px;
+  --ui-dimension-36px: 36px;
+  --ui-dimension-40px: 40px;
+  --ui-dimension-16px: 16px;
+  --ui-dimension-8px: 8px;
+  --ui-dimension-20px: 20px;
+  --ui-dimension-12px: 12px;
+  --ui-dimension-440px: 440px;
+  --ui-dimension-180px: 180px;
+  --ui-dimension-56px: 56px;
+  --ui-dimension-28px: 28px;
+  --ui-dimension-184px: 184px;
+  --ui-dimension-120px: 120px;
+  --ui-dimension-224px: 224px;
+  --ui-dimension-80px: 80px;
+  --ui-dimension-240px: 240px;
+  --ui-dimension-6px: 6px;
+  --ui-dimension-32px: 32px;
+  --ui-dimension-580px: 580px;
+  --ui-dimension-112px: 112px;
+  --ui-dimension-166px: 166px;
+  --ui-dimension-192px: 192px;
+  --ui-dimension-150px: 150px;
+  --ui-dimension-74px: 74px;
+  --ui-dimension-64px: 64px;
+  --ui-dimension-24px: 24px;
+  --ui-dimension-160px: 160px;
+  --ui-dimension-128px: 128px;
+  --ui-dimension-90px: 90px;
+  --ui-dimension-620px: 620px;
+  --ui-dimension-130px: 130px;
+  --ui-dimension-650px: 650px;
+  --ui-dimension-980px: 980px;
+  --ui-dimension-42-5rem: 42.5rem;
+  --ui-dimension-72px: 72px;
+  --ui-dimension-42px: 42px;
+  --ui-dimension-19px: 19px;
+  --ui-dimension-54px: 54px;
+  --ui-dimension-48px: 48px;
+  --ui-dimension-1260px: 1260px;
+  --ui-dimension-66px: 66px;
+  --ui-dimension-270px: 270px;
+  --ui-dimension-82px: 82px;
+  --ui-dimension-15px: 15px;
+  --ui-dimension-13px: 13px;
+  --ui-dimension-78px: 78px;
+  --ui-dimension-17px: 17px;
+  --ui-dimension-58px: 58px;
+  --ui-dimension-135px: 135px;
+  --ui-dimension-0px: 0px;
+  --ui-dimension-760px: 760px;
+  --ui-dimension-14px: 14px;
+  --ui-dimension-700px: 700px;
+  --ui-dimension-10px: 10px;
+  --ui-dimension-96px: 96px;
+  --ui-dimension-178px: 178px;
+  --ui-dimension-84px: 84px;
+  --ui-dimension-70px: 70px;
+  --ui-dimension-18px: 18px;
+  --ui-dimension-500px: 500px;
+  --ui-dimension-30px: 30px;
+  --ui-dimension-230px: 230px;
+  --ui-dimension-188px: 188px;
+  --ui-dimension-76px: 76px;
+  --ui-dimension-5px: 5px;
+  --ui-dimension-200px: 200px;
+  --ui-dimension-4px: 4px;
+  --ui-dimension-132px: 132px;
+  --ui-dimension-73px: 73px;
+  --ui-dimension-560px: 560px;
+  --ui-dimension-156px: 156px;
+  --ui-dimension-110px: 110px;
+  --ui-dimension-88px: 88px;
+  --ui-dimension-148px: 148px;
+  --ui-dimension-124px: 124px;
+  --ui-dimension-360px: 360px;
+  --ui-dimension-140px: 140px;
+  --ui-dimension-100px: 100px;
 
-        <div className="preparacao-cartoes secao-espacamento">
-          <Card>
-            <p className="secao-chamada">Equipamento</p>
-            <h3>10 espaços do personagem</h3>
-            <p className="atenuado">O equipamento atual será usado na entrada.</p>
-          </Card>
-          <Card>
-            <p className="secao-chamada">Técnicas</p>
-            <h3>{4 - vazioTecnicas}/4 configuradas</h3>
-            <p className="atenuado">
-              A ordem visível corresponde à prioridade real do combate.
-            </p>
-          </Card>
-          <Card>
-            <p className="secao-chamada">Consumíveis</p>
-            <h3>{2 - vazioConsumiveis}/2 preparados</h3>
-            <p className="atenuado">Consumir ocupa a ação atual.</p>
-          </Card>
-          <Card>
-            <p className="secao-chamada">Estilo</p>
-            <h3>{partida.combate.preferencias.estilo}</h3>
-            <p className="atenuado">Agressivo, Defensivo ou Misto.</p>
-          </Card>
-        </div>
+  /* Forma */
+  --ui-radius-sm: 0.25rem;
+  --ui-radius-md: 0.375rem;
+  --ui-radius-lg: 0.75rem;
+  --ui-radius-xl: 1.125rem;
+  --ui-radius-pill: 999px;
+  --ui-radius-2xs: 0.1875rem;
+  --ui-radius-control: 0.3125rem;
+  --ui-radius-2xl: 1.375rem;
+  --ui-radius-3xl: 1.5rem;
+  --ui-radius-none: 0;
+  --ui-radius-compact: 0.625rem;
+  --ui-radius-xl-compact: 1rem;
+  --ui-radius-15px: 0.9375rem;
+  --ui-radius-19px: 1.1875rem;
 
-        <Card className="confirmar-painel secao-espacamento">
-          <div>
-            <p className="secao-chamada">Ao entrar</p>
-            <h3>Você assume o risco da expedição.</h3>
-            <ul>
-              <li>{ativoTrabalhoRotulo(partida)} será pausada.</li>
-              <li>Encontrados irão para a Bolsa de Expedição.</li>
-              <li>
-                O conteúdo da Bolsa permanece em risco até uma saída segura.
-              </li>
-            </ul>
-          </div>
-          <Button
-            variant="primary"
-            size="sm"
-            disabled={ocupado}
-            onClick={() => void tratarIniciar()}
-          >
-            Entrar em Dún Liath
-          </Button>
-        </Card>
-        {mensagem ? (
-          <p className="emLinha-mensagem" role="status">
-            {mensagem}
-          </p>
-        ) : null}
-      </section>
-    );
-  }
+  /* Tipografia */
+  --ui-font-family-body: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --ui-font-family-display: "Antiquity Print", Georgia, "Times New Roman", serif;
+  --ui-font-family-antiquity: "Antiquity Print", Georgia, serif;
+  --ui-font-size-xs: 0.75rem;
+  --ui-font-size-3xs: 0.625rem;
+  --ui-font-size-2xs: 0.6875rem;
+  --ui-font-size-sm: 0.875rem;
+  --ui-font-size-md: 1rem;
+  --ui-font-size-lg: 1.125rem;
+  --ui-font-size-xl: 1.375rem;
+  --ui-font-size-2xl: 1.75rem;
+  --ui-font-size-3xs-small: 0.56rem;
+  --ui-font-size-2xs-small: 0.58rem;
+  --ui-font-size-3xs-large: 0.62rem;
+  --ui-font-size-2xs-large: 0.64rem;
+  --ui-font-size-caption: 0.65rem;
+  --ui-font-size-caption-large: 0.66rem;
+  --ui-font-size-caption-readable: 0.68rem;
+  --ui-font-size-compact: 0.7rem;
+  --ui-font-size-compact-large: 0.72rem;
+  --ui-font-size-body-compact: 0.76rem;
+  --ui-font-size-body-small: 0.78rem;
+  --ui-font-size-body-compact-readable: 0.77rem;
+  --ui-font-size-body-dense: 0.86rem;
+  --ui-font-size-body-large: 0.8125rem;
+  --ui-font-size-body-xl: 0.87rem;
+  --ui-font-size-body-2xl: 0.9rem;
+  --ui-font-size-body-3xl: 0.94rem;
+  --ui-font-size-display-small: 1.1rem;
+  --ui-font-size-display-medium: 1.15rem;
+  --ui-font-size-display-large: 1.2rem;
+  --ui-font-size-title-small: 1.55rem;
+  --ui-font-size-title-medium: 1.6rem;
+  --ui-font-size-title-large: 1.65rem;
+  --ui-font-size-page-title: clamp(1.6rem, 2.2vw, 2rem);
+  --ui-font-size-section-title: clamp(1.65rem, 2.2vw, 2.15rem);
+  --ui-font-weight-regular: 400;
+  --ui-font-weight-medium: 500;
+  --ui-font-weight-semibold: 600;
+  --ui-font-weight-bold: 700;
+  --ui-letter-spacing-wide: 0.12em;
+  --ui-letter-spacing-compact: 0.04em;
+  --ui-letter-spacing-caps: 0.15em;
+  --ui-letter-spacing-display: 0.025em;
+  --ui-letter-spacing-narrow: 0.08em;
+  --ui-letter-spacing-tight: 0.03em;
+  --ui-letter-spacing-relaxed: 0.06em;
+  --ui-letter-spacing-spacious: 0.1em;
+  --ui-letter-spacing-extra-wide: 0.13em;
+  --ui-letter-spacing-subtle: 0.09em;
+  --ui-letter-spacing-none: 0;
+  --ui-line-height-tight: 1.25;
+  --ui-line-height-normal: 1.5;
+  --ui-line-height-relaxed: 1.65;
+  --ui-line-height-loose: 1.8;
+  --ui-line-height-display: 1.02;
+  --ui-line-height-compact: 1.15;
+  --ui-line-height-comfortable: 1.2;
+  --ui-line-height-reading: 1.3;
+  --ui-line-height-menu-trigger: 0.7;
+  --ui-line-height-spacious: 1.6;
+  --ui-line-height-airy: 1.7;
+  --ui-line-height-dense: 1;
+  --ui-line-height-caption: 1.4;
+  --ui-line-height-caption-relaxed: 1.45;
+  --ui-font-size-hero: clamp(2rem, 4vw, 3.3rem);
 
-  if (incursaoAtiva) {
-    const segundosRestantes = Math.max(0, Math.ceil((Date.parse(incursaoAtiva.terminaEm) - relogioIncursao) / 1000));
-    return (
-      <section className="funcionalidade-telaDoJogo" aria-labelledby="incursao-em-curso">
-        <div className="telaDoJogo-tituloDaSecao">
-          <div>
-            <p className="secao-chamada">Dún Liath · Incursão Automática</p>
-            <h2 id="incursao-em-curso" className="destaque-titulo">Incursão em andamento</h2>
-            <p className="atenuado">Este modo não percorre a Masmorra manual. As atividades de Ofício estão pausadas.</p>
-          </div>
-        </div>
-        <Card className={estilos.incursaoPainel}>
-          <h3>Preset {nomesDosPresets[incursaoAtiva.preset]}</h3>
-          <div className="informacao-linhaDeDados">
-            <span>Chance calculada ao iniciar</span>
-            <strong>{Math.round(incursaoAtiva.chanceDeSucesso * 100)}%</strong>
-          </div>
-          <div className="informacao-linhaDeDados">
-            <span>{resultadoDaIncursao?.concluida ? 'Resultado disponível' : 'Tempo restante'}</span>
-            <strong>{resultadoDaIncursao?.concluida ? 'Pronto para resgatar' :
-              Math.floor(segundosRestantes / 60) + 'm ' + String(segundosRestantes % 60).padStart(2, '0') + 's'}</strong>
-          </div>
-          <ProgressBar className={estilos.incursaoBarra ?? ''} value={progressoDaIncursao} max={100}
-            label="Progresso da Incursão Automática" />
-          <p className="atenuado">
-            Recompensa possível: {incursaoAtiva.recompensaPossivel.map(item =>
-              item.quantidade + '× ' + itemRotulo(item.idDaDefinicao)).join(', ')}.
-            A chance e o saque ficam fixos na partida. Sem recompensas exclusivas do Chefe ou Relíquias.
-          </p>
-          <div className="botao-linhaDeDados">
-            {resultadoDaIncursao?.concluida ? (
-              <Button variant="primary" size="sm" disabled={ocupado}
-                onClick={() => void tratarFinalizarIncursao()}>Resgatar resultado</Button>
-            ) : null}
-            <Button variant="secondary" size="sm" disabled={ocupado}
-              onClick={() => void tratarCancelarIncursao()}>Cancelar sem recompensas</Button>
-          </div>
-        </Card>
-        {mensagem ? <p className="emLinha-mensagem" role="status">{mensagem}</p> : null}
-      </section>
-    );
-  }
+  /* Elevação e movimento */
+  --ui-shadow-sm: 0 2px 6px rgb(52 53 42 / 8%);
+  --ui-shadow-md: 0 6px 18px rgb(52 53 42 / 10%);
+  --ui-shadow-lg: 0 14px 36px rgb(52 53 42 / 16%);
+  --ui-shadow-navigation: 0 6px 18px var(--ui-color-card-shadow);
+  --ui-shadow-scene: 0 12px 32px var(--ui-color-card-shadow);
+  --ui-shadow-success-glow: 0 0 8px var(--ui-color-success-border);
+  --ui-shadow-action-glow: 0 0 6px var(--ui-color-primary-outline);
+  --ui-shadow-selection-ring: 0 0 0 var(--ui-size-border) var(--ui-color-inventory-selected-outline);
+  --ui-shadow-focus-ring: 0 0 0 var(--ui-size-focus-ring) var(--ui-color-primary-outline);
+  --ui-shadow-inset-focus: inset 0 0 0 var(--ui-size-focus-ring) var(--ui-color-primary-outline);
+  --ui-shadow-inset-card: inset 0 0 0 var(--ui-size-border-emphasis) var(--ui-color-card-shadow);
+  --ui-shadow-inset-selection-edge: inset var(--ui-size-border-emphasis) 0 var(--ui-color-warning);
+  --ui-shadow-inset-inventory: inset 0 0 0 var(--ui-size-border) var(--ui-color-primary-outline);
+  --ui-shadow-inset-overlay: inset 0 0 0 var(--ui-size-border) var(--ui-color-primary-outline), var(--ui-shadow-lg);
+  --ui-shadow-inset-panel: inset 0 0 0 var(--ui-size-focus-ring) var(--ui-color-card-shadow);
+  --ui-shadow-inset-progress: inset 0 var(--ui-size-border) 0.125rem var(--ui-color-card-shadow);
+  --ui-shadow-inset-navigation-edge: inset -1px 0 var(--ui-color-border);
+  --ui-shadow-inventory-text: 1px 1px var(--ui-color-inventory-text-shadow);
+  --ui-shadow-text-on-art: 0 1px 3px rgb(0 0 0 / 76%);
+  /* Duração quase nula usada pela preferência de movimento reduzido. */
+  --ui-motion-reduced-duration: 0.01ms;
+  --ui-transition-fast: 120ms ease;
+  --ui-transition-normal: 180ms ease;
+  --ui-transition-slow: 260ms ease;
+  --ui-transition-interactive: 200ms ease;
+  --ui-transition-spinner: 700ms linear;
+  --ui-transition-panel: 560ms cubic-bezier(.16, 1, .3, 1);
+  --ui-transition-panel-content: 460ms cubic-bezier(.16, 1, .3, 1);
+  --ui-transition-panel-backdrop: 260ms ease-out;
+  --ui-transition-loading: 800ms linear;
+  --ui-transition-screen-entry: 360ms cubic-bezier(.2,.8,.2,1);
+  --ui-transition-character-idle: 720ms steps(6, end);
+  --ui-transition-stagger-short: 80ms;
+  --ui-transition-stagger-medium: 140ms;
+  --ui-transition-stagger-long: 200ms;
+  --ui-transition-stagger-final: 250ms;
+  --ui-transition-stagger-panel-short: 180ms;
+  --ui-transition-stagger-panel-medium: 240ms;
+  --ui-transition-stagger-panel-long: 300ms;
+  --ui-blur-sm: 10px;
+  --ui-blur-md: 12px;
+  --ui-blur-lg: 16px;
+  --ui-blur-xl: 18px;
+  --ui-motion-panel-distance: 4rem;
+  --ui-motion-content-distance: 1rem;
+  /* Tokens semânticos da paleta em pergaminho do seletor de ofícios (ambos os temas).
+     Os demais tokens numéricos do ofício continuam legados e serão migrados por módulo. */
+  --ui-oficio-seletor-borda: #bcb19a;
+  --ui-oficio-seletor-fundo-inicio: #fffdf6;
+  --ui-oficio-seletor-fundo-fim: #f1e9d9;
+  --ui-oficio-seletor-texto: #302d26;
+  --ui-oficio-seletor-sombra-contorno: rgb(112 91 60 / 12%);
+  --ui-oficio-seletor-sombra: rgb(52 53 42 / 8%);
+  --ui-oficio-seletor-borda-hover: #88704b;
+  --ui-oficio-seletor-realce-hover: rgb(148 116 66 / 12%);
+  --ui-oficio-seletor-sombra-hover: rgb(52 53 42 / 12%);
+  --ui-oficio-seletor-icone-borda: #d2c4a5;
+  --ui-oficio-seletor-icone-fundo-inicio: #f2e7cf;
+  --ui-oficio-seletor-icone-fundo-fim: #e6dbc5;
+  --ui-oficio-seletor-texto-secundario: #796d5a;
+  --ui-oficio-seletor-status-borda: #c2ceb4;
+  --ui-oficio-seletor-status-fundo: #edf2e6;
+  --ui-oficio-seletor-status-texto: #3c6245;
+  --ui-oficio-seletor-seta: #705b3c;
+  --ui-oficio-seletor-menu-borda: #b7a88b;
+  --ui-oficio-seletor-menu-fundo: #faf7ef;
+  --ui-oficio-seletor-menu-texto: #343329;
+  --ui-oficio-seletor-menu-sombra: rgb(35 30 21 / 24%);
+  --ui-oficio-seletor-menu-sombra-contorno: rgb(35 30 21 / 10%);
+  --ui-oficio-seletor-grupo-texto: #796341;
+  --ui-oficio-seletor-divisor: #dfd5c3;
+  --ui-oficio-seletor-item-hover-fundo: #eee5d2;
+  --ui-oficio-seletor-item-hover-borda: #d1c09f;
+  --ui-oficio-seletor-item-selecionado-fundo: #e7deca;
+  --ui-oficio-seletor-item-selecionado-borda: #bda77d;
+  --ui-oficio-seletor-item-selecionado-hover: #ded0ae;
+  --ui-oficio-seletor-indicador: #725736;
+  --ui-oficios-medida-31: .4rem;
+  --ui-oficios-medida-32: 25rem;
+  --ui-oficios-medida-33: .2rem;
+  --ui-oficios-medida-34: .72rem;
+  --ui-oficios-medida-35: .11em;
+  --ui-oficios-medida-36: .85rem;
+  --ui-oficios-medida-37: 4.25rem;
+  --ui-oficios-medida-38: .5rem;
+  --ui-oficios-medida-39: .75rem;
+  --ui-oficios-medida-40: 1px;
+  --ui-oficios-medida-41: 2px;
+  --ui-oficios-medida-42: 7px;
+  --ui-oficios-medida-43: 20px;
+  --ui-oficios-medida-44: 180ms;
+  --ui-oficios-medida-45: 9px;
+  --ui-oficios-medida-46: 24px;
+  --ui-oficios-medida-47: 3px;
+  --ui-oficios-medida-48: 3rem;
+  --ui-oficios-medida-49: .65rem;
+  --ui-oficios-medida-50: .25rem;
+  --ui-oficios-medida-51: 1rem;
+  --ui-oficios-medida-52: .77rem;
+  --ui-oficios-medida-53: .28rem;
+  --ui-oficios-medida-54: .45rem;
+  --ui-oficios-medida-55: .35rem;
+  --ui-oficios-medida-56: .66rem;
+  --ui-oficios-medida-57: 1.8rem;
+  --ui-oficios-medida-58: .9rem;
+  --ui-oficios-medida-59: 18px;
+  --ui-oficios-medida-60: 48px;
+  --ui-oficios-medida-61: 8px;
+  --ui-oficios-medida-62: 170ms;
+  --ui-oficios-medida-63: 27rem;
+  --ui-oficios-medida-64: .7rem;
+  --ui-oficios-medida-65: .68rem;
+  --ui-oficios-medida-66: .14em;
+  --ui-oficios-medida-67: .55rem;
+  --ui-oficios-medida-68: .6rem;
+  --ui-oficios-medida-69: 3.75rem;
+  --ui-oficios-medida-70: .1rem;
+  --ui-oficios-medida-71: 1.85rem;
+  --ui-oficios-medida-72: 2.75rem;
+  --ui-oficios-medida-73: .15rem;
+  --ui-oficios-medida-74: .95rem;
+  --ui-oficios-medida-75: 1.2rem;
+  --ui-oficios-medida-76: 5px;
+  --ui-oficios-medida-77: 375px;
+  --ui-oficios-fonte-78: var(--ui-oficios-medida-34);
+  --ui-oficios-fonte-79: var(--ui-oficios-medida-56);
+  --ui-oficios-fonte-80: var(--ui-oficios-medida-65);
+  --ui-oficios-fonte-81: var(--ui-oficios-medida-74);
+  --ui-oficios-peso-82: 700;
+  --ui-oficios-peso-83: 700;
+  --ui-oficios-peso-84: 800;
+  --ui-oficios-peso-85: 800;
+  --ui-oficios-linha-86: var(--ui-oficios-medida-35);
+  --ui-oficios-linha-87: var(--ui-oficios-medida-66);
+  --ui-oficios-camada-88: 70;
+  --ui-oficios-cor-89: #1c1d1a;
+  --ui-oficios-medida-90: 14rem;
+  --ui-oficios-medida-91: 7.875rem;
+  --ui-oficios-medida-92: .12rem;
+  --ui-oficios-medida-93: .73rem;
+  --ui-oficios-medida-94: 540px;
+  --ui-oficios-medida-95: 12rem;
+  --ui-oficios-fonte-96: var(--ui-oficios-medida-93);
+  --ui-oficios-titulo-97: clamp(1.25rem, 1.1rem + 0.65vw, 1.65rem);
+  --ui-oficios-medida-98: 1.5rem;
+  --ui-oficios-medida-99: 720px;
+  --ui-oficios-medida-100: 440px;
+  --ui-oficios-medida-101: 45rem;
+  --ui-oficios-medida-102: 23rem;
+  --ui-oficios-fonte-103: var(--ui-oficios-titulo-97);
+  --ui-oficios-fonte-104: var(--ui-font-size-md);
+  --ui-oficios-fonte-105: var(--ui-font-size-caption);
+  --ui-oficios-fonte-106: var(--ui-font-size-compact);
+  --ui-oficios-fonte-107: var(--ui-font-size-xs);
+  --ui-oficios-fonte-108: var(--ui-font-size-xs);
+  --ui-oficios-fonte-109: var(--ui-font-size-sm);
+  --ui-oficios-fonte-110: var(--ui-font-size-xs);
+  --ui-oficios-fonte-111: var(--ui-font-size-caption-large);
+  --ui-oficios-fonte-112: var(--ui-font-size-body-small);
+  --ui-oficios-peso-113: var(--ui-font-weight-medium);
+  --ui-oficios-linha-114: 1.35;
+  --ui-oficios-linha-115: var(--ui-letter-spacing-display);
+  --ui-oficios-linha-116: var(--ui-letter-spacing-relaxed);
+}
 
-  if (!execucao) {
-    return (
-      <section
-        className="funcionalidade-telaDoJogo"
-        aria-labelledby="masmorra-titulo"
-      >
-        <div className="telaDoJogo-tituloDaSecao">
-          <div>
-            <p className="secao-chamada">Aventura · Masmorra</p>
-            <h2 id="masmorra-titulo" className="destaque-titulo">
-              Dún Liath
-            </h2>
-            <p className="atenuado">
-              Fortificação militar abandonada · expedição prolongada · saques em
-              risco. {partida.masmorra.dunLiathFacilConquistado
-                ? 'Novas incursões geram caminhos, armadilhas e passagens opcionais.'
-                : 'A primeira visita segue os acontecimentos do contrato.'}
-            </p>
-          </div>
-          {aoRetorno ? (
-            <Button variant="secondary" size="sm" onClick={aoRetorno}>
-              {rotulosDaInterface.voltarAAventura}
-            </Button>
-          ) : null}
-        </div>
 
-        <div className="contexto-arte contexto-arte--masmorra" aria-hidden="true">
-          <span>ARTE 16:9 · DÚN LIATH</span>
-        </div>
-        {mensagem ? (
-          <p className="emLinha-mensagem" role="status">
-            {mensagem}
-          </p>
-        ) : null}
-
-        <div className={`${estilos.entradaGrade} secao-espacamento`}>
-          <Card>
-            <p className="secao-chamada">Objetivo conhecido</p>
-            <h3>Fortaleza Cinzenta</h3>
-            <p className="atenuado">
-              Recupere o Registro de Suprimentos da Guarnição e atravesse a
-              fortaleza.
-            </p>
-            <div className="informacao-linhaDeDados">
-              <span>Serviço da Estrada</span>
-              <strong>
-                {partida.combate.loboDerrotado ? "Concluído" : "Pendente"}
-              </strong>
-            </div>
-            <div className="informacao-linhaDeDados">
-              <span>Contrato</span>
-              <strong>
-                {partida.masmorra.contratoAceito || partida.masmorra.contratoConcluido
-                  ? "Aceito"
-                  : "Disponível na Taverna"}
-              </strong>
-            </div>
-          </Card>
-          <Card className="risco-painel">
-            <p className="secao-chamada">Dificuldade da expedição</p>
-            <div className="botao-linhaDeDados" role="group" aria-label="Escolher dificuldade">
-              {(['facil','normal','dificil','impossivel'] as const).map(d => (
-                <Button key={d} variant={dificuldadeSelecionada === d ? 'primary' : 'secondary'}
-                  size="sm" disabled={ocupado || !dificuldadesDisponiveis.includes(d)}
-                  onClick={() => definirDificuldadeSelecionada(d)}>{nomesDasDificuldades[d]}</Button>
-              ))}
-            </div>
-            <p className="atenuado">Desbloqueie cada dificuldade concluindo a anterior. Desafios maiores têm inimigos mais fortes.</p>
-            <p className="secao-chamada">Riscos conhecidos</p>
-            <ul>
-              <li>Presença hostil confirmada.</li>
-              <li>A expedição mantém recursos entre salas.</li>
-              <li>
-                Saques encontrado fica na Bolsa de Expedição até uma saída segura.
-              </li>
-            </ul>
-            {!partida.masmorra.contratoAceito &&
-            !partida.masmorra.contratoConcluido ? (
-              <Button
-                variant="primary"
-                disabled={ocupado || !partida.combate.loboDerrotado}
-                onClick={() => void tratarAceitarContrato()}
-              >
-                Aceitar contrato
-              </Button>
-            ) : (
-              <Button
-                variant="primary"
-                disabled={ocupado}
-                onClick={() => definirPreparando(true)}
-              >
-                Preparar expedição
-              </Button>
-            )}
-          </Card>
-        </div>
-        <div className="secao-espacamento">
-          <Card className={estilos.incursaoPainel}>
-            <p className="secao-chamada">Modo separado · Incursão Automática</p>
-            <h3>Uma incursão sem explorar salas manualmente</h3>
-            <p className="atenuado">
-              Liberada após concluir Dún Liath Fácil. Presets definem duração, chance e recompensas.
-              Sua atividade atual será pausada. Sem segredos, Relíquias ou itens exclusivos do Chefe.
-            </p>
-            <div className="botao-linhaDeDados" role="group" aria-label="Preset da incursão">
-              {(['cautelosa', 'equilibrada', 'ousada'] as const).map(preset => (
-                <Button key={preset} size="sm"
-                  variant={presetDeIncursao === preset ? 'primary' : 'secondary'}
-                  disabled={ocupado || !partida.masmorra.dunLiathFacilConquistado}
-                  onClick={() => definirPresetDeIncursao(preset)}>
-                  {nomesDosPresets[preset]}
-                </Button>
-              ))}
-            </div>
-            <p className="atenuado">
-              {presetDeIncursao === 'cautelosa' ? '15 min · 82% base · 1 Viga' :
-                presetDeIncursao === 'equilibrada' ? '30 min · 67% base · 2 Vigas' :
-                  '60 min · 52% base · 3 Vigas'} · bônus provisório de nível até 12 p.p.
-            </p>
-            <Button variant="primary" size="sm" disabled={ocupado || !partida.masmorra.dunLiathFacilConquistado}
-              onClick={() => void tratarIniciarIncursao()}>
-              {partida.masmorra.dunLiathFacilConquistado ? 'Iniciar Incursão Automática' : 'Conclua Dún Liath Fácil'}
-            </Button>
-            {partida.masmorra.ultimaIncursaoAutomatica ? (
-              <p className="atenuado">
-                Última incursão: {partida.masmorra.ultimaIncursaoAutomatica.sucesso ? 'Sucesso' : 'Falha'}
-                {' · '}{nomesDosPresets[partida.masmorra.ultimaIncursaoAutomatica.preset]}
-              </p>
-            ) : null}
-          </Card>
-        </div>
-      </section>
-    );
-  }
-
-  if (!atualSala) {
-    return (
-      <p className="emLinha-mensagem">
-        A sala atual da expedição não foi encontrada no conteúdo.
-      </p>
-    );
-  }
-
-  const emChefePortao = atualSala.id === "sala.chefe-portao";
-  const ramoEscolha = salaResolvido && atualSala.idsDasProximasSalas.length > 1;
-
-  return (
-    <section
-      className="funcionalidade-telaDoJogo"
-      aria-labelledby="masmorra-execucao-titulo"
-    >
-      <div className={estilos.execucaoCabecalho}>
-        <div>
-          <p className="secao-chamada">Dún Liath · {nomesDasDificuldades[execucao.dificuldade]} · Expedição ativa</p>
-          <h2 id="masmorra-execucao-titulo" className="destaque-titulo">
-            {atualSala.nome}
-          </h2>
-        </div>
-        <div className="risco-selo">
-          BOLSA ·{" "}
-          {execucao.bolsaDaExpedicao.reduce(
-            (total, pilha) => total + pilha.quantidade,
-            0,
-          ) + execucao.equipamentosDaExpedicao.length}{" "}
-          EM RISCO
-        </div>
-      </div>
-
-      {mensagem ? (
-        <p className="emLinha-mensagem" role="status">
-          {mensagem}
-        </p>
-      ) : null}
-
-      <div className={estilos.execucaoGrade}>
-        <div>
-          <div className="contexto-arte contexto-arte--masmorra" aria-hidden="true">
-            <span>ARTE 16:9 · {atualSala.nome.toUpperCase()}</span>
-          </div>
-          <Card className={estilos.salaPainel}>
-            <p className="secao-chamada">Sala atual</p>
-            <h3>{salaRotulo(atualSala)}</h3>
-            <p className="atenuado">{atualSala.descricao ?? salaTexto[atualSala.id] ?? 'A fortificação muda, mas as marcas da guerra e da ocupação permanecem.'}</p>
-
-            <div className={estilos.recursoGrade}>
-              <div>
-                <span>VIDA</span>
-                <strong>
-                  {Math.round(execucao.recursos.vida)}/{execucao.recursos.vidaMaxima}
-                </strong>
-              </div>
-              <div>
-                <span>MANA</span>
-                <strong>
-                  {Math.round(execucao.recursos.mana)}/{execucao.recursos.manaMaxima}
-                </strong>
-              </div>
-              <div>
-                <span>STAMINA</span>
-                <strong>
-                  {Math.round(execucao.recursos.folego)}/{execucao.recursos.folegoMaximo}
-                </strong>
-              </div>
-            </div>
-
-            {atualSala.id === "sala.protetor" && !execucao.decisaoSobreOProtetor ? (
-              <div className={estilos.escolhaNarrativa}>
-                <p>
-                  Uma criatura ferida protege outra menor. Nenhuma recompensa ou
-                  classificação moral é apresentada.
-                </p>
-                <div className="botao-linhaDeDados">
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    disabled={ocupado}
-                    onClick={() => void tratarProtetor("morto")}
-                  >
-                    Matar
-                  </Button>
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    disabled={ocupado}
-                    onClick={() => void tratarProtetor("poupado")}
-                  >
-                    Poupar
-                  </Button>
-                </div>
-              </div>
-            ) : null}
-
-            {!salaResolvido ? (
-              <Button
-                variant="primary"
-                size="sm"
-                disabled={
-                  ocupado ||
-                  (atualSala.id === "sala.protetor" &&
-                    !execucao.decisaoSobreOProtetor)
-                }
-                onClick={() => void tratarResolver()}
-              >
-                {atualSala.idDaDefinicaoDoInimigo
-                  ? "Entrar em combate"
-                  : atualSala.tipo === "recuperacao"
-                    ? "Usar recuperação"
-                    : "Resolver sala"}
-              </Button>
-            ) : null}
-          </Card>
-
-          {resultadoDeCombate ? (
-            <Card className={`${estilos.resultadoEncontro} ${resultadoDeCombate.desfecho === "derrota" ? estilos.derrota : ""}`}>
-              <p className="secao-chamada">Último encontro</p>
-              <h3>
-                {resultadoDeCombate.desfecho === "vitoria"
-                  ? "Vitória"
-                  : resultadoDeCombate.desfecho === "derrota"
-                    ? "Derrota"
-                    : "Encerrado"}
-              </h3>
-              <p className="atenuado">
-                {resultadoDeCombate.duracaoEmSegundos.toFixed(1)}s ·{" "}
-                {resultadoDeCombate.xpConcedido} XP · consumíveis usados permanecem
-                consumidos.
-              </p>
-            </Card>
-          ) : null}
-
-          {salaResolvido && atualSala.idsDasProximasSalas.length > 0 && !emChefePortao ? (
-            <div
-              className={`masmorra-caminhos ${estilos.caminhos} ${ramoEscolha ? estilos.caminhosRamo : ""}`}
-            >
-              {atualSala.idsDasProximasSalas.map((salaId) => {
-                const sala = mapaDaExpedicao.salas.find(
-                  (candidato) => candidato.id === salaId,
-                );
-                return sala ? (
-                  <Button
-                    variant="route"
-                    key={salaId}
-                    disabled={ocupado || Boolean(sala.requisitoDeItemParaEntrar &&
-                      !partida.personagem.inventario.some(item =>
-                        item.idDaDefinicao === sala.requisitoDeItemParaEntrar && item.quantidade > 0))}
-                    onClick={() => void tratarCaminho(salaId)}
-                  >
-                    <span className="secao-chamada">Próxima rota</span>
-                    <strong>{atualSala.pistasDasSaidas?.[salaId]
-                      ?? (salaId === 'sala.alojamentos'
-                        ? 'Marcas recentes atravessam a poeira rumo ao quartel.'
-                        : salaId === 'sala.administracao'
-                          ? 'Uma porta antiga traz o selo corroído da guarnição.'
-                          : 'Um corredor de pedra molhada segue para o interior.')}</strong>
-                    <small>
-                      {ramoEscolha
-                        ? "Essa escolha fecha a alternativa nesta expedição."
-                        : "Seguir adiante"}
-                    </small>
-                  </Button>
-                ) : null;
-              })}
-            </div>
-          ) : null}
-
-          {/* O portão do chefe explicita a escolha entre assegurar o saque atual e continuar assumindo risco. */}
-          {salaResolvido && emChefePortao ? (
-            <div className={estilos.confirmarChefe}>
-              <p className="secao-chamada">Portão do Bastião</p>
-              <h3>Além deste ponto está Fairtheoir.</h3>
-              <p className="atenuado">
-                Retornar assegura a Bolsa. Continuar mantém tudo em risco.
-              </p>
-              <div className="botao-linhaDeDados">
-                {execucao.extracaoSeguraDisponivel ? (
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    disabled={ocupado}
-                    onClick={() => void tratarExtrair()}
-                  >
-                    Retornar e assegurar Bolsa
-                  </Button>
-                ) : null}
-                {atualSala.idsDasProximasSalas.map((salaId) => (
-                  <Button
-                    variant="primary"
-                    size="sm"
-                    key={salaId}
-                    disabled={ocupado}
-                    onClick={() => void tratarCaminho(salaId)}
-                  >
-                    Abrir o portão
-                  </Button>
-                ))}
-              </div>
-            </div>
-          ) : null}
-
-          {execucao.concluido ? (
-            <Card className={estilos.painelConclusao}>
-              <p className="secao-chamada">Dún Liath concluída</p>
-              <h3>Fairtheoir caiu.</h3>
-              <p className="atenuado">
-                O conclusão e o conteúdo da Bolsa ainda precisam ser assegurados
-                pelo retorno.
-              </p>
-              <Button
-                variant="primary"
-                size="sm"
-                disabled={ocupado}
-                onClick={() => void tratarExtrair()}
-              >
-                Retornar à Cidade Livre
-              </Button>
-            </Card>
-          ) : null}
-        </div>
-
-        {/* A bolsa mostra saque provisório; a rota lista apenas salas já visitadas, sem transformar navegação em movimento livre. */}
-        <aside className={estilos.lateral}>
-          <Card appearance="framed" className="expedicao-bolsa">
-            <p className="secao-chamada">Bolsa de Expedição</p>
-            <h3>Em risco</h3>
-            {execucao.bolsaDaExpedicao.length === 0 &&
-            execucao.equipamentosDaExpedicao.length === 0 ? (
-              <p className="atenuado">Nada encontrado nesta expedição ainda.</p>
-            ) : null}
-            {execucao.bolsaDaExpedicao.map((pilha) => (
-              <div className={estilos.linhaSaque} key={pilha.idDaDefinicao}>
-                <IconeDoJogo icone={obterIconeDoItem(pilha.idDaDefinicao)} tamanho={24} />
-                <span>{itemRotulo(pilha.idDaDefinicao)}</span>
-                <strong>×{pilha.quantidade}</strong>
-              </div>
-            ))}
-            {execucao.equipamentosDaExpedicao.map((item, indice) => (
-              <div className={estilos.linhaSaque} key={`${item.idDaDefinicao}-${indice}`}>
-                <IconeDoJogo icone={obterIconeDoEquipamento(item.idDaDefinicao)} tamanho={24} />
-                <span>{obterDefinicaoDeEquipamento(item.idDaDefinicao)?.nome ?? item.idDaDefinicao}</span>
-                <strong>{item.raridade}</strong>
-              </div>
-            ))}
-            <p className="risco-texto">
-              Uma derrota perde esta Bolsa. O patrimônio que já estava seguro
-              não está em risco.
-            </p>
-          </Card>
-
-          <Card className="masmorra-mapa-cartao">
-            <p className="secao-chamada">Rota descoberta</p>
-            <div className={estilos.percurso}>
-              {execucao.idsDasSalasVisitadas.map((salaId, indice) => {
-                const sala = DUN_LIATH_FACIL.salas.find(
-                  (candidato) => candidato.id === salaId,
-                );
-                return (
-                  <div key={salaId}>
-                    <span>{indice + 1}</span>
-                    <strong>{sala?.nome ?? salaId}</strong>
-                  </div>
-                );
-              })}
-            </div>
-            {atualSala.idsDasProximasSalas.length > 0 && !salaResolvido ? (
-              <p className="atenuado pequeno-texto">
-                Novas conexões ficam disponíveis depois de resolver a sala
-                atual.
-              </p>
-            ) : null}
-          </Card>
-
-          {execucao.extracaoSeguraDisponivel && !execucao.concluido && !emChefePortao ? (
-            <Button
-              variant="secondary"
-              fullWidth
-              disabled={ocupado}
-              onClick={() => void tratarExtrair()}
-            >
-              Retirar em segurança
-            </Button>
-          ) : null}
-        </aside>
-      </div>
-    </section>
-  );
+:root {
+ --ui-dungeon-fundo: #141820;
+ --ui-dungeon-pedra: #303b49;
+ --ui-dungeon-juntas: #677385;
+ --ui-dungeon-texto: #eee6d5;
+ --ui-dungeon-heroi: #78c5bd;
+ --ui-dungeon-encontro: #c47e69;
+ --ui-dungeon-sombra: #0b1018;
+ --ui-dungeon-altura: 22rem;
+ --ui-dungeon-svg-fonte: 10px;
 }
