@@ -54,7 +54,7 @@ export function useMasmorra({ partida, prepararRisco, aoAlterarPartida, aoAltera
     } finally { pendente.current = false; definirOcupado(false) }
   }
 
-  async function executar(acao: AcaoDaMasmorra, entrarEmRisco = false, apos?: () => void) {
+  async function executar(acao: AcaoDaMasmorra, entrarEmRisco = false, apos?: () => void, propagarFalha = false) {
     if (pendente.current) return
     pendente.current = true
     definirOcupado(true)
@@ -70,6 +70,7 @@ export function useMasmorra({ partida, prepararRisco, aoAlterarPartida, aoAltera
       aoAlterarEstadoDeRisco?.(Boolean(salva.masmorra.expedicaoAtiva || salva.masmorra.incursaoAutomaticaAtiva))
       apos?.()
     } catch (erro) {
+      if (propagarFalha) throw erro
       definirMensagem(erro instanceof Error ? erro.message : 'Não foi possível salvar a ação da expedição.')
       if (entrarEmRisco) {
         pendente.current = false
@@ -80,9 +81,9 @@ export function useMasmorra({ partida, prepararRisco, aoAlterarPartida, aoAltera
   const tratarAceitarContrato = () => executar(aceitarContrato)
   const tratarIniciar = () => executar(iniciarExpedicao(dificuldadeSelecionada, Date.now() >>> 0), true, () => definirPreparando(false))
   const tratarResolver = () => executar(resolverSala)
-  const tratarCaminho = (id: string) => executar(seguirCaminho(id))
-  const tratarProtetor = (decisao: 'morto' | 'poupado') => executar(decidirProtetor(decisao))
-  const tratarExtrair = () => executar(extrairExpedicao, false, () => { definirPreparando(false); aoRetorno?.() })
+  const tratarCaminho = (id: string) => executar(seguirCaminho(id), false, undefined, true)
+  const tratarProtetor = (decisao: 'morto' | 'poupado') => executar(decidirProtetor(decisao), false, undefined, true)
+  const tratarExtrair = (propagarFalha = false) => executar(extrairExpedicao, false, () => { definirPreparando(false); aoRetorno?.() }, propagarFalha)
   const tratarIniciarIncursao = () => executar(iniciarIncursao(presetDeIncursao, Date.now() >>> 0), true)
   const tratarFinalizarIncursao = () => executar(finalizarIncursao)
   const tratarCancelarIncursao = () => executar(cancelarIncursao)

@@ -70,6 +70,15 @@
   margin-top: var(--ui-space-3);
 }
 
+.opcoes {
+  display: grid;
+  gap: var(--ui-space-3);
+}
+
+.caminhos button {
+  min-height: var(--ui-dimension-44px);
+}
+
 .caminhosRamo {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }

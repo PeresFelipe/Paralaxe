@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react';
 import EscolhasDaMasmorra from './EscolhasDaMasmorra';
 import CenaDaMasmorra from "../CenaDaMasmorra/CenaDaMasmorra";
 import { nomesDasDificuldades, useMasmorra, type PropriedadesDaMasmorra } from "@/hooks/useMasmorra";
@@ -91,6 +92,15 @@ export default function BancadaDaMasmorra(props: PropriedadesDaMasmorra) {
     progressoDaIncursao, relogioIncursao, nomesDosPresets, dificuldadesDisponiveis, mapaDaExpedicao, atualSala, salaResolvido,
     tratarAceitarContrato, tratarIniciar, tratarResolver, tratarCaminho, tratarProtetor, tratarExtrair,
     tratarIniciarIncursao, tratarFinalizarIncursao, tratarCancelarIncursao } = useMasmorra(props);
+  const tituloDaSala = useRef<HTMLHeadingElement>(null);
+  const idDaSala = atualSala?.id;
+  const salaAnterior = useRef(idDaSala);
+  useEffect(() => {
+    if (salaAnterior.current && idDaSala && salaAnterior.current !== idDaSala) {
+      tituloDaSala.current?.focus();
+    }
+    salaAnterior.current = idDaSala;
+  }, [idDaSala]);
   if (falhaAoRetomar) return <section className="funcionalidade-telaDoJogo">
     <h2 className="destaque-titulo">Retomada pendente</h2>
     <p role="alert">{mensagem}</p>
@@ -431,7 +441,7 @@ export default function BancadaDaMasmorra(props: PropriedadesDaMasmorra) {
       <div className={estilos.execucaoCabecalho}>
         <div>
           <p className="secao-chamada">Dún Liath · {nomesDasDificuldades[execucao.dificuldade]} · Expedição ativa</p>
-          <h2 id="masmorra-execucao-titulo" className="destaque-titulo">
+          <h2 ref={tituloDaSala} tabIndex={-1} id="masmorra-execucao-titulo" className="destaque-titulo">
             {atualSala.nome}
           </h2>
         </div>
@@ -561,7 +571,7 @@ export default function BancadaDaMasmorra(props: PropriedadesDaMasmorra) {
                 })),
               ]}
               ocupado={ocupado}
-              aoConfirmar={id => id === 'extrair' ? tratarExtrair() : tratarCaminho(id)}
+              aoConfirmar={id => id === 'extrair' ? tratarExtrair(true) : tratarCaminho(id)}
             />
           )}
 

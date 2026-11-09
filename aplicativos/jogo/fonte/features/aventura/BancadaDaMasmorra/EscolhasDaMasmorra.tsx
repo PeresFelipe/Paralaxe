@@ -18,6 +18,7 @@ export default function EscolhasDaMasmorra({ titulo, escolhas, ocupado, aoConfir
   aoConfirmar: (id: string) => Promise<void>
 }) {
   const rotulo = useId()
+  const [erro, definirErro] = useState(false)
   const [selecionada, definirSelecionada] = useState<string | null>(null)
   const escolha = escolhas.find(item => item.id === selecionada && !item.bloqueio)
   const acao = selectAction({
@@ -25,17 +26,28 @@ export default function EscolhasDaMasmorra({ titulo, escolhas, ocupado, aoConfir
     execute: aoConfirmar,
   })
 
+  async function confirmar() {
+    if (!escolha || ocupado) return
+    definirErro(false)
+    try {
+      await selectCell(acao, escolha.id)
+    } catch {
+      definirErro(true)
+    }
+  }
+
   return <section className={estilos.caminhos} aria-labelledby={rotulo}>
     <h3 id={rotulo}>{titulo}</h3>
-    <div className={`${estilos.caminhos} ${escolhas.length > 1 ? estilos.caminhosRamo : ''}`}>
+    <div className={`${estilos.opcoes} ${escolhas.length > 1 ? estilos.caminhosRamo : ''}`}>
       {escolhas.map(item => <Button
         key={item.id}
         variant="route"
         aria-pressed={escolha?.id === item.id}
         disabled={ocupado || Boolean(item.bloqueio)}
-        onClick={() => definirSelecionada(item.id)}
+        onClick={() => { definirErro(false); definirSelecionada(item.id) }}
       >
         <strong>{item.titulo}</strong>
+        {escolha?.id === item.id && <small aria-hidden="true">Selecionada</small>}
         <small>{item.bloqueio ?? item.detalhe}</small>
       </Button>)}
     </div>
@@ -46,13 +58,14 @@ export default function EscolhasDaMasmorra({ titulo, escolhas, ocupado, aoConfir
       <Button
         variant="primary"
         disabled={!escolha || ocupado}
-        onClick={() => { if (escolha && !ocupado) void selectCell(acao, escolha.id) }}
+        onClick={() => void confirmar()}
       >
         {escolha?.confirmar ?? 'Confirmar escolha'}
       </Button>
-      {escolha && <Button variant="secondary" disabled={ocupado} onClick={() => definirSelecionada(null)}>
+      <Button variant="secondary" disabled={ocupado || !escolha} onClick={() => { definirErro(false); definirSelecionada(null) }}>
         Limpar seleção
-      </Button>}
+      </Button>
     </div>
+    {erro && <p role="alert">A escolha não foi salva. Tente novamente.</p>}
   </section>
 }
