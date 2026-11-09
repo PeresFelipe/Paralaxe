@@ -692,13 +692,13 @@
           "url": "https://github.com/itajaja/hb"
         }
       ],
-      "contribuicao": "Projeção hexagonal usada na primeira versão da cena; código mantido como referência.",
+      "contribuicao": "Indexação e seleção de alvos para as decisões de Dún Liath; projeção hexagonal da primeira cena.",
       "licenca": {
         "nome": "MIT",
         "url": "/creditos/hexa-battle.txt"
       },
       "origem": "https://github.com/itajaja/hb",
-      "modificacoes": "Fórmulas de projeção e vértices hexagonais copiadas de iso.ts para o piso 2D. Removidas dependências do motor original.",
+      "modificacoes": "O trecho de stageView/store.ts recebe IDs de escolhas e executa a ação após confirmação. As regras da expedição permanecem no domínio.",
       "avisos": [
         {
           "rotulo": "Copyright e licença MIT integral",

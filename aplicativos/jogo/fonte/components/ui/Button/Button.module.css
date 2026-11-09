@@ -864,3 +864,9 @@
 }
 /* GW-UI-RESPONSIVA-V1: FIM DO REFINAMENTO */
 
+
+.route[aria-pressed='true'] {
+  border-color: var(--ui-color-primary);
+  background: var(--ui-color-primary-soft);
+  box-shadow: var(--ui-shadow-focus-ring);
+}

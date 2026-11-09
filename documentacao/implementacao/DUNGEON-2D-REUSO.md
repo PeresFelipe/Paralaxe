@@ -35,3 +35,9 @@ A cena esquemática em SVG foi substituída pela renderização Phaser. O mapa e
 | ROT.js, 46782e248c2db9d379a5e4f13bb8323f18dff04b, BSD-3-Clause | src/rng.ts com cabeçalho de Alea e licença do repositório. | Cópia para referência em documentacao/terceiros/rot.js. |
 
 O novo palco gera texturas com o código upstream e o motor Phaser. Phaser e EventEmitter3 são distribuídos com seus avisos MIT em publico/creditos. As escolhas de rota e eventos continuam usando a implementação existente.
+
+## Escolhas de Dún Liath
+
+A revisão adapta `indexCells`, `selectAction` e o ramo de execução de `selectCell` do [store do Hexa Battle](https://github.com/itajaja/hb/blob/fe97718def25736a4000e93efca6894530ba0c86/src/ui/stageView/store.ts) (MIT). O original está em `documentacao/terceiros/hexa-battle`. A adaptação em `fonte/terceiros/hexaBattle/selecaoDeAlvos.ts` substitui coordenadas por IDs de opções e indexa apenas alvos disponíveis.
+
+Rotas, destino do Protetor e portão do chefe exibem opções e consequências antes da confirmação. A seleção é transitória. A confirmação chama os comandos de domínio e a fila de persistência existentes. Opções bloqueadas pelo requisito de item continuam visíveis com a razão do bloqueio.

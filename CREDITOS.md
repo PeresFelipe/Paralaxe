@@ -138,7 +138,7 @@ A entrada do jogo reutiliza o ornamento dourado do **Dark Ages UI**, de [Hypnobi
 ## Código da dungeon 2D
 
 - Dungeon Crawler Now — John VonDrashek, MIT: gerador de salas e estados extraídos do RoomManager. Aviso integral em `aplicativos/jogo/publico/creditos/dungeon-crawler-now.txt`.
-- Hexa Battle — Giacomo Tagliabue, MIT: fórmulas de projeção isométrica e vértices do piso. Aviso integral em `aplicativos/jogo/publico/creditos/hexa-battle.txt`.
+- Hexa Battle — Giacomo Tagliabue, MIT: fórmulas de projeção isométrica e seleção de alvos adaptada para as escolhas da masmorra. Aviso integral em `aplicativos/jogo/publico/creditos/hexa-battle.txt`.
 
 Versões, caminhos e modificações: `documentacao/implementacao/DUNGEON-2D-REUSO.md`.
 

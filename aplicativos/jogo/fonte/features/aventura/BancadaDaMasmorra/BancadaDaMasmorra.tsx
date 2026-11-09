@@ -1,3 +1,4 @@
+import EscolhasDaMasmorra from './EscolhasDaMasmorra';
 import CenaDaMasmorra from "../CenaDaMasmorra/CenaDaMasmorra";
 import { nomesDasDificuldades, useMasmorra, type PropriedadesDaMasmorra } from "@/hooks/useMasmorra";
 import { ativoTrabalhoRotulo } from "@/services/acoesDaMasmorra";
@@ -404,6 +405,23 @@ export default function BancadaDaMasmorra(props: PropriedadesDaMasmorra) {
 
   const emChefePortao = atualSala.id === "sala.chefe-portao";
   const ramoEscolha = salaResolvido && atualSala.idsDasProximasSalas.length > 1;
+  const rotas = atualSala.idsDasProximasSalas.flatMap((id) => {
+    const sala = mapaDaExpedicao.salas.find(candidata => candidata.id === id);
+    if (!sala) return [];
+    const requisito = sala.requisitoDeItemParaEntrar;
+    const bloqueada = requisito && !partida.personagem.inventario.some(item =>
+      item.idDaDefinicao === requisito && item.quantidade > 0);
+    const titulo = atualSala.pistasDasSaidas?.[id] ?? (
+      id === 'sala.alojamentos' ? 'Marcas recentes atravessam a poeira rumo ao quartel.'
+        : id === 'sala.administracao' ? 'Uma porta antiga traz o selo corroído da guarnição.'
+          : 'Um corredor de pedra molhada segue para o interior.'
+    );
+    return [{
+      id, titulo,
+      detalhe: ramoEscolha ? 'Confirmar fecha a alternativa nesta expedição.' : 'Seguir adiante.',
+      ...(bloqueada ? { bloqueio: `Requer ${itemRotulo(requisito)}.` } : {}),
+    }];
+  });
 
   return (
     <section
@@ -468,24 +486,15 @@ export default function BancadaDaMasmorra(props: PropriedadesDaMasmorra) {
                   Uma criatura ferida protege outra menor. Nenhuma recompensa ou
                   classificação moral é apresentada.
                 </p>
-                <div className="botao-linhaDeDados">
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    disabled={ocupado}
-                    onClick={() => void tratarProtetor("morto")}
-                  >
-                    Matar
-                  </Button>
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    disabled={ocupado}
-                    onClick={() => void tratarProtetor("poupado")}
-                  >
-                    Poupar
-                  </Button>
-                </div>
+                <EscolhasDaMasmorra
+                  titulo="O destino do Protetor"
+                  escolhas={[
+                    { id: 'morto', titulo: 'Matar', detalhe: 'Atacar a criatura ferida.' },
+                    { id: 'poupado', titulo: 'Poupar', detalhe: 'Deixar a criatura viver.' },
+                  ]}
+                  ocupado={ocupado}
+                  aoConfirmar={id => tratarProtetor(id === 'morto' ? 'morto' : 'poupado')}
+                />
               </div>
             ) : null}
 
@@ -527,74 +536,34 @@ export default function BancadaDaMasmorra(props: PropriedadesDaMasmorra) {
             </Card>
           ) : null}
 
-          {salaResolvido && atualSala.idsDasProximasSalas.length > 0 && !emChefePortao ? (
-            <div
-              className={`masmorra-caminhos ${estilos.caminhos} ${ramoEscolha ? estilos.caminhosRamo : ""}`}
-            >
-              {atualSala.idsDasProximasSalas.map((salaId) => {
-                const sala = mapaDaExpedicao.salas.find(
-                  (candidato) => candidato.id === salaId,
-                );
-                return sala ? (
-                  <Button
-                    variant="route"
-                    key={salaId}
-                    disabled={ocupado || Boolean(sala.requisitoDeItemParaEntrar &&
-                      !partida.personagem.inventario.some(item =>
-                        item.idDaDefinicao === sala.requisitoDeItemParaEntrar && item.quantidade > 0))}
-                    onClick={() => void tratarCaminho(salaId)}
-                  >
-                    <span className="secao-chamada">Próxima rota</span>
-                    <strong>{atualSala.pistasDasSaidas?.[salaId]
-                      ?? (salaId === 'sala.alojamentos'
-                        ? 'Marcas recentes atravessam a poeira rumo ao quartel.'
-                        : salaId === 'sala.administracao'
-                          ? 'Uma porta antiga traz o selo corroído da guarnição.'
-                          : 'Um corredor de pedra molhada segue para o interior.')}</strong>
-                    <small>
-                      {ramoEscolha
-                        ? "Essa escolha fecha a alternativa nesta expedição."
-                        : "Seguir adiante"}
-                    </small>
-                  </Button>
-                ) : null;
-              })}
-            </div>
-          ) : null}
+          {salaResolvido && rotas.length > 0 && !emChefePortao && (
+            <EscolhasDaMasmorra
+              key={atualSala.id}
+              titulo={ramoEscolha ? "Escolha a próxima rota" : "Próxima rota"}
+              escolhas={rotas}
+              ocupado={ocupado}
+              aoConfirmar={tratarCaminho}
+            />
+          )}
 
-          {/* O portão do chefe explicita a escolha entre assegurar o saque atual e continuar assumindo risco. */}
-          {salaResolvido && emChefePortao ? (
-            <div className={estilos.confirmarChefe}>
-              <p className="secao-chamada">Portão do Bastião</p>
-              <h3>Além deste ponto está Fairtheoir.</h3>
-              <p className="atenuado">
-                Retornar assegura a Bolsa. Continuar mantém tudo em risco.
-              </p>
-              <div className="botao-linhaDeDados">
-                {execucao.extracaoSeguraDisponivel ? (
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    disabled={ocupado}
-                    onClick={() => void tratarExtrair()}
-                  >
-                    Retornar e assegurar Bolsa
-                  </Button>
-                ) : null}
-                {atualSala.idsDasProximasSalas.map((salaId) => (
-                  <Button
-                    variant="primary"
-                    size="sm"
-                    key={salaId}
-                    disabled={ocupado}
-                    onClick={() => void tratarCaminho(salaId)}
-                  >
-                    Abrir o portão
-                  </Button>
-                ))}
-              </div>
-            </div>
-          ) : null}
+          {salaResolvido && emChefePortao && (
+            <EscolhasDaMasmorra
+              key={atualSala.id}
+              titulo="Portão do Bastião"
+              escolhas={[
+                ...(execucao.extracaoSeguraDisponivel ? [{
+                  id: 'extrair', titulo: 'Retornar e assegurar Bolsa',
+                  detalhe: 'Encerra a expedição e guarda o saque.',
+                }] : []),
+                ...rotas.map(rota => ({
+                  ...rota, titulo: 'Abrir o portão',
+                  detalhe: 'Enfrentar Fairtheoir e manter a Bolsa em risco.',
+                })),
+              ]}
+              ocupado={ocupado}
+              aoConfirmar={id => id === 'extrair' ? tratarExtrair() : tratarCaminho(id)}
+            />
+          )}
 
           {execucao.concluido ? (
             <Card className={estilos.painelConclusao}>
