@@ -666,13 +666,13 @@
           "url": "https://github.com/JohnVonDrashek/dungeon-crawler-now"
         }
       ],
-      "contribuicao": "Gerador de salas copiado e adaptado; estados de sala extraídos de RoomManager. Geometria visual ligada ao grafo do Paralaxe.",
+      "contribuicao": "Gerador, estados, rotinas de texturas procedurais e renderização de tiles das salas.",
       "licenca": {
         "nome": "MIT",
         "url": "/creditos/dungeon-crawler-now.txt"
       },
       "origem": "https://github.com/JohnVonDrashek/dungeon-crawler-now",
-      "modificacoes": "Gerador de salas copiado e adaptado; estados de sala extraídos de RoomManager. Geometria visual ligada ao grafo do Paralaxe.",
+      "modificacoes": "Texturas copiadas de AssetGenerator. O renderizador de GameSceneInit foi recortado para a sala atual e conectado ao domínio do Paralaxe.",
       "avisos": [
         {
           "rotulo": "Copyright e licença MIT integral",
@@ -692,7 +692,7 @@
           "url": "https://github.com/itajaja/hb"
         }
       ],
-      "contribuicao": "Fórmulas de projeção e vértices hexagonais copiadas de iso.ts para o piso 2D. Removidas dependências do motor original.",
+      "contribuicao": "Projeção hexagonal usada na primeira versão da cena; código mantido como referência.",
       "licenca": {
         "nome": "MIT",
         "url": "/creditos/hexa-battle.txt"
@@ -703,6 +703,58 @@
         {
           "rotulo": "Copyright e licença MIT integral",
           "url": "/creditos/hexa-battle.txt"
+        }
+      ],
+      "arquivos": [],
+      "creditosComplementares": []
+    },
+    {
+      "id": "phaser",
+      "grupo": "tecnologia",
+      "titulo": "Phaser 3.90.0",
+      "autores": [
+        {
+          "nome": "Richard Davey e Phaser Studio Inc.",
+          "url": "https://github.com/phaserjs/phaser"
+        }
+      ],
+      "contribuicao": "Renderização 2D da masmorra.",
+      "licenca": {
+        "nome": "MIT",
+        "url": "/creditos/phaser-MIT.txt"
+      },
+      "origem": "https://github.com/phaserjs/phaser",
+      "modificacoes": "Distribuído conforme o pacote publicado.",
+      "avisos": [
+        {
+          "rotulo": "Aviso MIT integral",
+          "url": "/creditos/phaser-MIT.txt"
+        }
+      ],
+      "arquivos": [],
+      "creditosComplementares": []
+    },
+    {
+      "id": "eventemitter3",
+      "grupo": "tecnologia",
+      "titulo": "EventEmitter3 5.0.4",
+      "autores": [
+        {
+          "nome": "Arnout Kazemier",
+          "url": "https://github.com/primus/eventemitter3"
+        }
+      ],
+      "contribuicao": "Dependência do Phaser.",
+      "licenca": {
+        "nome": "MIT",
+        "url": "/creditos/eventemitter3-MIT.txt"
+      },
+      "origem": "https://github.com/primus/eventemitter3",
+      "modificacoes": "Distribuído conforme o pacote publicado.",
+      "avisos": [
+        {
+          "rotulo": "Aviso MIT integral",
+          "url": "/creditos/eventemitter3-MIT.txt"
         }
       ],
       "arquivos": [],

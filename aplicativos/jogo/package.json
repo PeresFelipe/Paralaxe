@@ -12,11 +12,12 @@
     "verificar:tipos": "tsc -b"
   },
   "dependencies": {
-    "@radix-ui/react-select": "^2.4.1",
     "@paralaxe/conteudo": "workspace:*",
     "@paralaxe/dominio": "workspace:*",
-    "@paralaxe/persistencia": "workspace:*",
     "@paralaxe/interface": "workspace:*",
+    "@paralaxe/persistencia": "workspace:*",
+    "@radix-ui/react-select": "^2.4.1",
+    "phaser": "3.90.0",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "workbox-window": "^7.4.1"

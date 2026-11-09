@@ -141,3 +141,5 @@ A entrada do jogo reutiliza o ornamento dourado do **Dark Ages UI**, de [Hypnobi
 - Hexa Battle — Giacomo Tagliabue, MIT: fórmulas de projeção isométrica e vértices do piso. Aviso integral em `aplicativos/jogo/publico/creditos/hexa-battle.txt`.
 
 Versões, caminhos e modificações: `documentacao/implementacao/DUNGEON-2D-REUSO.md`.
+
+A revisão da cena de Dún Liath usa as texturas procedurais de `AssetGenerator.ts` e o ramo de renderização de tiles simples de `GameSceneInit.ts`, do Dungeon Crawler Now (MIT). Phaser 3.90.0 e EventEmitter3 5.0.4 têm avisos em `publico/creditos/phaser-MIT.txt` e `publico/creditos/eventemitter3-MIT.txt`. As cópias de referência do Hexa Battle e do ROT.js estão em `documentacao/terceiros`, junto das respectivas licenças.
