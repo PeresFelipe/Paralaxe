@@ -62,15 +62,18 @@ if errorlevel 1 (
   )
 )
 
+REM Inclui dependencias de desenvolvimento mesmo com NODE_ENV herdado.
+set "NODE_ENV=development"
+
 echo Verificando dependencias do workspace...
-call %PNPM_CMD% install --frozen-lockfile --prod=false
+call %PNPM_CMD% install --frozen-lockfile
 if errorlevel 1 goto :falha
 
 REM O pnpm resolve o executavel no contexto do pacote, mesmo com hoisting.
 call %PNPM_CMD% --filter @paralaxe/jogo exec vite --version >nul 2>&1
 if errorlevel 1 (
   echo Vite indisponivel. Tentando reparar a instalacao...
-  call %PNPM_CMD% install --frozen-lockfile --prod=false --force
+  call %PNPM_CMD% install --frozen-lockfile --force
   if errorlevel 1 goto :falha
   call %PNPM_CMD% --filter @paralaxe/jogo exec vite --version
   if errorlevel 1 (
