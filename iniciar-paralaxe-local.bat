@@ -17,6 +17,18 @@ if not exist "aplicativos\jogo\vite.config.ts" (
   goto :falha
 )
 
+REM O jogo depende dos pacotes locais do monorepositorio.
+if not exist "pnpm-workspace.yaml" (
+  echo [ERRO] Nao encontrei pnpm-workspace.yaml na raiz do Paralaxe.
+  goto :copia_incompleta
+)
+for %%P in (conteudo dominio interface persistencia) do (
+  if not exist "pacotes\%%P\package.json" (
+    echo [ERRO] Arquivo ausente: pacotes\%%P\package.json
+    goto :copia_incompleta
+  )
+)
+
 where node >nul 2>&1
 if errorlevel 1 (
   echo [ERRO] Node.js nao foi encontrado.
@@ -66,7 +78,7 @@ if not exist "%VITE_ENTRY%" (
 )
 
 REM Ao atualizar a branch, pode haver dependencias novas mesmo que o Vite ja exista.
-if not exist "aplicativos\\jogo\\node_modules\\@radix-ui\\react-select" (
+if not exist "aplicativos\jogo\node_modules\@radix-ui\react-select" (
   echo Atualizando dependencias do seletor de oficios...
   where pnpm >nul 2>&1
   if not errorlevel 1 (
@@ -104,6 +116,12 @@ echo.
 echo O servidor foi encerrado.
 pause
 exit /b 0
+
+:copia_incompleta
+echo        Use uma copia completa da branch develop do repositorio Paralaxe.
+echo        Mantenha as pastas aplicativos e pacotes juntas na mesma raiz.
+echo        Em um clone, confira git status e se o sparse-checkout esta ativo.
+goto :falha
 
 :falha
 echo.
