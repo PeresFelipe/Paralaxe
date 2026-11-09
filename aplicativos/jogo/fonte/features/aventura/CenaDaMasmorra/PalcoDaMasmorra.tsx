@@ -12,7 +12,7 @@ export default function PalcoDaMasmorra({ geometria, sala, resolvida }: {
   resolvida: boolean
 }) {
   const palco = useRef<HTMLDivElement>(null)
-  const [falhou, definirFalhou] = useState(false)
+  const [estado, definirEstado] = useState<'carregando' | 'pronta' | 'falhou'>('carregando')
   const encontro = useRef<Phaser.GameObjects.Sprite | null>(null)
   const resolvidaAtual = useRef(resolvida)
   useEffect(() => {
@@ -45,29 +45,35 @@ export default function PalcoDaMasmorra({ geometria, sala, resolvida }: {
         banner: false,
         scene: {
           create(this: Phaser.Scene) {
-            const assets = new AssetGenerator(this)
-            assets.createPlayerAssets()
-            assets.createFloorAndWallAssets()
-            assets.createEnemyAssets()
-            assets.createSpecialRoomObjectAssets()
-            createDungeonTiles(this, dungeon, room)
-            this.cameras.main.setScroll((room.x - 1) * TILE_SIZE, (room.y - 1) * TILE_SIZE)
-            const x = (room.x + room.width / 2) * TILE_SIZE
-            const y = (room.y + room.height / 2) * TILE_SIZE
-            this.add.sprite(x - 2 * TILE_SIZE, y, 'player').setDepth(1)
-            const textura = sala.idDaDefinicaoDoInimigo
-              ? (sala.tipo === 'chefe' ? 'enemy_boss' : 'enemy')
-              : sala.tipo === 'recuperacao' ? 'shrine'
-              : sala.tipo === 'tesouro' ? (resolvidaAtual.current ? 'chest_open' : 'chest_closed')
-              : null
-            if (textura) {
-              encontro.current = this.add.sprite(x + 2 * TILE_SIZE, y, textura).setDepth(1)
-              encontro.current.setVisible(sala.tipo === 'tesouro' || !resolvidaAtual.current)
+            if (cancelado) return
+            try {
+              const assets = new AssetGenerator(this)
+              assets.createPlayerAssets()
+              assets.createFloorAndWallAssets()
+              assets.createEnemyAssets()
+              assets.createSpecialRoomObjectAssets()
+              createDungeonTiles(this, dungeon, room)
+              this.cameras.main.setScroll((room.x - 1) * TILE_SIZE, (room.y - 1) * TILE_SIZE)
+              const x = (room.x + room.width / 2) * TILE_SIZE
+              const y = (room.y + room.height / 2) * TILE_SIZE
+              this.add.sprite(x - 2 * TILE_SIZE, y, 'player').setDepth(1)
+              const textura = sala.idDaDefinicaoDoInimigo
+                ? (sala.tipo === 'chefe' ? 'enemy_boss' : 'enemy')
+                : sala.tipo === 'recuperacao' ? 'shrine'
+                : sala.tipo === 'tesouro' ? (resolvidaAtual.current ? 'chest_open' : 'chest_closed')
+                : null
+              if (textura) {
+                encontro.current = this.add.sprite(x + 2 * TILE_SIZE, y, textura).setDepth(1)
+                encontro.current.setVisible(sala.tipo === 'tesouro' || !resolvidaAtual.current)
+              }
+              definirEstado('pronta')
+            } catch {
+              definirEstado('falhou')
             }
           },
         },
       })
-    }).catch(() => { if (!cancelado) definirFalhou(true) })
+    }).catch(() => { if (!cancelado) definirEstado('falhou') })
     return () => {
       cancelado = true
       encontro.current = null
@@ -77,8 +83,10 @@ export default function PalcoDaMasmorra({ geometria, sala, resolvida }: {
     }
   }, [geometria, sala])
 
-  return <>
-    <div ref={palco} className={estilos.palcoOriginal} role="img" aria-label={`Cena 2D de ${sala.nome}`} />
-    {falhou && <p role="status">Não foi possível abrir a cena. As ações da sala continuam disponíveis.</p>}
-  </>
+  return <div className={estilos.palcoOriginal}>
+    <div ref={palco} className={estilos.canvas} hidden={estado !== 'pronta'} role="img" aria-label={`Cena 2D de ${sala.nome}`} />
+    {estado !== 'pronta' && <p className={estilos.estadoPalco} role="status">
+      {estado === 'carregando' ? 'Carregando cena…' : 'Não foi possível abrir a cena. As ações da sala continuam disponíveis.'}
+    </p>}
+  </div>
 }

@@ -417,7 +417,7 @@ export default function BancadaDaMasmorra(props: PropriedadesDaMasmorra) {
           : 'Um corredor de pedra molhada segue para o interior.'
     );
     return [{
-      id, titulo,
+      id, titulo, confirmar: 'Seguir por esta rota',
       detalhe: ramoEscolha ? 'Confirmar fecha a alternativa nesta expedição.' : 'Seguir adiante.',
       ...(bloqueada ? { bloqueio: `Requer ${itemRotulo(requisito)}.` } : {}),
     }];
@@ -489,8 +489,8 @@ export default function BancadaDaMasmorra(props: PropriedadesDaMasmorra) {
                 <EscolhasDaMasmorra
                   titulo="O destino do Protetor"
                   escolhas={[
-                    { id: 'morto', titulo: 'Matar', detalhe: 'Atacar a criatura ferida.' },
-                    { id: 'poupado', titulo: 'Poupar', detalhe: 'Deixar a criatura viver.' },
+                    { id: 'morto', titulo: 'Matar', confirmar: 'Atacar o Protetor', detalhe: 'Atacar a criatura ferida.' },
+                    { id: 'poupado', titulo: 'Poupar', confirmar: 'Poupar o Protetor', detalhe: 'Deixar a criatura viver.' },
                   ]}
                   ocupado={ocupado}
                   aoConfirmar={id => tratarProtetor(id === 'morto' ? 'morto' : 'poupado')}
@@ -552,11 +552,11 @@ export default function BancadaDaMasmorra(props: PropriedadesDaMasmorra) {
               titulo="Portão do Bastião"
               escolhas={[
                 ...(execucao.extracaoSeguraDisponivel ? [{
-                  id: 'extrair', titulo: 'Retornar e assegurar Bolsa',
+                  id: 'extrair', titulo: 'Retornar e assegurar Bolsa', confirmar: 'Retornar com o saque',
                   detalhe: 'Encerra a expedição e guarda o saque.',
                 }] : []),
                 ...rotas.map(rota => ({
-                  ...rota, titulo: 'Abrir o portão',
+                  ...rota, titulo: 'Abrir o portão', confirmar: 'Abrir o portão',
                   detalhe: 'Enfrentar Fairtheoir e manter a Bolsa em risco.',
                 })),
               ]}

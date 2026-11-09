@@ -17,10 +17,10 @@ export default class LimiteDeErroDaTela extends Component<
       <Card as="section">
         <div role="alert">
           <h2>Não foi possível exibir esta tela</h2>
-          <p>Reabra o jogo para tentar carregar a tela novamente.</p>
+          <p>Escolha outra tela no menu ou recarregue o jogo para tentar novamente.</p>
         </div>
         <Button variant="primary" onClick={() => window.location.reload()}>
-          Reabrir o jogo
+          Recarregar jogo
         </Button>
       </Card>
     )

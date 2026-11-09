@@ -447,7 +447,7 @@ export default function EstruturaDoJogo({
 
       <div className="jogo-disposicao">
         <main ref={conteudoRef} className="jogo-conteudo" id="jogo-conteudo" tabIndex={-1}>
-          <LimiteDeErroDaTela>
+          <LimiteDeErroDaTela key={destino}>
           <Suspense fallback={<p role="status">Carregando tela…</p>}>
           {!focadoRisco ? (
             <ResumoDaMetaDaJornada

@@ -7,6 +7,15 @@
   max-height: var(--ui-dungeon-altura);
   overflow: hidden;
 }
+.canvas {
+  min-width: 0;
+  min-height: 0;
+}
+.estadoPalco {
+  margin: 0;
+  padding: var(--ui-space-3);
+  text-align: center;
+}
 .palcoOriginal canvas {
   display: block;
   width: auto;

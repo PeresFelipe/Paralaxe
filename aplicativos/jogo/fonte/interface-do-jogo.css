@@ -181,11 +181,11 @@ body {
   margin:var(--ui-space-0-5) calc(var(--ui-space-0-5) * -1) var(--ui-space-2);
   padding:var(--ui-space-0-5) var(--ui-space-0-5) var(--ui-space-2);
   overflow-x: auto;
-  scrollbar-width: none;
+  scrollbar-width: thin;
   scroll-snap-type: x proximity;
 }
 
-.subnavegacao::-webkit-scrollbar { display: none; }
+
 
 
 

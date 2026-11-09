@@ -8,6 +8,7 @@ export interface EscolhaDaMasmorra {
   titulo: string
   detalhe: string
   bloqueio?: string
+  confirmar?: string
 }
 
 export default function EscolhasDaMasmorra({ titulo, escolhas, ocupado, aoConfirmar }: {
@@ -39,7 +40,7 @@ export default function EscolhasDaMasmorra({ titulo, escolhas, ocupado, aoConfir
       </Button>)}
     </div>
     <p className="atenuado" role="status">
-      {escolha ? `Selecionado: ${escolha.titulo}` : 'Selecione uma opção para continuar.'}
+      {ocupado ? 'Salvando escolha…' : escolha ? `Selecionado: ${escolha.titulo}` : 'Selecione uma opção para continuar.'}
     </p>
     <div className="botao-linhaDeDados">
       <Button
@@ -47,7 +48,7 @@ export default function EscolhasDaMasmorra({ titulo, escolhas, ocupado, aoConfir
         disabled={!escolha || ocupado}
         onClick={() => { if (escolha && !ocupado) void selectCell(acao, escolha.id) }}
       >
-        Confirmar escolha
+        {escolha?.confirmar ?? 'Confirmar escolha'}
       </Button>
       {escolha && <Button variant="secondary" disabled={ocupado} onClick={() => definirSelecionada(null)}>
         Limpar seleção
