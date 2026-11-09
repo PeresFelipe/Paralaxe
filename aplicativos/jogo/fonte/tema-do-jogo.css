@@ -1222,6 +1222,7 @@ summary:focus-visible,
 
   .atividade-cena-envoltorio {
     width: min(100%, calc(var(--atividade-cena-largura) + var(--ui-dimension-16px)));
+    justify-self: center;
   }
 }
 

@@ -370,9 +370,11 @@
 }
 
 .route strong {
-  font-family: var(--ui-font-family-display);
-  font-size: var(--ui-font-size-md);
-  font-weight: var(--ui-font-weight-medium);
+  font-family: var(--ui-font-family-body);
+  font-size: var(--ui-font-size-sm);
+  font-weight: var(--ui-font-weight-semibold);
+  line-height: var(--ui-line-height-normal);
+  overflow-wrap: anywhere;
 }
 
 .route small {
@@ -687,9 +689,8 @@
 
 @media (max-width: 30rem) {
   .creation[data-with-art='true'] > .label {
-    grid-template-columns: minmax(0, 1fr);
-    gap: var(--ui-space-2);
-    justify-items: start;
+    grid-template-columns: var(--ui-dimension-64px) minmax(0, 1fr);
+    gap: var(--ui-space-3);
   }
 }
 
@@ -806,10 +807,6 @@
 
   .journey > .label {
     gap:var(--ui-space-2);
-  }
-
-  .journey strong {
-    font-size: var(--ui-font-size-md);
   }
 
   .filter {

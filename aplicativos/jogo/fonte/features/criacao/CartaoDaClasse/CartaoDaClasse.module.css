@@ -8,7 +8,7 @@
   /* A folha tem seis quadros e repete o primeiro no fim: seis passos exatos fecham o loop. */
   background-size: 700% 100%;
   image-rendering: pixelated;
-  animation: joanna-idle var(--ui-transition-character-idle) infinite;
+  animation: joanna-idle var(--ui-transition-character-idle) steps(6, end) infinite;
 }
 
 @keyframes joanna-idle {
@@ -46,7 +46,12 @@
   }
 }
 
-.gif { display: block; width: var(--ui-dimension-80px); height: var(--ui-dimension-80px); object-fit: contain; image-rendering: pixelated; }
+.gif { display: block; justify-self: center; width: var(--ui-dimension-80px); height: var(--ui-dimension-80px); object-fit: contain; image-rendering: pixelated; }
 .texto { display: grid; align-content: center; gap: var(--ui-space-2); min-width: 0; overflow-wrap: break-word; }
 .texto > span { display: block; color: var(--ui-color-text-muted); font-family: var(--ui-font-family-body); font-size: var(--ui-font-size-sm); font-weight: var(--ui-font-weight-regular); line-height: var(--ui-line-height-normal); }
-@media (max-width: 30rem) { .gif { width: var(--ui-dimension-100px); height: var(--ui-dimension-100px); } }
+@media (max-width: 30rem) {
+  .gif, .sprite {
+    width: var(--ui-dimension-64px);
+    height: var(--ui-dimension-64px);
+  }
+}
