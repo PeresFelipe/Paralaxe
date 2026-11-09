@@ -45,59 +45,38 @@ echo Node encontrado:
 node --version
 echo.
 
-set "VITE_ENTRY=aplicativos\jogo\node_modules\vite\bin\vite.js"
-
-if not exist "%VITE_ENTRY%" (
-
-  echo Dependencias nao encontradas. Tentando instalar com pnpm...
-  echo.
-  where pnpm >nul 2>&1
+REM Escolhe o gerenciador uma vez para instalar e iniciar o jogo.
+set "PNPM_CMD=pnpm"
+where pnpm >nul 2>&1
+if errorlevel 1 (
+  where corepack >nul 2>&1
   if not errorlevel 1 (
-    call pnpm install --no-frozen-lockfile
-    if errorlevel 1 goto :falha
+    set "PNPM_CMD=corepack pnpm"
   ) else (
-    where corepack >nul 2>&1
-    if not errorlevel 1 (
-      call corepack pnpm install --no-frozen-lockfile
-      if errorlevel 1 goto :falha
-    ) else (
-      REM O npm/npx costuma acompanhar o Node.js no Windows.
-      REM Usar a versao fixada em package.json evita instalacao global.
-      where npx >nul 2>&1
-      if errorlevel 1 (
-        echo [ERRO] pnpm, Corepack e npx nao foram encontrados.
-        echo        Instale o Node.js com npm incluido e tente novamente.
-        goto :falha
-      )
-      echo pnpm e Corepack ausentes. Usando npx para instalar as dependencias...
-      echo A primeira execucao precisa de conexao com a internet.
-      call npx --yes pnpm@12.3.4 install --no-frozen-lockfile
-      if errorlevel 1 goto :falha
+    where npx >nul 2>&1
+    if errorlevel 1 (
+      echo [ERRO] pnpm, Corepack e npx nao foram encontrados.
+      goto :falha
     )
+    set "PNPM_CMD=npx --yes pnpm@12.3.4"
   )
 )
 
-REM Ao atualizar a branch, pode haver dependencias novas mesmo que o Vite ja exista.
-if not exist "aplicativos\jogo\node_modules\@radix-ui\react-select" (
-  echo Atualizando dependencias do seletor de oficios...
-  where pnpm >nul 2>&1
-  if not errorlevel 1 (
-    call pnpm install --no-frozen-lockfile
-  ) else (
-    where corepack >nul 2>&1
-    if not errorlevel 1 (
-      call corepack pnpm install --no-frozen-lockfile
-    ) else (
-      call npx --yes pnpm@12.3.4 install --no-frozen-lockfile
-    )
-  )
+echo Verificando dependencias do workspace...
+call %PNPM_CMD% install --frozen-lockfile --prod=false
+if errorlevel 1 goto :falha
+
+REM O pnpm resolve o executavel no contexto do pacote, mesmo com hoisting.
+call %PNPM_CMD% --filter @paralaxe/jogo exec vite --version >nul 2>&1
+if errorlevel 1 (
+  echo Vite indisponivel. Tentando reparar a instalacao...
+  call %PNPM_CMD% install --frozen-lockfile --prod=false --force
   if errorlevel 1 goto :falha
-)
-
-if not exist "%VITE_ENTRY%" (
-  echo [ERRO] Vite nao foi instalado no local esperado:
-  echo        %VITE_ENTRY%
-  goto :falha
+  call %PNPM_CMD% --filter @paralaxe/jogo exec vite --version
+  if errorlevel 1 (
+    echo [ERRO] O pnpm nao conseguiu executar o Vite no pacote do jogo.
+    goto :falha
+  )
 )
 
 echo Iniciando o Paralaxe somente nesta maquina...
@@ -105,7 +84,7 @@ echo Acesse: http://127.0.0.1:5173/
 echo Para encerrar o servidor, pressione CTRL+C nesta janela.
 echo.
 REM --strictPort evita trocar silenciosamente para uma porta diferente.
-node "%VITE_ENTRY%" "aplicativos/jogo" --config "aplicativos/jogo/vite.config.ts" --host 127.0.0.1 --port 5173 --strictPort
+call %PNPM_CMD% --filter @paralaxe/jogo run desenvolver --port 5173 --strictPort
 if errorlevel 1 (
   echo.
   echo [ERRO] O servidor terminou com erro. Veja a mensagem acima.
