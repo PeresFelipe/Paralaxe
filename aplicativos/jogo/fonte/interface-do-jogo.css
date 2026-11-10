@@ -259,6 +259,8 @@ body {
   gap: var(--ui-space-2-5);
   padding: var(--ui-space-3);
   isolation: isolate;
+  /* Uma notificação informativa não pode bloquear ações do jogo abaixo dela. */
+  pointer-events: none;
   overflow: hidden;
   border: var(--ui-size-border) solid color-mix(in srgb, var(--aviso-acento) 62%, var(--ui-color-border));
   border-radius: var(--ui-radius-xl);
@@ -267,6 +269,11 @@ body {
     radial-gradient(ellipse at top left, color-mix(in srgb, var(--aviso-acento) 10%, transparent), transparent 64%),
     linear-gradient(145deg, var(--ui-color-surface-raised), var(--ui-color-surface));
   box-shadow: var(--ui-shadow-lg);
+}
+
+.jogo-aviso button {
+  /* O botão de dispensar continua acionável quando o corpo do aviso é transparente a cliques. */
+  pointer-events: auto;
 }
 
 .jogo-aviso--conquista {
@@ -364,6 +371,10 @@ body {
     padding: var(--ui-space-2-5);
   }
   .continuidade-acoes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  /* Reservar o espaço real dos dois controles fixos ao alcançar o fim da página. */
+  .game-shell:not(.jogo-estrutura--risco) .jogo-conteudo {
+    padding-block-end: calc(var(--ui-space-39-5) + var(--ui-size-hud-control) + env(safe-area-inset-bottom));
+  }
   .global-recursos > div {
     grid-template-columns: minmax(0, 1fr);
     grid-template-rows: 1fr auto;
