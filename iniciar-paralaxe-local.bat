@@ -20,12 +20,7 @@ if not exist "aplicativos\jogo\vite.config.ts" (
 REM O jogo depende dos pacotes locais do monorepositorio.
 if not exist "pnpm-workspace.yaml" (
   echo [ERRO] Nao encontrei pnpm-workspace.yaml na raiz do Paralaxe.
-  goto :servidor_existente
-echo.
-pause
-exit /b 0
-
-:copia_incompleta
+  goto :copia_incompleta
 )
 for %%P in (conteudo dominio interface persistencia) do (
   if not exist "pacotes\%%P\package.json" (
@@ -121,6 +116,11 @@ if errorlevel 1 (
 
 echo.
 echo O servidor foi encerrado.
+pause
+exit /b 0
+
+:servidor_existente
+echo.
 pause
 exit /b 0
 
