@@ -141,8 +141,9 @@
   .panel {
     inset: auto 0 0 0;
     width: 100%;
-    height: min(92dvh, calc(100dvh - env(safe-area-inset-top) - var(--ui-space-2)));
-    max-height: 100dvh;
+    /* A folha curta se ajusta ao conteúdo; a Jornada longa continua rolável. */
+    height: auto;
+    max-height: min(92dvh, calc(100dvh - env(safe-area-inset-top) - var(--ui-space-2)));
     border-left: 0;
     border-top: var(--ui-size-border) solid var(--ui-color-border);
     border-radius: var(--ui-radius-2xl) var(--ui-radius-2xl) var(--ui-radius-none) var(--ui-radius-none);
