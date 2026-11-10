@@ -317,6 +317,7 @@ export default function BancadaDeCombate(props: PropriedadesDoCombateDaEstrada) 
                 <SelectField
                   className="campo-pilha"
                   label="Item"
+                  aria-label={`Item do espaço ${espacoIndice + 1}`}
                     value={espaco.idDaDefinicao ?? ""}
                     onChange={(evento) =>
                       void atualizarConsumivelEspaco(espacoIndice, {
@@ -335,6 +336,7 @@ export default function BancadaDeCombate(props: PropriedadesDoCombateDaEstrada) 
                 <SelectField
                   className="campo-pilha"
                   label="Usar automaticamente quando"
+                  aria-label={`Uso automático do espaço ${espacoIndice + 1}`}
                     value={espaco.recursoDeUsoAutomatico ?? ""}
                     disabled={!espaco.idDaDefinicao}
                     onChange={(evento) =>
@@ -352,6 +354,7 @@ export default function BancadaDeCombate(props: PropriedadesDoCombateDaEstrada) 
                 <TextField
                   className="campo-pilha"
                   label="Limite (%)"
+                  aria-label={`Limite percentual do espaço ${espacoIndice + 1}`}
                     type="number"
                     min="1"
                     max="100"
