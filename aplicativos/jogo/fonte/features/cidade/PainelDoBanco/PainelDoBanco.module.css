@@ -95,3 +95,13 @@
 /* Banco: a lista usa uma única superfície e divisórias delicadas. */
 .listCard { box-shadow: none; }
 .row { padding-block: var(--ui-space-2-5); }
+
+/* Nomes longos não devem terminar em reticências nas listas empilhadas do celular. */
+@media (max-width: 760px) {
+  .itemLabel strong {
+    overflow: visible;
+    overflow-wrap: anywhere;
+    text-overflow: clip;
+    white-space: normal;
+  }
+}
