@@ -67,9 +67,10 @@
   margin: 0;
   color: var(--acesso-ouro);
   font-family: var(--ui-font-family-antiquity);
-  font-size: clamp(2.7rem, 5vw, 5rem);
+  font-size: clamp(2.35rem, 4.6vw, 4.5rem);
   font-weight: var(--ui-font-weight-regular);
-  line-height: 1.06;
+  /* A fonte Antiquity Print ocupa aproximadamente 1,46em de altura. */
+  line-height: 1.5;
   letter-spacing: .035em;
   text-shadow: 0 .15rem 1rem rgb(0 0 0 / 75%);
 }
@@ -146,9 +147,9 @@
   margin: 0;
   color: var(--acesso-texto);
   font-family: var(--ui-font-family-display);
-  font-size: clamp(2rem, 3vw, 2.5rem);
+  font-size: clamp(1.85rem, 2.8vw, 2.35rem);
   font-weight: var(--ui-font-weight-regular);
-  line-height: 1.15;
+  line-height: 1.5;
   outline: none;
 }
 .introducao {
@@ -305,7 +306,7 @@
     background-position: center, center 43%;
   }
   .historiaConteudo { padding: clamp(1.35rem, 5vw, 2.5rem); }
-  .marca { font-size: clamp(2.35rem, 7.5vw, 4.25rem); }
+  .marca { font-size: clamp(2.2rem, 7vw, 3.7rem); }
   .lema { font-size: .7rem; letter-spacing: .14em; }
   .acesso { width: 100%; padding: 0 clamp(1rem, 5vw, 2rem) 1.5rem; margin: -2.25rem auto 0; }
   .painel { max-width: 32rem; margin-inline: auto; padding: clamp(1.45rem, 5vw, 2.25rem); }

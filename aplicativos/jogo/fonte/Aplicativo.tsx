@@ -1,4 +1,5 @@
 import CartaoDaClasse from './features/criacao/CartaoDaClasse'
+import TelaDeSelecaoDePersonagens from './features/selecao/TelaDeSelecaoDePersonagens'
 /**
  * @file Coordenação principal da aplicação: carregar, criar, selecionar e salvar partidas.
  * Conecta intenções da interface às regras puras do domínio e serializa as gravações
@@ -175,54 +176,17 @@ function Aplicativo({ repositorioDePartidas, aoSairDoAcesso }: AplicativoProps) 
 
   if (tela === "partida-listar") {
     return (
-      <main className="entrada-estrutura">
-        <EstadoDoJogoWeb podeAtualizar />
-        <header className="entrada-cabecalho">
-          <div>
-            <p className="secao-chamada">Paralaxe</p>
-            <strong className="entrada-marca">Versão 0.1 · Sem conexão</strong>
-          </div>
-          <Button
-            variant="primary"
-            size="sm"
-            onClick={iniciarNovoPartida}
-          >
-            Novo personagem
-          </Button>
-        </header>
-        <section className="entrada-introducao">
-          <p className="secao-chamada">Continuar</p>
-          <h1 className="destaque-titulo">Escolha um personagem</h1>
-          <p className="atenuado">
-            Partidas locais, persistentes e separados de qualquer futuro modo
-            Conectado.
-          </p>
-        </section>
-        {mensagem ? <p className="emLinha-mensagem">{mensagem}</p> : null}
-        <section className="partida-gradeVisual-emExecucao">
-          {partidas.map((partida) => (
-            <Button
-              variant="saveCard"
-              key={partida.idDaPartida}
-              onClick={() => void tratarCarregarPartida(partida.idDaPartida)}
-            >
-              <span>
-                {obterNomeDaClasse(partida.personagem.idDaClasse)} · Nv.{" "}
-                {partida.personagem.nivel}
-              </span>
-              <strong>{partida.personagem.nome}</strong>
-              <small>{obterNomeDoPresente(partida.personagem.idDoPresente)}</small>
-              <em>
-                {partida.masmorra.expedicaoAtiva
-                  ? "EXPEDIÇÃO ATIVA · RETOMAR DÚN LIATH"
-                  : "OFFLINE · LOCAL"}
-              </em>
-            </Button>
-          ))}
-        </section>
-        {aoSairDoAcesso ? <Button variant="ghost" disabled={ehSalvando || ehPreparandoDebug} onClick={() => void encerrarAcessoLocal(aoSairDoAcesso)}>Sair do acesso local</Button> : null}
-        <CreditosDosRecursos />
-      </main>
+      <TelaDeSelecaoDePersonagens
+        partidas={partidas}
+        mensagem={mensagem}
+        avisoDoAplicativo={<EstadoDoJogoWeb podeAtualizar />}
+        aoCriar={iniciarNovoPartida}
+        aoCarregar={id => { void tratarCarregarPartida(id) }}
+        saidaIndisponivel={ehSalvando || ehPreparandoDebug}
+        obterNomeDaClasse={obterNomeDaClasse}
+        obterNomeDoPresente={obterNomeDoPresente}
+        {...(aoSairDoAcesso ? { aoSair: () => { void encerrarAcessoLocal(aoSairDoAcesso) } } : {})}
+      />
     );
   }
 

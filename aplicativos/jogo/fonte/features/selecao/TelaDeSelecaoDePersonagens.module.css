@@ -1,0 +1,283 @@
+/* Somente a lista de personagens: mantém os demais menus e a criação sem alterações. */
+.tela:global(.entrada-estrutura) {
+  position: relative;
+  isolation: isolate;
+  width: min(78rem, calc(100% - clamp(1.5rem, 5vw, 5rem)));
+  max-width: none;
+  min-height: 100svh;
+  margin-inline: auto;
+  padding: clamp(1.25rem, 3vw, 2.5rem) 0 2.5rem;
+  color: #ecede6;
+}
+.tela::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, rgb(9 16 20 / 88%) 0%, rgb(10 17 21 / 94%) 40%, #0d1519 90%),
+    var(--ui-access-scene) center top / cover no-repeat;
+}
+
+.cabecalho {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid rgb(199 211 211 / 16%);
+}
+.identidade { display: flex; flex-direction: column; align-items: flex-start; gap: .25rem; }
+.marca {
+  margin: 0;
+  color: #e4bf83;
+  font-family: var(--ui-font-family-antiquity);
+  font-size: clamp(1.5rem, 2vw, 2.1rem);
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: .055em;
+  text-shadow: 0 .2rem .75rem rgb(0 0 0 / 55%);
+}
+.rotuloMarca {
+  color: #aebfbe;
+  font-family: var(--ui-font-family-body);
+  font-size: .625rem;
+  font-weight: 700;
+  letter-spacing: .2em;
+}
+
+.novo:global([data-variant='primary']) {
+  min-height: 2.75rem;
+  padding-inline: 1.25rem;
+  border: 1px solid #f0d39e;
+  border-radius: .65rem;
+  background: linear-gradient(110deg, #d3af74, #e8c991);
+  color: #172125;
+  font-size: .8125rem;
+  font-weight: 700;
+  box-shadow: 0 .6rem 1.3rem rgb(0 0 0 / 20%);
+}
+.novo:global([data-variant='primary']):hover:not(:disabled) {
+  background: linear-gradient(110deg, #e5c58d, #f8dda9);
+  border-color: #ffedc9;
+}
+
+.introducao {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding: clamp(2rem, 4vw, 3.5rem) 0 1.5rem;
+}
+.sobretitulo {
+  margin: 0 0 .65rem;
+  color: #d8b67d;
+  font-family: var(--ui-font-family-body);
+  font-size: .6875rem;
+  font-weight: 700;
+  letter-spacing: .18em;
+}
+.titulo {
+  margin: 0;
+  color: #f2eee5;
+  font-family: var(--ui-font-family-body);
+  font-size: clamp(1.65rem, 3vw, 2.35rem);
+  font-weight: 650;
+  letter-spacing: -.025em;
+  line-height: 1.25;
+}
+.contagem {
+  padding-bottom: .25rem;
+  color: #aabbb9;
+  font-size: .8125rem;
+  white-space: nowrap;
+}
+
+.grade {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(.75rem, 1.4vw, 1.15rem);
+}
+
+.tela .cartao:global([data-variant='saveCard']) {
+  position: relative;
+  display: grid;
+  min-width: 0;
+  min-height: 11.25rem;
+  padding: 1.15rem;
+  align-content: stretch;
+  border: 1px solid rgb(145 169 171 / 28%);
+  border-radius: .95rem;
+  background: linear-gradient(150deg, rgb(34 48 54 / 94%), rgb(21 32 38 / 97%));
+  color: #ecece5;
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 5%), 0 .75rem 1.6rem rgb(0 0 0 / 13%);
+  transition: border-color .18s ease, background .18s ease, box-shadow .18s ease, transform .18s ease;
+}
+
+.tela .cartao:global([data-variant='saveCard']):hover:not(:disabled) {
+  transform: translateY(-.2rem);
+  border-color: #d9b57b;
+  background: linear-gradient(150deg, rgb(43 57 60 / 98%), rgb(29 41 45 / 98%));
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 8%), 0 .95rem 1.8rem rgb(0 0 0 / 28%);
+}
+
+.tela .cartao:global([data-variant='saveCard']):focus-visible {
+  outline: 2px solid #9acdd0;
+  outline-offset: .2rem;
+}
+
+.tela .cartao[data-expedicao='true'] {
+  border-color: rgb(220 174 106 / 60%);
+  background: linear-gradient(150deg, rgb(49 49 42 / 94%), rgb(27 34 35 / 97%));
+}
+
+.tela .cartao > :global([data-ui-slot='label']) {
+  display: grid;
+  grid-template-rows: auto auto auto 1fr;
+  gap: .45rem;
+  align-items: stretch;
+  width: 100%;
+  min-width: 0;
+  min-height: 100%;
+  text-align: left;
+}
+
+.tela .cartao .detalhes {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: .35rem .65rem;
+  min-width: 0;
+  align-items: center;
+}
+.tela .cartao .classe {
+  color: #c9d4d1;
+  font-family: var(--ui-font-family-body);
+  font-size: .75rem;
+  font-weight: 600;
+}
+.tela .cartao .nivel {
+  padding: .25rem .45rem;
+  border: 1px solid rgb(154 205 208 / 20%);
+  border-radius: .4rem;
+  color: #afd2d4;
+  font-family: var(--ui-font-family-body);
+  font-size: .6875rem;
+  font-weight: 650;
+  white-space: nowrap;
+}
+
+.tela .cartao > :global([data-ui-slot='label']) > .nome {
+  display: block;
+  margin: .4rem 0 0;
+  max-width: 100%;
+  color: #f3efe5;
+  font-family: var(--ui-font-family-body);
+  font-size: clamp(1rem, 1.45vw, 1.2rem);
+  font-weight: 650;
+  line-height: 1.3;
+  letter-spacing: -.01em;
+  overflow-wrap: anywhere;
+}
+
+.tela .cartao > :global([data-ui-slot='label']) > .presente {
+  display: block;
+  color: #aebdbb;
+  font-family: var(--ui-font-family-body);
+  font-size: .75rem;
+  font-weight: 400;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
+.tela .cartao .acao {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  gap: .5rem;
+  margin-top: 1rem;
+  padding-top: .85rem;
+  border-top: 1px solid rgb(181 205 204 / 14%);
+  color: #d9b67e;
+  font-family: var(--ui-font-family-body);
+  font-size: .75rem;
+  font-weight: 700;
+  line-height: 1.35;
+  letter-spacing: .015em;
+}
+.tela .cartao .acao > span:last-child {
+  color: #e9c68d;
+  font-size: 1.1rem;
+  line-height: 1;
+}
+.tela .cartao[data-expedicao='true'] .acao { color: #f0c48b; }
+
+.vazio {
+  display: grid;
+  gap: .45rem;
+  padding: 2rem 1.25rem;
+  border: 1px dashed rgb(145 169 171 / 34%);
+  border-radius: 1rem;
+  background: rgb(27 39 44 / 65%);
+  text-align: center;
+}
+.vazio p { margin: 0; color: #ecece5; font-weight: 650; }
+.vazio span { color: #b5c1bf; font-size: .875rem; }
+
+.rodape {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: .65rem 1.25rem;
+  margin-top: 1.8rem;
+  padding-top: .75rem;
+  border-top: 1px solid rgb(199 211 211 / 13%);
+}
+.rodape > div { margin: 0; }
+.sair:global([data-variant='ghost']) {
+  min-height: 2.75rem;
+  padding-inline: .25rem;
+  color: #adbebc;
+  font-size: .8125rem;
+}
+.sair:global([data-variant='ghost']):hover:not(:disabled) {
+  color: #f0d5aa;
+  background: transparent;
+}
+.rodape > div button {
+  min-height: 2.75rem;
+  padding: .35rem .75rem;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  color: #acbdba;
+  font-size: .75rem;
+}
+.rodape > div button:hover:not(:disabled) {
+  color: #e4c38c;
+  background: transparent;
+}
+.rodape > div button > span:first-child { display: none; }
+
+@media (max-width: 69rem) {
+  .grade { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 47rem) {
+  .grade { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .tela:global(.entrada-estrutura) { width: calc(100% - 2rem); }
+}
+@media (max-width: 34rem) {
+  .grade { grid-template-columns: minmax(0, 1fr); }
+  .cabecalho { align-items: flex-start; gap: .85rem; }
+  .novo:global([data-variant='primary']) { min-height: 2.75rem; }
+  .introducao { padding-top: 2.15rem; }
+  .tela .cartao:global([data-variant='saveCard']) { min-height: 10rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tela button { transition: none; }
+  .tela .cartao:global([data-variant='saveCard']):hover:not(:disabled) { transform: none; }
+}
