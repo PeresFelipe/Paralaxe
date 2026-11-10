@@ -80,9 +80,17 @@
   outline: var(--ui-size-focus-ring) solid var(--ui-color-focus);
   outline-offset: calc(-1 * var(--ui-space-1));
 }
+/* Bloqueado não significa ilegível: o requisito permanece claro sem habilitar a ação. */
 .options .opcao:disabled {
-  opacity: .58;
+  opacity: 1;
   cursor: not-allowed;
+}
+.options .opcao:disabled .opcaoNome,
+.options .opcao:disabled .opcaoRodape {
+  color: var(--ui-color-text-muted);
+}
+.options .opcao:disabled .opcaoRodape strong {
+  color: var(--ui-color-warning-text);
 }
 
 .opcaoNome {
