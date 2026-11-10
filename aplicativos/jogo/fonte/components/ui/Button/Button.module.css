@@ -870,3 +870,14 @@
   background: var(--ui-color-primary-soft);
   box-shadow: var(--ui-shadow-focus-ring);
 }
+
+/* Abas de navegação não encolhem no celular: o contêiner controla a rolagem horizontal. */
+.tab {
+  flex-shrink: 0;
+  max-inline-size: none;
+}
+
+.tab > .label {
+  white-space: nowrap;
+  overflow-wrap: normal;
+}
