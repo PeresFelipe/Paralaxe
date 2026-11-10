@@ -345,21 +345,21 @@ export default function EstruturaDoJogo({
               <dt className="recurso-simbolo vida-simbolo" aria-hidden="true">
                 <IconeDoJogo icone={iconeDoPainelPorId.vidaMaxima} tamanho={19} />
               </dt>
-              <dt>Vida máx.</dt>
+              <dt>Vida <span className="recurso-qualificador">máx.</span></dt>
               <dd>{estatisticas.vidaMaxima}</dd>
             </div>
             <div>
               <dt className="recurso-simbolo mana-simbolo" aria-hidden="true">
                 <IconeDoJogo icone={iconeDoPainelPorId.manaMaxima} tamanho={19} />
               </dt>
-              <dt>Mana máx.</dt>
+              <dt>Mana <span className="recurso-qualificador">máx.</span></dt>
               <dd>{estatisticas.manaMaxima}</dd>
             </div>
             <div>
               <dt className="recurso-simbolo folego-simbolo" aria-hidden="true">
                 <IconeDoJogo icone={iconeDoPainelPorId.folegoMaximo} tamanho={19} />
               </dt>
-              <dt>Fôlego máx.</dt>
+              <dt>Fôlego <span className="recurso-qualificador">máx.</span></dt>
               <dd>{estatisticas.folegoMaximo}</dd>
             </div>
             <div>
