@@ -15,7 +15,7 @@
 /* A escala medieval é limitada apenas nesta tela: preserva Antiquity Print nos demais módulos. */
 :global(.atividades-telaDoJogo) .pageTitle {
   font-family: var(--ui-font-family-display);
-  font-size:var(--ui-oficios-fonte-103);
+  font-size: var(--ui-font-size-2xl);
   line-height: var(--ui-oficios-linha-114);
   letter-spacing:var(--ui-oficios-linha-115);
 }
@@ -29,22 +29,16 @@
 /* A arte fica ao lado do progresso em telas largas, sem crescer com a janela. */
 :global(.atividades-telaDoJogo) .stage {
   display: grid;
-  grid-template-columns: minmax(0, var(--ui-oficios-medida-90)) minmax(0, 1fr);
-  align-items: start;
-  gap: var(--ui-space-3);
+  grid-template-columns: minmax(0, var(--ui-dimension-192px)) minmax(0, 1fr);
+  align-items: center;
+  gap: var(--ui-space-4);
   min-width: 0;
-}
-
-@media (max-width: 540px) {
-  :global(.atividades-telaDoJogo) .stage {
-    grid-template-columns: minmax(0, 1fr);
-  }
 }
 
 .options {
   display: grid;
-  gap: var(--ui-space-3);
-  margin-top: var(--ui-space-4-5);
+  gap: 0;
+  margin-top: var(--ui-space-4);
 }
 
 .optionsHeading {
@@ -58,7 +52,7 @@
 .optionsHeading h2 {
   margin: 0;
   color: var(--ui-color-text);
-  font-size:var(--ui-oficios-fonte-104);
+  font-size: var(--ui-font-size-xl);
 }
 
 .optionsHeading > span {
@@ -66,11 +60,16 @@
   font-size: var(--ui-font-size-xs);
 }
 
-.option {
+.options .option {
+  border: 0;
+  border-bottom: var(--ui-size-border) solid var(--ui-color-border);
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
   display: grid;
   grid-template-columns: var(--ui-size-activity-option-icon) minmax(0, 1fr);
   gap: var(--ui-space-3-25);
-  padding: var(--ui-space-3);
+  padding: var(--ui-space-4) var(--ui-space-2);
 }
 
 .option :global(.item-miniatura) {
@@ -132,7 +131,7 @@
   gap: var(--ui-space-1) var(--ui-space-3);
   padding: var(--ui-space-1-25) 0;
   border-bottom: var(--ui-size-border) solid var(--ui-color-border);
-  background: var(--ui-color-surface-raised);
+  background: transparent;
   font-size:var(--ui-oficios-fonte-109);
 }
 
@@ -237,11 +236,13 @@
 
 .catalogControls {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr) auto auto;
   gap: var(--ui-space-2);
-  align-items: end;
+  align-items: center;
+  padding-block: var(--ui-space-3);
+  border-bottom: var(--ui-size-border) solid var(--ui-color-border);
 }
-.catalogControls p { grid-column: 1 / -1; margin: 0; }
+.catalogControls p { margin: 0; font-size: var(--ui-font-size-xs); }
 @media (max-width: 45rem) {
   .catalogControls { grid-template-columns: minmax(0, 1fr); }
 }
@@ -260,3 +261,41 @@
 .comparacao li { display: grid; gap: var(--ui-space-1); min-width: 0; padding: var(--ui-space-2); border: var(--ui-size-border) solid var(--ui-color-border); border-radius: var(--ui-radius-md); }
 .comparacao li strong { color: var(--ui-color-text); font-size: var(--ui-font-size-xs); }
 .comparacao li span { color: var(--ui-color-text-muted); font-size: var(--ui-font-size-xs); line-height: var(--ui-line-height-normal); overflow-wrap: anywhere; }
+
+
+/* A bancada agrupa cena, atividade e XP; o catálogo usa linhas, sem cartões aninhados. */
+.workbench {
+  min-width: 0;
+  padding: var(--ui-space-3);
+  border: var(--ui-size-border) solid var(--ui-color-border);
+  border-radius: var(--ui-radius-lg);
+  background: var(--ui-color-surface-raised);
+}
+.currentActivity { min-width: 0; }
+.currentActivity h2 { margin: 0 0 var(--ui-space-2); font-family: var(--ui-font-family-body); font-size: var(--ui-font-size-body-large); }
+.currentActivity p { margin: 0; color: var(--ui-color-text-muted); font-size: var(--ui-font-size-sm); line-height: var(--ui-line-height-normal); }
+.currentActivity :global(.atividade-atualizado-acoes):empty { display: none; }
+.workbench .levelStrip { margin-top: var(--ui-space-3); padding: var(--ui-space-3) 0 0; border-top: var(--ui-size-border) solid var(--ui-color-border); border-bottom: 0; font-size: var(--ui-font-size-xs); }
+.workbench .levelStrip progress { max-width: none; }
+.workbench .levelStrip > div { flex-basis: 100%; }
+.futureFilter { min-height: var(--ui-dimension-44px); }
+.catalogControls > label:first-child > span:first-child { position: absolute; width: var(--ui-size-border); height: var(--ui-size-border); padding: 0; margin: calc(-1 * var(--ui-size-border)); overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
+.options .option[data-active] { border-inline-start: var(--ui-size-border-strong) solid var(--ui-color-warning); background: var(--ui-color-surface-raised); }
+.optionTitle h2 { font-family: var(--ui-font-family-body); font-size: var(--ui-font-size-body-large); line-height: var(--ui-line-height-normal); }
+.optionBody > button { margin-inline-end: var(--ui-space-2); margin-block-end: var(--ui-space-1); }
+.result { grid-template-columns: auto minmax(0, 1fr); align-items: baseline; gap: var(--ui-space-4); }
+.result > strong { font-size: var(--ui-font-size-sm); }
+@media (max-width: 45rem) {
+  .catalogControls { grid-template-columns: minmax(0, 1fr) auto; }
+  .catalogControls > label:first-child { grid-column: 1 / -1; }
+  .catalogControls p { text-align: right; }
+  .result { grid-template-columns: minmax(0, 1fr); gap: var(--ui-space-1); }
+}
+@media (max-width: 33.75rem) {
+  :global(.atividades-telaDoJogo) .stage { grid-template-columns: minmax(0, var(--ui-dimension-96px)) minmax(0, 1fr); gap: var(--ui-space-3); }
+  .workbench { padding: var(--ui-space-2-5); }
+  .currentActivity h2 { font-size: var(--ui-font-size-sm); }
+  .workbench:has(:global(.ocioso-progressoTrilha)) .stage { grid-template-columns: minmax(0, 1fr); }
+  .workbench .levelStrip { gap: var(--ui-space-2); }
+  .workbench .levelStrip details { flex-basis: 100%; margin-left: 0; }
+}

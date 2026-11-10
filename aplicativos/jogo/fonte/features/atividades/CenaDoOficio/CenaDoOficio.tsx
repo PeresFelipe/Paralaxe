@@ -12,8 +12,8 @@ const artes: Partial<Record<IdDaProfissao, { movimento: string; estatico: string
   culinaria: { movimento: '/arte/atividades/culinaria-suave.gif?v=1', estatico: '/arte/atividades/culinaria-estatico.png?v=2' },
 }
 
-type Propriedades = { profissao: IdDaProfissao; legenda: string }
-export function CenaDoOficio({ profissao, legenda }: Propriedades) {
+type Propriedades = { profissao: IdDaProfissao; legenda: string; emAtividade?: boolean }
+export function CenaDoOficio({ profissao, legenda, emAtividade = false }: Propriedades) {
   const arte = artes[profissao]
   return (
     <figure className={estilos.moldura}>
@@ -21,7 +21,7 @@ export function CenaDoOficio({ profissao, legenda }: Propriedades) {
         {arte ? (
           <picture>
             <source media="(prefers-reduced-motion: reduce)" srcSet={arte.estatico} />
-            <img src={arte.movimento} width={480} height={270} alt="" decoding="async" />
+            <img src={emAtividade ? arte.movimento : arte.estatico} width={480} height={270} alt="" decoding="async" />
           </picture>
         ) : null}
       </div>
@@ -29,3 +29,4 @@ export function CenaDoOficio({ profissao, legenda }: Propriedades) {
     </figure>
   )
 }
+

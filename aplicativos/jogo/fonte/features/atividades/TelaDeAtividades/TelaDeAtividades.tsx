@@ -11,7 +11,7 @@ import IndicadorDeProgressoOcioso from '../IndicadorDeProgressoOcioso'
 import { IconeDoJogo, ComparacaoDeEquipamento } from '@/components/jogo'
 import { obterIconeDoItem, obterIconeDoProduto, iconeDeProfissaoPorId } from '@/iconesDosRecursos'
 import { rotulosDosItens, rotulosDasProfissoes } from '@/rotulosDoJogo'
-import { Button, Card, ProgressBar, TextField } from '@/components/ui'
+import { Button, Card, Checkbox, ProgressBar, TextField } from '@/components/ui'
 import { SeletorDeOficios } from '../SeletorDeOficios/SeletorDeOficios'
 import { CenaDoOficio } from '../CenaDoOficio/CenaDoOficio'
 import estilos from './TelaDeAtividades.module.css'
@@ -89,76 +89,77 @@ export default function TelaDeAtividades({ partida, ultimoResultadoDoTrabalho, p
       <div className={estilos.layout}>
         <SeletorDeOficios selecionado={profissaoSelecionada} profissoes={partida.profissoes} emCurso={ativoProfissao} aoSelecionar={escolherProfissao} />
         <div className="atividades-areaDeTrabalho" aria-busy={pendente}>
-          <div className={`atividade-etapa ${estilos.stage}`}>
-            <CenaDoOficio profissao={profissaoSelecionada} legenda={atividades[0]?.nome ?? rotulosDasProfissoes[profissaoSelecionada]} />
-            <Card appearance="soft" className="atividade-atualizado">
-              {ativoProfissao === profissaoSelecionada ? <>
-                <IndicadorDeProgressoOcioso partida={partida} />
-                {secundaria ? <div aria-label="Coleta secundária em andamento">
-                  <p className="secao-chamada">Trabalho secundário · Coleta</p>
-                  <IndicadorDeProgressoOcioso partida={partida} espaco="secundaria" compacto />
-                  <Button variant="secondary" size="sm" disabled={pendente} onClick={() => void agir(aoPararAtividadeSecundaria)}>Parar coleta secundária</Button>
-                </div> : null}
-                {terciaria ? <div aria-label="Coleta terciária em andamento">
-                  <p className="secao-chamada">Terceiro trabalho · Coleta</p>
-                  <IndicadorDeProgressoOcioso partida={partida} espaco="terciaria" compacto />
-                  <Button variant="secondary" size="sm" disabled={pendente} onClick={() => void agir(aoPararAtividadeTerciaria)}>Parar terceira coleta</Button>
-                </div> : null}
-                {receitaSecundaria ? <div aria-label="Produção secundária em andamento">
-                  <p className="secao-chamada">Trabalho secundário · Produção</p>
-                  <IndicadorDeProgressoOcioso partida={partida} espaco="secundaria" compacto />
-                  <Button variant="secondary" size="sm" disabled={pendente} onClick={() => void agir(aoPararReceitaSecundaria)}>Parar produção secundária</Button>
-                </div> : null}
-                {receitaTerciaria ? <div aria-label="Produção terciária em andamento">
-                  <p className="secao-chamada">Terceiro trabalho · Produção</p>
-                  <IndicadorDeProgressoOcioso partida={partida} espaco="terciaria" compacto />
-                  <Button variant="secondary" size="sm" disabled={pendente} onClick={() => void agir(aoPararReceitaTerciaria)}>Parar terceira produção</Button>
-                </div> : null}
-              </> : <div className="atividade-pronto">
-                <p className="secao-chamada">{receitas.length ? 'Na bancada' : 'No campo'}</p>
-                <h2>{receitas.length ? 'Tudo começa com os materiais.' : 'O próximo ciclo começa com você.'}</h2>
-                <p>{trabalho ? `${trabalho} continua em curso. Iniciar uma nova tarefa substitui a atual.` : 'Escolha abaixo o que deseja coletar ou produzir.'}</p>
-                {ativoProfissao ? <div className="atividade-pronto-atalho"><Button variant="secondary" size="sm" onClick={() => escolherProfissao(ativoProfissao)}>Ver atividade em curso →</Button></div> : null}
-              </div>}
-              <div className="atividade-atualizado-acoes">
-                {ativoProfissao === profissaoSelecionada ? <Button variant="secondary" disabled={pendente} onClick={() => void agir(aoPararTrabalho)}>Parar atividade</Button> : null}
+          <div className={estilos.workbench}>
+            <div className={`atividade-etapa ${estilos.stage}`}>
+              <CenaDoOficio profissao={profissaoSelecionada} legenda={atividades[0]?.nome ?? rotulosDasProfissoes[profissaoSelecionada]} emAtividade={ativoProfissao === profissaoSelecionada} />
+              <div className={`atividade-atualizado ${estilos.currentActivity}`}>
+                {ativoProfissao === profissaoSelecionada ? <>
+                  <IndicadorDeProgressoOcioso partida={partida} />
+                  {secundaria ? <div aria-label="Coleta secundária em andamento">
+                    <p className="secao-chamada">Trabalho secundário · Coleta</p>
+                    <IndicadorDeProgressoOcioso partida={partida} espaco="secundaria" compacto />
+                    <Button variant="secondary" size="sm" disabled={pendente} onClick={() => void agir(aoPararAtividadeSecundaria)}>Parar coleta secundária</Button>
+                  </div> : null}
+                  {terciaria ? <div aria-label="Coleta terciária em andamento">
+                    <p className="secao-chamada">Terceiro trabalho · Coleta</p>
+                    <IndicadorDeProgressoOcioso partida={partida} espaco="terciaria" compacto />
+                    <Button variant="secondary" size="sm" disabled={pendente} onClick={() => void agir(aoPararAtividadeTerciaria)}>Parar terceira coleta</Button>
+                  </div> : null}
+                  {receitaSecundaria ? <div aria-label="Produção secundária em andamento">
+                    <p className="secao-chamada">Trabalho secundário · Produção</p>
+                    <IndicadorDeProgressoOcioso partida={partida} espaco="secundaria" compacto />
+                    <Button variant="secondary" size="sm" disabled={pendente} onClick={() => void agir(aoPararReceitaSecundaria)}>Parar produção secundária</Button>
+                  </div> : null}
+                  {receitaTerciaria ? <div aria-label="Produção terciária em andamento">
+                    <p className="secao-chamada">Terceiro trabalho · Produção</p>
+                    <IndicadorDeProgressoOcioso partida={partida} espaco="terciaria" compacto />
+                    <Button variant="secondary" size="sm" disabled={pendente} onClick={() => void agir(aoPararReceitaTerciaria)}>Parar terceira produção</Button>
+                  </div> : null}
+                </> : <div className="atividade-pronto">
+                  <h2>{receitas.length ? 'Escolha uma receita' : 'Escolha um recurso'}</h2>
+                  <p>{trabalho ? `${trabalho} continua em curso. Iniciar uma nova tarefa substitui a atual.` : receitas.length ? 'Confira os materiais e inicie a produção.' : 'Escolha um recurso abaixo e inicie a coleta.'}</p>
+                  {ativoProfissao ? <div className="atividade-pronto-atalho"><Button variant="secondary" size="sm" onClick={() => escolherProfissao(ativoProfissao)}>Ver atividade em curso →</Button></div> : null}
+                </div>}
+                <div className="atividade-atualizado-acoes">
+                  {ativoProfissao === profissaoSelecionada ? <Button variant="secondary" disabled={pendente} onClick={() => void agir(aoPararTrabalho)}>Parar atividade</Button> : null}
+                </div>
               </div>
-            </Card>
-          </div>
-          <div className="profissao-nivel-faixa">
-            <strong>{rotulosDasProfissoes[profissaoSelecionada]} · Nv. {progresso.nivel}</strong>
-            {proximoNivelXp ? <><ProgressBar max={proximoNivelXp} value={progresso.xp} label={`XP de ${rotulosDasProfissoes[profissaoSelecionada]} até o próximo nível`} /><span>{progresso.xp} / {proximoNivelXp} XP</span></> : <span>Nível máximo da versão · {progresso.xp} XP</span>}
-            {progresso.prestigio >= 2 && ativoProfissao === profissaoSelecionada ? (
-              <div aria-label="Prioridade dos trabalhos">
-                <p className="secao-chamada">Prestígio II · Prioridade dos trabalhos</p>
-                {(['equilibrado', 'principal', 'secundaria'] as const).map(opcao => {
-                  const atual = ocioso ? partida.ocioso.prioridade ?? 'equilibrado' : partida.fabricacao.prioridade ?? 'equilibrado'
-                  const nome = opcao === 'equilibrado' ? 'Equilibrado' : opcao === 'principal' ? 'Prioridade Principal' : 'Prioridade Secundária'
-                  return <Button key={opcao} variant={atual === opcao ? 'primary' : 'secondary'} size="sm"
-                    disabled={pendente || atual === opcao} onClick={() => void agir(() => aoAlterarPrioridade(opcao))}>{nome}</Button>
-                })}
-                {sugestao ? <div className={estilos.sugestao} role="note">
-                  <strong>Recomendação da Jornada: {sugestao.prioridade === 'equilibrado' ? 'Equilibrado' : sugestao.prioridade === 'principal' ? 'Prioridade principal' : 'Prioridade secundária'}</strong>
-                  <p>{sugestao.motivo} A decisão final é sua.</p>
-                  <details className={estilos.comparacao}>
-                    <summary>Comparar as 3 prioridades</summary>
-                    <ol>
-                      {sugestao.opcoes.map(opcao => (
-                        <li key={opcao.id}>
-                          <strong>{opcao.id === 'equilibrado' ? 'Equilibrado' : opcao.id === 'principal' ? 'Principal' : 'Secundária'} · {(opcao.pontuacao * 100).toFixed(0)}/100</strong>
-                          <span>{opcao.motivo}</span>
-                        </li>
-                      ))}
-                    </ol>
-                  </details>
-                  {(ocioso ? partida.ocioso.prioridade ?? 'equilibrado' : partida.fabricacao.prioridade ?? 'equilibrado') !== sugestao.prioridade
-                    ? <Button variant="secondary" size="sm" disabled={pendente} onClick={() => void agir(() => aoAlterarPrioridade(sugestao.prioridade))}>Aplicar sugestão</Button>
-                    : <span>A prioridade recomendada já está ativa.</span>}
-                </div> : null}
-              </div>
-            ) : null}
-            <details><summary>Detalhes</summary><p>Prestígio: {progresso.prestigio}. Prestígio I permite dois trabalhos do mesmo Ofício; II permite ajustar a prioridade; III permite três. O prazo de cada trabalho considera a prioridade selecionada.</p></details>
-            {progresso.nivel >= NIVEL_MAXIMO_DE_PROFISSAO && progresso.prestigio < 3 ? <Button variant="primary" disabled={pendente || Boolean(partida.ocioso.atividadeAtiva || partida.ocioso.atividadeSecundaria || partida.ocioso.atividadeTerciaria || partida.fabricacao.receitaAtiva || partida.fabricacao.receitaSecundaria || partida.fabricacao.receitaTerciaria)} onClick={() => void agir(() => aoPrestigiarProfissao(profissaoSelecionada))}>Realizar Prestígio {progresso.prestigio + 1} · reiniciar ofício</Button> : null}
+            </div>
+            <div className={`profissao-nivel-faixa ${estilos.levelStrip}`}>
+              <strong>Nível {progresso.nivel}</strong>
+              {proximoNivelXp ? <><ProgressBar max={proximoNivelXp} value={progresso.xp} label={`XP de ${rotulosDasProfissoes[profissaoSelecionada]} até o próximo nível`} /><span>{progresso.xp} / {proximoNivelXp} XP</span></> : <span>Nível máximo da versão · {progresso.xp} XP</span>}
+              {progresso.prestigio >= 2 && ativoProfissao === profissaoSelecionada ? (
+                <div aria-label="Prioridade dos trabalhos">
+                  <p className="secao-chamada">Prestígio II · Prioridade dos trabalhos</p>
+                  {(['equilibrado', 'principal', 'secundaria'] as const).map(opcao => {
+                    const atual = ocioso ? partida.ocioso.prioridade ?? 'equilibrado' : partida.fabricacao.prioridade ?? 'equilibrado'
+                    const nome = opcao === 'equilibrado' ? 'Equilibrado' : opcao === 'principal' ? 'Prioridade Principal' : 'Prioridade Secundária'
+                    return <Button key={opcao} variant={atual === opcao ? 'primary' : 'secondary'} size="sm"
+                      disabled={pendente || atual === opcao} onClick={() => void agir(() => aoAlterarPrioridade(opcao))}>{nome}</Button>
+                  })}
+                  {sugestao ? <div className={estilos.sugestao} role="note">
+                    <strong>Recomendação da Jornada: {sugestao.prioridade === 'equilibrado' ? 'Equilibrado' : sugestao.prioridade === 'principal' ? 'Prioridade principal' : 'Prioridade secundária'}</strong>
+                    <p>{sugestao.motivo} A decisão final é sua.</p>
+                    <details className={estilos.comparacao}>
+                      <summary>Comparar as 3 prioridades</summary>
+                      <ol>
+                        {sugestao.opcoes.map(opcao => (
+                          <li key={opcao.id}>
+                            <strong>{opcao.id === 'equilibrado' ? 'Equilibrado' : opcao.id === 'principal' ? 'Principal' : 'Secundária'} · {(opcao.pontuacao * 100).toFixed(0)}/100</strong>
+                            <span>{opcao.motivo}</span>
+                          </li>
+                        ))}
+                      </ol>
+                    </details>
+                    {(ocioso ? partida.ocioso.prioridade ?? 'equilibrado' : partida.fabricacao.prioridade ?? 'equilibrado') !== sugestao.prioridade
+                      ? <Button variant="secondary" size="sm" disabled={pendente} onClick={() => void agir(() => aoAlterarPrioridade(sugestao.prioridade))}>Aplicar sugestão</Button>
+                      : <span>A prioridade recomendada já está ativa.</span>}
+                  </div> : null}
+                </div>
+              ) : null}
+              <details><summary>Detalhes</summary><p>Prestígio: {progresso.prestigio}. Prestígio I permite dois trabalhos do mesmo Ofício; II permite ajustar a prioridade; III permite três. O prazo de cada trabalho considera a prioridade selecionada.</p></details>
+              {progresso.nivel >= NIVEL_MAXIMO_DE_PROFISSAO && progresso.prestigio < 3 ? <Button variant="primary" disabled={pendente || Boolean(partida.ocioso.atividadeAtiva || partida.ocioso.atividadeSecundaria || partida.ocioso.atividadeTerciaria || partida.fabricacao.receitaAtiva || partida.fabricacao.receitaSecundaria || partida.fabricacao.receitaTerciaria)} onClick={() => void agir(() => aoPrestigiarProfissao(profissaoSelecionada))}>Realizar Prestígio {progresso.prestigio + 1} · reiniciar ofício</Button> : null}
+            </div>
           </div>
           {minigame ? <Card appearance="soft" aria-label="Minigame opcional do Ofício">
             <p className="secao-chamada">Oportunidade opcional · {minigame.nome}</p>
@@ -176,10 +177,11 @@ export default function TelaDeAtividades({ partida, ultimoResultadoDoTrabalho, p
           <div className={estilos.options}>
             <div className={estilos.optionsHeading}><h2>{receitas.length ? 'Receitas conhecidas' : 'Recursos disponíveis'}</h2><span>Rendimento por ciclo</span></div>
             <div className={estilos.catalogControls}>
-              <TextField label="Buscar recurso ou receita" value={busca} onChange={event => definirBusca(event.target.value)} placeholder="Nome do recurso ou receita" />
-              <Button variant="filter" aria-pressed={mostrarBloqueados} onClick={() => definirMostrarBloqueados(!mostrarBloqueados)}>{mostrarBloqueados ? 'Todos os níveis e Prestígios' : 'Mostrar também níveis e Prestígios futuros'}</Button>
-              <p className="atenuado" role="status">{atividadesVisiveis.length + receitasVisiveis.length} de {atividades.length + receitas.length} opções · {mostrarBloqueados ? 'Catálogo completo' : 'Nível e Prestígio atuais'}</p>
+              <TextField label="Buscar recurso ou receita" value={busca} onChange={event => definirBusca(event.target.value)} placeholder="Buscar recurso ou receita" />
+              <Checkbox className={estilos.futureFilter} label="Mostrar bloqueados" checked={mostrarBloqueados} onChange={event => definirMostrarBloqueados(event.target.checked)} />
+              <p className="atenuado" role="status">{atividadesVisiveis.length + receitasVisiveis.length} de {atividades.length + receitas.length} opções</p>
             </div>
+            {trabalho ? <p className={estilos.replacement}>Iniciar outro trabalho principal pede confirmação e encerra as atividades em curso.</p> : null}
             {atividadesVisiveis.map((atividade) => {
               const ativo = ocioso?.id === atividade.id
               const ativaSecundaria = secundaria?.id === atividade.id
@@ -188,13 +190,12 @@ export default function TelaDeAtividades({ partida, ultimoResultadoDoTrabalho, p
               const podeIniciarSecundaria = progresso.prestigio >= 1 && ocioso?.idDaProfissao === profissaoSelecionada && !ativo && !ativaSecundaria && !terciaria
               const desbloqueado = progresso.nivel >= atividade.nivelExigidoDaProfissao && progresso.prestigio >= (atividade.prestigioExigido ?? 0)
               const bonusFerramenta = obterBonusDaFerramentaDeColeta(partida, atividade, obterDefinicaoDeEquipamento)
-              return <Card appearance="soft" className={`${estilos.option} ${ativo ? "selecionado-cartao" : ''}`} key={atividade.id}>
+              return <Card appearance="soft" className={estilos.option} data-active={ativo || ativaSecundaria || ativaTerciaria || undefined} key={atividade.id}>
                 <div className="item-miniatura" aria-hidden="true"><IconeDoJogo icone={obterIconeDoItem(atividade.idDaDefinicaoDoItemProduzido)} tamanho={40} /></div>
                 <div className={estilos.optionBody}>
                   <div className={estilos.optionTitle}><h2>{atividade.nomeDoResultado}</h2><span>Possuído: <strong>{possuido(atividade.idDaDefinicaoDoItemProduzido)}</strong></span></div>
                   <p className={estilos.yield}>+1 por ciclo · {atividade.segundosPorAcao}s · +{atividade.xpDeProfissaoPorAcao + bonusFerramenta} XP{bonusFerramenta ? ` (ferramenta +${bonusFerramenta})` : ''}</p>
                   {!desbloqueado ? <p className="informacao-alerta">Requer {rotulosDasProfissoes[profissaoSelecionada]} no nível {atividade.nivelExigidoDaProfissao}{atividade.prestigioExigido ? ` e Prestígio ${atividade.prestigioExigido}` : ''}.</p> : null}
-                  {trabalho && !ativo && !ativaSecundaria ? <p className={estilos.replacement}>Trocar o trabalho principal encerra {trabalho}{secundaria || receitaSecundaria ? ", a secundária" : ""}{terciaria || receitaTerciaria ? " e a terceira atividade" : ""}.</p> : null}
                   <Button variant={ativo ? 'secondary' : 'primary'} size="sm" disabled={pendente || !desbloqueado} onClick={() => ativo ? void agir(aoPararTrabalho) : iniciarPrincipal(atividade.nomeDoResultado, () => aoIniciarAtividade(atividade.id))}>{ativo ? 'Em curso · Parar' : `Coletar ${atividade.nomeDoResultado}`}</Button>
                   {ativaTerciaria ? <Button variant="secondary" size="sm" disabled={pendente} onClick={() => void agir(aoPararAtividadeTerciaria)}>Terciária · Parar</Button>
                     : podeIniciarTerciaria ? <Button variant="secondary" size="sm" disabled={pendente || !desbloqueado} onClick={() => void agir(() => aoIniciarAtividadeTerciaria(atividade.id))}>Adicionar terceira coleta</Button> : null}
@@ -218,7 +219,7 @@ export default function TelaDeAtividades({ partida, ultimoResultadoDoTrabalho, p
                 Boolean(partida.masmorra.dificuldadesConcluidas?.includes(dificuldadeRequerida))
               const desbloqueado = progresso.nivel >= receita.nivelExigidoDaProfissao &&
                 progresso.prestigio >= (receita.prestigioExigido ?? 0) && dificuldadeLiberada
-              return <Card appearance="soft" className={`${estilos.option} ${ativo ? "selecionado-cartao" : ''}`} key={receita.id}>
+              return <Card appearance="soft" className={estilos.option} data-active={ativo || ativaSecundaria || ativaTerciaria || undefined} key={receita.id}>
                 <div className="item-miniatura" aria-hidden="true">
                   <IconeDoJogo icone={receita.saida.tipo === 'equipamento-reforco' ? 'ferreiro' : obterIconeDoProduto(receita.saida)} tamanho={40} alternativa={receita.saida.nome.slice(0, 1)} />
                 </div>
@@ -254,7 +255,6 @@ export default function TelaDeAtividades({ partida, ultimoResultadoDoTrabalho, p
                   {!dificuldadeLiberada && dificuldadeRequerida
                     ? <p className="informacao-alerta">Requer concluir Dún Liath na dificuldade {dificuldadeRequerida}.</p>
                     : null}                  {!nivelLiberado(receita) ? <p className="informacao-alerta">Requer {rotulosDasProfissoes[profissaoSelecionada]} no nível {receita.nivelExigidoDaProfissao}{receita.prestigioExigido ? ` e Prestígio ${receita.prestigioExigido}` : ''}.</p> : null}
-                  {trabalho && !ativo && !ativaSecundaria ? <p className={estilos.replacement}>Trocar o trabalho principal encerra {trabalho}{secundaria || receitaSecundaria ? ", a secundária" : ""}{terciaria || receitaTerciaria ? " e a terceira atividade" : ""}.</p> : null}
                   <div className="botao-linhaDeDados"><Button variant={ativo ? 'secondary' : 'primary'} size="sm" disabled={pendente || (!ativo && (!suficiente || !desbloqueado))} onClick={() => ativo ? void agir(aoPararTrabalho) : iniciarPrincipal(receita.nome, () => aoIniciarReceita(receita.id))}>{ativo ? 'Em curso · Parar' : suficiente ? 'Iniciar produção' : 'Faltam materiais'}</Button>
                     {ativaTerciaria ? <Button variant="secondary" size="sm" disabled={pendente} onClick={() => void agir(aoPararReceitaTerciaria)}>Terciária · Parar</Button>
                       : podeIniciarTerciaria ? <Button variant="secondary" size="sm" disabled={pendente || !desbloqueado || !suficiente} onClick={() => void agir(() => aoIniciarReceitaTerciaria(receita.id))}>Adicionar terceira produção</Button> : null}
@@ -284,4 +284,5 @@ export default function TelaDeAtividades({ partida, ultimoResultadoDoTrabalho, p
     </section>
   )
 }
+
 

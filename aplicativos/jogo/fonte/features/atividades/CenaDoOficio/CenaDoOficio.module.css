@@ -3,11 +3,11 @@
   width: min(100%, var(--ui-oficios-medida-90));
   min-width: 0;
   margin: 0;
-  padding: var(--ui-oficios-medida-31);
-  border: var(--ui-oficios-medida-40) solid var(--ui-color-border);
+  padding: 0;
+  border: 0;
   border-radius: var(--ui-oficios-medida-51);
-  background: var(--ui-color-surface-sunken);
-  box-shadow: var(--ui-shadow-sm);
+  background: transparent;
+  box-shadow: none;
 }
 .palco {
   display: grid;
@@ -26,6 +26,11 @@
 }
 .palco img { object-fit: contain; object-position: center; image-rendering: pixelated; }
 .legenda {
+  position: absolute;
+  width: var(--ui-size-border);
+  height: var(--ui-size-border);
+  overflow: hidden;
+  clip-path: inset(50%);
   margin: var(--ui-oficios-medida-54) var(--ui-oficios-medida-33) var(--ui-oficios-medida-92);
   color: var(--ui-color-text-muted);
   font-family: var(--ui-font-family-body);
@@ -35,3 +40,4 @@
 @media (max-width: 540px) {
   .moldura { width: min(100%, var(--ui-oficios-medida-95)); }
 }
+

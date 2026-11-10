@@ -1,12 +1,17 @@
 .raiz {
   display: grid;
-  gap: var(--ui-oficios-medida-31);
+  gap: 0;
   width: min(100%, var(--ui-oficios-medida-32));
   min-width: 0;
   margin-bottom: var(--ui-oficios-medida-33);
   font-family: var(--ui-font-family-body);
 }
 .rotulo {
+  position: absolute;
+  width: var(--ui-size-border);
+  height: var(--ui-size-border);
+  overflow: hidden;
+  clip-path: inset(50%);
   color: var(--ui-color-warning-text);
   font-size: var(--ui-font-size-xs);
   font-weight: var(--ui-oficios-peso-82);
@@ -19,13 +24,13 @@
   gap: var(--ui-oficios-medida-36);
   width: 100%;
   min-width: 0;
-  min-height: var(--ui-oficios-medida-37);
+  min-height: var(--ui-dimension-48px);
   padding: var(--ui-oficios-medida-38) var(--ui-oficios-medida-39);
   border: var(--ui-oficios-medida-40) solid var(--ui-oficio-seletor-borda);
   border-radius: var(--ui-oficios-medida-36);
-  background: linear-gradient(140deg, var(--ui-oficio-seletor-fundo-inicio), var(--ui-oficio-seletor-fundo-fim));
-  color: var(--ui-oficio-seletor-texto);
-  box-shadow: 0 var(--ui-oficios-medida-41) 0 var(--ui-oficio-seletor-sombra-contorno), 0 var(--ui-oficios-medida-42) var(--ui-oficios-medida-43) var(--ui-oficio-seletor-sombra);
+  background: var(--ui-color-surface-raised);
+  color: var(--ui-color-text);
+  box-shadow: none;
   text-align: left;
   cursor: pointer;
   transition: box-shadow var(--ui-oficios-medida-44) ease, border-color var(--ui-oficios-medida-44) ease, transform var(--ui-oficios-medida-44) ease;
@@ -138,3 +143,10 @@
   .menu { animation: none; }
   .gatilho, .seta { transition: none; }
 }
+
+
+.gatilho .icone { width: var(--ui-dimension-32px); height: var(--ui-dimension-32px); background: var(--ui-color-surface-sunken); border-color: var(--ui-color-border); }
+.gatilho .dados { display: flex; align-items: baseline; flex-wrap: wrap; gap: var(--ui-space-2); }
+.gatilho .nome { font-size: var(--ui-font-size-sm); }
+.gatilho .subtitulo { color: var(--ui-color-text-muted); font-size: var(--ui-font-size-xs); }
+.gatilho .seta { color: var(--ui-color-text-muted); }
