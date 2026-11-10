@@ -92,6 +92,7 @@ export default function BancadaDoMercado({ partida, aoComprarOferta, aoVoltar }:
                   size="sm"
                   disabled={ofertaEmCompra !== null || !podePagar}
                   loading={ofertaEmCompra === oferta.id}
+                  aria-label={`Comprar ${oferta.nome} por ${oferta.preco} moedas`}
                   onClick={() => void comprar(oferta.id)}
                 >
                   Comprar por {oferta.preco} moedas
