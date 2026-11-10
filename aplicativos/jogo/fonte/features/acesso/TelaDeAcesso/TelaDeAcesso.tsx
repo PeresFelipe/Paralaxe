@@ -48,6 +48,14 @@ export default function TelaDeAcesso({ preferencias, aoEntrarLocalmente, aoEsque
               <p className={estilos.marca}>PARALAXE</p>
               <p className={estilos.lema}>Um refúgio entre as sombras</p>
             </div>
+            <div className={estilos.convite}>
+              <span className={estilos.emblema} aria-hidden="true">
+                <IconeDoJogo icone="elmo-barbuta" tamanho={36} />
+              </span>
+              <p className={estilos.categoria}>FANTASIA SOMBRIA · RPG IDLE</p>
+              <p className={estilos.chamada}>Cada escolha<br />deixa um legado.</p>
+              <p className={estilos.descricao}>Domine seus ofícios. Desbrave ruínas.<br />Reerga a Cidade Livre, no seu ritmo.</p>
+            </div>
           </div>
         </section>
         <section className={estilos.acesso} aria-labelledby="acesso-titulo">

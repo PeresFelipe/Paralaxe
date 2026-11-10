@@ -60,6 +60,10 @@
   position: relative;
   z-index: 1;
   height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 1.75rem;
   padding: clamp(1.5rem, 4.2vw, 4.5rem);
 }
 .assinatura { display: flex; flex-direction: column; align-items: flex-start; gap: .55rem; }
@@ -91,6 +95,57 @@
   height: .75rem;
   margin-top: .2rem;
   background: var(--ui-flourish-gold) left center / contain no-repeat;
+}
+
+/* Convite narrativo restaurado, separado do formulário da lateral. */
+.convite {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: min(34rem, calc(100vw - 38rem));
+  max-width: 100%;
+  margin-top: auto;
+  color: var(--acesso-texto);
+}
+.emblema {
+  display: grid;
+  place-items: center;
+  width: 3.5rem;
+  height: 3.5rem;
+  margin-bottom: 1.1rem;
+  border: 1px solid rgb(224 188 128 / 78%);
+  border-radius: .9rem;
+  background: rgb(10 18 20 / 78%);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 9%), 0 .6rem 1.5rem rgb(0 0 0 / 18%);
+}
+.categoria {
+  margin: 0 0 .6rem;
+  color: var(--acesso-ouro);
+  font-family: var(--ui-font-family-body);
+  font-size: .72rem;
+  font-weight: 650;
+  letter-spacing: .13em;
+  line-height: 1.5;
+}
+.chamada {
+  max-width: 100%;
+  margin: 0 0 .85rem;
+  color: #faf4e7;
+  font-family: var(--ui-font-family-antiquity);
+  font-size: clamp(2rem, 3.35vw, 3.45rem);
+  font-weight: 400;
+  line-height: 1.48;
+  letter-spacing: .01em;
+  overflow-wrap: anywhere;
+  text-shadow: 0 .2rem 1.15rem rgb(0 0 0 / 75%);
+}
+.descricao {
+  margin: 0;
+  color: #e6e8e1;
+  font-family: var(--ui-font-family-body);
+  font-size: clamp(.78rem, 1.05vw, .92rem);
+  line-height: 1.65;
+  text-shadow: 0 .15rem .75rem rgb(0 0 0 / 88%);
 }
 
 .acesso {
@@ -298,16 +353,26 @@
 
 @media (max-width: 900px) {
   .moldura { display: block; padding: 0; overflow: visible; }
-  .historia { position: relative; min-height: clamp(13rem, 34svh, 24rem); }
+  .historia { position: relative; min-height: clamp(27rem, 62svh, 39rem); }
   .cena {
     background-image:
       linear-gradient(180deg, rgb(5 12 15 / 55%), rgb(5 12 15 / 10%) 40%, rgb(5 12 15 / 80%)),
       var(--ui-access-scene);
     background-position: center, center 43%;
   }
-  .historiaConteudo { padding: clamp(1.35rem, 5vw, 2.5rem); }
+  .historiaConteudo {
+    min-height: inherit;
+    padding: clamp(1.35rem, 5vw, 2.5rem) clamp(1.35rem, 5vw, 2.5rem) 4.5rem;
+    gap: 1rem;
+  }
   .marca { font-size: clamp(2.2rem, 7vw, 3.7rem); }
   .lema { font-size: .7rem; letter-spacing: .14em; }
+  .convite { width: min(32rem, 100%); }
+  .emblema { width: 2.8rem; height: 2.8rem; margin-bottom: .65rem; }
+  .emblema img { max-width: 1.8rem; max-height: 1.8rem; }
+  .categoria { margin-bottom: .3rem; font-size: .65rem; }
+  .chamada { margin-bottom: .45rem; font-size: clamp(1.75rem, 4.7vw, 2.65rem); line-height: 1.45; }
+  .descricao { font-size: .8rem; line-height: 1.5; }
   .acesso { width: 100%; padding: 0 clamp(1rem, 5vw, 2rem) 1.5rem; margin: -2.25rem auto 0; }
   .painel { max-width: 32rem; margin-inline: auto; padding: clamp(1.45rem, 5vw, 2.25rem); }
 }
@@ -317,6 +382,9 @@
   .acesso { padding-inline: .75rem; }
   .painel { padding: 1.3rem; border-radius: .95rem; }
   .lema { font-size: .625rem; letter-spacing: .11em; }
+  .convite { width: 100%; }
+  .chamada { font-size: 1.65rem; }
+  .descricao { font-size: .75rem; }
 }
 @media (max-height: 650px) and (min-width: 901px) {
   .moldura { padding-block: 1rem; }
@@ -325,6 +393,11 @@
   .formulario { gap: .8rem; }
   .avancado { margin-top: 1rem; }
   .rodape { margin-top: .7rem; }
+  .historiaConteudo { padding-block: 1.25rem; }
+  .emblema { width: 2.75rem; height: 2.75rem; margin-bottom: .65rem; }
+  .categoria { margin-bottom: .35rem; font-size: .65rem; }
+  .chamada { margin-bottom: .4rem; font-size: clamp(1.7rem, 2.7vw, 2.4rem); line-height: 1.45; }
+  .descricao { font-size: .75rem; line-height: 1.45; }
 }
 @media (prefers-reduced-motion: reduce) {
   .pagina button,
