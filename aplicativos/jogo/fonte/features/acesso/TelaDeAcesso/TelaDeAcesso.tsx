@@ -44,40 +44,38 @@ export default function TelaDeAcesso({ preferencias, aoEntrarLocalmente, aoEsque
         <section className={estilos.historia} aria-label="Bem-vindo a Paralaxe">
           <div className={estilos.cena} aria-hidden="true" />
           <div className={estilos.historiaConteudo}>
-            <p className={estilos.marca}>PARALAXE<span>UM REFÚGIO ENTRE AS SOMBRAS</span></p>
-            <div className={estilos.convite}>
-              <span className={estilos.emblema} aria-hidden="true"><IconeDoJogo icone="elmo-barbuta" tamanho={40} /></span>
-              <p className={estilos.sobretitulo}>FANTASIA SOMBRIA · RPG IDLE</p>
-              <h2>Cada escolha<br />deixa um legado.</h2>
-              <p>Domine seus ofícios. Desbrave ruínas.<br />Reerga a Cidade Livre, no seu ritmo.</p>
-            </div>
-            <div className={estilos.promessa}><span aria-hidden="true">✦</span> Seu próximo capítulo começa aqui.</div>
+            <p className={estilos.marca}>PARALAXE</p>
           </div>
         </section>
         <section className={estilos.acesso} aria-labelledby="acesso-titulo">
-          <div className={estilos.topo}><span className={estilos.selo}><span aria-hidden="true">●</span> Modo local</span><span>VERSÃO 0.1</span></div>
           <div className={estilos.conteudo} id="acesso-formulario" tabIndex={-1}>
-            <p className={estilos.sobretitulo}>{pagina === 'entrar' ? 'BEM-VINDO A PARALAXE' : pagina === 'cadastro' ? 'CRIAR USUÁRIO' : 'ESQUECI MINHA SENHA'}</p>
-            <h1 id="acesso-titulo" ref={tituloRef} tabIndex={-1}>{titulos[pagina]}</h1>
-            <p className={estilos.introducao}>{pagina === 'entrar' ? 'Entre localmente para continuar. Não precisa de senha.' : pagina === 'cadastro' ? 'Em breve, uma conta para acompanhar suas aventuras.' : 'O caminho de volta à sua conta, com tranquilidade.'}</p>
+            <p className={estilos.sobretitulo}>{pagina === 'entrar' ? 'ACESSO LOCAL' : pagina === 'cadastro' ? 'CRIAR USUÁRIO' : 'ESQUECI MINHA SENHA'}</p>
+            <h1 id="acesso-titulo" ref={tituloRef} tabIndex={-1}>{pagina === 'entrar' ? 'Entrar no jogo' : titulos[pagina]}</h1>
+            {pagina !== 'entrar' ? <p className={estilos.introducao}>{pagina === 'cadastro' ? 'Em breve, uma conta para acompanhar suas aventuras.' : 'O caminho de volta à sua conta, com tranquilidade.'}</p> : null}
             {pagina === 'entrar' ? <>
               <form noValidate onSubmit={entrar} className={estilos.formulario}>
                 <TextField label="Usuário ou e-mail" name="identificador-local" value={identificador} maxLength={LIMITE_DO_IDENTIFICADOR}
                   autoComplete="username" autoCapitalize="none" spellCheck={false} required
                   placeholder="seu.usuario ou voce@email.com" {...(erro ? { error: erro } : {})}
-                  onChange={e => { definirIdentificador(e.target.value); definirErro(null) }}
-                  description="No modo local, este nome identifica apenas sua entrada." />
-                <TextField label="Senha" type="password" name="senha-online-indisponivel" disabled autoComplete="off" placeholder="Disponível com contas online" />
+                  onChange={e => { definirIdentificador(e.target.value); definirErro(null) }} />
                 <div className={estilos.opcoes}>
                   <Checkbox label="Lembrar usuário" checked={lembrar} onChange={e => { definirLembrar(e.target.checked); if (!e.target.checked) aoEsquecerUsuario() }} />
-                  <Button variant="ghost" size="sm" onClick={() => mudar('recuperar')}>Esqueci a senha</Button>
                 </div>
                 <Button type="submit" fullWidth size="lg" icon={<IconeDoJogo icone="livro-abrir" tamanho={20} />}>Entrar localmente <span aria-hidden="true">→</span></Button>
               </form>
-              <div className={estilos.divisor}><span>OUTRAS FORMAS DE ENTRAR</span></div>
+              <details className={estilos.avancado}>
+                <summary>Opções de conta</summary>
+                <div className={estilos.avancadoConteudo}>
+                <TextField label="Senha" type="password" name="senha-online-indisponivel" disabled autoComplete="off" placeholder="Disponível com contas online" />
+                  <div className={estilos.opcoesSecundarias}>
+                  <Button variant="ghost" size="sm" onClick={() => mudar('recuperar')}>Esqueci a senha</Button>
+                  </div>
+                  <div className={estilos.divisor}><span>OUTRAS FORMAS DE ENTRAR</span></div>
               <Button variant="secondary" fullWidth size="lg" disabled aria-describedby="google-disponibilidade"><span className={estilos.google} aria-hidden="true">G</span> Continuar com Google</Button>
               <p id="google-disponibilidade" className={estilos.emBreve}>Em breve · contas online ainda não estão disponíveis.</p>
-              <p className={estilos.cadastrar}>Novo por aqui? <Button variant="ghost" size="sm" onClick={() => mudar('cadastro')}>Criar usuário</Button></p>
+                  <p className={estilos.cadastrar}>Novo por aqui? <Button variant="ghost" size="sm" onClick={() => mudar('cadastro')}>Criar usuário</Button></p>
+                </div>
+              </details>
             </> : <>
               <div className={estilos.aviso} role="status"><IconeDoJogo icone="livro-abrir" tamanho={24} /><div><strong>Disponível em uma próxima etapa</strong><p>{pagina === 'cadastro' ? 'O cadastro online ainda não está habilitado. Você já pode jogar localmente sem criar uma conta.' : 'A recuperação por e-mail será habilitada com as contas online. O acesso local não usa senha.'}</p></div></div>
               <form className={estilos.formulario} onSubmit={e => e.preventDefault()}>
@@ -88,9 +86,9 @@ export default function TelaDeAcesso({ preferencias, aoEntrarLocalmente, aoEsque
               </form>
               <Button variant="secondary" fullWidth onClick={() => mudar('entrar')}>Voltar ao acesso local</Button>
             </>}
-            <p className={estilos.privacidade}><IconeDoJogo icone="elmo-barbuta" tamanho={18} /> Suas partidas continuam neste navegador.</p>
+            <p className={estilos.privacidade}>Sem senha. Seu progresso fica neste navegador.</p>
           </div>
-          <footer className={estilos.rodape}><span>PARALAXE · CIDADE LIVRE</span><CreditosDosRecursos /></footer>
+          <footer className={estilos.rodape}><CreditosDosRecursos /></footer>
         </section>
       </div>
     </main>
