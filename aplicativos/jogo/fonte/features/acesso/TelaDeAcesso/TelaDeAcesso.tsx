@@ -44,14 +44,18 @@ export default function TelaDeAcesso({ preferencias, aoEntrarLocalmente, aoEsque
         <section className={estilos.historia} aria-label="Bem-vindo a Paralaxe">
           <div className={estilos.cena} aria-hidden="true" />
           <div className={estilos.historiaConteudo}>
-            <p className={estilos.marca}>PARALAXE</p>
+            <div className={estilos.assinatura}>
+              <p className={estilos.marca}>PARALAXE</p>
+              <p className={estilos.lema}>Um refúgio entre as sombras</p>
+            </div>
           </div>
         </section>
         <section className={estilos.acesso} aria-labelledby="acesso-titulo">
+          <div className={estilos.painel}>
           <div className={estilos.conteudo} id="acesso-formulario" tabIndex={-1}>
             <p className={estilos.sobretitulo}>{pagina === 'entrar' ? 'ACESSO LOCAL' : pagina === 'cadastro' ? 'CRIAR USUÁRIO' : 'ESQUECI MINHA SENHA'}</p>
-            <h1 id="acesso-titulo" ref={tituloRef} tabIndex={-1}>{pagina === 'entrar' ? 'Entrar no jogo' : titulos[pagina]}</h1>
-            {pagina !== 'entrar' ? <p className={estilos.introducao}>{pagina === 'cadastro' ? 'Em breve, uma conta para acompanhar suas aventuras.' : 'O caminho de volta à sua conta, com tranquilidade.'}</p> : null}
+            <h1 id="acesso-titulo" ref={tituloRef} tabIndex={-1}>{pagina === 'entrar' ? 'Entrar' : titulos[pagina]}</h1>
+            <p className={estilos.introducao}>{pagina === 'entrar' ? 'Continue sua jornada localmente.' : pagina === 'cadastro' ? 'Em breve, uma conta para acompanhar suas aventuras.' : 'O caminho de volta à sua conta, com tranquilidade.'}</p>
             {pagina === 'entrar' ? <>
               <form noValidate onSubmit={entrar} className={estilos.formulario}>
                 <TextField label="Usuário ou e-mail" name="identificador-local" value={identificador} maxLength={LIMITE_DO_IDENTIFICADOR}
@@ -61,7 +65,7 @@ export default function TelaDeAcesso({ preferencias, aoEntrarLocalmente, aoEsque
                 <div className={estilos.opcoes}>
                   <Checkbox label="Lembrar usuário" checked={lembrar} onChange={e => { definirLembrar(e.target.checked); if (!e.target.checked) aoEsquecerUsuario() }} />
                 </div>
-                <Button type="submit" fullWidth size="lg" icon={<IconeDoJogo icone="livro-abrir" tamanho={20} />}>Entrar localmente <span aria-hidden="true">→</span></Button>
+                <Button type="submit" fullWidth size="lg" icon={<IconeDoJogo icone="livro-abrir" tamanho={20} />}>Entrar no jogo <span aria-hidden="true">→</span></Button>
               </form>
               <details className={estilos.avancado}>
                 <summary>Opções de conta</summary>
@@ -86,9 +90,10 @@ export default function TelaDeAcesso({ preferencias, aoEntrarLocalmente, aoEsque
               </form>
               <Button variant="secondary" fullWidth onClick={() => mudar('entrar')}>Voltar ao acesso local</Button>
             </>}
-            <p className={estilos.privacidade}>Sem senha. Seu progresso fica neste navegador.</p>
+            {pagina === 'entrar' ? <p className={estilos.privacidade}>Sem senha. Seu progresso fica neste navegador.</p> : null}
           </div>
           <footer className={estilos.rodape}><CreditosDosRecursos /></footer>
+          </div>
         </section>
       </div>
     </main>

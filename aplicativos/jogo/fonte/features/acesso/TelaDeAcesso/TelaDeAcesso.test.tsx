@@ -6,8 +6,12 @@ import { Checkbox } from '@/components/ui'
 describe('entrada local', () => {
   it('identifica o acesso local e deixa credenciais e integrações indisponíveis', () => {
     const html = renderToStaticMarkup(<TelaDeAcesso preferencias={{ identificador: '', lembrar: false }} aoEntrarLocalmente={() => {}} aoEsquecerUsuario={() => {}} />)
+    expect(html).toContain('PARALAXE')
+    expect(html).toContain('Um refúgio entre as sombras')
+    expect(html).toContain('Continue sua jornada localmente.')
     expect(html).toContain('Usuário ou e-mail')
-    expect(html).toContain('Entrar localmente')
+    expect(html).toContain('Entrar no jogo')
+    expect(html).toContain('<summary>Opções de conta</summary>')
     expect(html).toContain('Criar usuário')
     expect(html).toContain('Esqueci a senha')
     expect(html).toMatch(/<input[^>]*type="password"[^>]*disabled=""/)
