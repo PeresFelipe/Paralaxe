@@ -112,6 +112,7 @@ export default function PainelDoBanco({
                     icon={<IconeDoJogo icone="depositar" tamanho={16} />}
                     size="sm"
                     disabled={pendente}
+                    aria-label={`Depositar 1 unidade de ${itemNome(pilha.idDaDefinicao)}`}
                     onClick={() => void transferir(() => aoDepositarPilha(pilha.idDaDefinicao, 1))}
                   >
                     Depositar 1
@@ -122,6 +123,7 @@ export default function PainelDoBanco({
                     icon={<IconeDoJogo icone="depositar" tamanho={16} />}
                       size="sm"
                     disabled={pendente}
+                      aria-label={`Depositar ${pilha.quantidade} unidades de ${itemNome(pilha.idDaDefinicao)}`}
                       onClick={() =>
                         void transferir(() => aoDepositarPilha(pilha.idDaDefinicao, pilha.quantidade))
                       }
@@ -153,6 +155,7 @@ export default function PainelDoBanco({
                     icon={<IconeDoJogo icone="depositar" tamanho={16} />}
                     size="sm"
                     disabled={pendente}
+                    aria-label={`Depositar equipamento ${definicao?.nome ?? instancia.idDaDefinicao} +${instancia.nivelDeReforco}`}
                     onClick={() => void transferir(() => aoDepositarEquipamento(instancia.idDaInstancia))}
                   >
                     Depositar
@@ -192,6 +195,7 @@ export default function PainelDoBanco({
                     variant="secondary"
                     size="sm"
                     disabled={pendente}
+                    aria-label={`Retirar 1 unidade de ${itemNome(pilha.idDaDefinicao)}`}
                     onClick={() => void transferir(() => aoRetirarPilha(pilha.idDaDefinicao, 1))}
                   >
                     Retirar 1
@@ -201,6 +205,7 @@ export default function PainelDoBanco({
                       variant="secondary"
                       size="sm"
                     disabled={pendente}
+                      aria-label={`Retirar ${pilha.quantidade} unidades de ${itemNome(pilha.idDaDefinicao)}`}
                       onClick={() =>
                         void transferir(() => aoRetirarPilha(pilha.idDaDefinicao, pilha.quantidade))
                       }
@@ -231,6 +236,7 @@ export default function PainelDoBanco({
                     variant="secondary"
                     size="sm"
                     disabled={pendente}
+                    aria-label={`Retirar equipamento ${definicao?.nome ?? instancia.idDaDefinicao} +${instancia.nivelDeReforco}`}
                     onClick={() =>
                       void transferir(() => aoRetirarEquipamento(instancia.idDaInstancia))
                     }
