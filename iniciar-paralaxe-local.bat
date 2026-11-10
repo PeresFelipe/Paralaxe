@@ -20,7 +20,12 @@ if not exist "aplicativos\jogo\vite.config.ts" (
 REM O jogo depende dos pacotes locais do monorepositorio.
 if not exist "pnpm-workspace.yaml" (
   echo [ERRO] Nao encontrei pnpm-workspace.yaml na raiz do Paralaxe.
-  goto :copia_incompleta
+  goto :servidor_existente
+echo.
+pause
+exit /b 0
+
+:copia_incompleta
 )
 for %%P in (conteudo dominio interface persistencia) do (
   if not exist "pacotes\%%P\package.json" (
@@ -79,6 +84,26 @@ if errorlevel 1 (
   if errorlevel 1 (
     echo [ERRO] O pnpm nao conseguiu executar o Vite no pacote do jogo.
     goto :falha
+  )
+)
+
+REM Um segundo servidor na mesma porta falharia com --strictPort.
+REM Nao alternar a porta automaticamente: os saves locais usam a origem do navegador.
+REM O teste so verifica conexao; nunca encerra processos de outras aplicacoes.
+where powershell >nul 2>&1
+if not errorlevel 1 (
+  powershell -NoProfile -NonInteractive -Command "$c = New-Object System.Net.Sockets.TcpClient; try { $c.Connect('127.0.0.1', 5173); exit 0 } catch { exit 1 } finally { $c.Dispose() }" >nul 2>&1
+  if not errorlevel 1 (
+    echo.
+    echo [AVISO] A porta 5173 ja esta sendo utilizada.
+    echo Se o Paralaxe ja estiver em execucao, use http://127.0.0.1:5173/
+    echo Se nao for o jogo, feche o processo que ocupa a porta antes de tentar novamente.
+    echo.
+    echo Processos conectados a porta 5173:
+    netstat -ano -p TCP | findstr ":5173"
+    echo.
+    echo Nenhum novo servidor foi iniciado para evitar conflito.
+    goto :servidor_existente
   )
 )
 
